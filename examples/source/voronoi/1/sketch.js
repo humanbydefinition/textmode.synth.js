@@ -9,18 +9,15 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charOsc(0.1, 0.1)
-		.charColor(
-			osc(0.1, 0.1).color(0, 1, 1).brightness(0.2)
-		)
+	charVoronoi(25, 2, 2)
+	.charMap(' .')
+	.charColor(
+		voronoi(25, 2, 10).color(1,1,0).brightness(0.15)
+	)
 );
 
 t.draw(() => {
-	//t.clear();
-	//synthLayer.synthRender();
 
-	// t.char("A");
-	// t.rect(t.grid.cols / 2, t.grid.rows / 2);
 });
 
 t.windowResized(() => {

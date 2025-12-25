@@ -12,11 +12,12 @@ const synthLayer = t.layers.add();
 
 // Can be called globally, just like layer.draw()!
 synthLayer.synth(
-    charGradient(255, 1)
-        .scrollY(1, 0.01)
-        .charColor(gradient(0.21))
+    charGradient([1,2,4], 16)
+        .charColor(
+            gradient([1,2,4])
+        )
         .cellColor(
-            gradient(0.65)
+            gradient([1,2,4])
                 .invert((ctx) => Math.sin(ctx.time) * 2)
         )
 );

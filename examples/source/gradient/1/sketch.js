@@ -8,10 +8,24 @@ const t = textmode.create({
     plugins: [SynthPlugin]
 });
 
+
 t.layers.base.synth(
-	charNoise((ctx) => Math.sin(ctx.time * 0.0001) * 50, (ctx) => Math.sin(ctx.time ) / 500)
+	charGradient(0, 255)
+	.scrollX(0, 0.01)
+
 	.charColor(
-		noise((ctx) => Math.sin(ctx.time * 0.0001) * 50, (ctx) => Math.sin(ctx.time) / 500)
+		gradient(0)
+		.r()
+		.repeat(16, 1)
+		.scrollX(0, 0.1)
+	)
+
+	.cellColor(
+		gradient(0)
+		.r()
+		.repeat(16, 1)
+		.scrollX(0, 0.1)
+		.invert()
 	)
 );
 

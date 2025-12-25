@@ -9,18 +9,14 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charOsc(10, [-10, -1, -0.1, 0, 0.1, 1, 10])
-		.charColor(
-			osc(10, [-10, -1, -0.1, 0, 0.1, 1, 10], 0)
-		)
+	charVoronoi(5, 0.3, 8)
+	.charColor(
+		voronoi(5, 0.3, 0.3)
+	)
 );
 
 t.draw(() => {
-	//t.clear();
-	//synthLayer.synthRender();
 
-	// t.char("A");
-	// t.rect(t.grid.cols / 2, t.grid.rows / 2);
 });
 
 t.windowResized(() => {

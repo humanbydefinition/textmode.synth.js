@@ -4,28 +4,14 @@ import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVorono
 const t = textmode.create({
     width: window.innerWidth,
     height: window.innerHeight,
-    fontSize: 16,
+    fontSize: 8,
     plugins: [SynthPlugin]
 });
 
-
 t.layers.base.synth(
-	charGradient(255, 0)
-	.scrollX(0, 0.01)
-
+	charNoise((ctx) => Math.sin(ctx.time / 10) * 50, (ctx) => Math.sin(ctx.time / 2) / 500, 16)
 	.charColor(
-		gradient(0.21)
-		.r()
-		.repeat(16, 1)
-		.scrollX(0, 0.1)
-	)
-
-	.cellColor(
-		gradient(0.21)
-		.r()
-		.repeat(16, 1)
-		.scrollX(0, 0.1)
-		.invert()
+		noise((ctx) => Math.sin(ctx.time / 10) * 50, (ctx) => Math.sin(ctx.time / 2) / 500)
 	)
 );
 

@@ -38,9 +38,23 @@ body {
 	font-size: 32px;
 }
 
-.directory p {
+.directory > p {
 	color: #888;
 	margin-bottom: 40px;
+}
+
+.category-title {
+	margin-top: 50px;
+	margin-bottom: 20px;
+	font-size: 24px;
+	color: #4CAF50;
+	text-transform: uppercase;
+	letter-spacing: 2px;
+	font-weight: 600;
+}
+
+.category-title:first-of-type {
+	margin-top: 0;
 }
 
 .examples-grid {
@@ -64,10 +78,11 @@ body {
 	background-color: #1a1a1a;
 }
 
-.example-card h2 {
+.example-card h3 {
 	margin: 0 0 8px 0;
-	font-size: 20px;
+	font-size: 18px;
 	color: #fff;
+	font-weight: 600;
 }
 
 .example-card p {
