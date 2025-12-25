@@ -30,10 +30,10 @@ export const noise = defineTransform({
 	type: 'src',
 	inputs: [
 		{ name: 'scale', type: 'float', default: 10.0 },
-		{ name: 'speed', type: 'float', default: 0.1 },
+		{ name: 'offset', type: 'float', default: 0.1 },
 	],
 	glsl: `
-	return vec4(vec3(_noise(vec3(_st * scale, time * speed))), 1.0);
+	return vec4(vec3(_noise(vec3(_st * scale, offset * time))), 1.0);
 `,
 	description: 'Generate noise pattern',
 });

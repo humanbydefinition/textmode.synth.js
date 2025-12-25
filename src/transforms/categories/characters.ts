@@ -12,11 +12,11 @@ export const charNoise = defineTransform({
 	type: 'char',
 	inputs: [
 		{ name: 'scale', type: 'float', default: 10.0 },
-		{ name: 'speed', type: 'float', default: 0.5 },
+		{ name: 'offset', type: 'float', default: 0.5 },
 		{ name: 'charCount', type: 'float', default: 256.0 },
 	],
 	glsl: `
-	float n = _noise(vec3(_st * scale, time * speed));
+	float n = _noise(vec3(_st * scale, offset * time));
 	n = n * 0.5 + 0.5;
 	int charIndex = int(n * charCount);
 	return vec4(float(charIndex % 256) / 255.0, float(charIndex / 256) / 255.0, 0.0, 0.0);
@@ -30,10 +30,11 @@ export const charOsc = defineTransform({
 	inputs: [
 		{ name: 'frequency', type: 'float', default: 8.0 },
 		{ name: 'sync', type: 'float', default: 0.1 },
+		{ name: 'offset', type: 'float', default: 0.0 },
 		{ name: 'charCount', type: 'float', default: 256.0 },
 	],
 	glsl: `
-	float wave = sin((_st.x + time * sync) * frequency) * 0.5 + 0.5;
+	float wave = sin((_st.x - offset/frequency + time * sync) * frequency) * 0.5 + 0.5;
 	int charIndex = int(wave * charCount);
 	return vec4(float(charIndex % 256) / 255.0, float(charIndex / 256) / 255.0, 0.0, 0.0);
 `,
@@ -44,12 +45,12 @@ export const charGradient = defineTransform({
 	name: 'charGradient',
 	type: 'char',
 	inputs: [
+		{ name: 'speed', type: 'float', default: 0.0 },
 		{ name: 'charCount', type: 'float', default: 256.0 },
-		{ name: 'direction', type: 'float', default: 0.0 },
 	],
 	glsl: `
-	float t = mix(_st.x, _st.y, direction);
-	int charIndex = int(t * charCount);
+	float t = _st.x + sin(time * speed);
+	int charIndex = int(fract(t) * charCount);
 	return vec4(float(charIndex % 256) / 255.0, float(charIndex / 256) / 255.0, 0.0, 0.0);
 `,
 	description: 'Generate characters from gradient',
