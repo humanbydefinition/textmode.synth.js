@@ -177,6 +177,26 @@ export const b = defineTransform({
 	description: 'Extract blue channel',
 });
 
+export const shift = defineTransform({
+	name: 'shift',
+	type: 'color',
+	inputs: [
+		{ name: 'r', type: 'float', default: 0.5 },
+		{ name: 'g', type: 'float', default: 0.0 },
+		{ name: 'b', type: 'float', default: 0.0 },
+		{ name: 'a', type: 'float', default: 0.0 },
+	],
+	glsl: `
+	vec4 c2 = vec4(_c0);
+	c2.r += fract(r);
+	c2.g += fract(g);
+	c2.b += fract(b);
+	c2.a += fract(a);
+	return vec4(c2.rgba);
+`,
+	description: 'Shift color channels by adding offset values',
+});
+
 /**
  * All color transforms.
  */
@@ -194,4 +214,5 @@ export const COLOR_TRANSFORMS: TransformDefinition[] = [
 	r,
 	g,
 	b,
+	shift,
 ];
