@@ -35,6 +35,10 @@ import { ALL_TRANSFORMS } from './transforms/categories';
 import { SynthSource } from './core/SynthSource';
 import type { SynthContext, TransformInput as CoreTransformInput } from './core/types';
 import type { TransformRecord as CoreTransformRecord } from './core/SynthChain';
+import { initArrayUtils } from './lib/ArrayUtils';
+
+// Initialize array utilities (adds .fast(), .smooth(), .ease() to Array.prototype)
+initArrayUtils();
 
 // Register all built-in transforms
 TransformRegistry.registerMany(ALL_TRANSFORMS);
@@ -127,73 +131,81 @@ export { CharacterResolver } from './renderer/CharacterResolver';
 
 // Source generators
 export const osc = generatedFunctions['osc'] as (
-	frequency?: number | ((ctx: SynthContext) => number),
-	sync?: number | ((ctx: SynthContext) => number),
-	offset?: number | ((ctx: SynthContext) => number)
+	frequency?: number | number[] | ((ctx: SynthContext) => number),
+	sync?: number | number[] | ((ctx: SynthContext) => number),
+	offset?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
 export const noise = generatedFunctions['noise'] as (
-	scale?: number | ((ctx: SynthContext) => number),
-	speed?: number | ((ctx: SynthContext) => number)
+	scale?: number | number[] | ((ctx: SynthContext) => number),
+	offset?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
 export const voronoi = generatedFunctions['voronoi'] as (
-	scale?: number | ((ctx: SynthContext) => number),
-	speed?: number | ((ctx: SynthContext) => number),
-	blending?: number | ((ctx: SynthContext) => number)
+	scale?: number | number[] | ((ctx: SynthContext) => number),
+	speed?: number | number[] | ((ctx: SynthContext) => number),
+	blending?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
 export const gradient = generatedFunctions['gradient'] as (
-	speed?: number | ((ctx: SynthContext) => number)
+	speed?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
 export const shape = generatedFunctions['shape'] as (
-	sides?: number | ((ctx: SynthContext) => number),
-	radius?: number | ((ctx: SynthContext) => number),
-	smoothing?: number | ((ctx: SynthContext) => number)
+	sides?: number | number[] | ((ctx: SynthContext) => number),
+	radius?: number | number[] | ((ctx: SynthContext) => number),
+	smoothing?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
 export const solid = generatedFunctions['solid'] as (
-	r?: number | ((ctx: SynthContext) => number),
-	g?: number | ((ctx: SynthContext) => number),
-	b?: number | ((ctx: SynthContext) => number),
-	a?: number | ((ctx: SynthContext) => number)
+	r?: number | number[] | ((ctx: SynthContext) => number),
+	g?: number | number[] | ((ctx: SynthContext) => number),
+	b?: number | number[] | ((ctx: SynthContext) => number),
+	a?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
 // Character sources
 export const charNoise = generatedFunctions['charNoise'] as (
-	scale?: number | ((ctx: SynthContext) => number),
-	speed?: number | ((ctx: SynthContext) => number),
-	charCount?: number | ((ctx: SynthContext) => number)
+	scale?: number | number[] | ((ctx: SynthContext) => number),
+	offset?: number | number[] | ((ctx: SynthContext) => number),
+	charCount?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
 export const charOsc = generatedFunctions['charOsc'] as (
-	frequency?: number | ((ctx: SynthContext) => number),
-	sync?: number | ((ctx: SynthContext) => number),
-	charCount?: number | ((ctx: SynthContext) => number)
+	frequency?: number | number[] | ((ctx: SynthContext) => number),
+	sync?: number | number[] | ((ctx: SynthContext) => number),
+	offset?: number | number[] | ((ctx: SynthContext) => number),
+	charCount?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
 export const charGradient = generatedFunctions['charGradient'] as (
-	charCount?: number | ((ctx: SynthContext) => number),
-	direction?: number | ((ctx: SynthContext) => number)
+	speed?: number | number[] | ((ctx: SynthContext) => number),
+	charCount?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
 export const charVoronoi = generatedFunctions['charVoronoi'] as (
-	scale?: number | ((ctx: SynthContext) => number),
-	speed?: number | ((ctx: SynthContext) => number),
-	charCount?: number | ((ctx: SynthContext) => number)
+	scale?: number | number[] | ((ctx: SynthContext) => number),
+	speed?: number | number[] | ((ctx: SynthContext) => number),
+	charCount?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
 export const charShape = generatedFunctions['charShape'] as (
-	sides?: number | ((ctx: SynthContext) => number),
-	innerChar?: number | ((ctx: SynthContext) => number),
-	outerChar?: number | ((ctx: SynthContext) => number),
-	radius?: number | ((ctx: SynthContext) => number)
+	sides?: number | number[] | ((ctx: SynthContext) => number),
+	innerChar?: number | number[] | ((ctx: SynthContext) => number),
+	outerChar?: number | number[] | ((ctx: SynthContext) => number),
+	radius?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
 export const charSolid = generatedFunctions['charSolid'] as (
-	charIndex?: number | ((ctx: SynthContext) => number)
+	charIndex?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
+
+// ============================================================
+// EXPORTS - Utilities
+// ============================================================
+
+export type { ModulatedArray, EasingFunction } from './lib/ArrayUtils';
+export { getArrayValue, isModulatedArray } from './lib/ArrayUtils';
 
 // ============================================================
 // TYPE AUGMENTATION

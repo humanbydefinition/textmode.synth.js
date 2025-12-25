@@ -7,6 +7,7 @@
 
 import type { SynthParameterValue, SynthContext, SynthUniform, GLSLType } from '../core/types';
 import type { TransformInput } from '../transforms/TransformDefinition';
+import { getArrayValue, isModulatedArray, type ModulatedArray } from '../lib/ArrayUtils';
 
 /**
  * Result of processing a single argument.
@@ -35,6 +36,27 @@ export class UniformManager {
 		input: TransformInput,
 		prefix: string
 	): ProcessedArgument {
+		// Modulated array (Hydra-style) - create uniform
+		if (isModulatedArray(value)) {
+			const uniformName = `${prefix}_${input.name}`;
+			const uniform: SynthUniform = {
+				name: uniformName,
+				type: input.type as GLSLType,
+				value: (input.default as number) ?? 0,
+				isDynamic: true,
+			};
+			
+			const updater = (ctx: SynthContext) => getArrayValue(value as ModulatedArray, ctx);
+			this._uniforms.set(uniformName, uniform);
+			this._dynamicUpdaters.set(uniformName, updater);
+			
+			return {
+				glslValue: uniformName,
+				uniform,
+				updater,
+			};
+		}
+
 		// Dynamic function value - create uniform
 		if (typeof value === 'function') {
 			const uniformName = `${prefix}_${input.name}`;
