@@ -1,0 +1,53 @@
+{
+  "name": "textmode.synth.js",
+  "version": "1.0.0",
+  "description": "Synth engine for textmode.js",
+  "type": "module",
+  "types": "./dist/types/index.d.ts",
+  "main": "./dist/textmode.synth.umd.js",
+  "module": "./dist/textmode.synth.esm.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/textmode.synth.esm.js",
+      "require": "./dist/textmode.synth.umd.js"
+    }
+  },
+  "scripts": {
+    "dev": "vite --port 5174",
+    "build": "vite build && tsc",
+    "preview": "vite preview",
+    "build:docs": "typedoc",
+    "dev:docs": "typedoc --watch"
+  },
+  "devDependencies": {
+    "@rollup/plugin-terser": "^0.4.4",
+    "@types/node": "^24.5.2",
+    "terser": "^5.44.0",
+    "typedoc": "^0.28.13",
+    "typedoc-plugin-markdown": "^4.9.0",
+    "typescript": "~5.8.3",
+    "vite": "^7.1.7",
+    "vite-plugin-css-injected-by-js": "^3.5.2"
+  },
+  "peerDependencies": {
+    "textmode.js": "^0.8.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/humanbydefinition/textmode.synth.js.git"
+  },
+  "keywords": [
+    "textmode",
+    "textmode.js"
+  ],
+  "author": "humanbydefinition",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/humanbydefinition/textmode.synth.js/issues"
+  },
+  "homepage": "https://code.textmode.art",
+  "files": [
+    "dist"
+  ]
+}

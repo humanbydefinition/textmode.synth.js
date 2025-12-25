@@ -1,0 +1,102 @@
+body {
+	margin: 0;
+	padding: 20px;
+	background-color: #000;
+	color: #fff;
+	font-family: Arial, sans-serif;
+}
+
+#textmode-canvas {
+	border: 1px solid #333;
+}
+
+.controls {
+	margin-top: 15px;
+}
+
+.controls label {
+	margin-right: 10px;
+}
+
+.controls input {
+	width: 200px;
+}
+
+.controls span {
+	margin-left: 10px;
+	color: #888;
+}
+
+/* Directory index styles */
+.directory {
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.directory h1 {
+	margin-bottom: 10px;
+	font-size: 32px;
+}
+
+.directory p {
+	color: #888;
+	margin-bottom: 40px;
+}
+
+.examples-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+	gap: 20px;
+	margin-top: 30px;
+}
+
+.example-card {
+	background-color: #111;
+	border: 1px solid #333;
+	border-radius: 8px;
+	padding: 20px;
+	color: #fff;
+	transition: all 0.3s ease;
+}
+
+.example-card:hover {
+	border-color: #666;
+	background-color: #1a1a1a;
+}
+
+.example-card h2 {
+	margin: 0 0 8px 0;
+	font-size: 20px;
+	color: #fff;
+}
+
+.example-card p {
+	margin: 0 0 12px 0;
+	color: #888;
+	font-size: 14px;
+	line-height: 1.5;
+}
+
+.example-links {
+	display: flex;
+	gap: 8px;
+	flex-wrap: wrap;
+}
+
+.example-links a {
+	background-color: #222;
+	border: 1px solid #444;
+	padding: 4px 12px;
+	border-radius: 4px;
+	text-decoration: none;
+	color: #4CAF50;
+	font-size: 14px;
+	font-weight: bold;
+	transition: all 0.2s ease;
+}
+
+.example-links a:hover {
+	background-color: #333;
+	border-color: #666;
+	transform: translateY(-1px);
+}
