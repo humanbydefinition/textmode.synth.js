@@ -9,27 +9,22 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charOsc(50, 1, 1, 16)
-		.rotate((ctx) => ctx.time % 360, (ctx) => Math.sin(ctx.time * 0.1) * 0.05)
+	charShape(3)
+		.repeatY(3, 0)
 
 		.charColor(
-			osc(10, 1, 1)
-			.rotate((ctx) => ctx.time % 360, (ctx) => Math.sin(ctx.time * 0.1) * 0.05)
+			shape()
+				.repeatY(3, 0)
 		)
 
 		.cellColor(
-			osc(10, 1, 1)
-			.invert()
-			.rotate((ctx) => ctx.time % 360, (ctx) => Math.sin(ctx.time * 0.1) * 0.05)
+			shape()
+				.repeatY(3, 0)
+				.invert()
 		)
 );
 
 t.draw(() => {
-	//t.clear();
-	//synthLayer.synthRender();
-
-	// t.char("A");
-	// t.rect(t.grid.cols / 2, t.grid.rows / 2);
 });
 
 t.windowResized(() => {

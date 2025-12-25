@@ -9,18 +9,19 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charOsc(50, 1, 1, 16)
-		.rotate((ctx) => ctx.time % 360, (ctx) => Math.sin(ctx.time * 0.1) * 0.05)
+	charOsc(5, 0, 1, 32)
+		.repeatY([1,2,5,10], (ctx) => Math.sin(ctx.time))
+
 
 		.charColor(
-			osc(10, 1, 1)
-			.rotate((ctx) => ctx.time % 360, (ctx) => Math.sin(ctx.time * 0.1) * 0.05)
+			osc(5, 0, 1)
+				.repeatY([1,2,5,10], (ctx) => Math.sin(ctx.time))
 		)
 
 		.cellColor(
-			osc(10, 1, 1)
-			.invert()
-			.rotate((ctx) => ctx.time % 360, (ctx) => Math.sin(ctx.time * 0.1) * 0.05)
+			osc(5, 0, 1)
+				.repeatY([1,2,5,10], (ctx) => Math.sin(ctx.time))
+				.invert()
 		)
 );
 

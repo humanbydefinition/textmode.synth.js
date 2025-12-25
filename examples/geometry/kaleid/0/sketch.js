@@ -9,7 +9,7 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charOsc(25, -0.1, 32)
+	charOsc(25, -0.1, 0.5, 32)
 		.kaleid(50)
 
 		.charColor(

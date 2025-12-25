@@ -9,7 +9,7 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charOsc(50, 0, 16)
+	charOsc(50, 0, 0, 16)
 		.rotate((ctx) => ctx.time % 360)
 
 		.charColor(

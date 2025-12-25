@@ -2,37 +2,33 @@ import { textmode } from 'textmode.js';
 import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
 
 const t = textmode.create({
-    width: window.innerWidth,
-    height: window.innerHeight,
-    fontSize: 16,
-    plugins: [SynthPlugin]
+	width: window.innerWidth,
+	height: window.innerHeight,
+	fontSize: 16,
+	plugins: [SynthPlugin]
 });
 
 t.layers.base.synth(
-	charOsc(25, -0.1, 0.5, 32)
-		.kaleid(4)
-		.kaleid(4)
+	charOsc(10, 0, 1, 16)
+		.rotate(1.57)
+		.scrollY([0, 0.25, 0.5, 0.75, 1].fast(4), 0)
 
 		.charColor(
-			osc(25, -0.1, 0.5)
-				.kaleid(4)
-				.kaleid(4)
+			osc(10, 0, 1)
+				.rotate(1.57)
+				.scrollY([0, 0.25, 0.5, 0.75, 1].fast(4), 0)
 		)
 
 		.cellColor(
-			osc(25, -0.1, 0.5)
-				.kaleid(4)
-				.kaleid(4)
+			osc(10, 0, 1)
+				.rotate(1.57)
+				.scrollY([0, 0.25, 0.5, 0.75, 1].fast(4), 0)
 				.invert()
 		)
 );
 
 t.draw(() => {
-	//t.clear();
-	//synthLayer.synthRender();
 
-	// t.char("A");
-	// t.rect(t.grid.cols / 2, t.grid.rows / 2);
 });
 
 t.windowResized(() => {

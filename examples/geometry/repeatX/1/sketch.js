@@ -9,21 +9,21 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charOsc(5, 0, 32)
+	charOsc(5, 0, 1, 32)
 		.rotate(1.57)
-		.repeatX(2, (ctx) => Math.sin(ctx.time))
+		.repeatX([1,2,5,10], (ctx) => Math.sin(ctx.time))
 
 
 		.charColor(
 			osc(5, 0, 1)
 				.rotate(1.57)
-				.repeatX(2, (ctx) => Math.sin(ctx.time))
+				.repeatX([1,2,5,10], (ctx) => Math.sin(ctx.time))
 		)
 
 		.cellColor(
 			osc(5, 0, 1)
 				.rotate(1.57)
-				.repeatX(2, (ctx) => Math.sin(ctx.time))
+				.repeatX([1,2,5,10], (ctx) => Math.sin(ctx.time))
 				.invert()
 		)
 );

@@ -8,25 +8,13 @@ const t = textmode.create({
     plugins: [SynthPlugin]
 });
 
+
 t.layers.base.synth(
-	charSolid([16, 17, 18])
-
-	.charColor(
-		solid([1,0,0],[0,1,0],[0,0,1],1)
-	)
-
-	.cellColor(
-		solid([1,0,0],[0,1,0],[0,0,1],1)
-		.invert()
-	)
+	// not yet implemented
 );
 
 t.draw(() => {
-	//t.clear();
-	//synthLayer.synthRender();
 
-	// t.char("A");
-	// t.rect(t.grid.cols / 2, t.grid.rows / 2);
 });
 
 t.windowResized(() => {
