@@ -110,6 +110,64 @@ export const modulateScrollY = defineTransform({
 	description: 'Modulate Y scroll with another source',
 });
 
+export const modulateRepeat = defineTransform({
+	name: 'modulateRepeat',
+	type: 'combineCoord',
+	inputs: [
+		{ name: 'repeatX', type: 'float', default: 3.0 },
+		{ name: 'repeatY', type: 'float', default: 3.0 },
+		{ name: 'offsetX', type: 'float', default: 0.5 },
+		{ name: 'offsetY', type: 'float', default: 0.5 },
+	],
+	glsl: `
+	vec2 st = _st * vec2(repeatX, repeatY);
+	st.x += step(1.0, mod(st.y, 2.0)) + _c0.r * offsetX;
+	st.y += step(1.0, mod(st.x, 2.0)) + _c0.g * offsetY;
+	return fract(st);
+`,
+	description: 'Modulate repeat pattern with another source',
+});
+
+export const modulateRepeatX = defineTransform({
+	name: 'modulateRepeatX',
+	type: 'combineCoord',
+	inputs: [
+		{ name: 'reps', type: 'float', default: 3.0 },
+		{ name: 'offset', type: 'float', default: 0.5 },
+	],
+	glsl: `
+	vec2 st = _st * vec2(reps, 1.0);
+	st.y += step(1.0, mod(st.x, 2.0)) + _c0.r * offset;
+	return fract(st);
+`,
+	description: 'Modulate X repeat with another source',
+});
+
+export const modulateRepeatY = defineTransform({
+	name: 'modulateRepeatY',
+	type: 'combineCoord',
+	inputs: [
+		{ name: 'reps', type: 'float', default: 3.0 },
+		{ name: 'offset', type: 'float', default: 0.5 },
+	],
+	glsl: `
+	vec2 st = _st * vec2(1.0, reps);
+	st.x += step(1.0, mod(st.y, 2.0)) + _c0.r * offset;
+	return fract(st);
+`,
+	description: 'Modulate Y repeat with another source',
+});
+
+export const modulateHue = defineTransform({
+	name: 'modulateHue',
+	type: 'combineCoord',
+	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
+	glsl: `
+	return _st + (vec2(_c0.g - _c0.r, _c0.b - _c0.g) * amount * 1.0 / resolution);
+`,
+	description: 'Modulate coordinates based on hue differences',
+});
+
 /**
  * All combine coordinate transforms.
  */
@@ -121,4 +179,8 @@ export const COMBINE_COORD_TRANSFORMS: TransformDefinition[] = [
 	modulateKaleid,
 	modulateScrollX,
 	modulateScrollY,
+	modulateRepeat,
+	modulateRepeatX,
+	modulateRepeatY,
+	modulateHue,
 ];
