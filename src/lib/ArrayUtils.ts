@@ -75,17 +75,17 @@ function map(num: number, inMin: number, inMax: number, outMin: number, outMax: 
 export function initArrayUtils(): void {
 	if ('fast' in Array.prototype) return; // Already initialized
 
-	Array.prototype.fast = function (this: ModulatedArray, speed = 1) {
+	(Array.prototype as any).fast = function (this: ModulatedArray, speed = 1) {
 		this._speed = speed;
 		return this;
 	};
 
-	Array.prototype.smooth = function (this: ModulatedArray, smooth = 1) {
+	(Array.prototype as any).smooth = function (this: ModulatedArray, smooth = 1) {
 		this._smooth = smooth;
 		return this;
 	};
 
-	Array.prototype.ease = function (this: ModulatedArray, ease: EasingFunction = 'linear') {
+	(Array.prototype as any).ease = function (this: ModulatedArray, ease: EasingFunction = 'linear') {
 		if (typeof ease === 'function') {
 			this._smooth = 1;
 			this._ease = ease;
@@ -96,12 +96,12 @@ export function initArrayUtils(): void {
 		return this;
 	};
 
-	Array.prototype.offset = function (this: ModulatedArray, offset = 0.5) {
+	(Array.prototype as any).offset = function (this: ModulatedArray, offset = 0.5) {
 		this._offset = offset % 1.0;
 		return this;
 	};
 
-	Array.prototype.fit = function (this: ModulatedArray, low = 0, high = 1): ModulatedArray {
+	(Array.prototype as any).fit = function (this: ModulatedArray, low = 0, high = 1): ModulatedArray {
 		const lowest = Math.min(...this);
 		const highest = Math.max(...this);
 		const newArr = this.map((num) => map(num, lowest, highest, low, high)) as ModulatedArray;

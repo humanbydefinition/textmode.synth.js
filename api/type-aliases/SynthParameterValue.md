@@ -1,0 +1,23 @@
+[textmode.synth.js](../index.md) / SynthParameterValue
+
+# Type Alias: SynthParameterValue
+
+```ts
+type SynthParameterValue = 
+  | number
+  | number[]
+  | string
+  | (ctx) => number
+  | (ctx) => number[]
+  | ISynthSource
+  | null;
+```
+
+Dynamic parameter value types supported by the synth system.
+
+- `number`: Static numeric value
+- `number[]`: Array of numbers for vector types or modulated arrays (Hydra-style)
+- `string`: String value (rarely used)
+- `function`: Evaluated each frame with context
+- `ISynthSource`: Nested synth chain for combine/modulate operations
+- `null`: Use default value

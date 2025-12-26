@@ -4,23 +4,23 @@
  * This class manages the shader program, uniforms, and rendering to MRT framebuffers.
  */
 
-import type { GLRenderer, GLShader, GLFramebuffer } from '../../../rendering';
-import type { TextmodeFont } from '../../loadables/font/TextmodeFont';
+// import type { GLRenderer, GLShader } from '../../../rendering';
+import type { loadables, TextmodeFramebuffer } from 'textmode.js';
 import type { SynthContext } from '../core/types';
 import type { CompiledSynthShader } from '../compiler/types';
 import { SYNTH_VERTEX_SHADER } from '../compiler/GLSLGenerator';
 import { CharacterResolver } from './CharacterResolver';
-import { Textmodifier } from 'textmode.js';
+// import { Textmodifier } from 'textmode.js';
 
 /**
  * Renderer for compiled synth shaders.
  */
 export class SynthRenderer {
-    private readonly _textmodifier: Textmodifier;
+    private readonly _textmodifier: any;
 	private readonly _gl: WebGL2RenderingContext;
 	private readonly _characterResolver: CharacterResolver;
 	
-	private _shader?: GLShader;
+	private _shader?: any;
 	private _compiled?: CompiledSynthShader;
 	private _uniformLocations = new Map<string, WebGLUniformLocation>();
 	private _vao?: WebGLVertexArrayObject;
@@ -30,7 +30,7 @@ export class SynthRenderer {
 	 * Create a SynthRenderer.
 	 * @param renderer The GLRenderer instance
 	 */
-	constructor(textmodifier: Textmodifier, renderer: GLRenderer) {
+	constructor(textmodifier: any, renderer: any) {
         this._textmodifier = textmodifier;
 		this._gl = renderer.context as WebGL2RenderingContext;
 		this._characterResolver = new CharacterResolver();
@@ -123,11 +123,11 @@ export class SynthRenderer {
 	 * @param font The font to use for resolving character indices
 	 */
 	public render(
-		target: GLFramebuffer,
+		target: TextmodeFramebuffer,
 		width: number,
 		height: number,
 		context: SynthContext,
-		font: TextmodeFont
+		font: loadables.TextmodeFont
 	): void {
 		if (!this._shader || !this._compiled || !this._vao) {
 			console.warn('[SynthRenderer] Cannot render: missing shader, compiled data, or VAO');

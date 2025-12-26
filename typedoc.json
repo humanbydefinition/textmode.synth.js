@@ -1,0 +1,32 @@
+{
+    "entryPoints": [
+        "src/index.ts",
+    ],
+    "out": "api",
+    "readme": "none",
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "excludeExternals": false,
+    "includeVersion": false,
+    "disableSources": true,
+    "useCodeBlocks": true,
+    "tsconfig": "tsconfig.json",
+    "exclude": [
+        "**/node_modules/**"
+    ],
+    "logLevel": "Verbose",
+    "plugin": [
+        "typedoc-plugin-markdown",
+        "typedoc-vitepress-theme",
+        "./typedoc-plugins/flattened-namespaces-router.js"
+    ],
+    "router": "flattened-namespaces",
+    "indexFormat": "table",
+    "parametersFormat": "table",
+    "interfacePropertiesFormat": "table",
+    "classPropertiesFormat": "table",
+    "enumMembersFormat": "table",
+    "propertyMembersFormat": "table",
+    "typeDeclarationFormat": "table",
+    "cleanOutputDir": true,
+}

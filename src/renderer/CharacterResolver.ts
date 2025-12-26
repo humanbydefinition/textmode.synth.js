@@ -5,7 +5,7 @@
  * positions, with caching for performance.
  */
 
-import type { TextmodeFont } from '../../loadables/font/TextmodeFont';
+import type { loadables } from 'textmode.js';
 
 /**
  * Resolver for character indices using font data.
@@ -23,7 +23,7 @@ export class CharacterResolver {
 	 * @param font The font to use for resolution
 	 * @returns Array of resolved font indices
 	 */
-	public resolve(chars: string, font: TextmodeFont): Int32Array {
+	public resolve(chars: string, font: loadables.TextmodeFont): Int32Array {
 		// Check if we can reuse cached indices
 		const fontCharCount = font.characters.length;
 		if (

@@ -24,11 +24,12 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@types/node": "^24.5.2",
     "terser": "^5.44.0",
-    "typedoc": "^0.28.13",
-    "typedoc-plugin-markdown": "^4.9.0",
     "typescript": "~5.8.3",
     "vite": "^7.1.7",
-    "vite-plugin-css-injected-by-js": "^3.5.2"
+    "vite-plugin-css-injected-by-js": "^3.5.2",
+    "typedoc": "^0.28.13",
+    "typedoc-plugin-markdown": "^4.7.0",
+    "typedoc-vitepress-theme": "^1.1.2"
   },
   "peerDependencies": {
     "textmode.js": "^0.8.1"

@@ -1,13 +1,22 @@
 /**
- * Textmode Synth Module
+ * textmode.synth.js
  *
- * A hydra-inspired chainable visual synthesis system for textmode.js.
+ * A `hydra`-inspired chainable visual synthesis system for `textmode.js`.
  * Enables procedural generation of characters, colors, and visual effects
  * through method chaining.
  *
  * @example
  * ```ts
- * import { charNoise, osc, solid } from 'textmode.js';
+ * import { textmode } from 'textmode.js';
+ * import { SynthPlugin, charNoise, osc, solid } from 'textmode.synth.js';
+ *
+ * // Create textmode instance with SynthPlugin
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   fontSize: 16,
+ *   plugins: [SynthPlugin]
+ * });
  *
  * // Create a synth chain with procedural characters and colors
  * const synth = charNoise(10)
@@ -17,8 +26,8 @@
  *   .cellColor(solid(0, 0, 0, 0.5))
  *   .scroll(0.1, 0);
  *
- * // Apply to a layer
- * t.layers.add('synth', { synth });
+ * // Apply synth to the base layer
+ * t.layers.base.synth(synth);
  * ```
  *
  * @packageDocumentation
@@ -33,8 +42,8 @@ import { TransformRegistry } from './transforms/TransformRegistry';
 import { TransformFactory } from './transforms/TransformFactory';
 import { ALL_TRANSFORMS } from './transforms/categories';
 import { SynthSource } from './core/SynthSource';
-import type { SynthContext, TransformInput as CoreTransformInput } from './core/types';
-import type { TransformRecord as CoreTransformRecord } from './core/SynthChain';
+import type { SynthContext, /* TransformInput */ } from './core/types';
+// import type { TransformRecord as CoreTransformRecord } from './core/SynthChain';
 import { initArrayUtils } from './lib/ArrayUtils';
 
 // Initialize array utilities (adds .fast(), .smooth(), .ease() to Array.prototype)
@@ -44,7 +53,7 @@ initArrayUtils();
 TransformRegistry.registerMany(ALL_TRANSFORMS);
 
 // Set up the SynthSource class for method injection
-TransformFactory.setSynthSourceClass(SynthSource as unknown as new () => { 
+TransformFactory.setSynthSourceClass(SynthSource as unknown as new () => {
 	_addTransform(name: string, userArgs: unknown[]): unknown;
 	_addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
 });
@@ -213,25 +222,25 @@ export { getArrayValue, isModulatedArray } from './lib/ArrayUtils';
 // ============================================================
 
 declare module 'textmode.js' {
-    interface TextmodeLayer {
-        /**
-         * Set a synth source for this layer.
-         * 
-         * The synth will render procedurally generated characters and colors
-         * directly to the layer's MRT framebuffer before the draw callback runs.
-         * 
-         * @param source A SynthSource chain defining the procedural generation
-         */
-        synth(source: SynthSource): void;
+	interface TextmodeLayer {
+		/**
+		 * Set a synth source for this layer.
+		 * 
+		 * The synth will render procedurally generated characters and colors
+		 * directly to the layer's MRT framebuffer before the draw callback runs.
+		 * 
+		 * @param source A SynthSource chain defining the procedural generation
+		 */
+		synth(source: SynthSource): void;
 
-        /**
-         * Clear the synth source from this layer.
-         */
-        clearSynth(): void;
+		/**
+		 * Clear the synth source from this layer.
+		 */
+		clearSynth(): void;
 
-        /**
-         * Check if this layer has a synth source.
-         */
-        hasSynth(): boolean;
-    }
+		/**
+		 * Check if this layer has a synth source.
+		 */
+		hasSynth(): boolean;
+	}
 }

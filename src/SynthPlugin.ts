@@ -5,14 +5,15 @@
  * to TextmodeLayer instances, enabling hydra-like procedural generation.
  */
 
-import type { 
-    TextmodePlugin, 
-    TextmodePluginAPI, 
-    LayerRenderContext 
+import type {
+    TextmodePlugin,
+    TextmodePluginAPI,
+    LayerRenderContext,
+    loadables,
+    layering 
 } from 'textmode.js';
-import type { TextmodeLayer } from 'textmode.js/layering';
-import type { TextmodeFont } from 'textmode.js/loadables';
-import type { GLRenderer, GLFramebuffer } from 'textmode.js';
+
+import type { TextmodeFramebuffer, /*GLRenderer*/ } from 'textmode.js';
 
 import { SynthSource } from './core/SynthSource';
 import { compileSynthSource } from './compiler/SynthCompiler';
@@ -73,7 +74,7 @@ export const SynthPlugin: TextmodePlugin = {
         // ============================================================
         // EXTEND LAYER WITH .synth() METHOD
         // ============================================================
-        api.extendLayer('synth', function(this: TextmodeLayer, source: SynthSource): void {
+        api.extendLayer('synth', function (this: layering.TextmodeLayer, source: SynthSource): void {
             const now = performance.now() / 1000;
 
             // Check if layer is already initialized (has grid and drawFramebuffer)
@@ -81,13 +82,13 @@ export const SynthPlugin: TextmodePlugin = {
 
             // Get existing state or create new
             let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
-            
+
             if (state) {
                 // Update existing state with new source
                 state.source = source;
                 state.startTime = now;
                 state.shaderNeedsUpdate = true;
-                
+
                 // If already initialized, compile immediately
                 if (isInitialized && state.renderer) {
                     state.compiled = compileSynthSource(source);
@@ -110,7 +111,7 @@ export const SynthPlugin: TextmodePlugin = {
             }
 
             this.setPluginState(PLUGIN_NAME, state);
-            
+
             // Mark that this layer has renderable plugin content
             this.setPluginState('__hasRenderableContent__', true);
         });
@@ -118,7 +119,7 @@ export const SynthPlugin: TextmodePlugin = {
         // ============================================================
         // EXTEND LAYER WITH .clearSynth() METHOD
         // ============================================================
-        api.extendLayer('clearSynth', function(this: TextmodeLayer): void {
+        api.extendLayer('clearSynth', function (this: layering.TextmodeLayer): void {
             const state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
             if (state?.renderer) {
                 state.renderer.dispose();
@@ -129,14 +130,14 @@ export const SynthPlugin: TextmodePlugin = {
         // ============================================================
         // EXTEND LAYER WITH .hasSynth() METHOD
         // ============================================================
-        api.extendLayer('hasSynth', function(this: TextmodeLayer): boolean {
+        api.extendLayer('hasSynth', function (this: layering.TextmodeLayer): boolean {
             return this.hasPluginState(PLUGIN_NAME);
         });
 
         // ============================================================
         // LAYER PRE-RENDER HOOK - Render synth before user draw
         // ============================================================
-        api.registerLayerPreRenderHook(async (layer: TextmodeLayer, context: LayerRenderContext) => {
+        api.registerLayerPreRenderHook(async (layer: layering.TextmodeLayer, context: LayerRenderContext) => {
             const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
             if (!state) {
                 return;
@@ -144,7 +145,7 @@ export const SynthPlugin: TextmodePlugin = {
 
             const grid = layer.grid;
             const drawFramebuffer = layer.drawFramebuffer;
-            
+
             if (!grid || !drawFramebuffer) {
                 // Layer not yet initialized, skip this frame
                 return;
@@ -159,7 +160,7 @@ export const SynthPlugin: TextmodePlugin = {
 
             // Lazy initialization of SynthRenderer
             if (!state.renderer) {
-                state.renderer = new SynthRenderer(textmodifier, glRenderer as unknown as GLRenderer);
+                state.renderer = new SynthRenderer(textmodifier, glRenderer as unknown as any);
                 state.shaderNeedsUpdate = true;
             }
 
@@ -172,7 +173,7 @@ export const SynthPlugin: TextmodePlugin = {
             // Build synth context
             const now = performance.now() / 1000;
             const mouse = (context.textmodifier as any).mouse;
-            
+
             const synthContext: SynthContext = {
                 time: now - state.startTime,
                 frameCount: context.frameCount,
@@ -186,11 +187,11 @@ export const SynthPlugin: TextmodePlugin = {
 
             // Render synth to the layer's MRT framebuffer
             state.renderer.render(
-                drawFramebuffer as unknown as GLFramebuffer,
+                drawFramebuffer as unknown as TextmodeFramebuffer,
                 grid.cols,
                 grid.rows,
                 synthContext,
-                layer.font as unknown as TextmodeFont
+                layer.font as unknown as loadables.TextmodeFont
             );
 
             // Mark that this layer has renderable content for this frame
@@ -200,7 +201,7 @@ export const SynthPlugin: TextmodePlugin = {
         // ============================================================
         // LAYER DISPOSED HOOK - Clean up synth resources
         // ============================================================
-        api.registerLayerDisposedHook((layer: TextmodeLayer) => {
+        api.registerLayerDisposedHook((layer: layering.TextmodeLayer) => {
             const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
             if (state?.renderer) {
                 state.renderer.dispose();
@@ -208,7 +209,7 @@ export const SynthPlugin: TextmodePlugin = {
         });
     },
 
-    uninstall(textmodifier, api: TextmodePluginAPI) {
+    uninstall(_textmodifier, api: TextmodePluginAPI) {
         // Clean up all synth renderers
         const allLayers = [api.layerManager.base, ...api.layerManager.all];
         for (const layer of allLayers) {
