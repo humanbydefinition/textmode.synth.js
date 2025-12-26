@@ -1,10 +1,3 @@
-/**
- * UniformManager - Handles uniform extraction and management.
- * 
- * This module processes transform arguments and creates uniform
- * definitions for dynamic values that need to be updated each frame.
- */
-
 import type { SynthParameterValue, SynthContext, SynthUniform, GLSLType } from '../core/types';
 import type { TransformInput } from '../transforms/TransformDefinition';
 import { getArrayValue, isModulatedArray, type ModulatedArray } from '../lib/ArrayUtils';
@@ -22,7 +15,10 @@ export interface ProcessedArgument {
 }
 
 /**
- * Manager for shader uniforms.
+ * Handles uniform extraction and management.
+ * 
+ * This module processes transform arguments and creates uniform
+ * definitions for dynamic values that need to be updated each frame.
  */
 export class UniformManager {
 	private readonly _uniforms = new Map<string, SynthUniform>();

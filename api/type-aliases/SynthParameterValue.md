@@ -9,7 +9,7 @@ type SynthParameterValue =
   | string
   | (ctx) => number
   | (ctx) => number[]
-  | ISynthSource
+  | SynthSource
   | null;
 ```
 
@@ -19,5 +19,5 @@ Dynamic parameter value types supported by the synth system.
 - `number[]`: Array of numbers for vector types or modulated arrays (Hydra-style)
 - `string`: String value (rarely used)
 - `function`: Evaluated each frame with context
-- `ISynthSource`: Nested synth chain for combine/modulate operations
+- `SynthSource`: Nested synth chain for combine/modulate operations
 - `null`: Use default value

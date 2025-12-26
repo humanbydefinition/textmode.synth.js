@@ -15,8 +15,8 @@ import type { SynthParameterValue } from '../core/types';
  * This is used to avoid circular dependencies.
  */
 export interface SynthSourcePrototype {
-	_addTransform(name: string, userArgs: SynthParameterValue[]): unknown;
-	_addCombineTransform(name: string, source: unknown, userArgs: SynthParameterValue[]): unknown;
+	addTransform(name: string, userArgs: SynthParameterValue[]): unknown;
+	addCombineTransform(name: string, source: unknown, userArgs: SynthParameterValue[]): unknown;
 }
 
 /**
@@ -72,7 +72,7 @@ class TransformFactoryImpl {
 				...args: SynthParameterValue[]
 			) {
 				const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);
-				return this._addCombineTransform(name, source, resolvedArgs);
+				return this.addCombineTransform(name, source, resolvedArgs);
 			};
 		} else {
 			// Standard transform - just takes parameter values
@@ -81,7 +81,7 @@ class TransformFactoryImpl {
 				...args: SynthParameterValue[]
 			) {
 				const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);
-				return this._addTransform(name, resolvedArgs);
+				return this.addTransform(name, resolvedArgs);
 			};
 		}
 	}
@@ -106,7 +106,7 @@ class TransformFactoryImpl {
 				functions[name] = (...args: SynthParameterValue[]) => {
 					const source = new SynthSource();
 					const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);
-					return source._addTransform(name, resolvedArgs);
+					return source.addTransform(name, resolvedArgs);
 				};
 			}
 		}
@@ -143,7 +143,7 @@ class TransformFactoryImpl {
 			this._generatedFunctions[name] = (...args: SynthParameterValue[]) => {
 				const source = new SynthSource();
 				const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);
-				return source._addTransform(name, resolvedArgs);
+				return source.addTransform(name, resolvedArgs);
 			};
 		}
 	}

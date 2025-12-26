@@ -4,14 +4,14 @@ import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVorono
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 2,
+	fontSize: 8,
 	plugins: [SynthPlugin]
 });
 
 t.layers.base.synth(
 	charVoronoi(100, 3, 16)
 		.modulateRotate(osc(1, 0.5, 0).kaleid(50).scale(0.5), 15, 0)
-		.mult(osc(50, -0.1, 8).kaleid(9))
+		//.mult(osc(50, -0.1, 8).kaleid(9))
 
 
 		.charColor(

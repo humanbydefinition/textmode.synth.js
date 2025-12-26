@@ -6,11 +6,9 @@
  * context interfaces, and shader compilation types.
  */
 
-/**
- * Forward declaration for SynthSource to avoid circular imports.
- */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ISynthSource {}
+import { SynthSource } from "./SynthSource";
+
+
 
 /**
  * Transform type categories determining how functions compose in the shader pipeline.
@@ -61,7 +59,7 @@ export interface TransformInput {
  * - `number[]`: Array of numbers for vector types or modulated arrays (Hydra-style)
  * - `string`: String value (rarely used)
  * - `function`: Evaluated each frame with context
- * - `ISynthSource`: Nested synth chain for combine/modulate operations
+ * - `SynthSource`: Nested synth chain for combine/modulate operations
  * - `null`: Use default value
  */
 export type SynthParameterValue =
@@ -70,7 +68,7 @@ export type SynthParameterValue =
 	| string
 	| ((ctx: SynthContext) => number)
 	| ((ctx: SynthContext) => number[])
-	| ISynthSource
+	| SynthSource
 	| null;
 
 /**

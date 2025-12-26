@@ -1,14 +1,8 @@
-/**
- * CharacterResolver - Handles font character resolution for synth rendering.
- * 
- * This module manages the mapping from character indices to font atlas
- * positions, with caching for performance.
- */
-
 import type { loadables } from 'textmode.js';
 
 /**
  * Resolver for character indices using font data.
+ * @ignore
  */
 export class CharacterResolver {
 	private _resolvedIndices?: Int32Array;

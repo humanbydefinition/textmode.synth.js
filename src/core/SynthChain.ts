@@ -60,7 +60,7 @@ export class SynthChain {
 	 * Push a transform to this chain (internal mutation).
 	 * @internal
 	 */
-	public $push(record: TransformRecord): void {
+	public push(record: TransformRecord): void {
 		this._transforms.push(record);
 	}
 

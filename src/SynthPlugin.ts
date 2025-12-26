@@ -39,10 +39,10 @@ interface LayerSynthState {
     needsInitialization: boolean;
 }
 
-const PLUGIN_NAME = 'textmode-synth';
+const PLUGIN_NAME = 'textmode.synth.js';
 
 /**
- * The textmode-synth plugin.
+ * The `textmode.synth.js` plugin to install.
  * 
  * Install this plugin to enable `.synth()` on TextmodeLayer instances.
  * 

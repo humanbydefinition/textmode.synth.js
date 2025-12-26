@@ -10,7 +10,7 @@ import type { SynthContext } from '../core/types';
 /**
  * Easing functions from https://gist.github.com/gre/1650294
  */
-const EASING_FUNCTIONS = {
+export const EASING_FUNCTIONS = {
 	linear: (t: number) => t,
 	easeInQuad: (t: number) => t * t,
 	easeOutQuad: (t: number) => t * (2 - t),
@@ -27,6 +27,34 @@ const EASING_FUNCTIONS = {
 	sin: (t: number) => (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2,
 };
 
+/**
+ * Easing functions from https://gist.github.com/gre/1650294
+ * 
+ * Available easing functions: `'linear'`, `'easeInQuad'`, `'easeOutQuad'`, `'easeInOutQuad'`,
+ * `'easeInCubic'`, `'easeOutCubic'`, `'easeInOutCubic'`, `'easeInQuart'`, `'easeOutQuart'`,
+ * `'easeInOutQuart'`, `'easeInQuint'`, `'easeOutQuint'`, `'easeInOutQuint'`, `'sin'`
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Rotating shape with eased animation
+ * t.layers.base.synth(
+ *   charShape(4)
+ *     .rotate([-3.14, 3.14].ease('easeInOutCubic'))
+ *     .charColor(
+ *       shape(4).rotate([-3.14, 3.14].ease('easeInOutCubic'))
+ *     )
+ *     .cellColor(
+ *       shape(4).rotate([-3.14, 3.14].ease('easeInOutCubic')).invert()
+ *     )
+ * );
+ * ```
+ */
 export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => number);
 
 /**

@@ -6,7 +6,7 @@
 const SynthPlugin: TextmodePlugin;
 ```
 
-The textmode-synth plugin.
+The `textmode.synth.js` plugin to install.
 
 Install this plugin to enable `.synth()` on TextmodeLayer instances.
 

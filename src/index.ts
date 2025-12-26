@@ -1,6 +1,4 @@
 /**
- * textmode.synth.js
- *
  * A `hydra`-inspired chainable visual synthesis system for `textmode.js`.
  * Enables procedural generation of characters, colors, and visual effects
  * through method chaining.
@@ -54,14 +52,14 @@ TransformRegistry.registerMany(ALL_TRANSFORMS);
 
 // Set up the SynthSource class for method injection
 TransformFactory.setSynthSourceClass(SynthSource as unknown as new () => {
-	_addTransform(name: string, userArgs: unknown[]): unknown;
-	_addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
+	addTransform(name: string, userArgs: unknown[]): unknown;
+	addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
 });
 
 // Inject chainable methods into SynthSource prototype
 TransformFactory.injectMethods(SynthSource.prototype as unknown as {
-	_addTransform(name: string, userArgs: unknown[]): unknown;
-	_addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
+	addTransform(name: string, userArgs: unknown[]): unknown;
+	addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
 });
 
 // Generate standalone functions for source transforms
@@ -77,61 +75,13 @@ export type {
 	SynthTransformType,
 	SynthParameterValue,
 	SynthContext,
-	SynthUniform,
-	CharacterMapping,
-	SynthSourceOptions,
-	ISynthSource,
-	GLSLType,
-	TransformInput,
 } from './core/types';
-
-export { TRANSFORM_TYPE_INFO, createCharacterMapping } from './core/types';
 
 // ============================================================
 // EXPORTS - Core classes
 // ============================================================
 
 export { SynthSource } from './core/SynthSource';
-export { SynthChain, type TransformRecord } from './core/SynthChain';
-
-// ============================================================
-// EXPORTS - Transforms
-// ============================================================
-
-export type { TransformDefinition, ProcessedTransform } from './transforms/TransformDefinition';
-export { defineTransform, processTransform, getDefaultArgs, requiresNestedSource, isSourceType } from './transforms/TransformDefinition';
-export { TransformRegistry } from './transforms/TransformRegistry';
-export { TransformFactory, type GeneratedFunctions, type SynthSourcePrototype } from './transforms/TransformFactory';
-
-// Re-export all transform definitions
-export {
-	ALL_TRANSFORMS,
-	SOURCE_TRANSFORMS,
-	COORD_TRANSFORMS,
-	COLOR_TRANSFORMS,
-	COMBINE_TRANSFORMS,
-	COMBINE_COORD_TRANSFORMS,
-	CHAR_TRANSFORMS,
-	CHAR_MODIFY_TRANSFORMS,
-	CHAR_COLOR_TRANSFORMS,
-	CELL_COLOR_TRANSFORMS,
-} from './transforms/categories';
-
-// ============================================================
-// EXPORTS - Compiler
-// ============================================================
-
-export type { CompiledSynthShader, IRNode, ChainCompilationResult, GenerationContext } from './compiler/types';
-export { compileSynthSource, SYNTH_VERTEX_SHADER } from './compiler/SynthCompiler';
-export { UniformManager, formatNumber } from './compiler/UniformManager';
-export { generateFragmentShader, generateCharacterOutputCode } from './compiler/GLSLGenerator';
-
-// ============================================================
-// EXPORTS - Renderer
-// ============================================================
-
-export { SynthRenderer } from './renderer/SynthRenderer';
-export { CharacterResolver } from './renderer/CharacterResolver';
 
 // ============================================================
 // EXPORTS - Generated standalone functions
@@ -139,33 +89,177 @@ export { CharacterResolver } from './renderer/CharacterResolver';
 // ============================================================
 
 // Source generators
+/**
+ * Generate oscillating patterns using sine waves.
+ * @param frequency - Frequency of the oscillation (default: 60.0)
+ * @param sync - Synchronization offset (default: 0.1)
+ * @param offset - Phase offset (default: 0.0)
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Basic oscillating color pattern
+ * t.layers.base.synth(
+ *   charOsc(10, 0.1)
+ *     .charColor(osc(10, 0.1))
+ * );
+ * 
+ * // Animated frequency using array modulation
+ * t.layers.base.synth(
+ *   charOsc([1, 10, 50, 100].fast(2), 0.001)
+ *     .charColor(osc([1, 10, 50, 100].fast(2), 0.001))
+ * );
+ * ```
+ */
 export const osc = generatedFunctions['osc'] as (
 	frequency?: number | number[] | ((ctx: SynthContext) => number),
 	sync?: number | number[] | ((ctx: SynthContext) => number),
 	offset?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
+/**
+ * Generate Perlin noise patterns.
+ * @param scale - Scale of the noise pattern (default: 10.0)
+ * @param offset - Offset in noise space (default: 0.1)
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Basic noise pattern
+ * t.layers.base.synth(
+ *   charNoise(10, 0.1)
+ *     .charColor(noise(10, 0.1))
+ * );
+ * ```
+ */
 export const noise = generatedFunctions['noise'] as (
 	scale?: number | number[] | ((ctx: SynthContext) => number),
 	offset?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
+/**
+ * Generate Voronoi (cellular) patterns.
+ * @param scale - Scale of Voronoi cells (default: 5.0)
+ * @param speed - Animation speed (default: 0.3)
+ * @param blending - Blending between cell regions (default: 0.3)
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Animated Voronoi pattern
+ * t.layers.base.synth(
+ *   charVoronoi(5, 0.3, 8)
+ *     .charColor(voronoi(5, 0.3, 0.3))
+ * );
+ * ```
+ */
 export const voronoi = generatedFunctions['voronoi'] as (
 	scale?: number | number[] | ((ctx: SynthContext) => number),
 	speed?: number | number[] | ((ctx: SynthContext) => number),
 	blending?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
+/**
+ * Generate a rotating radial gradient.
+ * @param speed - Rotation speed (default: 0.0)
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Animated gradient with array modulation
+ * t.layers.base.synth(
+ *   charGradient([1, 2, 4], 16)
+ *     .charColor(gradient([1, 2, 4]))
+ *     .cellColor(
+ *       gradient([1, 2, 4])
+ *         .invert((ctx) => Math.sin(ctx.time) * 2)
+ *     )
+ * );
+ * ```
+ */
 export const gradient = generatedFunctions['gradient'] as (
 	speed?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
+/**
+ * Generate geometric shapes (polygons).
+ * @param sides - Number of sides (default: 3)
+ * @param radius - Radius of the shape (default: 0.3)
+ * @param smoothing - Edge smoothing amount (default: 0.01)
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Triangle with smooth edges
+ * t.layers.base.synth(
+ *   charShape(3, 0, 1, 0.5)
+ *     .charMap('. ')
+ * );
+ * 
+ * // High-sided polygon (circle-like)
+ * t.layers.base.synth(
+ *   charShape(100, 0, 1, 0.5)
+ *     .charMap('. ')
+ * );
+ * ```
+ */
 export const shape = generatedFunctions['shape'] as (
 	sides?: number | number[] | ((ctx: SynthContext) => number),
 	radius?: number | number[] | ((ctx: SynthContext) => number),
 	smoothing?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
+/**
+ * Generate a solid color.
+ * @param r - Red channel (0-1, default: 0.0)
+ * @param g - Green channel (0-1, default: 0.0)
+ * @param b - Blue channel (0-1, default: 0.0)
+ * @param a - Alpha channel (0-1, default: 1.0)
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Solid colors with array modulation
+ * t.layers.base.synth(
+ *   charSolid([16, 17, 18])
+ *     .charColor(solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1))
+ *     .cellColor(
+ *       solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1)
+ *         .invert()
+ *     )
+ * );
+ * ```
+ */
 export const solid = generatedFunctions['solid'] as (
 	r?: number | number[] | ((ctx: SynthContext) => number),
 	g?: number | number[] | ((ctx: SynthContext) => number),
@@ -174,12 +268,63 @@ export const solid = generatedFunctions['solid'] as (
 ) => SynthSource;
 
 // Character sources
+/**
+ * Generate character indices using Perlin noise.
+ * @param scale - Scale of the noise pattern (default: 10.0)
+ * @param offset - Offset in noise space (default: 0.1)
+ * @param charCount - Number of different characters to use (default: 256)
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Noise-based character generation
+ * t.layers.base.synth(
+ *   charNoise(10, 0.1)
+ *     .charColor(noise(10, 0.1))
+ * );
+ * ```
+ */
 export const charNoise = generatedFunctions['charNoise'] as (
 	scale?: number | number[] | ((ctx: SynthContext) => number),
 	offset?: number | number[] | ((ctx: SynthContext) => number),
 	charCount?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
+/**
+ * Generate character indices using oscillating sine waves.
+ * @param frequency - Frequency of the oscillation (default: 60.0)
+ * @param sync - Synchronization offset (default: 0.1)
+ * @param offset - Phase offset (default: 0.0)
+ * @param charCount - Number of different characters to use (default: 256)
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Oscillating characters with dynamic frequency
+ * t.layers.base.synth(
+ *   charOsc([1, 10, 50, 100, 250, 500].fast(2), 0.001)
+ *     .charColor(osc([1, 10, 50, 100, 250, 500].fast(2), 0.001))
+ * );
+ * 
+ * // Using context function for time-based animation
+ * t.layers.base.synth(
+ *   charOsc(0.1, 0.1)
+ *     .charColor(
+ *       osc(10, 0.1, (ctx) => Math.sin(ctx.time / 10) * 100)
+ *     )
+ * );
+ * ```
+ */
 export const charOsc = generatedFunctions['charOsc'] as (
 	frequency?: number | number[] | ((ctx: SynthContext) => number),
 	sync?: number | number[] | ((ctx: SynthContext) => number),
@@ -187,17 +332,90 @@ export const charOsc = generatedFunctions['charOsc'] as (
 	charCount?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
+/**
+ * Generate character indices using a rotating radial gradient.
+ * @param speed - Rotation speed (default: 0.0)
+ * @param charCount - Number of different characters to use (default: 256)
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Gradient-based characters with array modulation
+ * t.layers.base.synth(
+ *   charGradient([1, 2, 4], 16)
+ *     .charColor(gradient([1, 2, 4]))
+ *     .cellColor(
+ *       gradient([1, 2, 4])
+ *         .invert((ctx) => Math.sin(ctx.time) * 2)
+ *     )
+ * );
+ * ```
+ */
 export const charGradient = generatedFunctions['charGradient'] as (
 	speed?: number | number[] | ((ctx: SynthContext) => number),
 	charCount?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
+/**
+ * Generate character indices using Voronoi (cellular) patterns.
+ * @param scale - Scale of Voronoi cells (default: 5.0)
+ * @param speed - Animation speed (default: 0.3)
+ * @param charCount - Number of different characters to use (default: 256)
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Voronoi-based character generation
+ * t.layers.base.synth(
+ *   charVoronoi(5, 0.3, 8)
+ *     .charColor(voronoi(5, 0.3, 0.3))
+ * );
+ * ```
+ */
 export const charVoronoi = generatedFunctions['charVoronoi'] as (
 	scale?: number | number[] | ((ctx: SynthContext) => number),
 	speed?: number | number[] | ((ctx: SynthContext) => number),
 	charCount?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
+/**
+ * Generate character indices based on geometric shapes (polygons).
+ * @param sides - Number of sides (default: 3)
+ * @param innerChar - Character index for inside the shape (default: 0)
+ * @param outerChar - Character index for outside the shape (default: 1)
+ * @param radius - Radius of the shape (default: 0.3)
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Triangle shape with two character indices
+ * t.layers.base.synth(
+ *   charShape(3, 0, 1, 0.5)
+ *     .charMap('. ')
+ * );
+ * 
+ * // Circle-like shape (100 sides)
+ * t.layers.base.synth(
+ *   charShape(100, 0, 1, 0.5)
+ *     .charMap('. ')
+ * );
+ * ```
+ */
 export const charShape = generatedFunctions['charShape'] as (
 	sides?: number | number[] | ((ctx: SynthContext) => number),
 	innerChar?: number | number[] | ((ctx: SynthContext) => number),
@@ -205,6 +423,29 @@ export const charShape = generatedFunctions['charShape'] as (
 	radius?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
+/**
+ * Generate a solid character index across the entire canvas.
+ * @param charIndex - Character index to use (default: 0)
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Solid character with array modulation for cycling
+ * t.layers.base.synth(
+ *   charSolid([16, 17, 18])
+ *     .charColor(solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1))
+ *     .cellColor(
+ *       solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1)
+ *         .invert()
+ *     )
+ * );
+ * ```
+ */
 export const charSolid = generatedFunctions['charSolid'] as (
 	charIndex?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
@@ -214,7 +455,6 @@ export const charSolid = generatedFunctions['charSolid'] as (
 // ============================================================
 
 export type { ModulatedArray, EasingFunction } from './lib/ArrayUtils';
-export { getArrayValue, isModulatedArray } from './lib/ArrayUtils';
 
 // ============================================================
 // TYPE AUGMENTATION

@@ -24,7 +24,7 @@
     "indexFormat": "table",
     "parametersFormat": "table",
     "interfacePropertiesFormat": "table",
-    "classPropertiesFormat": "table",
+    "classPropertiesFormat": "list",
     "enumMembersFormat": "table",
     "propertyMembersFormat": "table",
     "typeDeclarationFormat": "table",
