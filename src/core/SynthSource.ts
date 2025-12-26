@@ -162,6 +162,75 @@ export class SynthSource {
 		return this;
 	}
 
+	/**
+	 * Set both character foreground and cell background color using the same source chain.
+	 * This is a convenience method that combines `.charColor()` and `.cellColor()` in one call.
+	 *
+	 * After calling `paint()`, you can still override the cell color separately using `.cellColor()`.
+	 *
+	 * @param source A SynthSource producing color values
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * ```ts
+	 * // Apply same color to both character and cell background
+	 * charNoise(10).paint(osc(5, 0.1).kaleid(4))
+	 *
+	 * // Apply color to both, then invert just the cell background
+	 * charNoise(10)
+	 *   .paint(voronoi(10, 0.5).mult(osc(20)))
+	 *   .cellColor(voronoi(10, 0.5).mult(osc(20)).invert())
+	 *
+	 * // Equivalent to:
+	 * // charNoise(10)
+	 * //   .charColor(voronoi(10, 0.5).mult(osc(20)))
+	 * //   .cellColor(voronoi(10, 0.5).mult(osc(20)))
+	 * ```
+	 */
+	public paint(source: SynthSource): this {
+		this._colorSource = source;
+		this._cellColorSource = source;
+		return this;
+	}
+
+	/**
+	 * Create a deep clone of this SynthSource.
+	 * Useful when you want to create a modified version of an existing chain
+	 * without affecting the original.
+	 *
+	 * @returns A new SynthSource with the same transform chain
+	 *
+	 * @example
+	 * ```ts
+	 * // Create a color chain and use a modified clone for cell color
+	 * const colorChain = voronoi(10, 0.5).mult(osc(20));
+	 * 
+	 * charNoise(10)
+	 *   .paint(colorChain)
+	 *   .cellColor(colorChain.clone().invert())
+	 * 
+	 * // Or use it to create variations of a base pattern
+	 * const base = osc(10, 0.1);
+	 * const rotated = base.clone().rotate(0.5);
+	 * const scaled = base.clone().scale(2);
+	 * ```
+	 */
+	public clone(): SynthSource {
+		// Clone nested sources
+		const clonedNestedSources = new Map<number, SynthSource>();
+		for (const [key, value] of this._nestedSources) {
+			clonedNestedSources.set(key, value.clone());
+		}
+
+		return new SynthSource({
+			chain: SynthChain.from(this._chain.transforms),
+			charMapping: this._charMapping,
+			colorSource: this._colorSource?.clone(),
+			cellColorSource: this._cellColorSource?.clone(),
+			nestedSources: clonedNestedSources,
+		});
+	}
+
 	// ============================================================
 	// ACCESSORS (for compiler use)
 	// ============================================================
