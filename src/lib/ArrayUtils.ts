@@ -120,13 +120,14 @@ export function getArrayValue(arr: ModulatedArray, ctx: SynthContext): number {
 	const speed = arr._speed ?? 1;
 	const smooth = arr._smooth ?? 0;
 	const bpm = 60; // Default BPM, could be exposed as a setting
+	// Offset is added directly to the time-based index (matching Hydra behavior)
 	let index = ctx.time * speed * (bpm / 60) + (arr._offset ?? 0);
 
 	if (smooth !== 0) {
 		const ease = arr._ease ?? EASING_FUNCTIONS.linear;
 		const _index = index - smooth / 2;
 
-		// Get current and next values with proper wrapping
+		// Get current and next values with proper wrapping using modulo (not remainder)
 		const currValue = arr[Math.floor(modulo(_index, arr.length))];
 		const nextValue = arr[Math.floor(modulo(_index + 1, arr.length))];
 
@@ -136,8 +137,8 @@ export function getArrayValue(arr: ModulatedArray, ctx: SynthContext): number {
 		// Apply easing and interpolate
 		return ease(t) * (nextValue - currValue) + currValue;
 	} else {
-		// No smoothing - direct array access
-		return arr[Math.floor(index % arr.length)];
+		// No smoothing - direct array access with proper modulo (not remainder)
+		return arr[Math.floor(modulo(index, arr.length))];
 	}
 }
 
