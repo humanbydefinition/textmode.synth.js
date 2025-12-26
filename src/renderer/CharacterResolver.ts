@@ -30,23 +30,20 @@ export class CharacterResolver {
 
 		const charArray = Array.from(chars);
 		const indices = new Int32Array(charArray.length);
+		const characterMap = font.characterMap;
 		const characters = font.characters;
 
-		// Build a reverse lookup: character string -> index in font
-		const charToIndex = new Map<string, number>();
-		for (let i = 0; i < characters.length; i++) {
-			charToIndex.set(characters[i].character, i);
-		}
-
-		// Resolve each character in the charMap to its font index
+		// Resolve each character to its font index using O(1) lookup
 		for (let i = 0; i < charArray.length; i++) {
 			const char = charArray[i];
-			const fontIndex = charToIndex.get(char);
-			if (fontIndex !== undefined) {
-				indices[i] = fontIndex;
+			const charData = characterMap.get(char);
+			if (charData !== undefined) {
+				// Find the index of this character in the characters array
+				indices[i] = characters.indexOf(charData);
 			} else {
 				// Character not found in font, use space or first character
-				indices[i] = charToIndex.get(' ') ?? 0;
+				const fallback = characterMap.get(' ');
+				indices[i] = fallback !== undefined ? characters.indexOf(fallback) : 0;
 				console.warn(`[CharacterResolver] Character '${char}' not found in font, using fallback`);
 			}
 		}
