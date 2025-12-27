@@ -8,27 +8,18 @@ const t = textmode.create({
     plugins: [SynthPlugin]
 });
 
+const colorChain = osc(100).rotate((ctx) => ctx.time % 360);
+
 t.layers.base.synth(
 	charOsc(50, 0, 0, 16)
 		.rotate((ctx) => ctx.time % 360)
 
-		.charColor(
-			osc(50)
-			.rotate((ctx) => ctx.time % 360)
-		)
-
-		.cellColor(
-			osc(100)
-			.rotate((ctx) => ctx.time % 360)
-		)
+		.charColor(colorChain)
+		.cellColor(colorChain.clone().invert())
 );
 
 t.draw(() => {
-	//t.clear();
-	//synthLayer.synthRender();
-
-	// t.char("A");
-	// t.rect(t.grid.cols / 2, t.grid.rows / 2);
+	
 });
 
 t.windowResized(() => {

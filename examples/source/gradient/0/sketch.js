@@ -23,8 +23,7 @@ synthLayer.synth(
 );
 
 t.draw(() => {
-    // The synth renders automatically before this callback
-    // You can draw additional content on top here
+
 });
 
 t.windowResized(() => {

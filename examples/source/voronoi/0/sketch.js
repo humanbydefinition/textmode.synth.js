@@ -9,10 +9,7 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charVoronoi(5, 0.3, 8)
-	.charColor(
-		voronoi(5, 0.3, 0.3)
-	)
+	voronoi(5, 0.3, 0.3)
 );
 
 t.draw(() => {

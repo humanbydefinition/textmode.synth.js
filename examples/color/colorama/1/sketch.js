@@ -8,19 +8,14 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
+const colorChain = osc(30, 0.1, 1).colorama(-0.1);
+
 t.layers.base.synth(
-	charOsc(10, 0, [0, 0.5, 1, 2], 16)
+	charOsc(30, 0.1, 1, 16)
 
-		.charColor(
-			osc(10, 0, [0, 0.5, 1, 2])
-				.luma([0.1, 0.25, 0.75, 1].fast(0.25), 0.1)
-		)
+		.charColor(colorChain)
 
-		.cellColor(
-			osc(10, 0, [0, 0.5, 1, 2])
-				.luma([0.1, 0.25, 0.75, 1].fast(0.25), 0.1)
-				.invert()
-		)
+		.cellColor(colorChain.clone().invert())
 );
 
 t.draw(() => {

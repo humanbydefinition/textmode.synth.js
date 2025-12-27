@@ -8,21 +8,16 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
+const colorChain = gradient(1).scrollY(0, (ctx) => Math.sin(ctx.time * 0.05) * 0.05);
+
 t.layers.base.synth(
 	charGradient(1, 16)
 		.rotate(1.57)
 		.scrollY(0, (ctx) => Math.sin(ctx.time * 0.05) * 0.05)
 
-		.charColor(
-			gradient(1)
-				.scrollY(0, (ctx) => Math.sin(ctx.time * 0.05) * 0.05)
-		)
+		.charColor(colorChain)
 
-		.cellColor(
-			gradient(1)
-				.scrollY(0, (ctx) => Math.sin(ctx.time * 0.05) * 0.05)
-				.invert()
-		)
+		.cellColor(colorChain.clone().invert())
 );
 
 t.draw(() => {

@@ -9,18 +9,7 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charOsc(10, 0, 1, 16)
-
-		.charColor(
-			osc(10, 0, 1)
-			.luma(0.5, 0.1)
-		)
-
-		.cellColor(
-			osc(10, 0, 1)
-			.luma(0.5, 0.1)
-				.invert()
-		)
+	osc(10,0,1).luma(0.5,0.1)
 );
 
 t.draw(() => {

@@ -9,22 +9,7 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charOsc(10, 0, 1, 16)
-		.rotate(1.57)
-		.scrollY([0, 0.25, 0.5, 0.75, 1].fast(4), 0)
-
-		.charColor(
-			osc(10, 0, 1)
-				.rotate(1.57)
-				.scrollY([0, 0.25, 0.5, 0.75, 1].fast(4), 0)
-		)
-
-		.cellColor(
-			osc(10, 0, 1)
-				.rotate(1.57)
-				.scrollY([0, 0.25, 0.5, 0.75, 1].fast(4), 0)
-				.invert()
-		)
+	osc(10,0,1).scrollY([0,0.25,0.5,0.75,1].fast(4),0)
 );
 
 t.draw(() => {

@@ -2,23 +2,19 @@ import { textmode } from 'textmode.js';
 import { SynthPlugin, charNoise, charSolid, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
 
 const t = textmode.create({
-    width: window.innerWidth,
-    height: window.innerHeight,
-    fontSize: 16,
-    plugins: [SynthPlugin]
+	width: window.innerWidth,
+	height: window.innerHeight,
+	fontSize: 16,
+	plugins: [SynthPlugin]
 });
+
+const colorChain = solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1)
 
 t.layers.base.synth(
 	charSolid([16, 17, 18])
 
-	.charColor(
-		solid([1,0,0],[0,1,0],[0,0,1],1)
-	)
-
-	.cellColor(
-		solid([1,0,0],[0,1,0],[0,0,1],1)
-		.invert()
-	)
+		.charColor(colorChain)
+		.cellColor(colorChain.clone().invert())
 );
 
 t.draw(() => {

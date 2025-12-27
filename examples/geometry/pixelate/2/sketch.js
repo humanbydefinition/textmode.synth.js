@@ -1,43 +1,24 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
+import { SynthPlugin, charNoise, charOsc, src, prev, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
 
 const t = textmode.create({
-    width: window.innerWidth,
-    height: window.innerHeight,
-    fontSize: 16,
-    plugins: [SynthPlugin]
+	width: window.innerWidth,
+	height: window.innerHeight,
+	fontSize: 4,
+	plugins: [SynthPlugin]
 });
 
 t.layers.base.synth(
-	charNoise(1, 0.05)
-		//.mult(osc(10, 0.25, 1))
-		//.scrollY(1, 0.25)
-		.pixelate(20)
-
-		.charColor(
-			noise()
-				.mult(osc(10, 0.25, 1))
-				.scrollY(1, 0.25)
-				.pixelate(20)
-			//.modulateRotate()
-			//.diff()
-		)
-
-		.cellColor(
-			noise()
-				.mult(osc(10, 0.25, 1))
-				.scrollY(1, 0.25)
-				.pixelate(20)
-				.invert()
-		)
+	noise()
+		.mult(osc(10, 0.25, 1))
+		.scrollY(1, 0.25)
+		.pixelate([100, 40, 20, 70].fast(0.25))
+		.modulateRotate(src().scale(0.5), 0.125)
+		.diff(src().rotate([-0.05, 0.05].fast(0.125)))
 );
 
 t.draw(() => {
-	//t.clear();
-	//synthLayer.synthRender();
-
-	// t.char("A");
-	// t.rect(t.grid.cols / 2, t.grid.rows / 2);
+	
 });
 
 t.windowResized(() => {

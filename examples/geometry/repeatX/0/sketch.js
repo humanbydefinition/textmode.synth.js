@@ -9,19 +9,8 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charShape(3)
+	shape(3)
 		.repeatX(3, 0)
-
-		.charColor(
-			shape()
-				.repeatX(3, 0)
-		)
-
-		.cellColor(
-			shape()
-				.repeatX(3, 0)
-				.invert()
-		)
 );
 
 t.draw(() => {

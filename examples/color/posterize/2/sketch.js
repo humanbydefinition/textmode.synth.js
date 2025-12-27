@@ -8,9 +8,9 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
+// not yet working as expected
 t.layers.base.synth(
 	charOsc(8, 0.1, 0, 16)
-		//.posterize([1, 5, 15, 30], 0.5)
 
 		.charColor(
 			osc().posterize(3, 1)

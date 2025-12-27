@@ -1,5 +1,5 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
+import { SynthPlugin, charNoise, charOsc, gradient, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape } from 'textmode.synth.js';
 
 const t = textmode.create({
 	width: window.innerWidth,
@@ -9,32 +9,12 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charShape(3)
-		.scale(1.5, [0.25, 0.5, 0.75, 1].fast(0.25), [3, 2, 1])
-		.kaleid(5)
-		.kaleid(12)
-		.scale((ctx) => Math.sin(ctx.time / 5) * 0.5)
-		.rotate(1, 1)
-
-		.charColor(
-			shape()
-				.scale(1.5, [0.25, 0.5, 0.75, 1].fast(0.25), [3, 2, 1])
-				.invert([0, 1].fast(0.25))
-				.kaleid(5)
-				.kaleid(12)
-				.scale((ctx) => Math.sin(ctx.time / 5) * 0.5)
-				.rotate(1, 1)
-		)
-
-		.cellColor(
-			shape()
-				.scale(1.5, [0.25, 0.5, 0.75, 1].fast(0.25), [3, 2, 1])
-				.invert([1, 0].fast(0.25))
-				.kaleid(5)
-				.kaleid(12)
-				.scale((ctx) => Math.sin(ctx.time / 5) * 0.5)
-				.rotate(1, 1)
-		)
+	gradient(0.125)
+		.scrollX(0, (ctx) => Math.sin(ctx.time * 0.05) * 0.05)
+		.scrollY(0, (ctx) => Math.sin(ctx.time * 0.01) * -0.07)
+		.pixelate([5, 2, 10], [15, 8])
+		.scale(0.15)
+		.modulate(noise(1, 0.25))
 );
 
 t.draw(() => {

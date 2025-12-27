@@ -9,20 +9,7 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charGradient(0, 16)
-	.rotate(1.57)
-		//.posterize([1, 5, 15, 30], 0.5)
-
-		.charColor(
-			gradient(0)
-				.posterize( 3, [0.1, 0.5, 1.0, 2.0] )
-		)
-
-		.cellColor(
-			gradient(0)
-				.posterize( 3, [0.1, 0.5, 1.0, 2.0] )
-				.invert()
-		)
+	gradient(0).posterize(3, [0.1, 0.5, 1.0, 2.0])
 );
 
 t.draw(() => {

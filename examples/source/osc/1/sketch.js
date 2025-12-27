@@ -9,10 +9,7 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charOsc((ctx) => Math.sin(ctx.time / 10) * 100, 0.0001)
-		.charColor(
-			osc((ctx) => Math.sin(ctx.time / 10) * 100, 0.0001)
-		)
+	osc((ctx) => Math.sin(ctx.time / 10) * 100)
 );
 
 t.draw(() => {

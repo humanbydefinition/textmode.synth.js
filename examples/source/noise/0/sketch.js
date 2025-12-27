@@ -9,18 +9,10 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charNoise(10, 0.1)
-	.charColor(
-		noise(10, 0.1)
-	)
+	noise(10, 0.1)
 );
 
 t.draw(() => {
-	//t.clear();
-	//synthLayer.synthRender();
-
-	// t.char("A");
-	// t.rect(t.grid.cols / 2, t.grid.rows / 2);
 });
 
 t.windowResized(() => {

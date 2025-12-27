@@ -9,16 +9,9 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charShape(4)
+	shape(4)
+	.charMap('.:-=+*#%@')
 		.rotate([-3.14, 3.14].ease('easeInOutCubic'))
-
-		.charColor(
-			shape(4).rotate([-3.14, 3.14].ease('easeInOutCubic'))
-		)
-
-		.cellColor(
-			shape(4).rotate([-3.14, 3.14].ease('easeInOutCubic')).invert()
-		)
 );
 
 t.draw(() => {

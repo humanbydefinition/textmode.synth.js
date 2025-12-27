@@ -9,32 +9,13 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charShape(3)
+	shape()
 		.scale(1.5, [0.25, 0.5, 0.75, 1].fast(0.25), [3, 2, 1])
+		.invert([0, 1].fast(0.25))
 		.kaleid(5)
 		.kaleid(12)
 		.scale((ctx) => Math.sin(ctx.time / 5) * 0.5)
 		.rotate(1, 1)
-
-		.charColor(
-			shape()
-				.scale(1.5, [0.25, 0.5, 0.75, 1].fast(0.25), [3, 2, 1])
-				.invert([0, 1].fast(0.25))
-				.kaleid(5)
-				.kaleid(12)
-				.scale((ctx) => Math.sin(ctx.time / 5) * 0.5)
-				.rotate(1, 1)
-		)
-
-		.cellColor(
-			shape()
-				.scale(1.5, [0.25, 0.5, 0.75, 1].fast(0.25), [3, 2, 1])
-				.invert([1, 0].fast(0.25))
-				.kaleid(5)
-				.kaleid(12)
-				.scale((ctx) => Math.sin(ctx.time / 5) * 0.5)
-				.rotate(1, 1)
-		)
 );
 
 t.draw(() => {

@@ -9,8 +9,7 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charShape(3)
-		.scroll(0.1,-0.3)
+    shape(3).scroll(0.1, -0.3)
 );
 
 t.draw(() => {
@@ -18,5 +17,5 @@ t.draw(() => {
 });
 
 t.windowResized(() => {
-	t.resizeCanvas(window.innerWidth, window.innerHeight);
+    t.resizeCanvas(window.innerWidth, window.innerHeight);
 });

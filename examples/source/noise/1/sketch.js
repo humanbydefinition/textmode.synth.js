@@ -9,18 +9,11 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charNoise((ctx) => Math.sin(ctx.time / 10) * 50, (ctx) => Math.sin(ctx.time / 2) / 500, 16)
-	.charColor(
-		noise((ctx) => Math.sin(ctx.time / 10) * 50, (ctx) => Math.sin(ctx.time / 2) / 500)
-	)
+	noise((ctx) => Math.sin(ctx.time / 10) * 50, (ctx) => Math.sin(ctx.time / 2) / 500)
 );
 
 t.draw(() => {
-	//t.clear();
-	//synthLayer.synthRender();
 
-	// t.char("A");
-	// t.rect(t.grid.cols / 2, t.grid.rows / 2);
 });
 
 t.windowResized(() => {

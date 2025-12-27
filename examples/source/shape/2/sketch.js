@@ -2,26 +2,22 @@ import { textmode } from 'textmode.js';
 import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
 
 const t = textmode.create({
-    width: window.innerWidth,
-    height: window.innerHeight,
-    fontSize: 16,
-    plugins: [SynthPlugin]
+	width: window.innerWidth,
+	height: window.innerHeight,
+	fontSize: 16,
+	plugins: [SynthPlugin]
 });
+
+const synthChain = shape(100, 0.5)
+	.invert((ctx) => Math.sin(ctx.time) * 2);
 
 t.layers.base.synth(
 	charShape(100, 0, 1, 0.5)
 		.charMap('. ')
-		.invert((ctx) => Math.sin(ctx.time) * 2)
 
-		.charColor(
-			shape(100, 0.5)
-			.invert((ctx) => Math.sin(ctx.time) * 2)
-		)
+		.charColor(synthChain)
 
-		.cellColor(
-			shape(100, 0.5)
-			.invert((ctx) => Math.sin(ctx.time) * -2)
-		)
+		.cellColor(synthChain.clone().invert())
 );
 
 t.draw(() => {

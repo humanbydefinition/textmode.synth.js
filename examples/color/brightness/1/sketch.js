@@ -4,25 +4,13 @@ import { SynthPlugin, charNoise, charOsc, osc, charSolid, noise, solid, voronoi,
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 16,
+	fontSize: 8,
 	plugins: [SynthPlugin]
 });
 
 t.layers.base.synth(
-	charNoise(10, 0.5, 16)
-
-		.charColor(
-			noise()
-				.brightness(1)
-				.color(0.5, 0.5, 0.5)
-		)
-
-		.cellColor(
-			noise()
-				.brightness(1)
-				.color(0.5, 0.5, 0.5)
-				.invert()
-		)
+	noise().brightness(1).color(0.5, 0.5, 0.5)
+	.charMap('.,:;i1tfLCG08@')
 );
 
 t.draw(() => {

@@ -9,16 +9,9 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charShape(999)
+	shape(999)
+		.charMap('.:-=+*#%@')
 		.scrollX([-0.2, 0.2].smooth())
-
-		.charColor(
-			shape(999).scrollX([-0.2, 0.2].smooth())
-		)
-
-		.cellColor(
-			shape(999).scrollX([-0.2, 0.2].smooth()).invert()
-		)
 );
 
 t.draw(() => {

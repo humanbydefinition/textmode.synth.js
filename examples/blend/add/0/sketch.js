@@ -9,24 +9,10 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charShape(3)
-		.scale(0.5)
-
-		.charColor(
-			shape(3)
-				.scale(0.5)
-				.add(
-					shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1]
-				)
-		)
-
-		.cellColor(
-			shape(3)
-				.scale(0.5)
-				.add(
-					shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1]
-				)
-				//.invert()
+	shape(3)
+		.charMap('.:-=+*#%@')
+		.add(
+			shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1]
 		)
 );
 

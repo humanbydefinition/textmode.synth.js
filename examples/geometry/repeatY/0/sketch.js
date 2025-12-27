@@ -9,24 +9,12 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charShape(3)
-		.repeatY(3, 0)
-
-		.charColor(
-			shape()
-				.repeatY(3, 0)
-		)
-
-		.cellColor(
-			shape()
-				.repeatY(3, 0)
-				.invert()
-		)
+    shape(3).repeatY(3, 0)
 );
 
 t.draw(() => {
 });
 
 t.windowResized(() => {
-	t.resizeCanvas(window.innerWidth, window.innerHeight);
+    t.resizeCanvas(window.innerWidth, window.innerHeight);
 });

@@ -9,11 +9,8 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charVoronoi(25, 2, 2)
+	voronoi(25,2,10).color(1,1,0).brightness(0.15)
 	.charMap(' .')
-	.charColor(
-		voronoi(25, 2, 10).color(1,1,0).brightness(0.15)
-	)
 );
 
 t.draw(() => {

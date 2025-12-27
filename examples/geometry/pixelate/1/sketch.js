@@ -4,32 +4,16 @@ import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVorono
 const t = textmode.create({
     width: window.innerWidth,
     height: window.innerHeight,
-    fontSize: 16,
+    fontSize: 8,
     plugins: [SynthPlugin]
 });
 
 t.layers.base.synth(
-	charNoise(1, 0.05)
-		.pixelate(2000, 1)
-
-		.charColor(
-			noise()
-				.pixelate(2000, 1)
-		)
-
-		.cellColor(
-			noise()
-				.pixelate(2000, 1)
-				.invert()
-		)
+	noise().pixelate(2000,1)
 );
 
 t.draw(() => {
-	//t.clear();
-	//synthLayer.synthRender();
 
-	// t.char("A");
-	// t.rect(t.grid.cols / 2, t.grid.rows / 2);
 });
 
 t.windowResized(() => {

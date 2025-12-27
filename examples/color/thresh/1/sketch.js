@@ -9,18 +9,8 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charNoise(3, 0.1, 16)
-
-		.charColor(
-			noise(3, 0.1)
-				.thresh((ctx) => Math.sin(ctx.time / 2), [0.04, 0.25, 0.75, 1].fast(0.25))
-		)
-
-		.cellColor(
-			noise(3, 0.1)
-				.thresh((ctx) => Math.sin(ctx.time / 2), [0.04, 0.25, 0.75, 1].fast(0.25))
-				.invert()
-		)
+	noise(3, 0.1)
+		.thresh((ctx) => Math.sin(ctx.time / 2), [0.04, 0.25, 0.75, 1].fast(0.25))
 );
 
 t.draw(() => {
