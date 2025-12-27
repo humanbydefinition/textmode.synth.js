@@ -197,6 +197,48 @@ export const shift = defineTransform({
 	description: 'Shift color channels by adding offset values',
 });
 
+export const gamma = defineTransform({
+	name: 'gamma',
+	type: 'color',
+	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
+	glsl: `
+	return vec4(pow(max(vec3(0.0), _c0.rgb), vec3(1.0 / amount)), _c0.a);
+`,
+	description: 'Apply gamma correction',
+});
+
+export const levels = defineTransform({
+	name: 'levels',
+	type: 'color',
+	inputs: [
+		{ name: 'inMin', type: 'float', default: 0.0 },
+		{ name: 'inMax', type: 'float', default: 1.0 },
+		{ name: 'outMin', type: 'float', default: 0.0 },
+		{ name: 'outMax', type: 'float', default: 1.0 },
+		{ name: 'gamma', type: 'float', default: 1.0 },
+	],
+	glsl: `
+	vec3 v = clamp((_c0.rgb - vec3(inMin)) / (vec3(inMax - inMin) + 0.0000001), 0.0, 1.0);
+	v = pow(v, vec3(1.0 / gamma));
+	v = mix(vec3(outMin), vec3(outMax), v);
+	return vec4(v, _c0.a);
+`,
+	description: 'Adjust input/output levels and gamma',
+});
+
+export const clampColor = defineTransform({
+	name: 'clampColor',
+	type: 'color',
+	inputs: [
+		{ name: 'min', type: 'float', default: 0.0 },
+		{ name: 'max', type: 'float', default: 1.0 },
+	],
+	glsl: `
+	return vec4(clamp(_c0.rgb, vec3(min), vec3(max)), _c0.a);
+`,
+	description: 'Clamp color values to a range',
+});
+
 /**
  * All color transforms.
  */
@@ -215,4 +257,7 @@ export const COLOR_TRANSFORMS: TransformDefinition[] = [
 	g,
 	b,
 	shift,
+	gamma,
+	levels,
+	clampColor,
 ];

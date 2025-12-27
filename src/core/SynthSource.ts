@@ -655,6 +655,73 @@ export class SynthSource {
 	 */
 	declare public b: (scale?: SynthParameterValue, offset?: SynthParameterValue) => this;
 
+	/**
+	 * Shift color channels by adding offset values.
+	 * @param r - Red channel shift (default: 0.5)
+	 * @param g - Green channel shift (default: 0.0)
+	 * @param b - Blue channel shift (default: 0.0)
+	 * @param a - Alpha channel shift (default: 0.0)
+	 */
+	declare public shift: (r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue) => this;
+
+	/**
+	 * Apply gamma correction for nonlinear brightness control.
+	 * @param amount - Gamma value (default: 1.0, < 1.0 brightens, > 1.0 darkens)
+	 * 
+	 * @example
+	 * ```typescript
+	 * // Brighten midtones
+	 * charNoise(10)
+	 *   .charColor(gradient(0).gamma(0.7))
+	 * 
+	 * // Darken with animation
+	 * charOsc(8)
+	 *   .charColor(osc(5).gamma([1.0, 1.5, 2.0].smooth(4)))
+	 * ```
+	 */
+	declare public gamma: (amount?: SynthParameterValue) => this;
+
+	/**
+	 * Adjust input/output levels and gamma for precise tonal control.
+	 * @param inMin - Input minimum (default: 0.0)
+	 * @param inMax - Input maximum (default: 1.0)
+	 * @param outMin - Output minimum (default: 0.0)
+	 * @param outMax - Output maximum (default: 1.0)
+	 * @param gamma - Gamma correction (default: 1.0)
+	 * 
+	 * @example
+	 * ```typescript
+	 * // Expand tonal range from 0.2-0.8 to 0-1
+	 * charNoise(10)
+	 *   .charColor(noise(5).levels(0.2, 0.8, 0.0, 1.0, 1.0))
+	 * 
+	 * // Compress highlights, boost shadows
+	 * charVoronoi(8)
+	 *   .charColor(voronoi(5).levels(0.0, 1.0, 0.2, 0.9, 0.8))
+	 * ```
+	 */
+	declare public levels: (inMin?: SynthParameterValue, inMax?: SynthParameterValue, outMin?: SynthParameterValue, outMax?: SynthParameterValue, gamma?: SynthParameterValue) => this;
+
+	/**
+	 * Clamp color values to a specified range for stability.
+	 * @param min - Minimum value (default: 0.0)
+	 * @param max - Maximum value (default: 1.0)
+	 * 
+	 * @example
+	 * ```typescript
+	 * // Prevent overflow after multiple blend operations
+	 * charOsc(10)
+	 *   .charColor(
+	 *     osc(5).add(osc(8), 0.8).add(osc(12), 0.6).clampColor(0.0, 1.0)
+	 *   )
+	 * 
+	 * // Create hard clip effect
+	 * charNoise(8)
+	 *   .charColor(noise(5).brightness(0.5).clampColor(0.3, 0.7))
+	 * ```
+	 */
+	declare public clampColor: (min?: SynthParameterValue, max?: SynthParameterValue) => this;
+
 	// Combine operations
 	/**
 	 * Add another source.
