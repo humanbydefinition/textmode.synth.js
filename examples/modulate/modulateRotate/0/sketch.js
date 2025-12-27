@@ -8,28 +8,21 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
+const colorChain = voronoi(100, 3, 5)
+    .modulateRotate(osc(1, 0.5, 0).kaleid(50).scale(0.5), 15, 0)
+    .mult(osc(50, -0.1, 8).kaleid(9));
+
 t.layers.base.synth(
 	charVoronoi(100, 3, 16)
 		.modulateRotate(osc(1, 0.5, 0).kaleid(50).scale(0.5), 15, 0)
 		//.mult(osc(50, -0.1, 8).kaleid(9))
 
-
-		.charColor(
-			voronoi(100, 3, 5)
-				.modulateRotate(osc(1, 0.5, 0).kaleid(50).scale(0.5), 15, 0)
-				.mult(osc(50, -0.1, 8).kaleid(9))
-		)
-
-		.cellColor(
-			voronoi(100, 3, 5)
-				.modulateRotate(osc(1, 0.5, 0).kaleid(50).scale(0.5), 15, 0)
-				.mult(osc(50, -0.1, 8).kaleid(9))
-				.invert()
-		)
+		.charColor(colorChain)
+		.cellColor(colorChain.clone().invert())
 );
 
 t.draw(() => {
-
+	
 });
 
 t.windowResized(() => {
