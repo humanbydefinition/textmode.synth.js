@@ -16,6 +16,12 @@ export interface CompiledSynthShader {
 	dynamicUpdaters: Map<string, (ctx: SynthContext) => number | number[]>;
 	/** Character mapping if charMap was used */
 	charMapping?: CharacterMapping;
+	/** Whether this shader uses feedback (src/prev) - reads from prevBuffer */
+	usesFeedback: boolean;
+	/** Whether this shader uses character feedback (charSrc) - reads from prevCharBuffer */
+	usesCharFeedback: boolean;
+	/** Whether this shader uses cell color feedback (cellColorSrc) - reads from prevCellColorBuffer */
+	usesCellColorFeedback: boolean;
 }
 
 /**

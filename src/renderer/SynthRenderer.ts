@@ -97,6 +97,17 @@ export class SynthRenderer {
 			this._cacheUniformLocation('u_charMap');
 			this._cacheUniformLocation('u_charMapSize');
 		}
+
+		// Feedback uniforms for src/prev, charSrc, and cellColorSrc
+		if (compiled.usesFeedback) {
+			this._cacheUniformLocation('prevBuffer');
+		}
+		if (compiled.usesCharFeedback) {
+			this._cacheUniformLocation('prevCharBuffer');
+		}
+		if (compiled.usesCellColorFeedback) {
+			this._cacheUniformLocation('prevCellColorBuffer');
+		}
 	}
 
 	/**
@@ -121,13 +132,19 @@ export class SynthRenderer {
 	 * @param height Height in pixels
 	 * @param context The synth context with time, resolution, etc.
 	 * @param font The font to use for resolving character indices
+	 * @param feedbackTextures Optional textures from the previous frame for feedback
 	 */
 	public render(
 		target: TextmodeFramebuffer,
 		width: number,
 		height: number,
 		context: SynthContext,
-		font: loadables.TextmodeFont
+		font: loadables.TextmodeFont,
+		feedbackTextures?: {
+			prevBuffer?: WebGLTexture | null;
+			prevCharBuffer?: WebGLTexture | null;
+			prevCellColorBuffer?: WebGLTexture | null;
+		}
 	): void {
 		if (!this._shader || !this._compiled || !this._vao) {
 			console.warn('[SynthRenderer] Cannot render: missing shader, compiled data, or VAO');
@@ -185,6 +202,39 @@ export class SynthRenderer {
 			}
 		}
 
+		// Bind feedback textures for src/prev, charSrc, and cellColorSrc functions
+		let textureUnit = 0;
+		
+		if (this._compiled.usesFeedback && feedbackTextures?.prevBuffer) {
+			const prevLoc = this._uniformLocations.get('prevBuffer');
+			if (prevLoc) {
+				gl.activeTexture(gl.TEXTURE0 + textureUnit);
+				gl.bindTexture(gl.TEXTURE_2D, feedbackTextures.prevBuffer);
+				gl.uniform1i(prevLoc, textureUnit);
+				textureUnit++;
+			}
+		}
+
+		if (this._compiled.usesCharFeedback && feedbackTextures?.prevCharBuffer) {
+			const charLoc = this._uniformLocations.get('prevCharBuffer');
+			if (charLoc) {
+				gl.activeTexture(gl.TEXTURE0 + textureUnit);
+				gl.bindTexture(gl.TEXTURE_2D, feedbackTextures.prevCharBuffer);
+				gl.uniform1i(charLoc, textureUnit);
+				textureUnit++;
+			}
+		}
+
+		if (this._compiled.usesCellColorFeedback && feedbackTextures?.prevCellColorBuffer) {
+			const cellLoc = this._uniformLocations.get('prevCellColorBuffer');
+			if (cellLoc) {
+				gl.activeTexture(gl.TEXTURE0 + textureUnit);
+				gl.bindTexture(gl.TEXTURE_2D, feedbackTextures.prevCellColorBuffer);
+				gl.uniform1i(cellLoc, textureUnit);
+				textureUnit++;
+			}
+		}
+
 		// Bind VAO
 		gl.bindVertexArray(this._vao);
 
@@ -204,6 +254,24 @@ export class SynthRenderer {
 
 		// Cleanup attribute
 		gl.disableVertexAttribArray(0);
+
+		// Unbind all feedback textures to avoid feedback loops on next render
+		let unbindUnit = 0;
+		if (this._compiled.usesFeedback && feedbackTextures?.prevBuffer) {
+			gl.activeTexture(gl.TEXTURE0 + unbindUnit);
+			gl.bindTexture(gl.TEXTURE_2D, null);
+			unbindUnit++;
+		}
+		if (this._compiled.usesCharFeedback && feedbackTextures?.prevCharBuffer) {
+			gl.activeTexture(gl.TEXTURE0 + unbindUnit);
+			gl.bindTexture(gl.TEXTURE_2D, null);
+			unbindUnit++;
+		}
+		if (this._compiled.usesCellColorFeedback && feedbackTextures?.prevCellColorBuffer) {
+			gl.activeTexture(gl.TEXTURE0 + unbindUnit);
+			gl.bindTexture(gl.TEXTURE_2D, null);
+			unbindUnit++;
+		}
 
 		// Cleanup
 		gl.bindVertexArray(null);

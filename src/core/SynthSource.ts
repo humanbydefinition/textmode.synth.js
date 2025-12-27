@@ -328,6 +328,70 @@ export class SynthSource {
 	 */
 	declare public solid: (r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue) => this;
 
+	/**
+	 * Sample the previous frame's primary color output for feedback effects.
+	 * This is the core of feedback loops - it reads from the previous frame's
+	 * rendered output (character foreground color), enabling effects like trails,
+	 * motion blur, and recursive patterns.
+	 * 
+	 * Equivalent to hydra's `src(o0)`.
+	 * 
+	 * @example
+	 * ```typescript
+	 * // Classic hydra-style feedback loop with noise modulation
+	 * src().modulate(noise(3), 0.005).blend(shape(4), 0.01)
+	 * 
+	 * // Feedback with color shift
+	 * src().hue(0.01).scale(1.01).blend(osc(10), 0.1)
+	 * ```
+	 */
+	declare public src: () => this;
+
+	/**
+	 * Sample the previous frame's primary color output for feedback effects.
+	 * @deprecated Use src() instead for hydra compatibility
+	 * 
+	 * @example
+	 * ```typescript
+	 * // Classic feedback loop with noise modulation
+	 * prev().modulate(noise(3), 0.005).blend(shape(4), 0.01)
+	 * 
+	 * // Trailing effect with scaling
+	 * prev().scale(1.01).blend(charNoise(10), 0.1)
+	 * ```
+	 */
+	declare public prev: () => this;
+
+	/**
+	 * Sample the previous frame's character data for feedback effects.
+	 * Reads from the previous frame's character texture, which contains
+	 * character index and transform data.
+	 * 
+	 * Use this to create feedback loops that affect character selection.
+	 * 
+	 * @example
+	 * ```typescript
+	 * // Character feedback with modulation
+	 * charSrc().modulate(noise(3), 0.01)
+	 * ```
+	 */
+	declare public charSrc: () => this;
+
+	/**
+	 * Sample the previous frame's cell/secondary color for feedback effects.
+	 * Reads from the previous frame's secondary color texture, which contains
+	 * the cell background color.
+	 * 
+	 * Use this to create feedback loops that affect cell background colors.
+	 * 
+	 * @example
+	 * ```typescript
+	 * // Cell color feedback
+	 * cellColorSrc().hue(0.01).blend(solid(0, 0, 0), 0.1)
+	 * ```
+	 */
+	declare public cellColorSrc: () => this;
+
 	// Coordinate transforms
 	/**
 	 * Rotate coordinates.

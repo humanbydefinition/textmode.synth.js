@@ -37,6 +37,18 @@ interface LayerSynthState {
     shaderNeedsUpdate: boolean;
     /** Whether this is the first render (needs initialization) */
     needsInitialization: boolean;
+    /** 
+     * Ping-pong framebuffers for feedback loops.
+     * We use two buffers to avoid reading from and writing to the same texture.
+     * pingPongBuffers[0] = buffer A, pingPongBuffers[1] = buffer B
+     */
+    pingPongBuffers?: [any, any];
+    /** 
+     * Current ping-pong index. 
+     * We READ from pingPongBuffers[pingPongIndex] and WRITE to pingPongBuffers[1 - pingPongIndex].
+     * After rendering, we swap the index.
+     */
+    pingPongIndex: number;
 }
 
 const PLUGIN_NAME = 'textmode.synth.js';
@@ -93,6 +105,7 @@ export const SynthPlugin: TextmodePlugin = {
                 if (isInitialized && state.renderer) {
                     state.compiled = compileSynthSource(source);
                     state.shaderNeedsUpdate = true;
+                    // Note: pingPongBuffers will be created/updated in pre-render hook if needed
                 } else {
                     // Mark for initialization on first render
                     state.needsInitialization = true;
@@ -107,6 +120,8 @@ export const SynthPlugin: TextmodePlugin = {
                     startTime: now,
                     shaderNeedsUpdate: true,
                     needsInitialization: !isInitialized,
+                    pingPongBuffers: undefined, // Created lazily only when feedback is used
+                    pingPongIndex: 0,
                 };
             }
 
@@ -124,6 +139,8 @@ export const SynthPlugin: TextmodePlugin = {
             if (state?.renderer) {
                 state.renderer.dispose();
             }
+            // Note: Ping-pong buffers will be garbage collected when the layer is disposed
+            // GLFramebuffer doesn't expose a public dispose method
             this.deletePluginState(PLUGIN_NAME);
         });
 
@@ -170,6 +187,33 @@ export const SynthPlugin: TextmodePlugin = {
                 state.shaderNeedsUpdate = false;
             }
 
+            // Check if any type of feedback is used
+            const usesFeedback = state.compiled?.usesFeedback ?? false;
+            const usesCharFeedback = state.compiled?.usesCharFeedback ?? false;
+            const usesCellColorFeedback = state.compiled?.usesCellColorFeedback ?? false;
+            const usesAnyFeedback = usesFeedback || usesCharFeedback || usesCellColorFeedback;
+
+            // Create ping-pong buffers if any feedback is used and buffers don't exist yet
+            // We need TWO buffers to avoid GPU feedback loops (reading and writing same texture)
+            if (usesAnyFeedback && !state.pingPongBuffers) {
+                const tm = textmodifier as any;
+                if (tm.createFramebuffer) {
+                    state.pingPongBuffers = [
+                        tm.createFramebuffer({ 
+                            width: grid.cols, 
+                            height: grid.rows, 
+                            attachments: 3 
+                        }),
+                        tm.createFramebuffer({ 
+                            width: grid.cols, 
+                            height: grid.rows, 
+                            attachments: 3 
+                        })
+                    ];
+                    state.pingPongIndex = 0;
+                }
+            }
+
             // Build synth context
             const now = performance.now() / 1000;
             const mouse = (context.textmodifier as any).mouse;
@@ -185,14 +229,62 @@ export const SynthPlugin: TextmodePlugin = {
                 mouseY: mouse?.y ?? 0,
             };
 
-            // Render synth to the layer's MRT framebuffer
-            state.renderer.render(
-                drawFramebuffer as unknown as TextmodeFramebuffer,
-                grid.cols,
-                grid.rows,
-                synthContext,
-                layer.font as unknown as loadables.TextmodeFont
-            );
+            // Handle feedback rendering with ping-pong buffers
+            if (usesAnyFeedback && state.pingPongBuffers) {
+                // Ping-pong approach to avoid GPU feedback loops:
+                // - READ from pingPongBuffers[pingPongIndex] (contains previous frame)
+                // - WRITE to pingPongBuffers[1 - pingPongIndex] (stores current frame for next iteration)
+                // - Also WRITE to drawFramebuffer (for the layer system to process)
+                // Both writes use the SAME prev textures, so the results are identical
+                
+                const readIndex = state.pingPongIndex;
+                const writeIndex = 1 - state.pingPongIndex;
+                
+                const readBuffer = state.pingPongBuffers[readIndex];
+                const writeBuffer = state.pingPongBuffers[writeIndex];
+                
+                // Build feedback textures object from the read buffer
+                // Attachment 0 = character data, 1 = primary color, 2 = cell/secondary color
+                const feedbackTextures = {
+                    prevBuffer: usesFeedback ? (readBuffer?.textures?.[1] ?? null) : null,
+                    prevCharBuffer: usesCharFeedback ? (readBuffer?.textures?.[0] ?? null) : null,
+                    prevCellColorBuffer: usesCellColorFeedback ? (readBuffer?.textures?.[2] ?? null) : null,
+                };
+                
+                // First render: to the ping-pong WRITE buffer (for next frame's feedback)
+                state.renderer.render(
+                    writeBuffer as unknown as TextmodeFramebuffer,
+                    grid.cols,
+                    grid.rows,
+                    synthContext,
+                    layer.font as unknown as loadables.TextmodeFont,
+                    feedbackTextures
+                );
+                
+                // Second render: to the actual drawFramebuffer (for layer processing)
+                // Uses the SAME prev textures, so the result is identical
+                state.renderer.render(
+                    drawFramebuffer as unknown as TextmodeFramebuffer,
+                    grid.cols,
+                    grid.rows,
+                    synthContext,
+                    layer.font as unknown as loadables.TextmodeFont,
+                    feedbackTextures
+                );
+                
+                // Swap ping-pong index for next frame
+                state.pingPongIndex = writeIndex;
+            } else {
+                // No feedback - render directly to drawFramebuffer
+                state.renderer.render(
+                    drawFramebuffer as unknown as TextmodeFramebuffer,
+                    grid.cols,
+                    grid.rows,
+                    synthContext,
+                    layer.font as unknown as loadables.TextmodeFont,
+                    undefined
+                );
+            }
 
             // Mark that this layer has renderable content for this frame
             layer.setPluginState('__hasRenderableContent__', true);
@@ -206,6 +298,8 @@ export const SynthPlugin: TextmodePlugin = {
             if (state?.renderer) {
                 state.renderer.dispose();
             }
+            // Note: Ping-pong buffers will be garbage collected
+            // GLFramebuffer doesn't expose a public dispose method
         });
     },
 
@@ -217,6 +311,8 @@ export const SynthPlugin: TextmodePlugin = {
             if (state?.renderer) {
                 state.renderer.dispose();
             }
+            // Note: Ping-pong buffers will be garbage collected
+            // GLFramebuffer doesn't expose a public dispose method
         }
 
         // Remove layer extensions

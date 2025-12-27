@@ -267,6 +267,96 @@ export const solid = generatedFunctions['solid'] as (
 	a?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
+/**
+ * Sample the previous frame's primary color output for feedback effects.
+ * This is the core of feedback loops - it reads from the previous frame's
+ * character foreground color, enabling effects like trails, motion blur, 
+ * and recursive patterns.
+ * 
+ * Equivalent to hydra's `src(o0)`.
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Classic hydra-style feedback loop with noise modulation
+ * t.layers.base.synth(
+ *   src().modulate(noise(3), 0.005).blend(shape(4), 0.01)
+ * );
+ * 
+ * // Feedback with color shift and scaling
+ * t.layers.base.synth(
+ *   src().hue(0.01).scale(1.01).blend(osc(10), 0.1)
+ * );
+ * ```
+ */
+export const src = generatedFunctions['src'] as () => SynthSource;
+
+/**
+ * Sample the previous frame's primary color output for feedback effects.
+ * @deprecated Use src() instead for hydra compatibility
+ * 
+ * @example
+ * ```typescript
+ * // Classic feedback loop with noise modulation
+ * prev().modulate(noise(3), 0.005).blend(shape(4), 0.01)
+ * 
+ * // Character trails effect
+ * prev().scale(1.01).blend(charNoise(10).charColor(osc(5)), 0.1)
+ * ```
+ */
+export const prev = generatedFunctions['prev'] as () => SynthSource;
+
+/**
+ * Sample the previous frame's character data for feedback effects.
+ * Reads from the previous frame's character texture, which contains
+ * character index and transform data.
+ * 
+ * Use this to create feedback loops that affect character selection.
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Character feedback with modulation
+ * t.layers.base.synth(
+ *   charSrc().modulate(noise(3), 0.01)
+ * );
+ * ```
+ */
+export const charSrc = generatedFunctions['charSrc'] as () => SynthSource;
+
+/**
+ * Sample the previous frame's cell/secondary color for feedback effects.
+ * Reads from the previous frame's secondary color texture, which contains
+ * the cell background color.
+ * 
+ * Use this to create feedback loops that affect cell background colors.
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Cell color feedback
+ * t.layers.base.synth(
+ *   cellColorSrc().hue(0.01).blend(solid(0, 0, 0), 0.1)
+ * );
+ * ```
+ */
+export const cellColorSrc = generatedFunctions['cellColorSrc'] as () => SynthSource;
+
 // Character sources
 /**
  * Generate character indices using Perlin noise.

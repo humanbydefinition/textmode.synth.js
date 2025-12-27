@@ -25,6 +25,12 @@ export interface ShaderGenerationOptions {
 	cellColorVar: string;
 	/** Character mapping (if any) */
 	charMapping?: CharacterMapping;
+	/** Whether primary color feedback (src/prev) is used */
+	usesFeedback?: boolean;
+	/** Whether character feedback (charSrc) is used */
+	usesCharFeedback?: boolean;
+	/** Whether cell color feedback (cellColorSrc) is used */
+	usesCellColorFeedback?: boolean;
 }
 
 /**
@@ -140,6 +146,9 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 		primaryColorVar,
 		cellColorVar,
 		charMapping,
+		usesFeedback,
+		usesCharFeedback,
+		usesCellColorFeedback,
 	} = options;
 
 	// Build uniform declarations
@@ -160,6 +169,19 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 	charOutput.g = float(mappedCharIdx / 256) / 255.0;`;
 	}
 
+	// Feedback buffer declarations
+	const feedbackDecls: string[] = [];
+	if (usesFeedback) {
+		feedbackDecls.push('uniform sampler2D prevBuffer;');
+	}
+	if (usesCharFeedback) {
+		feedbackDecls.push('uniform sampler2D prevCharBuffer;');
+	}
+	if (usesCellColorFeedback) {
+		feedbackDecls.push('uniform sampler2D prevCellColorBuffer;');
+	}
+	const feedbackDecl = feedbackDecls.join('\n');
+
 	return `#version 300 es
 precision highp float;
 
@@ -174,6 +196,7 @@ layout(location = 2) out vec4 o_secondaryColor;
 // Standard uniforms
 uniform float time;
 uniform vec2 resolution;
+${feedbackDecl}
 ${charMapDecl}
 
 // Dynamic uniforms

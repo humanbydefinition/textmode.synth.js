@@ -34,6 +34,9 @@ class SynthCompilerContext {
 	private readonly _uniformManager = new UniformManager();
 	private readonly _glslFunctions = new Set<string>();
 	private readonly _mainCode: string[] = [];
+	private _usesFeedback = false;
+	private _usesCharFeedback = false;
+	private _usesCellColorFeedback = false;
 
 	/**
 	 * Compile a SynthSource into a shader.
@@ -44,6 +47,9 @@ class SynthCompilerContext {
 		this._uniformManager.clear();
 		this._glslFunctions.clear();
 		this._mainCode.length = 0;
+		this._usesFeedback = false;
+		this._usesCharFeedback = false;
+		this._usesCellColorFeedback = false;
 
 		// Compile the main chain (default color white for visibility)
 		const chainResult = this._compileChain(
@@ -90,6 +96,9 @@ class SynthCompilerContext {
 			primaryColorVar,
 			cellColorVar,
 			charMapping: source.charMapping,
+			usesFeedback: this._usesFeedback,
+			usesCharFeedback: this._usesCharFeedback,
+			usesCellColorFeedback: this._usesCellColorFeedback,
 		});
 
 		return {
@@ -97,6 +106,9 @@ class SynthCompilerContext {
 			uniforms: this._uniformManager.getUniforms(),
 			dynamicUpdaters: this._uniformManager.getDynamicUpdaters(),
 			charMapping: source.charMapping,
+			usesFeedback: this._usesFeedback,
+			usesCharFeedback: this._usesCharFeedback,
+			usesCellColorFeedback: this._usesCellColorFeedback,
 		};
 	}
 
@@ -144,6 +156,17 @@ class SynthCompilerContext {
 			if (!def) {
 				console.warn(`[SynthCompiler] Unknown transform: ${record.name}`);
 				return;
+			}
+
+			// Track which feedback sources are used
+			if (record.name === 'prev' || record.name === 'src') {
+				this._usesFeedback = true;
+			}
+			if (record.name === 'charSrc') {
+				this._usesCharFeedback = true;
+			}
+			if (record.name === 'cellColorSrc') {
+				this._usesCellColorFeedback = true;
 			}
 
 			this._glslFunctions.add(def.glslFunction);
