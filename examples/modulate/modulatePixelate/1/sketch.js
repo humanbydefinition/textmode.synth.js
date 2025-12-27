@@ -8,18 +8,14 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
+const colorChain = noise(3).modulatePixelate(noise(3).pixelate(8, 8), 1024, 8);
+
 t.layers.base.synth(
 	charNoise(3, 0.5, 16)
 		.modulatePixelate(noise(3).pixelate(8, 8), 1024, 8)
 
-
-		.charColor(
-			noise(3).modulatePixelate(noise(3).pixelate(8, 8), 1024, 8)
-		)
-
-		.cellColor(
-			noise(3).modulatePixelate(noise(3).pixelate(8, 8), 1024, 8).invert()
-		)
+		.charColor(colorChain)
+		.cellColor(colorChain.clone().invert())
 );
 
 t.draw(() => {

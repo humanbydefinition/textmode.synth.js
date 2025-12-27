@@ -9,23 +9,9 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charGradient(5, 16)
+	gradient(5)
 		.repeat(50, 50).kaleid([3, 5, 7, 9].fast(0.5))
 		.modulateScale(osc(4, -0.5, 0).kaleid(50).scale(0.5), 15, 0)
-
-
-		.charColor(
-			gradient(5)
-				.repeat(50, 50).kaleid([3, 5, 7, 9].fast(0.5))
-				.modulateScale(osc(4, -0.5, 0).kaleid(50).scale(0.5), 15, 0)
-		)
-
-		.cellColor(
-			gradient(5)
-				.repeat(50, 50).kaleid([3, 5, 7, 9].fast(0.5))
-				.modulateScale(osc(4, -0.5, 0).kaleid(50).scale(0.5), 15, 0)
-				.invert()
-		)
 );
 
 t.draw(() => {

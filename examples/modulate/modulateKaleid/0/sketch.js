@@ -9,29 +9,11 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charOsc(9, -0.1, 0.1, 16)
-		.modulateKaleid(osc(11, 0.5, 0), 50)
+	osc(1, -0.01, 0.01)
+		.modulateKaleid(osc(1, -0.01, 0.01), 50)
 		.scale(0.1, 0.3)
 		.modulate(noise(5, 0.1))
 		.mult(solid(1, 1, 0.3))
-
-
-		.charColor(
-			osc(9, -0.1, 0.1)
-				.modulateKaleid(osc(11, 0.5, 0), 50)
-				.scale(0.1, 0.3)
-				.modulate(noise(5, 0.1))
-				.mult(solid(1, 1, 0.3))
-		)
-
-		.cellColor(
-			osc(9, -0.1, 0.1)
-				.modulateKaleid(osc(11, 0.5, 0), 50)
-				.scale(0.1, 0.3)
-				.modulate(noise(5, 0.1))
-				.mult(solid(1, 1, 0.3))
-				.invert()
-		)
 );
 
 t.draw(() => {

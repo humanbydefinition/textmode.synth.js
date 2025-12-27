@@ -8,25 +8,21 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
+const colorChain = osc(1, 1, 2)
+	.diff(shape(6, 1.1, 0.01)
+		.scale((ctx) => Math.sin(ctx.time) * 0.05 + 0.9)
+		.kaleid(15)
+		.rotate((ctx) => ctx.time % 360));
+
 t.layers.base.synth(
-	charOsc(1, 1, 2, 16)
+	charOsc(1, -1, 2, 16)
+		.scale((ctx) => Math.sin(ctx.time) * 0.05 + 0.9)
+		.kaleid(15)
+		.rotate((ctx) => ctx.time % 360)
 
-		.charColor(
-			osc(1, 1, 2)
-				.diff(shape(6, 1.1, 0.01)
-					.scale((ctx) => Math.sin(ctx.time) * 0.05 + 0.9)
-					.kaleid(15)
-					.rotate((ctx) => ctx.time % 360))
-		)
+		.charColor(colorChain)
 
-		.cellColor(
-			osc(1, 1, 2)
-				.diff(shape(6, 1.1, 0.01)
-					.scale((ctx) => Math.sin(ctx.time) * 0.05 + 0.9)
-					.kaleid(15)
-					.rotate((ctx) => ctx.time % 360))
-			//.invert()
-		)
+		.cellColor(colorChain.clone().hue())
 );
 
 t.draw(() => {

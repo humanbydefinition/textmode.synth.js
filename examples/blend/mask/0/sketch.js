@@ -9,18 +9,8 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charGradient(0, 16)
-
-		.charColor(
-			gradient(5)
-				.mask(voronoi(),3,0.5).invert([0,1])
-		)
-
-		.cellColor(
-			gradient(5)
-				.mask(voronoi(),3,0.5).invert([0,1])
-				//.invert()
-		)
+	gradient(5)
+		.mask(voronoi(), 3, 0.5).invert([0, 1])
 );
 
 t.draw(() => {

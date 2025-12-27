@@ -8,25 +8,12 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
+const colorChain = solid(1, 0, 0, 1).layer(shape(4).color(0, 1, 0, (ctx) => Math.sin(ctx.time * 2)));
+
 t.layers.base.synth(
 	charSolid(34)
-
-		.charColor(
-			solid(1, 0, 0, 1)
-			.layer(
-				shape(4)
-				.color(0, 1, 0, (ctx) => Math.sin(ctx.time * 2))
-			)
-		)
-
-		.cellColor(
-			solid(1, 0, 0, 1)
-			.layer(
-				shape(4)
-				.color(0, 1, 0, (ctx) => Math.sin(ctx.time * 2))
-			)
-			.invert()
-		)
+		.charColor(colorChain)
+		.cellColor(colorChain)
 );
 
 t.draw(() => {

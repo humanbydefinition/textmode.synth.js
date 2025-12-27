@@ -9,37 +9,14 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charVoronoi(5, 0.3, 16)
+	voronoi()
+		.color(0.9, 0.25, 0.15)
 		.rotate((ctx) => (ctx.time % 360) / 2)
 		.modulate(osc(25, 0.1, 0.5)
 			.kaleid(50)
 			.scale((ctx) => Math.sin(ctx.time * 1) * 0.5 + 1)
 			.modulate(noise(0.6, 0.5)),
 			0.5)
-
-
-		.charColor(
-			voronoi()
-				.color(0.9, 0.25, 0.15)
-				.rotate((ctx) => (ctx.time % 360) / 2)
-				.modulate(osc(25, 0.1, 0.5)
-					.kaleid(50)
-					.scale((ctx) => Math.sin(ctx.time * 1) * 0.5 + 1)
-					.modulate(noise(0.6, 0.5)),
-					0.5)
-		)
-
-		.cellColor(
-			voronoi()
-				.color(0.9, 0.25, 0.15)
-				.rotate((ctx) => (ctx.time % 360) / 2)
-				.modulate(osc(25, 0.1, 0.5)
-					.kaleid(50)
-					.scale((ctx) => Math.sin(ctx.time * 1) * 0.5 + 1)
-					.modulate(noise(0.6, 0.5)),
-					0.5)
-				.invert()
-		)
 );
 
 t.draw(() => {

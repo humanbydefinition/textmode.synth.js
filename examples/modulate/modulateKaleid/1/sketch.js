@@ -8,20 +8,14 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
+const colorChain = osc(10, 0.1, 2).modulateKaleid(osc(16).kaleid(999), 1);
+
 t.layers.base.synth(
-	charOsc(10,0.1,2, 16)
-	.modulateKaleid(osc(16).kaleid(999),1)
+	charOsc(10, 0.1, 2, 16)
+		.modulateKaleid(osc(16).kaleid(999), 1)
 
-		.charColor(
-			osc(10,0.1,2)
-				.modulateKaleid(osc(16).kaleid(999),1)
-		)
-
-		.cellColor(
-			osc(10,0.1,2)
-				.modulateKaleid(osc(16).kaleid(999),1)
-				.invert()
-		)
+		.charColor(colorChain)
+		.cellColor(colorChain.clone().invert())
 );
 
 t.draw(() => {

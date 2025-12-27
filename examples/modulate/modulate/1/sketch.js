@@ -9,20 +9,8 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charOsc(3, 0, 2, 16)
+	osc(3, 0, 2)
 		.modulate(noise().add(gradient(), -1), 1)
-
-
-		.charColor(
-			osc(3, 0, 2)
-				.modulate(noise().add(gradient(), -1), 1)
-		)
-
-		.cellColor(
-			osc(3, 0, 2)
-				.modulate(noise().add(gradient(), -1), 1)
-				.invert()
-		)
 );
 
 t.draw(() => {

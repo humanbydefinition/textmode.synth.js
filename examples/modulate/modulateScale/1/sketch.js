@@ -9,20 +9,8 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charShape(4)
+	shape(4)
 		.modulateScale(gradient().g(), 2, 0.5)
-
-
-		.charColor(
-			shape(4)
-				.modulateScale(gradient().g(), 2, 0.5)
-		)
-
-		.cellColor(
-			shape(4)
-				.modulateScale(gradient().g(), 2, 0.5)
-				.invert()
-		)
 );
 
 t.draw(() => {
@@ -32,4 +20,3 @@ t.draw(() => {
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
-c

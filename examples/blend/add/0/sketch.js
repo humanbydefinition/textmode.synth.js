@@ -8,12 +8,12 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
+const colorChain = shape().add(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1]);
+
 t.layers.base.synth(
-	shape(3)
-		.charMap('.:-=+*#%@')
-		.add(
-			shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1]
-		)
+	charShape()
+		.charColor(colorChain)
+		.cellColor(colorChain)
 );
 
 t.draw(() => {

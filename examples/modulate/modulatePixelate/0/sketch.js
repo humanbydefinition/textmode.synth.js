@@ -9,23 +9,9 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charVoronoi(10, 1, 16)
+	voronoi(10, 1, 5)
 		.brightness(() => Math.random() * 0.15)
 		.modulatePixelate(noise(25, 0.5), 100)
-
-
-		.charColor(
-			voronoi(10, 1, 5)
-				.brightness(() => Math.random() * 0.15)
-				.modulatePixelate(noise(25, 0.5), 100)
-		)
-
-		.cellColor(
-			voronoi(10, 1, 5)
-				.brightness(() => Math.random() * 0.15)
-				.modulatePixelate(noise(25, 0.5), 100)
-				.invert()
-		)
 );
 
 t.draw(() => {

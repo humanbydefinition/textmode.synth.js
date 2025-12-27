@@ -8,32 +8,15 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
-// does not produce expected result yet
-// certain framebuffers in textmode.js need to be FLOAT for this..
+
 t.layers.base.synth(
-	charOsc(6, 0, 1.5, 16)
-
-		.charColor(
-			osc(6, 0, 1.5)
-				.modulate(
-					noise(3)
-					.sub(
-						gradient()
-					),
-					1
-				)
-		)
-
-		.cellColor(
-			osc(6, 0, 1.5)
-				.modulate(
-					noise(3)
-					.sub(
-						gradient()
-					),
-					1
-				)
-				//.invert()
+	osc(6, 0, 1.5)
+		.modulate(
+			noise(3)
+				.sub(
+					gradient()
+				),
+			1
 		)
 );
 

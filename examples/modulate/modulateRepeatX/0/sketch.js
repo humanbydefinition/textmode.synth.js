@@ -8,23 +8,15 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
+const colorChain = shape(4, 0.9)
+	.mult(osc(4, 0.25, 1))
+	.modulateRepeatX(osc(10), 5.0, (ctx) => Math.sin(ctx.time) * 5)
+	.scale(1, 0.5, 0.05)
+
 t.layers.base.synth(
 	charShape(4, 2, 4, 0.9)
-
-		.charColor(
-			shape(4, 0.9)
-				.mult(osc(4, 0.25, 1))
-				.modulateRepeatX(osc(10), 5.0, (ctx) => Math.sin(ctx.time) * 5)
-				.scale(1, 0.5, 0.05)
-		)
-
-		.cellColor(
-			shape(4, 0.9)
-				.mult(osc(4, 0.25, 1))
-				.modulateRepeatX(osc(10), 5.0, (ctx) => Math.sin(ctx.time) * 5)
-				.scale(1, 0.5, 0.05)
-				.invert()
-		)
+		.charColor(colorChain)
+		.cellColor(colorChain.clone().invert())
 );
 
 t.draw(() => {

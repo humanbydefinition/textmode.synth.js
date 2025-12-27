@@ -1,5 +1,5 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
+import { SynthPlugin, charNoise, charOsc, osc, noise, src, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
 
 const t = textmode.create({
 	width: window.innerWidth,
@@ -8,10 +8,10 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
-// not reproducible yet
-// requires feedback loops working first
 t.layers.base.synth(
-	
+	src()
+		.modulateHue(src().scale(1.01), 1)
+		.layer(osc(4, 0.5, 2).mask(shape(4, 0.5, 0.001)))
 );
 
 t.draw(() => {

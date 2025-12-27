@@ -9,20 +9,8 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	charVoronoi(25, 0, 16)
+	voronoi(25, 0, 0)
 		.modulateScrollY(osc(10), 0.5, 0.25)
-
-
-		.charColor(
-			voronoi(25, 0, 0)
-				.modulateScrollY(osc(10), 0.5, 0.25)
-		)
-
-		.cellColor(
-			voronoi(25, 0, 0)
-				.modulateScrollY(osc(10), 0.5, 0.25)
-				.invert()
-		)
 );
 
 t.draw(() => {

@@ -18,7 +18,7 @@ t.layers.base.synth(
 		//.mult(osc(50, -0.1, 8).kaleid(9))
 
 		.charColor(colorChain)
-		.cellColor(colorChain.clone().invert())
+		.cellColor(colorChain.clone().shift())
 );
 
 t.draw(() => {

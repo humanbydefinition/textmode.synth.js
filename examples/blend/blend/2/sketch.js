@@ -8,27 +8,8 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
-// does not yet work as expected
-// needs proper feedback loop implementation
 t.layers.base.synth(
-	charOsc(8, 0.1, 0, 16)
-
-		.charColor(
-			osc()
-				.thresh()
-				.blend(
-					osc(13, 0.5, 5), 0.9
-				)
-		)
-
-		.cellColor(
-			osc()
-				.thresh()
-				.blend(
-					osc(13, 0.5, 5), 0.9
-				)
-				.invert()
-		)
+	osc().thresh().blend(osc().thresh(), 0.9)
 );
 
 t.draw(() => {
