@@ -179,14 +179,6 @@ export const TRANSFORM_TYPE_INFO: Record<
 };
 
 /**
- * Options for creating a SynthSource instance.
- */
-export interface SynthSourceOptions {
-	/** Default character set for charMap */
-	defaultCharset?: string;
-}
-
-/**
  * Create a CharacterMapping from a string of characters.
  */
 export function createCharacterMapping(chars: string): CharacterMapping {
