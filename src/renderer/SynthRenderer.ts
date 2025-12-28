@@ -157,15 +157,15 @@ export class SynthRenderer {
 		target.begin();
 
 		// Clear all color attachments and depth buffer
-		//gl.clearColor(0, 0, 0, 0);
-		//gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+		gl.clearColor(0, 0, 0, 0);
+		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-		this._textmodifier.clear();
+		//this._textmodifier.clear();
 
 		// Use the shader program
 		gl.useProgram(this._shader.glProgram);
 
-		this._textmodifier.shader(this._shader);
+		//this._textmodifier.shader(this._shader);
 
 		// Set standard uniforms
 		this._setUniform('time', context.time);
