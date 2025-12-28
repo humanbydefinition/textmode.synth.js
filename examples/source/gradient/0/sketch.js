@@ -11,14 +11,14 @@ const t = textmode.create({
 const synthLayer = t.layers.add();
 
 // Can be called globally, just like layer.draw()!
-synthLayer.synth(
+t.layers.base.synth(
     charGradient([1,2,4], 16)
         .charColor(
             gradient([1,2,4])
         )
         .cellColor(
             gradient([1,2,4])
-                .invert((ctx) => Math.sin(ctx.time) * 2)
+                .invert()
         )
 );
 

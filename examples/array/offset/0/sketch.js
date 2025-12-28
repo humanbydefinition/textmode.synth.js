@@ -17,19 +17,13 @@ const t = textmode.create({
 
 // does not work as expected yet..
 t.layers.base.synth(
-	charSolid(219)
-		.charColor(
-			shape(999, 0.3, 0.01)
-				.scrollY(0.2)
-				.scrollX([-0.2, 0.2])
-				.add(
-					shape(4, 0.3, 0.01)
-						.scrollY(-0.4)
-						.scrollX([-0.4, 0.4].offset(0.5))
-				)
-		)
-		.cellColor(
-			solid(0, 0, 0, 1)
+	shape(999, 0.3, 0.01)
+		.scrollY(0.2)
+		.scrollX([-0.2, 0.2])
+		.add(
+			shape(4, 0.3, 0.01)
+				.scrollY(-0.4)
+				.scrollX([-0.4, 0.4].offset(0.5))
 		)
 );
 

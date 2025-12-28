@@ -10,7 +10,6 @@ const t = textmode.create({
 
 t.layers.base.synth(
 	shape(4)
-	.charMap('.:-=+*#%@')
 		.rotate([-3.14, 3.14].ease('easeInOutCubic'))
 );
 

@@ -10,7 +10,6 @@ const t = textmode.create({
 
 t.layers.base.synth(
 	shape(999)
-		.charMap('.:-=+*#%@')
 		.scrollX([-0.2, 0.2].smooth())
 );
 
