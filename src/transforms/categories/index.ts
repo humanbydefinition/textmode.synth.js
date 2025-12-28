@@ -9,7 +9,6 @@ export { COMBINE_TRANSFORMS, add, sub, mult, blend, diff, layer, mask } from './
 export { COMBINE_COORD_TRANSFORMS, modulate, modulateScale, modulateRotate, modulatePixelate, modulateKaleid, modulateScrollX, modulateScrollY } from './combineCoord';
 export { CHAR_TRANSFORMS, charNoise, charOsc, charGradient, charVoronoi, charShape, charSolid } from './characters';
 export { CHAR_MODIFY_TRANSFORMS, charFlipX, charFlipY, charInvert, charRotate, charRotateFrom } from './charModifiers';
-export { CHAR_COLOR_TRANSFORMS, CELL_COLOR_TRANSFORMS, charColorSolid, charColorFromIndex, charColorGradient, cellColorSolid, cellColorComplement, cellColorFromChar } from './cellColors';
 
 import { SOURCE_TRANSFORMS } from './sources';
 import { COORD_TRANSFORMS } from './coordinates';
@@ -18,7 +17,6 @@ import { COMBINE_TRANSFORMS } from './combine';
 import { COMBINE_COORD_TRANSFORMS } from './combineCoord';
 import { CHAR_TRANSFORMS } from './characters';
 import { CHAR_MODIFY_TRANSFORMS } from './charModifiers';
-import { CHAR_COLOR_TRANSFORMS, CELL_COLOR_TRANSFORMS } from './cellColors';
 import type { TransformDefinition } from '../TransformDefinition';
 
 /**
@@ -31,7 +29,5 @@ export const ALL_TRANSFORMS: TransformDefinition[] = [
 	...COMBINE_TRANSFORMS,
 	...COMBINE_COORD_TRANSFORMS,
 	...CHAR_TRANSFORMS,
-	...CHAR_MODIFY_TRANSFORMS,
-	...CHAR_COLOR_TRANSFORMS,
-	...CELL_COLOR_TRANSFORMS,
+	...CHAR_MODIFY_TRANSFORMS
 ];
