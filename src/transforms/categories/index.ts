@@ -8,7 +8,7 @@ export { COLOR_TRANSFORMS, brightness, contrast, invert, saturate, hue, colorama
 export { COMBINE_TRANSFORMS, add, sub, mult, blend, diff, layer, mask } from './combine';
 export { COMBINE_COORD_TRANSFORMS, modulate, modulateScale, modulateRotate, modulatePixelate, modulateKaleid, modulateScrollX, modulateScrollY } from './combineCoord';
 export { CHAR_TRANSFORMS, charNoise, charOsc, charGradient, charVoronoi, charShape, charSolid } from './characters';
-export { CHAR_MODIFY_TRANSFORMS, charFlipX, charFlipY, charInvert, charRotate, charRotateFrom } from './charModifiers';
+export { CHAR_MODIFY_TRANSFORMS, charFlipX, charFlipY, charInvert, charRotate } from './charModifiers';
 
 import { SOURCE_TRANSFORMS } from './sources';
 import { COORD_TRANSFORMS } from './coordinates';

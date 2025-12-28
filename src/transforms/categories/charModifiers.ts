@@ -63,18 +63,6 @@ export const charRotate = defineTransform({
 	description: 'Rotate characters',
 });
 
-export const charRotateFrom = defineTransform({
-	name: 'charRotateFrom',
-	type: 'charModify',
-	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
-	glsl: `
-	float idx = _char.r * 255.0 + _char.g * 255.0 * 256.0;
-	float rotation = fract(idx * amount * 0.01);
-	return vec4(_char.rgb, rotation);
-`,
-	description: 'Derive rotation from character index',
-});
-
 /**
  * All character modifier transforms.
  */
@@ -83,5 +71,4 @@ export const CHAR_MODIFY_TRANSFORMS: TransformDefinition[] = [
 	charFlipY,
 	charInvert,
 	charRotate,
-	charRotateFrom,
 ];
