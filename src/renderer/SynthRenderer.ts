@@ -16,10 +16,10 @@ import { CharacterResolver } from './CharacterResolver';
  * Renderer for compiled synth shaders.
  */
 export class SynthRenderer {
-    private readonly _textmodifier: any;
+	private readonly _textmodifier: any;
 	private readonly _gl: WebGL2RenderingContext;
 	private readonly _characterResolver: CharacterResolver;
-	
+
 	private _shader?: any;
 	private _compiled?: CompiledSynthShader;
 	private _uniformLocations = new Map<string, WebGLUniformLocation>();
@@ -31,7 +31,7 @@ export class SynthRenderer {
 	 * @param renderer The GLRenderer instance
 	 */
 	constructor(textmodifier: any, renderer: any) {
-        this._textmodifier = textmodifier;
+		this._textmodifier = textmodifier;
 		this._gl = renderer.context as WebGL2RenderingContext;
 		this._characterResolver = new CharacterResolver();
 		this._initGeometry();
@@ -116,8 +116,8 @@ export class SynthRenderer {
 	private _cacheUniformLocation(name: string): void {
 		if (!this._shader) return;
 
-        console.log(this._shader);
-        console.log(this._shader.glProgram);
+		console.log(this._shader);
+		console.log(this._shader.glProgram);
 
 		const loc = this._gl.getUniformLocation(this._shader.glProgram, name);
 		if (loc) {
@@ -156,20 +156,16 @@ export class SynthRenderer {
 		// Use the framebuffer's begin method to properly bind it
 		target.begin();
 
-		// Save GL state that we'll modify
-		const depthTestEnabled = gl.isEnabled(gl.DEPTH_TEST);
-		const blendEnabled = gl.isEnabled(gl.BLEND);
-
-		// Disable depth testing for fullscreen quad rendering
-		gl.disable(gl.DEPTH_TEST);
-		gl.disable(gl.BLEND);
-
 		// Clear all color attachments and depth buffer
-		gl.clearColor(0, 0, 0, 0);
-		gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+		//gl.clearColor(0, 0, 0, 0);
+		//gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+		this._textmodifier.clear();
 
 		// Use the shader program
 		gl.useProgram(this._shader.glProgram);
+
+		this._textmodifier.shader(this._shader);
 
 		// Set standard uniforms
 		this._setUniform('time', context.time);
@@ -204,7 +200,7 @@ export class SynthRenderer {
 
 		// Bind feedback textures for src/prev, charSrc, and cellColorSrc functions
 		let textureUnit = 0;
-		
+
 		if (this._compiled.usesFeedback && feedbackTextures?.prevBuffer) {
 			const prevLoc = this._uniformLocations.get('prevBuffer');
 			if (prevLoc) {
@@ -275,10 +271,6 @@ export class SynthRenderer {
 
 		// Cleanup
 		gl.bindVertexArray(null);
-
-		// Restore GL state
-		if (depthTestEnabled) gl.enable(gl.DEPTH_TEST);
-		if (blendEnabled) gl.enable(gl.BLEND);
 
 		// End the framebuffer binding
 		target.end();

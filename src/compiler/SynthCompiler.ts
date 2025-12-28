@@ -12,7 +12,7 @@ import type { SynthSource } from '../core/SynthSource';
 import type { CompiledSynthShader, ChainCompilationResult } from './types';
 import { UniformManager } from './UniformManager';
 import { generateFragmentShader, generateCharacterOutputCode } from './GLSLGenerator';
-import { TransformRegistry } from '../transforms/TransformRegistry';
+import { transformRegistry } from '../transforms/TransformRegistry';
 import type { ProcessedTransform } from '../transforms/TransformDefinition';
 
 /**
@@ -231,7 +231,7 @@ class SynthCompilerContext {
 	 * Get a processed transform definition.
 	 */
 	private _getProcessedTransform(name: string): ProcessedTransform | undefined {
-		return TransformRegistry.getProcessed(name);
+		return transformRegistry.getProcessed(name);
 	}
 
 	/**

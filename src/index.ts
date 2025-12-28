@@ -36,8 +36,8 @@
 // Register all transforms and inject methods into SynthSource
 // ============================================================
 
-import { TransformRegistry } from './transforms/TransformRegistry';
-import { TransformFactory } from './transforms/TransformFactory';
+import { transformRegistry } from './transforms/TransformRegistry';
+import { transformFactory } from './transforms/TransformFactory';
 import { ALL_TRANSFORMS } from './transforms/categories';
 import { SynthSource } from './core/SynthSource';
 import type { SynthContext, /* TransformInput */ } from './core/types';
@@ -48,22 +48,22 @@ import { initArrayUtils } from './lib/ArrayUtils';
 initArrayUtils();
 
 // Register all built-in transforms
-TransformRegistry.registerMany(ALL_TRANSFORMS);
+transformRegistry.registerMany(ALL_TRANSFORMS);
 
 // Set up the SynthSource class for method injection
-TransformFactory.setSynthSourceClass(SynthSource as unknown as new () => {
+transformFactory.setSynthSourceClass(SynthSource as unknown as new () => {
 	addTransform(name: string, userArgs: unknown[]): unknown;
 	addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
 });
 
 // Inject chainable methods into SynthSource prototype
-TransformFactory.injectMethods(SynthSource.prototype as unknown as {
+transformFactory.injectMethods(SynthSource.prototype as unknown as {
 	addTransform(name: string, userArgs: unknown[]): unknown;
 	addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
 });
 
 // Generate standalone functions for source transforms
-const generatedFunctions = TransformFactory.generateStandaloneFunctions();
+const generatedFunctions = transformFactory.generateStandaloneFunctions();
 
 // ============================================================
 // EXPORTS - Core types

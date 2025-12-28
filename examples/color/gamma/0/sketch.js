@@ -8,16 +8,12 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
-const synthChain = shape(100, 0.5)
-	.invert(() => Math.sin(t.millis() / 1000) * 2);
+const colorChain = osc(60, 0.1, 1.5).layer(gradient().gamma(() => Math.sin(t.frameCount * 0.05) * 2 + 2));
 
 t.layers.base.synth(
-	charShape(100, 0, 1, 0.5)
-		.charMap('. ')
-
-		.charColor(synthChain)
-
-		.cellColor(synthChain.clone().invert())
+	charOsc(60, 0.1, 1.5, 16)
+		.charColor(colorChain)
+		.cellColor(colorChain.clone().invert())
 );
 
 t.draw(() => {

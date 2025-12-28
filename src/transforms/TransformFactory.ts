@@ -7,7 +7,7 @@
  */
 
 import type { TransformDefinition } from './TransformDefinition';
-import { TransformRegistry } from './TransformRegistry';
+import { transformRegistry } from './TransformRegistry';
 import type { SynthParameterValue } from '../core/types';
 
 /**
@@ -34,7 +34,7 @@ export interface GeneratedFunctions {
 /**
  * Factory for generating dynamic transform methods.
  */
-class TransformFactoryImpl {
+class TransformFactory {
 	private _generatedFunctions: GeneratedFunctions = {};
 	private _synthSourceClass: (new () => SynthSourcePrototype) | null = null;
 
@@ -51,7 +51,7 @@ class TransformFactoryImpl {
 	 * This dynamically adds all registered transforms as methods.
 	 */
 	public injectMethods(prototype: SynthSourcePrototype): void {
-		const transforms = TransformRegistry.getAll();
+		const transforms = transformRegistry.getAll();
 		
 		for (const transform of transforms) {
 			this._injectMethod(prototype, transform);
@@ -96,7 +96,7 @@ class TransformFactoryImpl {
 		}
 
 		const functions: GeneratedFunctions = {};
-		const transforms = TransformRegistry.getAll();
+		const transforms = transformRegistry.getAll();
 		const SynthSource = this._synthSourceClass;
 
 		for (const transform of transforms) {
@@ -128,7 +128,7 @@ class TransformFactoryImpl {
 	 */
 	public addTransform(transform: TransformDefinition, prototype?: SynthSourcePrototype): void {
 		// Register in the registry
-		TransformRegistry.register(transform);
+		transformRegistry.register(transform);
 
 		// Inject method if prototype provided
 		if (prototype) {
@@ -152,4 +152,4 @@ class TransformFactoryImpl {
 /**
  * Singleton instance of the transform factory.
  */
-export const TransformFactory = new TransformFactoryImpl();
+export const transformFactory = new TransformFactory();

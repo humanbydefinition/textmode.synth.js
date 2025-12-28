@@ -11,7 +11,7 @@ const t = textmode.create({
 const synthLayer = t.layers.add();
 
 // Can be called globally, just like layer.draw()!
-t.layers.base.synth(
+synthLayer.synth(
     charGradient([1,2,4], 16)
         .charColor(
             gradient([1,2,4])
@@ -21,6 +21,9 @@ t.layers.base.synth(
                 .invert()
         )
 );
+
+synthLayer.draw(() => {
+});
 
 t.draw(() => {
 

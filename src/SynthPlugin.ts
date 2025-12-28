@@ -8,10 +8,10 @@
 import type {
     TextmodePlugin,
     TextmodePluginAPI,
-    LayerRenderContext,
-    loadables,
-    layering 
 } from 'textmode.js';
+
+import type { TextmodeFont } from 'textmode.js/loadables';
+import type { TextmodeLayer } from 'textmode.js/layering';
 
 import type { TextmodeFramebuffer, /*GLRenderer*/ } from 'textmode.js';
 
@@ -86,7 +86,7 @@ export const SynthPlugin: TextmodePlugin = {
         // ============================================================
         // EXTEND LAYER WITH .synth() METHOD
         // ============================================================
-        api.extendLayer('synth', function (this: layering.TextmodeLayer, source: SynthSource): void {
+        api.extendLayer('synth', function (this: TextmodeLayer, source: SynthSource): void {
             const now = performance.now() / 1000;
 
             // Check if layer is already initialized (has grid and drawFramebuffer)
@@ -132,7 +132,7 @@ export const SynthPlugin: TextmodePlugin = {
         // ============================================================
         // LAYER PRE-RENDER HOOK - Render synth before user draw
         // ============================================================
-        api.registerLayerPreRenderHook(async (layer: layering.TextmodeLayer, context: LayerRenderContext) => {
+        api.registerLayerPreRenderHook(async (layer: TextmodeLayer) => {
             const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
             if (!state) {
                 return;
@@ -193,11 +193,11 @@ export const SynthPlugin: TextmodePlugin = {
             }
 
             // Build synth context
-            const mouse = (context.textmodifier as any).mouse;
+            const mouse = (textmodifier as any).mouse;
 
             const synthContext: SynthContext = {
-                time: context.textmodifier.millis() / 1000,
-                frameCount: context.frameCount,
+                time: textmodifier.millis() / 1000,
+                frameCount: textmodifier.frameCount,
                 width: grid.width,
                 height: grid.height,
                 cols: grid.cols,
@@ -234,7 +234,7 @@ export const SynthPlugin: TextmodePlugin = {
                     grid.cols,
                     grid.rows,
                     synthContext,
-                    layer.font as unknown as loadables.TextmodeFont,
+                    layer.font as unknown as TextmodeFont,
                     feedbackTextures
                 );
                 
@@ -245,7 +245,7 @@ export const SynthPlugin: TextmodePlugin = {
                     grid.cols,
                     grid.rows,
                     synthContext,
-                    layer.font as unknown as loadables.TextmodeFont,
+                    layer.font as unknown as TextmodeFont,
                     feedbackTextures
                 );
                 
@@ -258,7 +258,7 @@ export const SynthPlugin: TextmodePlugin = {
                     grid.cols,
                     grid.rows,
                     synthContext,
-                    layer.font as unknown as loadables.TextmodeFont,
+                    layer.font as unknown as TextmodeFont,
                     undefined
                 );
             }
@@ -267,7 +267,7 @@ export const SynthPlugin: TextmodePlugin = {
         // ============================================================
         // LAYER DISPOSED HOOK - Clean up synth resources
         // ============================================================
-        api.registerLayerDisposedHook((layer: layering.TextmodeLayer) => {
+        api.registerLayerDisposedHook((layer: TextmodeLayer) => {
             const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
             if (state?.renderer) {
                 state.renderer.dispose();

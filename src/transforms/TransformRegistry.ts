@@ -13,7 +13,7 @@ import type { SynthTransformType } from '../core/types';
 /**
  * Centralized registry for synthesis transforms.
  */
-class TransformRegistryImpl {
+class TransformRegistry {
 	/** Map of transform name to definition */
 	private readonly _transforms = new Map<string, TransformDefinition>();
 	
@@ -125,4 +125,4 @@ class TransformRegistryImpl {
 /**
  * Singleton instance of the transform registry.
  */
-export const TransformRegistry = new TransformRegistryImpl();
+export const transformRegistry = new TransformRegistry();
