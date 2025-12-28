@@ -13,9 +13,9 @@ import { ISynthSource } from './ISynthSource';
 interface SynthSourceCreateOptions {
 	chain?: SynthChain;
 	charMapping?: CharacterMapping;
-	colorSource?: ISynthSource;
-	cellColorSource?: ISynthSource;
-	nestedSources?: Map<number, ISynthSource>;
+	colorSource?: SynthSource;
+	cellColorSource?: SynthSource;
+	nestedSources?: Map<number, SynthSource>;
 }
 
 /**
@@ -43,13 +43,13 @@ export class SynthSource implements ISynthSource {
 	private _charMapping?: CharacterMapping;
 
 	/** Nested sources for combine operations (indexed by transform position) */
-	private readonly _nestedSources: Map<number, ISynthSource>;
+	private readonly _nestedSources: Map<number, SynthSource>;
 
 	/** Reference to the color source chain (if any) */
-	private _colorSource?: ISynthSource;
+	private _colorSource?: SynthSource;
 
 	/** Reference to the cell color source chain (if any) */
-	private _cellColorSource?: ISynthSource;
+	private _cellColorSource?: SynthSource;
 
 	/**
 	 * Create a new SynthSource.
@@ -86,7 +86,7 @@ export class SynthSource implements ISynthSource {
 	 * Add a combine transform that references another source.
 	 * @ignore
 	 */
-	public addCombineTransform(name: string, source: ISynthSource, userArgs: SynthParameterValue[]): this {
+	public addCombineTransform(name: string, source: SynthSource, userArgs: SynthParameterValue[]): this {
 		const index = this._chain.length;
 		this._nestedSources.set(index, source);
 		return this.addTransform(name, userArgs);
@@ -101,25 +101,25 @@ export class SynthSource implements ISynthSource {
 		return this;
 	}
 
-	public charColor(source: ISynthSource): this {
+	public charColor(source: SynthSource): this {
 		this._colorSource = source;
 		return this;
 	}
 
-	public cellColor(source: ISynthSource): this {
+	public cellColor(source: SynthSource): this {
 		this._cellColorSource = source;
 		return this;
 	}
 
-	public paint(source: ISynthSource): this {
+	public paint(source: SynthSource): this {
 		this._colorSource = source;
 		this._cellColorSource = source;
 		return this;
 	}
 
-	public clone(): ISynthSource {
+	public clone(): SynthSource {
 		// Clone nested sources
-		const clonedNestedSources = new Map<number, ISynthSource>();
+		const clonedNestedSources = new Map<number, SynthSource>();
 		for (const [key, value] of this._nestedSources) {
 			clonedNestedSources.set(key, value.clone());
 		}
@@ -157,7 +157,7 @@ export class SynthSource implements ISynthSource {
 	 * Get the color source if defined.
 	 * @ignore
 	 */
-	public get colorSource(): ISynthSource | undefined {
+	public get colorSource(): SynthSource | undefined {
 		return this._colorSource;
 	}
 
@@ -165,7 +165,7 @@ export class SynthSource implements ISynthSource {
 	 * Get the cell color source if defined.
 	 * @ignore
 	 */
-	public get cellColorSource(): ISynthSource | undefined {
+	public get cellColorSource(): SynthSource | undefined {
 		return this._cellColorSource;
 	}
 
@@ -173,7 +173,7 @@ export class SynthSource implements ISynthSource {
 	 * Get all nested sources for combine operations.
 	 * @ignore
 	 */
-	public get nestedSources(): Map<number, ISynthSource> {
+	public get nestedSources(): Map<number, SynthSource> {
 		return this._nestedSources;
 	}
 }

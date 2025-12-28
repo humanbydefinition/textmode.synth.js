@@ -1,11 +1,3 @@
-/**
- * SynthChain - Immutable transform chain data structure.
- * 
- * This class represents an immutable sequence of transforms that make up
- * a synth chain. Each modification returns a new SynthChain instance,
- * ensuring predictable state management.
- */
-
 import type { SynthParameterValue } from './types';
 
 /**

@@ -780,10 +780,4 @@ export interface ISynthSource {
      * @param speed - Rotation speed (default: 0.0)
      */
     charRotate?: (angle?: SynthParameterValue, speed?: SynthParameterValue) => ISynthSource;
-
-    /**
-     * Rotate characters based on underlying value.
-     * @param amount - Rotation amount multiplier (default: 1.0)
-     */
-    charRotateFrom?: (amount?: SynthParameterValue) => ISynthSource;
 }
