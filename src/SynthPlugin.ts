@@ -126,30 +126,8 @@ export const SynthPlugin: TextmodePlugin = {
             }
 
             this.setPluginState(PLUGIN_NAME, state);
-
-            // Mark that this layer has renderable plugin content
-            this.setPluginState('__hasRenderableContent__', true);
         });
 
-        // ============================================================
-        // EXTEND LAYER WITH .clearSynth() METHOD
-        // ============================================================
-        api.extendLayer('clearSynth', function (this: layering.TextmodeLayer): void {
-            const state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
-            if (state?.renderer) {
-                state.renderer.dispose();
-            }
-            // Note: Ping-pong buffers will be garbage collected when the layer is disposed
-            // GLFramebuffer doesn't expose a public dispose method
-            this.deletePluginState(PLUGIN_NAME);
-        });
-
-        // ============================================================
-        // EXTEND LAYER WITH .hasSynth() METHOD
-        // ============================================================
-        api.extendLayer('hasSynth', function (this: layering.TextmodeLayer): boolean {
-            return this.hasPluginState(PLUGIN_NAME);
-        });
 
         // ============================================================
         // LAYER PRE-RENDER HOOK - Render synth before user draw
@@ -215,11 +193,10 @@ export const SynthPlugin: TextmodePlugin = {
             }
 
             // Build synth context
-            const now = performance.now() / 1000;
             const mouse = (context.textmodifier as any).mouse;
 
             const synthContext: SynthContext = {
-                time: now - state.startTime,
+                time: context.textmodifier.millis() / 1000,
                 frameCount: context.frameCount,
                 width: grid.width,
                 height: grid.height,
@@ -285,9 +262,6 @@ export const SynthPlugin: TextmodePlugin = {
                     undefined
                 );
             }
-
-            // Mark that this layer has renderable content for this frame
-            layer.setPluginState('__hasRenderableContent__', true);
         });
 
         // ============================================================
