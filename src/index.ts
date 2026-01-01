@@ -6,7 +6,7 @@
  * @example
  * ```ts
  * import { textmode } from 'textmode.js';
- * import { SynthPlugin, charNoise, osc, solid } from 'textmode.synth.js';
+ * import { SynthPlugin, osc, noise } from 'textmode.synth.js';
  *
  * // Create textmode instance with SynthPlugin
  * const t = textmode.create({
@@ -17,12 +17,15 @@
  * });
  *
  * // Create a synth chain with procedural characters and colors
- * const synth = charNoise(10)
- *   .charMap('@#%*+=-:. ')
- *   .charRotate(0.1)
+ * const synth = noise(10)
+ *   .rotate(0.1)
+ *   .scroll(0.1, 0)
+ *
  *   .charColor(osc(5).kaleid(4))
- *   .cellColor(solid(0, 0, 0, 0.5))
- *   .scroll(0.1, 0);
+ *   .cellColor(osc(5).kaleid(4).invert())
+ *
+ *   .charMap('@#%*+=-:. ');
+ *
  *
  * // Apply synth to the base layer
  * t.layers.base.synth(synth);
@@ -66,6 +69,223 @@ transformFactory.injectMethods(SynthSource.prototype as unknown as {
 const generatedFunctions = transformFactory.generateStandaloneFunctions();
 
 // ============================================================
+// SPECIAL STANDALONE FUNCTION: char()
+// Creates a SynthSource that uses another source for character generation
+// ============================================================
+
+/**
+ * Create a character source from any color/pattern source.
+ * 
+ * This is the primary way to define which source drives character generation.
+ * The source's luminance (or color value) is converted to character indices.
+ * 
+ * @param source - A SynthSource producing color values that will be mapped to characters
+ * @param charCount - Number of different characters to use (default: 256)
+ * @returns A new SynthSource configured for character generation
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Use osc pattern for characters
+ * const pattern = osc(10, 0.1, 1.5);
+ * t.layers.base.synth(
+ *   char(pattern)
+ *     .charMap('@#%*+=-:. ')
+ *     .charColor(pattern.clone())
+ *     .cellColor(pattern.clone().invert())
+ * );
+ * 
+ * // Use noise for characters with limited character count
+ * t.layers.base.synth(
+ *   char(noise(10), 16)
+ *     .charMap('@#%*+=-:. ')
+ *     .charColor(voronoi(5))
+ * );
+ * 
+ * // Complex composition - same pattern for all three outputs
+ * const colorPattern = voronoi(5).mult(osc(20));
+ * t.layers.base.synth(
+ *   char(colorPattern)
+ *     .charMap(' .:-=+*#%@')
+ *     .charColor(colorPattern)
+ *     .cellColor(colorPattern.invert())
+ * );
+ * ```
+ */
+function createCharFunction(): (source: SynthSource, charCount?: number) => SynthSource {
+	// We need a reference to SynthSource, but we get it from the module scope
+	return (source: SynthSource, charCount: number = 256): SynthSource => {
+		// Create a new SynthSource with the charSource set
+		// We use Object.create to properly instantiate while setting internal properties
+		const result = new SynthSource();
+		
+		// Access private properties via any cast (internal API)
+		(result as any)._charSource = source;
+		(result as any)._charCount = charCount;
+		
+		return result;
+	};
+}
+
+/**
+ * Create a character source from any color/pattern source.
+ * 
+ * This function converts any pattern (like `osc()`, `noise()`, `voronoi()`) into
+ * character indices. The pattern's luminance or color values are mapped to character indices.
+ * 
+ * This is the recommended way to define character generation in textmode.synth.js,
+ * as it provides a unified, compositional API where the same patterns can drive
+ * characters, character colors, and cell colors.
+ * 
+ * @param source - A SynthSource producing color values that will be mapped to characters
+ * @param charCount - Number of different characters to use (default: 256)
+ * @returns A new SynthSource configured for character generation
+ * 
+ * @example
+ * ```typescript
+ * // Simple usage - same pattern for chars and colors
+ * const pattern = osc(1, 0.1);
+ * layer.synth(
+ *   char(pattern)
+ *     .charColor(pattern.clone())
+ * );
+ * 
+ * // With limited character count
+ * layer.synth(
+ *   char(noise(10), 16)
+ *     .charMap('@#%*+=-:. ')
+ * );
+ * ```
+ */
+export const char = createCharFunction();
+
+/**
+ * Create a synth source with character foreground color defined.
+ * 
+ * This function creates a SynthSource where the character foreground color
+ * is driven by the provided source pattern. This is compositional and can be
+ * combined with `char()` and `cellColor()`.
+ * 
+ * @param source - A SynthSource producing color values for character foreground
+ * @returns A new SynthSource configured with character color
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Start with character color
+ * const pattern = osc(10, 0.1);
+ * t.layers.base.synth(
+ *   charColor(pattern)
+ *     .char(noise(10))
+ *     .cellColor(solid(0, 0, 0, 0.5))
+ * );
+ * 
+ * // Using different patterns for each aspect
+ * t.layers.base.synth(
+ *   charColor(voronoi(5).mult(osc(20)))
+ *     .char(noise(10), 16)
+ *     .charMap('@#%*+=-:. ')
+ * );
+ * ```
+ */
+export const charColor: (source: SynthSource) => SynthSource = (source) => {
+	const result = new SynthSource();
+	(result as any)._colorSource = source;
+	return result;
+};
+
+/**
+ * Create a synth source with cell background color defined.
+ * 
+ * This function creates a SynthSource where the cell background color
+ * is driven by the provided source pattern. This is compositional and can be
+ * combined with `char()` and `charColor()`.
+ * 
+ * @param source - A SynthSource producing color values for cell background
+ * @returns A new SynthSource configured with cell color
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Start with cell color
+ * t.layers.base.synth(
+ *   cellColor(solid(0, 0, 0, 0.5))
+ *     .char(noise(10))
+ *     .charColor(osc(5))
+ * );
+ * 
+ * // Complete composition - all three defined
+ * const colorPattern = voronoi(5, 0.3);
+ * t.layers.base.synth(
+ *   cellColor(colorPattern.clone().invert())
+ *     .char(noise(10), 16)
+ *     .charMap('@#%*+=-:. ')
+ *     .charColor(colorPattern)
+ * );
+ * ```
+ */
+export const cellColor: (source: SynthSource) => SynthSource = (source) => {
+	const result = new SynthSource();
+	(result as any)._cellColorSource = source;
+	return result;
+};
+
+/**
+ * Create a synth source with both character and cell colors defined.
+ * 
+ * This function creates a SynthSource where both the character foreground color
+ * and the cell background color are driven by the same source pattern.
+ * This is a convenience function equivalent to calling both `charColor()` and
+ * `cellColor()` with the same source.
+ * 
+ * @param source - A SynthSource producing color values for both character and cell colors
+ * @returns A new SynthSource configured with both color sources
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * // Use same pattern for both foreground and background colors
+ * const colorPattern = osc(10, 0.1).mult(voronoi(5));
+ * t.layers.base.synth(
+ *   paint(colorPattern)
+ *     .char(noise(10), 16)
+ *     .charMap('@#%*+=-:. ')
+ * );
+ * 
+ * // Paint with gradient
+ * t.layers.base.synth(
+ *   paint(gradient(0.5))
+ * );
+ * ```
+ */
+export const paint: (source: SynthSource) => SynthSource = (source) => {
+	const result = new SynthSource();
+	(result as any)._colorSource = source;
+	(result as any)._cellColorSource = source;
+	return result;
+};
+
+// ============================================================
 // EXPORTS - Core types
 // ============================================================
 
@@ -105,13 +325,13 @@ export { SynthSource } from './core/SynthSource';
  * 
  * // Basic oscillating color pattern
  * t.layers.base.synth(
- *   charOsc(10, 0.1)
+ *   osc(1, 0.1)
  *     .charColor(osc(10, 0.1))
  * );
  * 
  * // Animated frequency using array modulation
  * t.layers.base.synth(
- *   charOsc([1, 10, 50, 100].fast(2), 0.001)
+ *   osc([1, 10, 50, 100].fast(2), 0.001)
  *     .charColor(osc([1, 10, 50, 100].fast(2), 0.001))
  * );
  * ```
@@ -137,7 +357,7 @@ export const osc = generatedFunctions['osc'] as (
  * 
  * // Basic noise pattern
  * t.layers.base.synth(
- *   charNoise(10, 0.1)
+ *   noise(10, 0.1)
  *     .charColor(noise(10, 0.1))
  * );
  * ```
@@ -163,7 +383,7 @@ export const noise = generatedFunctions['noise'] as (
  * 
  * // Animated Voronoi pattern
  * t.layers.base.synth(
- *   charVoronoi(5, 0.3, 8)
+ *   voronoi(5, 0.3, 0.3)
  *     .charColor(voronoi(5, 0.3, 0.3))
  * );
  * ```
@@ -188,7 +408,7 @@ export const voronoi = generatedFunctions['voronoi'] as (
  * 
  * // Animated gradient with array modulation
  * t.layers.base.synth(
- *   charGradient([1, 2, 4], 16)
+ *   gradient([1, 2, 4])
  *     .charColor(gradient([1, 2, 4]))
  *     .cellColor(
  *       gradient([1, 2, 4])
@@ -215,15 +435,15 @@ export const gradient = generatedFunctions['gradient'] as (
  *   plugins: [SynthPlugin]
  * });
  * 
- * // Triangle with smooth edges
+ * // Triangle
  * t.layers.base.synth(
- *   charShape(3, 0, 1, 0.5)
+ *   shape(3)
  *     .charMap('. ')
  * );
  * 
  * // High-sided polygon (circle-like)
  * t.layers.base.synth(
- *   charShape(100, 0, 1, 0.5)
+ *   shape(100)
  *     .charMap('. ')
  * );
  * ```
@@ -251,7 +471,7 @@ export const shape = generatedFunctions['shape'] as (
  * 
  * // Solid colors with array modulation
  * t.layers.base.synth(
- *   charSolid([16, 17, 18])
+ *   solid(0.6, 0, 0, 1)
  *     .charColor(solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1))
  *     .cellColor(
  *       solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1)
@@ -295,21 +515,6 @@ export const solid = generatedFunctions['solid'] as (
  * ```
  */
 export const src = generatedFunctions['src'] as () => SynthSource;
-
-/**
- * Sample the previous frame's primary color output for feedback effects.
- * @deprecated Use src() instead for hydra compatibility
- * 
- * @example
- * ```typescript
- * // Classic feedback loop with noise modulation
- * prev().modulate(noise(3), 0.005).blend(shape(4), 0.01)
- * 
- * // Character trails effect
- * prev().scale(1.01).blend(charNoise(10).charColor(osc(5)), 0.1)
- * ```
- */
-export const prev = generatedFunctions['prev'] as () => SynthSource;
 
 /**
  * Sample the previous frame's character data for feedback effects.
@@ -356,189 +561,6 @@ export const charSrc = generatedFunctions['charSrc'] as () => SynthSource;
  * ```
  */
 export const cellColorSrc = generatedFunctions['cellColorSrc'] as () => SynthSource;
-
-// Character sources
-/**
- * Generate character indices using Perlin noise.
- * @param scale - Scale of the noise pattern (default: 10.0)
- * @param offset - Offset in noise space (default: 0.1)
- * @param charCount - Number of different characters to use (default: 256)
- * 
- * @example
- * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- * 
- * // Noise-based character generation
- * t.layers.base.synth(
- *   charNoise(10, 0.1)
- *     .charColor(noise(10, 0.1))
- * );
- * ```
- */
-export const charNoise = generatedFunctions['charNoise'] as (
-	scale?: number | number[] | ((ctx: SynthContext) => number),
-	offset?: number | number[] | ((ctx: SynthContext) => number),
-	charCount?: number | number[] | ((ctx: SynthContext) => number)
-) => SynthSource;
-
-/**
- * Generate character indices using oscillating sine waves.
- * @param frequency - Frequency of the oscillation (default: 60.0)
- * @param sync - Synchronization offset (default: 0.1)
- * @param offset - Phase offset (default: 0.0)
- * @param charCount - Number of different characters to use (default: 256)
- * 
- * @example
- * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- * 
- * // Oscillating characters with dynamic frequency
- * t.layers.base.synth(
- *   charOsc([1, 10, 50, 100, 250, 500].fast(2), 0.001)
- *     .charColor(osc([1, 10, 50, 100, 250, 500].fast(2), 0.001))
- * );
- * 
- * // Using context function for time-based animation
- * t.layers.base.synth(
- *   charOsc(0.1, 0.1)
- *     .charColor(
- *       osc(10, 0.1, (ctx) => Math.sin(ctx.time / 10) * 100)
- *     )
- * );
- * ```
- */
-export const charOsc = generatedFunctions['charOsc'] as (
-	frequency?: number | number[] | ((ctx: SynthContext) => number),
-	sync?: number | number[] | ((ctx: SynthContext) => number),
-	offset?: number | number[] | ((ctx: SynthContext) => number),
-	charCount?: number | number[] | ((ctx: SynthContext) => number)
-) => SynthSource;
-
-/**
- * Generate character indices using a rotating radial gradient.
- * @param speed - Rotation speed (default: 0.0)
- * @param charCount - Number of different characters to use (default: 256)
- * 
- * @example
- * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- * 
- * // Gradient-based characters with array modulation
- * t.layers.base.synth(
- *   charGradient([1, 2, 4], 16)
- *     .charColor(gradient([1, 2, 4]))
- *     .cellColor(
- *       gradient([1, 2, 4])
- *         .invert((ctx) => Math.sin(ctx.time) * 2)
- *     )
- * );
- * ```
- */
-export const charGradient = generatedFunctions['charGradient'] as (
-	speed?: number | number[] | ((ctx: SynthContext) => number),
-	charCount?: number | number[] | ((ctx: SynthContext) => number)
-) => SynthSource;
-
-/**
- * Generate character indices using Voronoi (cellular) patterns.
- * @param scale - Scale of Voronoi cells (default: 5.0)
- * @param speed - Animation speed (default: 0.3)
- * @param charCount - Number of different characters to use (default: 256)
- * 
- * @example
- * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- * 
- * // Voronoi-based character generation
- * t.layers.base.synth(
- *   charVoronoi(5, 0.3, 8)
- *     .charColor(voronoi(5, 0.3, 0.3))
- * );
- * ```
- */
-export const charVoronoi = generatedFunctions['charVoronoi'] as (
-	scale?: number | number[] | ((ctx: SynthContext) => number),
-	speed?: number | number[] | ((ctx: SynthContext) => number),
-	charCount?: number | number[] | ((ctx: SynthContext) => number)
-) => SynthSource;
-
-/**
- * Generate character indices based on geometric shapes (polygons).
- * @param sides - Number of sides (default: 3)
- * @param innerChar - Character index for inside the shape (default: 0)
- * @param outerChar - Character index for outside the shape (default: 1)
- * @param radius - Radius of the shape (default: 0.3)
- * 
- * @example
- * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- * 
- * // Triangle shape with two character indices
- * t.layers.base.synth(
- *   charShape(3, 0, 1, 0.5)
- *     .charMap('. ')
- * );
- * 
- * // Circle-like shape (100 sides)
- * t.layers.base.synth(
- *   charShape(100, 0, 1, 0.5)
- *     .charMap('. ')
- * );
- * ```
- */
-export const charShape = generatedFunctions['charShape'] as (
-	sides?: number | number[] | ((ctx: SynthContext) => number),
-	innerChar?: number | number[] | ((ctx: SynthContext) => number),
-	outerChar?: number | number[] | ((ctx: SynthContext) => number),
-	radius?: number | number[] | ((ctx: SynthContext) => number)
-) => SynthSource;
-
-/**
- * Generate a solid character index across the entire canvas.
- * @param charIndex - Character index to use (default: 0)
- * 
- * @example
- * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- * 
- * // Solid character with array modulation for cycling
- * t.layers.base.synth(
- *   charSolid([16, 17, 18])
- *     .charColor(solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1))
- *     .cellColor(
- *       solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1)
- *         .invert()
- *     )
- * );
- * ```
- */
-export const charSolid = generatedFunctions['charSolid'] as (
-	charIndex?: number | number[] | ((ctx: SynthContext) => number)
-) => SynthSource;
 
 // ============================================================
 // EXPORTS - Utilities

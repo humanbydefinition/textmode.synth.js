@@ -18,11 +18,9 @@ import { SynthPlugin, charNoise, osc } from 'textmode.synth.js';
 
 const t = textmode.create({ plugins: [SynthPlugin] });
 
-const layer = t.layers.add();
-
 // Can be called globally, before setup()
-layer.synth(
-  charNoise(10)
+t.layers.base.synth(
+  noise(10)
     .charMap('@#%*+=-:. ')
     .charColor(osc(5).kaleid(4))
 );

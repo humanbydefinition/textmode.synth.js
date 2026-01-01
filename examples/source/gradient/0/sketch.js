@@ -1,5 +1,5 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charGradient, gradient, osc, solid } from 'textmode.synth.js';
+import { SynthPlugin, gradient } from 'textmode.synth.js';
 
 const t = textmode.create({
     width: window.innerWidth,
@@ -8,22 +8,9 @@ const t = textmode.create({
     plugins: [SynthPlugin]
 });
 
-const synthLayer = t.layers.add();
-
-// Can be called globally, just like layer.draw()!
-synthLayer.synth(
-    charGradient([1,2,4], 16)
-        .charColor(
-            gradient([1,2,4])
-        )
-        .cellColor(
-            gradient([1,2,4])
-                .invert()
-        )
+t.layers.base.synth(
+    gradient([1, 2, 4])
 );
-
-synthLayer.draw(() => {
-});
 
 t.draw(() => {
 

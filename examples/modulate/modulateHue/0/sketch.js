@@ -1,5 +1,5 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charOsc, osc, noise, src, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
+import { SynthPlugin,  osc, shape, src } from 'textmode.synth.js';
 
 const t = textmode.create({
 	width: window.innerWidth,

@@ -23,13 +23,7 @@ const t = textmode.create({
 
 // Rotating shape with eased animation
 t.layers.base.synth(
-  charShape(4)
+  shape(4)
     .rotate([-3.14, 3.14].ease('easeInOutCubic'))
-    .charColor(
-      shape(4).rotate([-3.14, 3.14].ease('easeInOutCubic'))
-    )
-    .cellColor(
-      shape(4).rotate([-3.14, 3.14].ease('easeInOutCubic')).invert()
-    )
 );
 ```

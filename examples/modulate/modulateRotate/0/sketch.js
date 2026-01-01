@@ -1,5 +1,5 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
+import { SynthPlugin, osc, voronoi } from 'textmode.synth.js';
 
 const t = textmode.create({
 	width: window.innerWidth,
@@ -13,7 +13,7 @@ const colorChain = voronoi(100, 3, 5)
     .mult(osc(50, -0.1, 8).kaleid(9));
 
 t.layers.base.synth(
-	charVoronoi(100, 3, 16)
+	voronoi(100, 3)
 		.modulateRotate(osc(1, 0.5, 0).kaleid(50).scale(0.5), 15, 0)
 		//.mult(osc(50, -0.1, 8).kaleid(9))
 

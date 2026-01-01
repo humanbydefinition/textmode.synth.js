@@ -31,13 +31,13 @@ const t = textmode.create({
 
 // Basic oscillating color pattern
 t.layers.base.synth(
-  charOsc(10, 0.1)
+  osc(1, 0.1)
     .charColor(osc(10, 0.1))
 );
 
 // Animated frequency using array modulation
 t.layers.base.synth(
-  charOsc([1, 10, 50, 100].fast(2), 0.001)
+  osc([1, 10, 50, 100].fast(2), 0.001)
     .charColor(osc([1, 10, 50, 100].fast(2), 0.001))
 );
 ```

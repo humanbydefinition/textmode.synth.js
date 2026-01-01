@@ -117,23 +117,6 @@ export const solid = defineTransform({
 	description: 'Generate solid color',
 });
 
-/**
- * Sample the previous frame's primary color output for feedback effects.
- * This is the core of feedback loops - it reads from the previous frame's
- * primary color texture (character foreground color), enabling effects like 
- * trails, motion blur, and recursive patterns.
- * 
- * Equivalent to hydra's `src(o0)`.
- * 
- * @example
- * ```typescript
- * // Classic feedback loop with noise modulation (hydra-style)
- * src().modulate(noise(3), 0.005).blend(shape(4), 0.01)
- * 
- * // Feedback with color shift
- * src().hue(0.01).scale(1.01).blend(osc(10), 0.1)
- * ```
- */
 export const src = defineTransform({
 	name: 'src',
 	type: 'src',
@@ -144,33 +127,6 @@ export const src = defineTransform({
 	description: 'Sample the previous frame primary color for feedback effects',
 });
 
-/**
- * Alias for src() - sample the previous frame's primary color output.
- * @deprecated Use src() instead for hydra compatibility
- */
-export const prev = defineTransform({
-	name: 'prev',
-	type: 'src',
-	inputs: [],
-	glsl: `
-	return texture(prevBuffer, fract(_st));
-`,
-	description: 'Sample the previous frame primary color for feedback effects (alias for src)',
-});
-
-/**
- * Sample the previous frame's character data for feedback effects.
- * Reads from the previous frame's character texture (attachment 0), which contains
- * character index and transform data.
- * 
- * Use this to create feedback loops that affect character selection.
- * 
- * @example
- * ```typescript
- * // Character feedback with modulation
- * charSrc().modulate(noise(3), 0.01)
- * ```
- */
 export const charSrc = defineTransform({
 	name: 'charSrc',
 	type: 'src',
@@ -181,19 +137,6 @@ export const charSrc = defineTransform({
 	description: 'Sample the previous frame character data for feedback effects',
 });
 
-/**
- * Sample the previous frame's cell/secondary color for feedback effects.
- * Reads from the previous frame's secondary color texture (attachment 2), which contains
- * the cell background color.
- * 
- * Use this to create feedback loops that affect cell background colors.
- * 
- * @example
- * ```typescript
- * // Cell color feedback
- * cellColorSrc().hue(0.01).blend(solid(0, 0, 0), 0.1)
- * ```
- */
 export const cellColorSrc = defineTransform({
 	name: 'cellColorSrc',
 	type: 'src',
@@ -215,7 +158,6 @@ export const SOURCE_TRANSFORMS: TransformDefinition[] = [
 	shape,
 	solid,
 	src,
-	prev,
 	charSrc,
 	cellColorSrc,
 ];

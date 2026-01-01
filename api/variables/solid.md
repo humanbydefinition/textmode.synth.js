@@ -32,7 +32,7 @@ const t = textmode.create({
 
 // Solid colors with array modulation
 t.layers.base.synth(
-  charSolid([16, 17, 18])
+  solid(0.6, 0, 0, 1)
     .charColor(solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1))
     .cellColor(
       solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1)

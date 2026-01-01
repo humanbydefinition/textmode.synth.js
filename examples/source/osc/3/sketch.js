@@ -1,18 +1,20 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
+import { SynthPlugin, osc, char } from 'textmode.synth.js';
 
 const t = textmode.create({
-    width: window.innerWidth,
-    height: window.innerHeight,
-    fontSize: 16,
-    plugins: [SynthPlugin]
+	width: window.innerWidth,
+	height: window.innerHeight,
+	fontSize: 16,
+	plugins: [SynthPlugin]
 });
 
+const charChain = osc(1, 0.1, (ctx) => Math.sin(ctx.time / 10) * 10)
+
+const colorChain = osc(10, 0.1, (ctx) => Math.sin(ctx.time / 10) * 100)
+
 t.layers.base.synth(
-	charOsc(0.1, 0.1)
-		.charColor(
-			osc(10, 0.1, (ctx) => Math.sin(ctx.time / 10) * 100)
-		)
+	char(charChain)
+		.charColor(colorChain)
 );
 
 t.draw(() => {

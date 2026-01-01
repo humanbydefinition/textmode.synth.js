@@ -23,7 +23,4 @@ Each type has specific input/output signatures:
 - `color`: Color transforms that modify existing color values
 - `combine`: Blending operations that combine two color sources
 - `combineCoord`: Modulation that uses one source to affect another's coordinates
-- `char`: Character source generators for textmode
 - `charModify`: Character property modifiers (flip, rotate, invert)
-- `charColor`: Character foreground color sources
-- `cellColor`: Cell/background color sources

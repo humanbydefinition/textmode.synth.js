@@ -29,15 +29,15 @@ const t = textmode.create({
   plugins: [SynthPlugin]
 });
 
-// Triangle with smooth edges
+// Triangle
 t.layers.base.synth(
-  charShape(3, 0, 1, 0.5)
+  shape(3)
     .charMap('. ')
 );
 
 // High-sided polygon (circle-like)
 t.layers.base.synth(
-  charShape(100, 0, 1, 0.5)
+  shape(100)
     .charMap('. ')
 );
 ```

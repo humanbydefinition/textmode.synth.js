@@ -1,5 +1,5 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
+import { SynthPlugin, shape, char } from 'textmode.synth.js';
 
 const t = textmode.create({
 	width: window.innerWidth,
@@ -8,11 +8,11 @@ const t = textmode.create({
 	plugins: [SynthPlugin]
 });
 
-const synthChain = shape(100, 0.5)
+const synthChain = shape(100, 0.01, 1)
 	.invert(() => Math.sin(t.millis() / 1000) * 2);
 
 t.layers.base.synth(
-	charShape(100, 0, 1, 0.5)
+	char(synthChain, 2)
 		.charMap('. ')
 
 		.charColor(synthChain)

@@ -8,7 +8,7 @@ through method chaining.
 
 ```ts
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, osc, solid } from 'textmode.synth.js';
+import { SynthPlugin, osc, noise } from 'textmode.synth.js';
 
 // Create textmode instance with SynthPlugin
 const t = textmode.create({
@@ -19,12 +19,14 @@ const t = textmode.create({
 });
 
 // Create a synth chain with procedural characters and colors
-const synth = charNoise(10)
-  .charMap('@#%*+=-:. ')
-  .charRotate(0.1)
+const synth = noise(10)
+  .rotate(0.1)
+  .scroll(0.1, 0)
+
   .charColor(osc(5).kaleid(4))
-  .cellColor(solid(0, 0, 0, 0.5))
-  .scroll(0.1, 0);
+  .cellColor(osc(5).kaleid(4).invert())
+
+  .charMap('@#%*+=-:. ');
 
 // Apply synth to the base layer
 t.layers.base.synth(synth);
@@ -55,16 +57,17 @@ t.layers.base.synth(synth);
 
 | Variable | Description |
 | ------ | ------ |
-| [charGradient](variables/charGradient.md) | Generate character indices using a rotating radial gradient. |
-| [charNoise](variables/charNoise.md) | Generate character indices using Perlin noise. |
-| [charOsc](variables/charOsc.md) | Generate character indices using oscillating sine waves. |
-| [charShape](variables/charShape.md) | Generate character indices based on geometric shapes (polygons). |
-| [charSolid](variables/charSolid.md) | Generate a solid character index across the entire canvas. |
-| [charVoronoi](variables/charVoronoi.md) | Generate character indices using Voronoi (cellular) patterns. |
+| [cellColor](variables/cellColor.md) | Create a synth source with cell background color defined. |
+| [cellColorSrc](variables/cellColorSrc.md) | Sample the previous frame's cell/secondary color for feedback effects. Reads from the previous frame's secondary color texture, which contains the cell background color. |
+| [char](variables/char.md) | Create a character source from any color/pattern source. |
+| [charColor](variables/charColor.md) | Create a synth source with character foreground color defined. |
+| [charSrc](variables/charSrc.md) | Sample the previous frame's character data for feedback effects. Reads from the previous frame's character texture, which contains character index and transform data. |
 | [gradient](variables/gradient.md) | Generate a rotating radial gradient. |
 | [noise](variables/noise.md) | Generate Perlin noise patterns. |
 | [osc](variables/osc.md) | Generate oscillating patterns using sine waves. |
+| [paint](variables/paint.md) | Create a synth source with both character and cell colors defined. |
 | [shape](variables/shape.md) | Generate geometric shapes (polygons). |
 | [solid](variables/solid.md) | Generate a solid color. |
+| [src](variables/src.md) | Sample the previous frame's primary color output for feedback effects. This is the core of feedback loops - it reads from the previous frame's character foreground color, enabling effects like trails, motion blur, and recursive patterns. |
 | [SynthPlugin](variables/SynthPlugin.md) | The `textmode.synth.js` plugin to install. |
 | [voronoi](variables/voronoi.md) | Generate Voronoi (cellular) patterns. |

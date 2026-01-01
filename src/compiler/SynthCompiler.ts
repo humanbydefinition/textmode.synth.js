@@ -58,6 +58,27 @@ class SynthCompilerContext {
 			'vec4(1.0, 1.0, 1.0, 1.0)'
 		);
 
+		// Compile character source if using char() function
+		let charVar: string | undefined = chainResult.charVar;
+		let charSourceCharCount: number | undefined;
+		if (source.charSource) {
+			const charChain = this._compileChain(
+				source.charSource,
+				'charSrc',
+				'vec4(1.0, 1.0, 1.0, 1.0)'
+			);
+			// The charSource produces a color - we'll convert it to char indices
+			// Store the color var and charCount for the character output code
+			charVar = `charFromSource_${this._varCounter++}`;
+			charSourceCharCount = source.charCount ?? 256;
+			
+			// Generate code to convert color luminance to character index
+			this._mainCode.push(`\t// Convert charSource color to character index`);
+			this._mainCode.push(`\tfloat charLum_${charVar} = _luminance(${charChain.colorVar}.rgb);`);
+			this._mainCode.push(`\tint charIdx_${charVar} = int(charLum_${charVar} * ${charSourceCharCount.toFixed(1)});`);
+			this._mainCode.push(`\tvec4 ${charVar} = vec4(float(charIdx_${charVar} % 256) / 255.0, float(charIdx_${charVar} / 256) / 255.0, 0.0, 0.0);`);
+		}
+
 		// Compile color source if separate
 		let primaryColorVar = chainResult.colorVar;
 		if (source.colorSource) {
@@ -82,8 +103,8 @@ class SynthCompilerContext {
 
 		// Generate character output
 		const charOutputCode = generateCharacterOutputCode(
-			!!chainResult.charVar,
-			chainResult.charVar ?? 'vec4(0.0)',
+			!!charVar,
+			charVar ?? 'vec4(0.0)',
 			chainResult.colorVar
 		);
 

@@ -1,5 +1,5 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
+import { SynthPlugin, osc } from 'textmode.synth.js';
 
 const t = textmode.create({
 	width: window.innerWidth,
@@ -13,7 +13,7 @@ const colorChain = osc(20)
 	.colorama([0.005, 0.33, 0.66, 1.0].fast(0.125));
 
 t.layers.base.synth(
-	charOsc(30, 0.1, 1, 16)
+	osc(1)
 
 		.charColor(colorChain)
 		.cellColor(colorChain.clone().invert())

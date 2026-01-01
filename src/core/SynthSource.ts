@@ -15,6 +15,8 @@ interface SynthSourceCreateOptions {
 	charMapping?: CharacterMapping;
 	colorSource?: SynthSource;
 	cellColorSource?: SynthSource;
+	charSource?: SynthSource;
+	charCount?: number;
 	nestedSources?: Map<number, SynthSource>;
 }
 
@@ -28,11 +30,14 @@ interface SynthSourceCreateOptions {
  * @example
  * ```ts
  * // Create a synth chain with procedural characters and colors
- * const chain = charNoise(10)
- *   .charMap('@#%*+=-:. ')
- *   .charRotate(0.1)
+ * const synth = noise(10)
+ *   .rotate(0.1)
+ *   .scroll(0.1, 0)
+ *
  *   .charColor(osc(5).kaleid(4))
- *   .scroll(0.1, 0);
+ *   .cellColor(osc(5).kaleid(4).invert())
+ *
+ *   .charMap('@#%*+=-:. ');
  * ```
  */
 export class SynthSource implements ISynthSource {
@@ -51,6 +56,12 @@ export class SynthSource implements ISynthSource {
 	/** Reference to the cell color source chain (if any) */
 	private _cellColorSource?: SynthSource;
 
+	/** Reference to the character source chain (if any) - used by char() function */
+	private _charSource?: SynthSource;
+
+	/** Number of unique characters when using char() function */
+	private _charCount?: number;
+
 	/**
 	 * Create a new SynthSource.
 	 * @param options Optional initialization options
@@ -61,6 +72,8 @@ export class SynthSource implements ISynthSource {
 		this._charMapping = options?.charMapping;
 		this._colorSource = options?.colorSource;
 		this._cellColorSource = options?.cellColorSource;
+		this._charSource = options?.charSource;
+		this._charCount = options?.charCount;
 		this._nestedSources = options?.nestedSources ?? new Map();
 	}
 
@@ -106,6 +119,12 @@ export class SynthSource implements ISynthSource {
 		return this;
 	}
 
+	public char(source: SynthSource, charCount: number): this {
+		this._charSource = source;
+		this._charCount = charCount;
+		return this;
+	}
+
 	public cellColor(source: SynthSource): this {
 		this._cellColorSource = source;
 		return this;
@@ -129,6 +148,8 @@ export class SynthSource implements ISynthSource {
 			charMapping: this._charMapping,
 			colorSource: this._colorSource?.clone(),
 			cellColorSource: this._cellColorSource?.clone(),
+			charSource: this._charSource?.clone(),
+			charCount: this._charCount,
 			nestedSources: clonedNestedSources,
 		});
 	}
@@ -167,6 +188,22 @@ export class SynthSource implements ISynthSource {
 	 */
 	public get cellColorSource(): SynthSource | undefined {
 		return this._cellColorSource;
+	}
+
+	/**
+	 * Get the character source if defined (from char() function).
+	 * @ignore
+	 */
+	public get charSource(): SynthSource | undefined {
+		return this._charSource;
+	}
+
+	/**
+	 * Get the character count if defined (from char() function).
+	 * @ignore
+	 */
+	public get charCount(): number | undefined {
+		return this._charCount;
 	}
 
 	/**

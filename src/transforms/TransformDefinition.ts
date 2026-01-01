@@ -80,5 +80,5 @@ export function requiresNestedSource(type: SynthTransformType): boolean {
  * Check if a transform type is a source generator.
  */
 export function isSourceType(type: SynthTransformType): boolean {
-	return type === 'src' || type === 'char';
+	return type === 'src';
 }

@@ -30,7 +30,7 @@ const t = textmode.create({
 
 // Basic noise pattern
 t.layers.base.synth(
-  charNoise(10, 0.1)
+  noise(10, 0.1)
     .charColor(noise(10, 0.1))
 );
 ```

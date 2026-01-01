@@ -31,7 +31,7 @@ const t = textmode.create({
 
 // Animated Voronoi pattern
 t.layers.base.synth(
-  charVoronoi(5, 0.3, 8)
+  voronoi(5, 0.3, 0.3)
     .charColor(voronoi(5, 0.3, 0.3))
 );
 ```

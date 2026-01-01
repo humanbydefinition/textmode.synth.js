@@ -1,5 +1,5 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
+import { SynthPlugin, osc, shape } from 'textmode.synth.js';
 
 const t = textmode.create({
 	width: window.innerWidth,
@@ -10,20 +10,9 @@ const t = textmode.create({
 
 // not yet working as expected
 t.layers.base.synth(
-	charOsc(8, 0.1, 0, 16)
-
-		.charColor(
-			osc().posterize(3, 1)
-				.layer(osc().pixelate(16, 1)
-					.mask(shape(2, 0.5, 0.001).scrollY(-0.25)))
-		)
-
-		.cellColor(
-			osc().posterize(3, 1)
-				.layer(osc().pixelate(16, 1)
-					.mask(shape(2, 0.5, 0.001).scrollY(-0.25)))
-				.invert()
-		)
+	osc(1).posterize(3, 1)
+		.layer(osc(1).pixelate(16, 1)
+			.mask(shape(2, 0.5, 0.001).scrollY(-0.25)))
 );
 
 t.draw(() => {

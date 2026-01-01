@@ -1,5 +1,5 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
+import { SynthPlugin, osc } from 'textmode.synth.js';
 
 const t = textmode.create({
 	width: window.innerWidth,
@@ -9,8 +9,7 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	osc(10, 0, 1)
-		.scrollX(0.5, 0)
+	osc(10, 0, 1).scrollX(0.5, 0)
 );
 
 t.draw(() => {

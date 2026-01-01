@@ -22,7 +22,7 @@ export interface SynthSourcePrototype {
 /**
  * Map of source-type transform names for generator function creation.
  */
-const SOURCE_TYPE_TRANSFORMS = new Set(['src', 'char']);
+const SOURCE_TYPE_TRANSFORMS = new Set(['src']);
 
 /**
  * Generated standalone functions for source transforms.

@@ -32,7 +32,7 @@ export class UniformManager {
 		input: TransformInput,
 		prefix: string
 	): ProcessedArgument {
-		// Modulated array (Hydra-style) - create uniform
+		// Modulated array - create uniform
 		if (isModulatedArray(value)) {
 			const uniformName = `${prefix}_${input.name}`;
 			const uniform: SynthUniform = {

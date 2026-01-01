@@ -8,15 +8,12 @@ const t = textmode.create({
     plugins: [SynthPlugin]
 });
 
-// Exact hydra translation: src(o0).modulate(noise(3),0.005).blend(shape(4),0.01).out(o0)
+
 t.layers.base.synth(
-    src()
-        .modulate(noise(3), 0.005)
-        .blend(shape(4), 0.01)
+    src().modulate(noise(3),0.005).blend(shape(4),0.01)
 );
 
 t.draw(() => {
-    // Drawing happens automatically via synth
 });
 
 t.windowResized(() => {

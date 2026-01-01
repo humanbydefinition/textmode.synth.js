@@ -1,31 +1,29 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
+import { SynthPlugin, osc, shape, char } from 'textmode.synth.js';
 
 const t = textmode.create({
-    width: window.innerWidth,
-    height: window.innerHeight,
-    fontSize: 16,
-    plugins: [SynthPlugin]
+	width: window.innerWidth,
+	height: window.innerHeight,
+	fontSize: 16,
+	plugins: [SynthPlugin]
 });
 
+const charChain = shape(5, 0.5, 0.1)
+	.repeat(12, 12)
+	.rotate((ctx) => ctx.time % (Math.PI * 2))
+	.scrollX(1, -0.25);
+
+const colorChain = osc(10, 1, 2).mult(shape(16, 0.5, 0))
+	.rotate((ctx) => ctx.time % (Math.PI * 2))
+	.scrollX(1, -0.25);
+
 t.layers.base.synth(
-	charShape(16, 0, 8, 0.5)
+	char(charChain)
 		.charMap('@#%*+=-:. ')
-		.repeat(12, 12)
-		.rotate((ctx) => ctx.time % (Math.PI * 2))
-		.scrollX(1, -0.25)
 
-		.charColor(
-			osc(10, 1, 2).mult(shape(16, 0.5, 0))
-				.rotate((ctx) => ctx.time % (Math.PI * 2))
-				.scrollX(1, -0.25)
-		)
+		.charColor(colorChain)
 
-		.cellColor(
-			osc(10, 0.5, 1).mult(shape(16, 0.5, 0))
-				.rotate((ctx) => ctx.time % (Math.PI * 2))
-				.scrollX(1, -0.25)
-		)
+		.cellColor(colorChain.clone().hue())
 );
 
 t.draw(() => {

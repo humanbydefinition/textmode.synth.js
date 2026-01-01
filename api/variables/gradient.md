@@ -29,7 +29,7 @@ const t = textmode.create({
 
 // Animated gradient with array modulation
 t.layers.base.synth(
-  charGradient([1, 2, 4], 16)
+  gradient([1, 2, 4])
     .charColor(gradient([1, 2, 4]))
     .cellColor(
       gradient([1, 2, 4])
