@@ -15,6 +15,23 @@ import type { SynthUniform, SynthContext, CharacterMapping } from '../core/types
 export type CompilationTarget = 'char' | 'charColor' | 'cellColor' | 'main';
 
 /**
+ * Information about an external layer reference used in the shader.
+ * Tracks which textures from the external layer are sampled.
+ */
+export interface ExternalLayerInfo {
+	/** Unique identifier for this external layer in the shader */
+	layerId: string;
+	/** Uniform prefix for this layer's samplers (e.g., 'extLayer0') */
+	uniformPrefix: string;
+	/** Whether the character texture is sampled */
+	usesChar: boolean;
+	/** Whether the primary color texture is sampled */
+	usesPrimary: boolean;
+	/** Whether the cell color texture is sampled */
+	usesCellColor: boolean;
+}
+
+/**
  * Result of compiling a SynthSource.
  */
 export interface CompiledSynthShader {
@@ -32,6 +49,8 @@ export interface CompiledSynthShader {
 	usesCharFeedback: boolean;
 	/** Whether this shader uses cell color feedback (cellColorSrc) - reads from prevCellColorBuffer */
 	usesCellColorFeedback: boolean;
+	/** External layer references used in this shader, keyed by layer ID */
+	externalLayers: Map<string, ExternalLayerInfo>;
 }
 
 /**

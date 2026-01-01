@@ -1,6 +1,7 @@
 import type {
 	SynthParameterValue,
 	CharacterMapping,
+	ExternalLayerReference,
 } from './types';
 import { SynthChain, type TransformRecord } from './SynthChain';
 import { ISynthSource } from './ISynthSource';
@@ -17,6 +18,7 @@ interface SynthSourceCreateOptions {
 	charSource?: SynthSource;
 	charCount?: number;
 	nestedSources?: Map<number, SynthSource>;
+	externalLayerRefs?: Map<number, ExternalLayerReference>;
 }
 
 /**
@@ -49,6 +51,9 @@ export class SynthSource implements ISynthSource {
 	/** Nested sources for combine operations (indexed by transform position) */
 	private readonly _nestedSources: Map<number, SynthSource>;
 
+	/** External layer references for cross-layer sampling (indexed by transform position) */
+	private readonly _externalLayerRefs: Map<number, ExternalLayerReference>;
+
 	/** Reference to the color source chain (if any) */
 	private _colorSource?: SynthSource;
 
@@ -74,6 +79,7 @@ export class SynthSource implements ISynthSource {
 		this._charSource = options?.charSource;
 		this._charCount = options?.charCount;
 		this._nestedSources = options?.nestedSources ?? new Map();
+		this._externalLayerRefs = options?.externalLayerRefs ?? new Map();
 	}
 
 	// ============================================================
@@ -102,6 +108,17 @@ export class SynthSource implements ISynthSource {
 		const index = this._chain.length;
 		this._nestedSources.set(index, source);
 		return this.addTransform(name, userArgs);
+	}
+
+	/**
+	 * Add an external layer reference at the current transform index.
+	 * Used by src(layer) to track cross-layer sampling.
+	 * @ignore
+	 */
+	public addExternalLayerRef(ref: ExternalLayerReference): this {
+		const index = this._chain.length;
+		this._externalLayerRefs.set(index, ref);
+		return this.addTransform('src', []);
 	}
 
 	// ============================================================
@@ -150,6 +167,12 @@ export class SynthSource implements ISynthSource {
 			clonedNestedSources.set(key, value.clone());
 		}
 
+		// Clone external layer refs (shallow copy - layers are references)
+		const clonedExternalLayerRefs = new Map<number, ExternalLayerReference>();
+		for (const [key, value] of this._externalLayerRefs) {
+			clonedExternalLayerRefs.set(key, { ...value });
+		}
+
 		return new SynthSource({
 			chain: SynthChain.from(this._chain.transforms),
 			charMapping: this._charMapping,
@@ -158,6 +181,7 @@ export class SynthSource implements ISynthSource {
 			charSource: this._charSource?.clone(),
 			charCount: this._charCount,
 			nestedSources: clonedNestedSources,
+			externalLayerRefs: clonedExternalLayerRefs,
 		});
 	}
 
@@ -219,5 +243,13 @@ export class SynthSource implements ISynthSource {
 	 */
 	public get nestedSources(): Map<number, SynthSource> {
 		return this._nestedSources;
+	}
+
+	/**
+	 * Get all external layer references for cross-layer sampling.
+	 * @ignore
+	 */
+	public get externalLayerRefs(): Map<number, ExternalLayerReference> {
+		return this._externalLayerRefs;
 	}
 }

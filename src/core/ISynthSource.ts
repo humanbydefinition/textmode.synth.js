@@ -172,18 +172,25 @@ export interface ISynthSource {
     solid?: (r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue) => ISynthSource;
 
     /**
-     * Sample the previous frame for feedback effects.
+     * Sample the previous frame for feedback effects, or sample from another layer.
      * 
-     * **Context-aware behavior:** `src()` automatically samples the appropriate texture
-     * based on where it's used in the synth chain:
+     * **Self-feedback (no argument):** `src()` samples the current layer's previous frame.
+     * The sampled texture is context-aware based on where it's used in the synth chain:
      * 
      * - Inside `char(...)` → samples previous frame's character data
      * - Inside `charColor(...)` → samples previous frame's primary color (character foreground)
      * - Inside `cellColor(...)` → samples previous frame's cell color (character background)
      * - Outside all three → samples previous frame's primary color
      * 
-     * This is the core of feedback loops - enabling effects like trails,
-     * motion blur, and recursive patterns. Equivalent to hydra's `src(o0)`.
+     * **Cross-layer sampling (with layer argument):** `src(layer)` samples from another 
+     * layer's output, enabling hydra-style multi-output compositions. The sampled texture
+     * is still context-aware based on the current compilation target.
+     * 
+     * This is the core of feedback loops and multi-layer compositions - enabling effects 
+     * like trails, motion blur, recursive patterns, and complex layered visuals.
+     * Equivalent to hydra's `src(o0)`.
+     * 
+     * @param layer - Optional TextmodeLayer to sample from. If omitted, samples from self (feedback).
      * 
      * @example
      * ```typescript
@@ -198,13 +205,24 @@ export interface ISynthSource {
      *   .charColor(osc(5).blend(src(), 0.5)) // src() → primary color feedback
      *   .cellColor(voronoi().diff(src()))    // src() → cell color feedback
      * 
-     * // Independent feedback loops for each output
-     * char(noise(0.1).modulateRotate(src().scale(0.5), 0.125))
-     *   .charColor(osc(10).modulateRotate(src().scale(0.5), 0.125))
-     *   .cellColor(voronoi(5).modulateRotate(src().scale(0.5), 0.125))
+     * // Cross-layer sampling (hydra-style o0, o1, o2, o3)
+     * const layer1 = t.layers.add();
+     * const layer2 = t.layers.add();
+     * 
+     * layer1.synth(noise(10).mult(osc(20)));
+     * 
+     * layer2.synth(
+     *   char(voronoi(5).diff(src(layer1)))  // Sample layer1's char texture
+     *     .charColor(osc(10).blend(src(layer1), 0.5))  // Sample layer1's primary color
+     * );
+     * 
+     * // Complex multi-layer composition
+     * t.layers.base.synth(
+     *   noise(3, 0.3).thresh(0.3).diff(src(layer2), 0.3)
+     * );
      * ```
      */
-    src?: () => ISynthSource;
+    src?: (layer?: unknown) => ISynthSource;
 
     // Coordinate transforms
     /**

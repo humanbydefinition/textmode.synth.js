@@ -6,6 +6,7 @@
  */
 
 import type { SynthUniform, CharacterMapping } from '../core/types';
+import type { ExternalLayerInfo } from './types';
 
 /**
  * Options for shader generation.
@@ -31,6 +32,8 @@ export interface ShaderGenerationOptions {
 	usesCharFeedback?: boolean;
 	/** Whether cell color feedback (cellColorSrc) is used */
 	usesCellColorFeedback?: boolean;
+	/** External layer references used in this shader */
+	externalLayers?: Map<string, ExternalLayerInfo>;
 }
 
 /**
@@ -149,6 +152,7 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 		usesFeedback,
 		usesCharFeedback,
 		usesCellColorFeedback,
+		externalLayers,
 	} = options;
 
 	// Build uniform declarations
@@ -169,7 +173,7 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 	charOutput.g = float(mappedCharIdx / 256) / 255.0;`;
 	}
 
-	// Feedback buffer declarations
+	// Feedback buffer declarations (self-feedback)
 	const feedbackDecls: string[] = [];
 	if (usesFeedback) {
 		feedbackDecls.push('uniform sampler2D prevBuffer;');
@@ -181,6 +185,25 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 		feedbackDecls.push('uniform sampler2D prevCellColorBuffer;');
 	}
 	const feedbackDecl = feedbackDecls.join('\n');
+
+	// External layer sampler declarations
+	const externalLayerDecls: string[] = [];
+	if (externalLayers) {
+		for (const [, info] of externalLayers) {
+			if (info.usesChar) {
+				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}_char;`);
+			}
+			if (info.usesPrimary) {
+				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}_primary;`);
+			}
+			if (info.usesCellColor) {
+				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}_cell;`);
+			}
+		}
+	}
+	const externalLayerDecl = externalLayerDecls.length > 0 
+		? `// External layer samplers\n${externalLayerDecls.join('\n')}`
+		: '';
 
 	return `#version 300 es
 precision highp float;
@@ -197,6 +220,7 @@ layout(location = 2) out vec4 o_secondaryColor;
 uniform float time;
 uniform vec2 resolution;
 ${feedbackDecl}
+${externalLayerDecl}
 ${charMapDecl}
 
 // Dynamic uniforms

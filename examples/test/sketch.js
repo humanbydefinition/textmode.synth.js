@@ -1,5 +1,5 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, gradient, paint, osc, src, shape, voronoi, char } from 'textmode.synth.js';
+import { SynthPlugin, gradient, paint, osc, src, shape, voronoi, char, noise } from 'textmode.synth.js';
 
 // Create textmode instance with SynthPlugin
 const t = textmode.create({
@@ -9,36 +9,31 @@ const t = textmode.create({
   plugins: [SynthPlugin]
 });
 
-const layer1 = t.layers.add({ blendMode: 'difference'})
+const layer1 = t.layers.add({ blendMode: 'normal', fontSize: 8 });
+const layer2 = t.layers.add({ blendMode: 'normal', fontSize: 8 });
+const layer3 = t.layers.add({ blendMode: 'normal', fontSize: 8 });
 
-const charChain = osc(7, -0.125).modulate(voronoi(1)).diff(voronoi(1).mult(gradient(-1).luma(0.125)))
-  .luma(0.125)
-  .add(shape(7, 0.5)
-    .mult(voronoi(10, 2).blend(src()).diff(gradient(1)).modulate(voronoi())))
-  .scrollY(-0.1)
-  .scrollX(0.125)
-  .blend(src())
-  .blend(src());
-
-const colorChain = osc(7, -0.125).modulate(voronoi(1)).diff(voronoi(1).mult(gradient(-1).luma(0.125)))
-  .luma(0.125)
-  .add(shape(7, 0.5)
-    .mult(voronoi(10, 2).blend(src()).diff(gradient(1)).modulate(voronoi())))
-  .scrollY(-0.1)
-  .scrollX(0.125)
-  .blend(src())
-  .blend(src());
+// voronoi(33,3,30).rotate(3,0.3,0).modulateScale(o2,0.3).color(-3,3,0).brightness(3).out(o0)
+// noise(3,0.3,3).thresh(0.3,0.03).diff(o3,0.3).out(o1)
+// shape(30,0.3,1).invert(({time})=>Math.sin(time)*3).out(o2)
+// gradient([0.3,0.3,3]).diff(o0).blend(o1).out(o3)
 
 t.layers.base.synth(
-  char(charChain)
-    .charColor(colorChain)
+  paint(voronoi(33, 3, 30).rotate(3, 0.3, 0).modulateScale(src(layer2), 0.3).color(-3, 3, 0).brightness(3))
 );
 
 layer1.synth(
-  paint(
-    colorChain.clone().hue(0.5)
-  )
-)
+  paint(noise(3, 0.3, 3).thresh(0.3, 0.03).diff(src(layer3), 0.3))
+
+);
+
+layer2.synth(
+  paint(shape(30, 0.3, 1).invert(({ time }) => Math.sin(time) * 3))
+);
+
+layer3.synth(
+  paint(gradient([0.3, 0.3, 3]).diff(src(t.layers.base)).blend(src(layer1)))
+);
 
 t.layers.base.draw(() => {
 

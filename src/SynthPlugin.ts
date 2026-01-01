@@ -42,9 +42,60 @@ interface LayerSynthState {
 	 * READ from pingPongBuffers[pingPongIndex], WRITE to pingPongBuffers[1 - pingPongIndex].
 	 */
 	pingPongIndex: number;
+	/**
+	 * External layer references mapped to their layer objects.
+	 * Populated during compilation from the source's external layer refs.
+	 */
+	externalLayerMap?: Map<string, TextmodeLayer>;
 }
 
 const PLUGIN_NAME = 'textmode.synth.js';
+
+/**
+ * Collect all external layer references from a SynthSource and its nested chains.
+ */
+function collectExternalLayerRefs(source: SynthSource): Map<string, TextmodeLayer> {
+	const layers = new Map<string, TextmodeLayer>();
+	
+	// Collect from main source
+	for (const [, ref] of source.externalLayerRefs) {
+		layers.set(ref.layerId, ref.layer as TextmodeLayer);
+	}
+	
+	// Collect from nested sources
+	for (const [, nested] of source.nestedSources) {
+		const nestedRefs = collectExternalLayerRefs(nested);
+		for (const [id, layer] of nestedRefs) {
+			layers.set(id, layer);
+		}
+	}
+	
+	// Collect from charSource
+	if (source.charSource) {
+		const charRefs = collectExternalLayerRefs(source.charSource);
+		for (const [id, layer] of charRefs) {
+			layers.set(id, layer);
+		}
+	}
+	
+	// Collect from colorSource
+	if (source.colorSource) {
+		const colorRefs = collectExternalLayerRefs(source.colorSource);
+		for (const [id, layer] of colorRefs) {
+			layers.set(id, layer);
+		}
+	}
+	
+	// Collect from cellColorSource
+	if (source.cellColorSource) {
+		const cellRefs = collectExternalLayerRefs(source.cellColorSource);
+		for (const [id, layer] of cellRefs) {
+			layers.set(id, layer);
+		}
+	}
+	
+	return layers;
+}
 
 /**
  * The `textmode.synth.js` plugin to install.
@@ -125,6 +176,7 @@ export const SynthPlugin: TextmodePlugin = {
 			// Lazy compile on first render
 			if (!state.compiled) {
 				state.compiled = compileSynthSource(state.source);
+				state.externalLayerMap = collectExternalLayerRefs(state.source);
 				state.needsCompile = true;
 			}
 
@@ -134,6 +186,9 @@ export const SynthPlugin: TextmodePlugin = {
 				if (state.shader?.dispose) {
 					state.shader.dispose();
 				}
+
+				// Collect external layer references from source
+				state.externalLayerMap = collectExternalLayerRefs(state.source);
 
 				// Use createFilterShader - leverages the instanced vertex shader
 				state.shader = await textmodifier.createFilterShader(state.compiled.fragmentSource);
@@ -213,6 +268,47 @@ export const SynthPlugin: TextmodePlugin = {
 					}
 					if (usesCellColorFeedback) {
 						textmodifier.setUniform('prevCellColorBuffer', feedbackBuffer.textures[2]);
+					}
+				}
+
+				// External layer texture uniforms
+				const externalLayers = state.compiled!.externalLayers;
+				if (externalLayers && externalLayers.size > 0 && state.externalLayerMap) {
+					for (const [layerId, info] of externalLayers) {
+						const extLayer = state.externalLayerMap.get(layerId);
+						if (!extLayer) {
+							console.warn(`[SynthPlugin] External layer not found: ${layerId}`);
+							continue;
+						}
+
+						// Get the external layer's synth state to access its ping-pong buffers
+						const extState = extLayer.getPluginState<LayerSynthState>(PLUGIN_NAME);
+						
+						// Determine which buffer to sample from the external layer
+						// If the external layer has ping-pong buffers (uses feedback), sample from the read buffer
+						// Otherwise, sample from the draw framebuffer
+						let extTextures: any[] | undefined;
+						
+						if (extState?.pingPongBuffers) {
+							// External layer uses feedback - sample from its current read buffer
+							const extReadBuffer = extState.pingPongBuffers[extState.pingPongIndex];
+							extTextures = extReadBuffer.textures;
+						} else if (extLayer.drawFramebuffer) {
+							// External layer doesn't use feedback - sample from its draw framebuffer
+							extTextures = extLayer.drawFramebuffer.textures;
+						}
+
+						if (extTextures) {
+							if (info.usesChar) {
+								textmodifier.setUniform(`${info.uniformPrefix}_char`, extTextures[0]);
+							}
+							if (info.usesPrimary) {
+								textmodifier.setUniform(`${info.uniformPrefix}_primary`, extTextures[1]);
+							}
+							if (info.usesCellColor) {
+								textmodifier.setUniform(`${info.uniformPrefix}_cell`, extTextures[2]);
+							}
+						}
 					}
 				}
 			};

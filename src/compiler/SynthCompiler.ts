@@ -9,11 +9,12 @@
  */
 
 import type { SynthSource } from '../core/SynthSource';
-import type { CompiledSynthShader, ChainCompilationResult, CompilationTarget } from './types';
+import type { CompiledSynthShader, ChainCompilationResult, CompilationTarget, ExternalLayerInfo } from './types';
 import { UniformManager } from './UniformManager';
 import { generateFragmentShader, generateCharacterOutputCode } from './GLSLGenerator';
 import { transformRegistry } from '../transforms/TransformRegistry';
 import type { ProcessedTransform } from '../transforms/TransformDefinition';
+import type { ExternalLayerReference } from '../core/types';
 
 /**
  * Compile a SynthSource chain into a complete MRT GLSL shader.
@@ -39,6 +40,12 @@ class SynthCompilerContext {
 	private _usesCellColorFeedback = false;
 	/** Current compilation target - determines which texture src() samples */
 	private _currentTarget: CompilationTarget = 'main';
+	/** External layer references collected during compilation */
+	private readonly _externalLayers = new Map<string, ExternalLayerInfo>();
+	/** Counter for generating unique external layer uniform prefixes */
+	private _externalLayerCounter = 0;
+	/** Map from layerId to uniform prefix for consistent naming */
+	private readonly _layerIdToPrefix = new Map<string, string>();
 
 	/**
 	 * Compile a SynthSource into a shader.
@@ -52,6 +59,9 @@ class SynthCompilerContext {
 		this._usesFeedback = false;
 		this._usesCharFeedback = false;
 		this._usesCellColorFeedback = false;
+		this._externalLayers.clear();
+		this._externalLayerCounter = 0;
+		this._layerIdToPrefix.clear();
 
 		// Compile the main chain (default color white for visibility)
 		const chainResult = this._compileChain(
@@ -130,6 +140,7 @@ class SynthCompilerContext {
 			usesFeedback: this._usesFeedback,
 			usesCharFeedback: this._usesCharFeedback,
 			usesCellColorFeedback: this._usesCellColorFeedback,
+			externalLayers: this._externalLayers,
 		});
 
 		return {
@@ -140,6 +151,7 @@ class SynthCompilerContext {
 			usesFeedback: this._usesFeedback,
 			usesCharFeedback: this._usesCharFeedback,
 			usesCellColorFeedback: this._usesCellColorFeedback,
+			externalLayers: new Map(this._externalLayers),
 		};
 	}
 
@@ -195,26 +207,34 @@ class SynthCompilerContext {
 				return;
 			}
 
+			// Check for external layer reference at this index
+			const externalRef = source.externalLayerRefs.get(i);
+
 			// Track which feedback sources are used (context-aware for src)
 			if (record.name === 'src') {
-				// src() samples different textures based on compilation context
-				switch (this._currentTarget) {
-					case 'char':
-						this._usesCharFeedback = true;
-						break;
-					case 'cellColor':
-						this._usesCellColorFeedback = true;
-						break;
-					case 'charColor':
-					case 'main':
-					default:
-						this._usesFeedback = true;
-						break;
+				if (externalRef) {
+					// External layer reference - track which textures are needed
+					this._trackExternalLayerUsage(externalRef, this._currentTarget);
+				} else {
+					// Self-feedback - src() samples different textures based on compilation context
+					switch (this._currentTarget) {
+						case 'char':
+							this._usesCharFeedback = true;
+							break;
+						case 'cellColor':
+							this._usesCellColorFeedback = true;
+							break;
+						case 'charColor':
+						case 'main':
+						default:
+							this._usesFeedback = true;
+							break;
+					}
 				}
 			}
 
 			// Add GLSL function (with context-aware src handling)
-			const glslFunc = this._getContextAwareGlslFunction(def, record.name);
+			const glslFunc = this._getContextAwareGlslFunction(def, record.name, externalRef);
 			this._glslFunctions.add(glslFunc);
 
 			const args = this._processArguments(
@@ -251,7 +271,8 @@ class SynthCompilerContext {
 				flagsVar,
 				rotationVar,
 				args,
-				nestedColorVar
+				nestedColorVar,
+				externalRef
 			);
 
 			colorVar = result.colorVar;
@@ -293,13 +314,40 @@ class SynthCompilerContext {
 	 * - char context → samples prevCharBuffer
 	 * - charColor/main context → samples prevBuffer (primary color)
 	 * - cellColor context → samples prevCellColorBuffer
+	 * 
+	 * For external layer references, generates a function that samples from
+	 * the external layer's texture uniforms.
 	 */
-	private _getContextAwareGlslFunction(def: ProcessedTransform, name: string): string {
+	private _getContextAwareGlslFunction(
+		def: ProcessedTransform, 
+		name: string,
+		externalRef?: ExternalLayerReference
+	): string {
 		if (name !== 'src') {
 			return def.glslFunction;
 		}
 
-		// Generate context-specific src function
+		if (externalRef) {
+			// External layer reference - generate sampler for external layer
+			const prefix = this._getExternalLayerPrefix(externalRef.layerId);
+			const samplerMap: Record<CompilationTarget, string> = {
+				'char': `${prefix}_char`,
+				'charColor': `${prefix}_primary`,
+				'cellColor': `${prefix}_cell`,
+				'main': `${prefix}_primary`
+			};
+
+			const sampler = samplerMap[this._currentTarget];
+			const funcName = `src_ext_${prefix}_${this._currentTarget}`;
+
+			return `
+vec4 ${funcName}(vec2 _st) {
+	return texture(${sampler}, fract(_st));
+}
+`;
+		}
+
+		// Self-feedback - generate context-specific src function
 		const samplerMap: Record<CompilationTarget, string> = {
 			'char': 'prevCharBuffer',
 			'charColor': 'prevBuffer',
@@ -315,6 +363,52 @@ vec4 ${funcName}(vec2 _st) {
 	return texture(${sampler}, fract(_st));
 }
 `;
+	}
+
+	/**
+	 * Get or create a uniform prefix for an external layer.
+	 */
+	private _getExternalLayerPrefix(layerId: string): string {
+		let prefix = this._layerIdToPrefix.get(layerId);
+		if (!prefix) {
+			prefix = `extLayer${this._externalLayerCounter++}`;
+			this._layerIdToPrefix.set(layerId, prefix);
+		}
+		return prefix;
+	}
+
+	/**
+	 * Track usage of an external layer's textures.
+	 */
+	private _trackExternalLayerUsage(ref: ExternalLayerReference, target: CompilationTarget): void {
+		const prefix = this._getExternalLayerPrefix(ref.layerId);
+		
+		let info = this._externalLayers.get(ref.layerId);
+		if (!info) {
+			info = {
+				layerId: ref.layerId,
+				uniformPrefix: prefix,
+				usesChar: false,
+				usesPrimary: false,
+				usesCellColor: false,
+			};
+			this._externalLayers.set(ref.layerId, info);
+		}
+
+		// Mark which texture is used based on compilation context
+		switch (target) {
+			case 'char':
+				info.usesChar = true;
+				break;
+			case 'cellColor':
+				info.usesCellColor = true;
+				break;
+			case 'charColor':
+			case 'main':
+			default:
+				info.usesPrimary = true;
+				break;
+		}
 	}
 
 	/**
@@ -354,7 +448,8 @@ vec4 ${funcName}(vec2 _st) {
 		flagsVar: string | undefined,
 		rotationVar: string | undefined,
 		args: string[],
-		nestedColorVar?: string
+		nestedColorVar?: string,
+		externalRef?: ExternalLayerReference
 	): {
 		colorVar: string;
 		charVar?: string;
@@ -367,10 +462,16 @@ vec4 ${funcName}(vec2 _st) {
 			return allArgs.join(', ');
 		};
 
-		// Get the function name to call (context-aware for src)
-		const funcName = def.name === 'src' 
-			? `src_${this._currentTarget}` 
-			: def.name;
+		// Get the function name to call (context-aware for src, with external layer support)
+		let funcName = def.name;
+		if (def.name === 'src') {
+			if (externalRef) {
+				const prefix = this._getExternalLayerPrefix(externalRef.layerId);
+				funcName = `src_ext_${prefix}_${this._currentTarget}`;
+			} else {
+				funcName = `src_${this._currentTarget}`;
+			}
+		}
 
 		let newColorVar = colorVar;
 		let newCharVar = charVar;
