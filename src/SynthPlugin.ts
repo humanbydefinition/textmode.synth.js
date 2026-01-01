@@ -1,8 +1,11 @@
 import type {
-	TextmodePlugin,
-	TextmodePluginAPI,
 	TextmodeFramebuffer,
 } from 'textmode.js';
+
+import type {
+	TextmodePlugin,
+	TextmodePluginAPI,
+} from 'textmode.js/plugins';
 
 import type { TextmodeFont } from 'textmode.js/loadables';
 import type { TextmodeLayer } from 'textmode.js/layering';
