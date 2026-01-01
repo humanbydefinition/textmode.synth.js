@@ -12,10 +12,7 @@ t.layers.base.synth(
 	shape().scrollX([0, 1, 2, 3, 4].fit(-0.2, 0.2))
 );
 
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

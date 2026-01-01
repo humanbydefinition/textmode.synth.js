@@ -12,11 +12,7 @@ t.layers.base.synth(
     voronoi(25, 2, 10).color(1, 1, 0).brightness(0.15)
         .charMap(' .')
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
     t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

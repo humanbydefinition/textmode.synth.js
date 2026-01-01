@@ -13,10 +13,7 @@ t.layers.base.synth(
 		.mask(voronoi(), 3, 0.5).invert([0, 1])
 );
 
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

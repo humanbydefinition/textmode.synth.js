@@ -11,11 +11,7 @@ const t = textmode.create({
 t.layers.base.synth(
     voronoi(5, 0.3, 0.3)
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
     t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

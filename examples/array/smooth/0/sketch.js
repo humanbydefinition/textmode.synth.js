@@ -13,10 +13,7 @@ t.layers.base.synth(
 		.scrollX([-0.2, 0.2].smooth())
 );
 
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

@@ -13,11 +13,7 @@ t.layers.base.synth(
 		.rotate(1.57)
 		.repeatX([1, 2, 5, 10], (ctx) => Math.sin(ctx.time))
 );
-
-t.draw(() => {
-	
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

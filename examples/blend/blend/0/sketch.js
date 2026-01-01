@@ -16,10 +16,7 @@ t.layers.base.synth(
 		)
 );
 
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

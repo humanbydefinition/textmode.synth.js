@@ -12,10 +12,7 @@ t.layers.base.synth(
 	noise().brightness(1).color(0.5, 0.5, 0.5)
 );
 
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

@@ -41,11 +41,7 @@ t.layers.base.synth(
 				.hue(0.5)
 		)
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

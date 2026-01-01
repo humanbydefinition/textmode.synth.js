@@ -18,10 +18,7 @@ t.layers.base.synth(
 		.charMap("@")
 );
 
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

@@ -11,10 +11,7 @@ const t = textmode.create({
 t.layers.base.synth(
 	radial(0.5, () => Math.cos(t.frameCount * 0.02), 0.5, 0.5),
 );
-
-t.draw(() => {
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

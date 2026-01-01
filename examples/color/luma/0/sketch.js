@@ -11,11 +11,7 @@ const t = textmode.create({
 t.layers.base.synth(
 	osc(10,0,1).luma(0.5,0.1)
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

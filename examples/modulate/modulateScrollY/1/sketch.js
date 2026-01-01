@@ -12,11 +12,6 @@ t.layers.base.synth(
 	voronoi(25, 0, 0)
 		.modulateScrollY(osc(10), 0.5, 0.25)
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });

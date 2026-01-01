@@ -14,11 +14,7 @@ t.layers.base.synth(
 		.layer(osc(1).pixelate(16, 1)
 			.mask(shape(2, 0.5, 0.001).scrollY(-0.25)))
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

@@ -15,11 +15,7 @@ t.layers.base.synth(
 		.modulate(noise(5, 0.1))
 		.mult(solid(1, 1, 0.3))
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

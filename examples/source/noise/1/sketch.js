@@ -11,11 +11,7 @@ const t = textmode.create({
 t.layers.base.synth(
 	noise((ctx) => Math.sin(ctx.time / 10) * 50, (ctx) => Math.sin(ctx.time / 2) / 500)
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

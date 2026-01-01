@@ -17,11 +17,7 @@ t.layers.base.synth(
 		.scale((ctx) => Math.sin(ctx.time / 5) * 0.5)
 		.rotate(1, 1)
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

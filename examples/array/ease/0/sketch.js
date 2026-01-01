@@ -13,10 +13,7 @@ t.layers.base.synth(
 		.rotate([-3.14, 3.14].ease('easeInOutCubic'))
 );
 
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

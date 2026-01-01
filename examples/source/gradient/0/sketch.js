@@ -11,11 +11,6 @@ const t = textmode.create({
 t.layers.base.synth(
     gradient([1, 2, 4])
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
     t.resizeCanvas(window.innerWidth, window.innerHeight);
 });

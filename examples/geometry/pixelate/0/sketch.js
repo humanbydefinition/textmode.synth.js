@@ -12,11 +12,7 @@ t.layers.base.synth(
 	noise()
 		.pixelate(20, 20)
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

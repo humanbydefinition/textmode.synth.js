@@ -12,11 +12,7 @@ t.layers.base.synth(
 	gradient(0).posterize([5, 15, 30, 60], 0.5)
 	.charMap('.:-=+*#%@')
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

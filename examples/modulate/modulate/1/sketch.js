@@ -12,11 +12,6 @@ t.layers.base.synth(
 	osc(3, 0, 2)
 		.modulate(noise().add(gradient(), -1), 1)
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });

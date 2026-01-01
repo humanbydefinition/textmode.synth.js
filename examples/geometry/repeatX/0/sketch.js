@@ -11,11 +11,7 @@ const t = textmode.create({
 t.layers.base.synth(
 	shape(3).repeatX(3, 0)
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

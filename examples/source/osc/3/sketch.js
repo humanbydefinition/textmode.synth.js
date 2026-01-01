@@ -16,11 +16,7 @@ t.layers.base.synth(
 	char(charChain)
 		.charColor(colorChain)
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

@@ -13,11 +13,7 @@ t.layers.base.synth(
 		.brightness(() => Math.random() * 0.15)
 		.modulatePixelate(noise(25, 0.5), 100)
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

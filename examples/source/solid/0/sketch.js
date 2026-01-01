@@ -15,10 +15,7 @@ t.layers.base.synth(
 		.cellColor(colorChain.clone().invert())
 		.charMap('a')
 );
-
-t.draw(() => {
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+

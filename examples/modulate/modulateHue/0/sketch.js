@@ -13,11 +13,7 @@ t.layers.base.synth(
 		.modulateHue(src().scale(1.01), 1)
 		.layer(osc(4, 0.5, 2).mask(shape(4, 0.5, 0.001)))
 );
-
-t.draw(() => {
-
-});
-
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
+
