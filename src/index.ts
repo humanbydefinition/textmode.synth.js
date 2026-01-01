@@ -68,55 +68,8 @@ transformFactory.injectMethods(SynthSource.prototype as unknown as {
 // Generate standalone functions for source transforms
 const generatedFunctions = transformFactory.generateStandaloneFunctions();
 
-// ============================================================
-// SPECIAL STANDALONE FUNCTION: char()
-// Creates a SynthSource that uses another source for character generation
-// ============================================================
 
-/**
- * Create a character source from any color/pattern source.
- * 
- * This is the primary way to define which source drives character generation.
- * The source's luminance (or color value) is converted to character indices.
- * 
- * @param source - A SynthSource producing color values that will be mapped to characters
- * @param charCount - Number of different characters to use (default: 256)
- * @returns A new SynthSource configured for character generation
- * 
- * @example
- * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- * 
- * // Use osc pattern for characters
- * const pattern = osc(10, 0.1, 1.5);
- * t.layers.base.synth(
- *   char(pattern)
- *     .charMap('@#%*+=-:. ')
- *     .charColor(pattern.clone())
- *     .cellColor(pattern.clone().invert())
- * );
- * 
- * // Use noise for characters with limited character count
- * t.layers.base.synth(
- *   char(noise(10), 16)
- *     .charMap('@#%*+=-:. ')
- *     .charColor(voronoi(5))
- * );
- * 
- * // Complex composition - same pattern for all three outputs
- * const colorPattern = voronoi(5).mult(osc(20));
- * t.layers.base.synth(
- *   char(colorPattern)
- *     .charMap(' .:-=+*#%@')
- *     .charColor(colorPattern)
- *     .cellColor(colorPattern.invert())
- * );
- * ```
- */
+
 function createCharFunction(): (source: SynthSource, charCount?: number) => SynthSource {
 	// We need a reference to SynthSource, but we get it from the module scope
 	return (source: SynthSource, charCount: number = 256): SynthSource => {
@@ -584,15 +537,5 @@ declare module 'textmode.js' {
 		 * @param source A SynthSource chain defining the procedural generation
 		 */
 		synth(source: SynthSource): void;
-
-		/**
-		 * Clear the synth source from this layer.
-		 */
-		clearSynth(): void;
-
-		/**
-		 * Check if this layer has a synth source.
-		 */
-		hasSynth(): boolean;
 	}
 }

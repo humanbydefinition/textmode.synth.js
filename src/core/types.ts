@@ -8,8 +8,6 @@
 
 import { SynthSource } from "./SynthSource";
 
-
-
 /**
  * Transform type categories determining how functions compose in the shader pipeline.
  * 
@@ -27,10 +25,7 @@ export type SynthTransformType =
 	| 'color'
 	| 'combine'
 	| 'combineCoord'
-	| 'char'
-	| 'charModify'
-	| 'charColor'
-	| 'cellColor';
+	| 'charModify';
 
 /**
  * GLSL type for transform inputs.
@@ -76,18 +71,14 @@ export interface SynthContext {
 	time: number;
 	/** Current frame count */
 	frameCount: number;
-	/** Canvas/grid width in pixels */
+	/** Grid width in pixels */
 	width: number;
-	/** Canvas/grid height in pixels */
+	/** Grid height in pixels */
 	height: number;
 	/** Grid columns */
 	cols: number;
 	/** Grid rows */
 	rows: number;
-	/** Normalized mouse X (0-1) */
-	mouseX: number;
-	/** Normalized mouse Y (0-1) */
-	mouseY: number;
 }
 
 /**
@@ -150,41 +141,8 @@ export const TRANSFORM_TYPE_INFO: Record<
 			{ type: 'vec4', name: '_c0' },
 		],
 	},
-	char: {
-		returnType: 'vec4',
-		args: [{ type: 'vec2', name: '_st' }],
-	},
 	charModify: {
 		returnType: 'vec4',
 		args: [{ type: 'vec4', name: '_char' }],
-	},
-	charColor: {
-		returnType: 'vec4',
-		args: [
-			{ type: 'vec2', name: '_st' },
-			{ type: 'vec4', name: '_char' },
-		],
-	},
-	cellColor: {
-		returnType: 'vec4',
-		args: [
-			{ type: 'vec2', name: '_st' },
-			{ type: 'vec4', name: '_char' },
-			{ type: 'vec4', name: '_charColor' },
-		],
-	},
-};
-
-/**
- * Create a CharacterMapping from a string of characters.
- */
-export function createCharacterMapping(chars: string): CharacterMapping {
-	const charArray = Array.from(chars);
-	const indices: number[] = [];
-
-	for (const char of charArray) {
-		indices.push(char.codePointAt(0) ?? 32);
 	}
-
-	return { chars, indices };
-}
+};

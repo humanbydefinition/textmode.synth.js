@@ -95,7 +95,7 @@ class TransformRegistry {
 	 * Get source-type transforms (those that can start a chain).
 	 */
 	public getSourceTransforms(): TransformDefinition[] {
-		return this.getByType('src').concat(this.getByType('char'));
+		return this.getByType('src');
 	}
 
 	/**

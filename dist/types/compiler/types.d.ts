@@ -2,18 +2,6 @@
  * Compiler types and interfaces.
  */
 import type { SynthUniform, SynthContext, CharacterMapping } from '../core/types';
-import type { ExternalOutputRef } from '../core/SynthSource';
-/**
- * Information about an external layer texture used in a shader.
- */
-export interface ExternalTextureInfo {
-    /** Unique sampler name in GLSL */
-    samplerName: string;
-    /** The output reference */
-    outputRef: ExternalOutputRef;
-    /** Texture unit assignment (determined at render time) */
-    textureUnit?: number;
-}
 /**
  * Result of compiling a SynthSource.
  */
@@ -26,14 +14,12 @@ export interface CompiledSynthShader {
     dynamicUpdaters: Map<string, (ctx: SynthContext) => number | number[]>;
     /** Character mapping if charMap was used */
     charMapping?: CharacterMapping;
-    /** Whether this shader uses self-feedback (src/prev without external ref) - reads from prevBuffer */
+    /** Whether this shader uses feedback (src/prev) - reads from prevBuffer */
     usesFeedback: boolean;
-    /** Whether this shader uses self character feedback (charSrc without external ref) - reads from prevCharBuffer */
+    /** Whether this shader uses character feedback (charSrc) - reads from prevCharBuffer */
     usesCharFeedback: boolean;
-    /** Whether this shader uses self cell color feedback (cellColorSrc without external ref) - reads from prevCellColorBuffer */
+    /** Whether this shader uses cell color feedback (cellColorSrc) - reads from prevCellColorBuffer */
     usesCellColorFeedback: boolean;
-    /** External layer textures referenced in this shader */
-    externalTextures: ExternalTextureInfo[];
 }
 /**
  * Intermediate representation node for a transform.

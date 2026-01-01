@@ -160,7 +160,7 @@ class SynthCompilerContext {
 		);
 
 		// Coord-like transforms are wrappers in hydra-style chaining.
-		// They must be applied to coordinates BEFORE evaluating sources/char generators,
+		// They must be applied to coordinates before evaluating sources/char generators,
 		// and in reverse call order (last called coord transform applies first to the input).
 		const coordWrapperIndices: number[] = [];
 		for (let i = 0; i < defs.length; i++) {
@@ -180,7 +180,7 @@ class SynthCompilerContext {
 			}
 
 			// Track which feedback sources are used
-			if (record.name === 'prev' || record.name === 'src') {
+			if (record.name === 'src') {
 				this._usesFeedback = true;
 			}
 			if (record.name === 'charSrc') {
@@ -346,19 +346,6 @@ class SynthCompilerContext {
 				break;
 			}
 
-			case 'char': {
-				if (!newCharVar) {
-					newCharVar = `char${varId}`;
-					newFlagsVar = `flags${varId}`;
-					newRotationVar = `rot${varId}`;
-					this._mainCode.push(`\tvec4 ${newCharVar} = vec4(0.0);`);
-					this._mainCode.push(`\tfloat ${newFlagsVar} = 0.0;`);
-					this._mainCode.push(`\tfloat ${newRotationVar} = 0.0;`);
-				}
-				this._mainCode.push(`\t${newCharVar} = ${def.name}(${buildArgs(coordVar)});`);
-				break;
-			}
-
 			case 'charModify': {
 				if (!newCharVar) {
 					newCharVar = `char${varId}`;
@@ -369,20 +356,6 @@ class SynthCompilerContext {
 					this._mainCode.push(`\tfloat ${newRotationVar} = 0.0;`);
 				}
 				this._mainCode.push(`\t${newCharVar} = ${def.name}(${buildArgs(newCharVar)});`);
-				break;
-			}
-
-			case 'charColor': {
-				const newColor = `c${varId}`;
-				this._mainCode.push(`\tvec4 ${newColor} = ${def.name}(${buildArgs(coordVar, newCharVar ?? 'vec4(0.0)')});`);
-				newColorVar = newColor;
-				break;
-			}
-
-			case 'cellColor': {
-				const newColor = `c${varId}`;
-				this._mainCode.push(`\tvec4 ${newColor} = ${def.name}(${buildArgs(coordVar, newCharVar ?? 'vec4(0.0)', colorVar)});`);
-				newColorVar = newColor;
 				break;
 			}
 		}
@@ -397,5 +370,4 @@ class SynthCompilerContext {
 }
 
 // Re-export for convenience
-export { SYNTH_VERTEX_SHADER } from './GLSLGenerator';
 export type { CompiledSynthShader } from './types';

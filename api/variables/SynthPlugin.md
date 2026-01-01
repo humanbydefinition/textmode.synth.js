@@ -14,11 +14,10 @@ Install this plugin to enable `.synth()` on TextmodeLayer instances.
 
 ```typescript
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, osc } from 'textmode.synth.js';
+import { SynthPlugin, noise, osc } from 'textmode.synth.js';
 
 const t = textmode.create({ plugins: [SynthPlugin] });
 
-// Can be called globally, before setup()
 t.layers.base.synth(
   noise(10)
     .charMap('@#%*+=-:. ')

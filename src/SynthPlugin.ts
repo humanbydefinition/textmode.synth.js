@@ -1,71 +1,60 @@
-/**
- * SynthPlugin - The textmode.js plugin that enables synth functionality on layers.
- * 
- * This plugin adds the `.synth()`, `.clearSynth()`, and `.hasSynth()` methods
- * to TextmodeLayer instances, enabling hydra-like procedural generation.
- */
-
 import type {
-    TextmodePlugin,
-    TextmodePluginAPI,
+	TextmodePlugin,
+	TextmodePluginAPI,
+	TextmodeFramebuffer,
 } from 'textmode.js';
 
 import type { TextmodeFont } from 'textmode.js/loadables';
 import type { TextmodeLayer } from 'textmode.js/layering';
 
-import type { TextmodeFramebuffer, /*GLRenderer*/ } from 'textmode.js';
-
 import { SynthSource } from './core/SynthSource';
 import { compileSynthSource } from './compiler/SynthCompiler';
-import { SynthRenderer } from './renderer/SynthRenderer';
 import type { CompiledSynthShader } from './compiler/types';
 import type { SynthContext } from './core/types';
+import { CharacterResolver } from './utils/CharacterResolver';
 
 /**
  * Per-layer synth state stored via plugin state API.
  */
 interface LayerSynthState {
-    /** The original SynthSource - stored so synth can be set before layer is initialized */
-    source: SynthSource;
-    /** Compiled shader - created lazily when layer is ready */
-    compiled?: CompiledSynthShader;
-    /** Renderer instance - created lazily when layer is ready */
-    renderer?: SynthRenderer;
-    /** Time when synth was set */
-    startTime: number;
-    /** Whether the shader needs to be updated on next render */
-    shaderNeedsUpdate: boolean;
-    /** Whether this is the first render (needs initialization) */
-    needsInitialization: boolean;
-    /** 
-     * Ping-pong framebuffers for feedback loops.
-     * We use two buffers to avoid reading from and writing to the same texture.
-     * pingPongBuffers[0] = buffer A, pingPongBuffers[1] = buffer B
-     */
-    pingPongBuffers?: [any, any];
-    /** 
-     * Current ping-pong index. 
-     * We READ from pingPongBuffers[pingPongIndex] and WRITE to pingPongBuffers[1 - pingPongIndex].
-     * After rendering, we swap the index.
-     */
-    pingPongIndex: number;
+	/** The original SynthSource */
+	source: SynthSource;
+	/** Compiled shader data */
+	compiled?: CompiledSynthShader;
+	/** The compiled GLShader instance */
+	shader?: any; // GLShader type from textmode.js
+	/** Character resolver for this layer's synth */
+	characterResolver: CharacterResolver;
+	/** Time when synth was set */
+	startTime: number;
+	/** Whether the shader needs to be recompiled */
+	needsCompile: boolean;
+	/**
+	 * Ping-pong framebuffers for feedback loops.
+	 * pingPongBuffers[0] = buffer A, pingPongBuffers[1] = buffer B
+	 */
+	pingPongBuffers?: [TextmodeFramebuffer, TextmodeFramebuffer];
+	/**
+	 * Current ping-pong index.
+	 * READ from pingPongBuffers[pingPongIndex], WRITE to pingPongBuffers[1 - pingPongIndex].
+	 */
+	pingPongIndex: number;
 }
 
 const PLUGIN_NAME = 'textmode.synth.js';
 
 /**
  * The `textmode.synth.js` plugin to install.
- * 
+ *
  * Install this plugin to enable `.synth()` on TextmodeLayer instances.
- * 
+ *
  * @example
  * ```typescript
  * import { textmode } from 'textmode.js';
- * import { SynthPlugin, charNoise, osc } from 'textmode.synth.js';
- * 
+ * import { SynthPlugin, noise, osc } from 'textmode.synth.js';
+ *
  * const t = textmode.create({ plugins: [SynthPlugin] });
- * 
- * // Can be called globally, before setup()
+ *
  * t.layers.base.synth(
  *   noise(10)
  *     .charMap('@#%*+=-:. ')
@@ -74,222 +63,225 @@ const PLUGIN_NAME = 'textmode.synth.js';
  * ```
  */
 export const SynthPlugin: TextmodePlugin = {
-    name: PLUGIN_NAME,
-    version: '1.0.0',
+	name: PLUGIN_NAME,
+	version: '1.0.0',
 
-    install(textmodifier, api: TextmodePluginAPI) {
-        // Store renderer reference for creating SynthRenderers
-        const glRenderer = api.renderer;
+	install(textmodifier, api: TextmodePluginAPI) {
+		// ============================================================
+		// EXTEND LAYER WITH .synth() METHOD
+		// ============================================================
+		api.extendLayer('synth', function (this: TextmodeLayer, source: SynthSource): void {
+			const now = performance.now() / 1000;
+			const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
 
-        // ============================================================
-        // EXTEND LAYER WITH .synth() METHOD
-        // ============================================================
-        api.extendLayer('synth', function (this: TextmodeLayer, source: SynthSource): void {
-            const now = performance.now() / 1000;
+			let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
 
-            // Check if layer is already initialized (has grid and drawFramebuffer)
-            const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
+			if (state) {
+				// Update existing state
+				state.source = source;
+				state.startTime = now;
+				state.needsCompile = true;
+				state.characterResolver.invalidate();
 
-            // Get existing state or create new
-            let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+				if (isInitialized) {
+					state.compiled = compileSynthSource(source);
+				}
+			} else {
+				// Create new state
+				state = {
+					source,
+					compiled: isInitialized ? compileSynthSource(source) : undefined,
+					shader: undefined,
+					characterResolver: new CharacterResolver(),
+					startTime: now,
+					needsCompile: true,
+					pingPongBuffers: undefined,
+					pingPongIndex: 0,
+				};
+			}
 
-            if (state) {
-                // Update existing state with new source
-                state.source = source;
-                state.startTime = now;
-                state.shaderNeedsUpdate = true;
-
-                // If already initialized, compile immediately
-                if (isInitialized && state.renderer) {
-                    state.compiled = compileSynthSource(source);
-                    state.shaderNeedsUpdate = true;
-                    // Note: pingPongBuffers will be created/updated in pre-render hook if needed
-                } else {
-                    // Mark for initialization on first render
-                    state.needsInitialization = true;
-                    state.compiled = undefined;
-                }
-            } else {
-                // Create new state - defer compilation until render if not initialized
-                state = {
-                    source,
-                    compiled: isInitialized ? compileSynthSource(source) : undefined,
-                    renderer: undefined, // Always created lazily
-                    startTime: now,
-                    shaderNeedsUpdate: true,
-                    needsInitialization: !isInitialized,
-                    pingPongBuffers: undefined, // Created lazily only when feedback is used
-                    pingPongIndex: 0,
-                };
-            }
-
-            this.setPluginState(PLUGIN_NAME, state);
-        });
+			this.setPluginState(PLUGIN_NAME, state);
+		});
 
 
-        // ============================================================
-        // LAYER PRE-RENDER HOOK - Render synth before user draw
-        // ============================================================
-        api.registerLayerPreRenderHook(async (layer: TextmodeLayer) => {
-            const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
-            if (!state) {
-                return;
-            }
+		// ============================================================
+		// LAYER PRE-RENDER HOOK - Render synth before user draw
+		// ============================================================
+		api.registerLayerPreRenderHook(async (layer: TextmodeLayer) => {
+			const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
+			if (!state) return;
 
-            const grid = layer.grid;
-            const drawFramebuffer = layer.drawFramebuffer;
+			const grid = layer.grid;
+			const drawFramebuffer = layer.drawFramebuffer;
 
-            if (!grid || !drawFramebuffer) {
-                // Layer not yet initialized, skip this frame
-                return;
-            }
+			if (!grid || !drawFramebuffer) {
+				// Layer not yet initialized
+				return;
+			}
 
-            // Lazy initialization - compile and create renderer on first render when ready
-            if (state.needsInitialization || !state.compiled) {
-                state.compiled = compileSynthSource(state.source);
-                state.needsInitialization = false;
-                state.shaderNeedsUpdate = true;
-            }
+			// Lazy compile on first render
+			if (!state.compiled) {
+				state.compiled = compileSynthSource(state.source);
+				state.needsCompile = true;
+			}
 
-            // Lazy initialization of SynthRenderer
-            if (!state.renderer) {
-                state.renderer = new SynthRenderer(textmodifier, glRenderer as unknown as any);
-                state.shaderNeedsUpdate = true;
-            }
+			// Compile shader if needed
+			if (state.needsCompile && state.compiled) {
+				// Dispose old shader
+				if (state.shader?.dispose) {
+					state.shader.dispose();
+				}
 
-            // Apply pending shader update
-            if (state.shaderNeedsUpdate && state.compiled) {
-                await state.renderer.setShader(state.compiled);
-                state.shaderNeedsUpdate = false;
-            }
+				// Use createFilterShader - leverages the instanced vertex shader
+				state.shader = await textmodifier.createFilterShader(state.compiled.fragmentSource);
+				state.needsCompile = false;
+			}
 
-            // Check if any type of feedback is used
-            const usesFeedback = state.compiled?.usesFeedback ?? false;
-            const usesCharFeedback = state.compiled?.usesCharFeedback ?? false;
-            const usesCellColorFeedback = state.compiled?.usesCellColorFeedback ?? false;
-            const usesAnyFeedback = usesFeedback || usesCharFeedback || usesCellColorFeedback;
+			if (!state.shader || !state.compiled) return;
 
-            // Create ping-pong buffers if any feedback is used and buffers don't exist yet
-            // We need TWO buffers to avoid GPU feedback loops (reading and writing same texture)
-            if (usesAnyFeedback && !state.pingPongBuffers) {
-                const tm = textmodifier as any;
-                if (tm.createFramebuffer) {
-                    state.pingPongBuffers = [
-                        tm.createFramebuffer({ 
-                            width: grid.cols, 
-                            height: grid.rows, 
-                            attachments: 3 
-                        }),
-                        tm.createFramebuffer({ 
-                            width: grid.cols, 
-                            height: grid.rows, 
-                            attachments: 3 
-                        })
-                    ];
-                    state.pingPongIndex = 0;
-                }
-            }
+			// Check if feedback is used
+			const usesFeedback = state.compiled.usesFeedback;
+			const usesCharFeedback = state.compiled.usesCharFeedback;
+			const usesCellColorFeedback = state.compiled.usesCellColorFeedback;
+			const usesAnyFeedback = usesFeedback || usesCharFeedback || usesCellColorFeedback;
 
-            // Build synth context
-            const mouse = (textmodifier as any).mouse;
+			// Create ping-pong buffers if feedback is used
+			if (usesAnyFeedback && !state.pingPongBuffers) {
+				state.pingPongBuffers = [
+					textmodifier.createFramebuffer({
+						width: grid.cols,
+						height: grid.rows,
+						attachments: 3,
+					}),
+					textmodifier.createFramebuffer({
+						width: grid.cols,
+						height: grid.rows,
+						attachments: 3,
+					}),
+				] as [TextmodeFramebuffer, TextmodeFramebuffer];
+				state.pingPongIndex = 0;
+			}
 
-            const synthContext: SynthContext = {
-                time: textmodifier.millis() / 1000,
-                frameCount: textmodifier.frameCount,
-                width: grid.width,
-                height: grid.height,
-                cols: grid.cols,
-                rows: grid.rows,
-                mouseX: mouse?.x ?? 0,
-                mouseY: mouse?.y ?? 0,
-            };
+			// Build synth context
+			const synthContext: SynthContext = {
+				time: textmodifier.millis() / 1000,
+				frameCount: textmodifier.frameCount,
+				width: grid.width,
+				height: grid.height,
+				cols: grid.cols,
+				rows: grid.rows
+			};
 
-            // Handle feedback rendering with ping-pong buffers
-            if (usesAnyFeedback && state.pingPongBuffers) {
-                // Ping-pong approach to avoid GPU feedback loops:
-                // - READ from pingPongBuffers[pingPongIndex] (contains previous frame)
-                // - WRITE to pingPongBuffers[1 - pingPongIndex] (stores current frame for next iteration)
-                // - Also WRITE to drawFramebuffer (for the layer system to process)
-                // Both writes use the SAME prev textures, so the results are identical
-                
-                const readIndex = state.pingPongIndex;
-                const writeIndex = 1 - state.pingPongIndex;
-                
-                const readBuffer = state.pingPongBuffers[readIndex];
-                const writeBuffer = state.pingPongBuffers[writeIndex];
-                
-                // Build feedback textures object from the read buffer
-                // Attachment 0 = character data, 1 = primary color, 2 = cell/secondary color
-                const feedbackTextures = {
-                    prevBuffer: usesFeedback ? (readBuffer?.textures?.[1] ?? null) : null,
-                    prevCharBuffer: usesCharFeedback ? (readBuffer?.textures?.[0] ?? null) : null,
-                    prevCellColorBuffer: usesCellColorFeedback ? (readBuffer?.textures?.[2] ?? null) : null,
-                };
-                
-                // First render: to the ping-pong WRITE buffer (for next frame's feedback)
-                state.renderer.render(
-                    writeBuffer as unknown as TextmodeFramebuffer,
-                    grid.cols,
-                    grid.rows,
-                    synthContext,
-                    layer.font as unknown as TextmodeFont,
-                    feedbackTextures
-                );
-                
-                // Second render: to the actual drawFramebuffer (for layer processing)
-                // Uses the SAME prev textures, so the result is identical
-                state.renderer.render(
-                    drawFramebuffer as unknown as TextmodeFramebuffer,
-                    grid.cols,
-                    grid.rows,
-                    synthContext,
-                    layer.font as unknown as TextmodeFont,
-                    feedbackTextures
-                );
-                
-                // Swap ping-pong index for next frame
-                state.pingPongIndex = writeIndex;
-            } else {
-                // No feedback - render directly to drawFramebuffer
-                state.renderer.render(
-                    drawFramebuffer as unknown as TextmodeFramebuffer,
-                    grid.cols,
-                    grid.rows,
-                    synthContext,
-                    layer.font as unknown as TextmodeFont,
-                    undefined
-                );
-            }
-        });
+			// Helper to set all uniforms
+			const setUniforms = (feedbackBuffer: TextmodeFramebuffer | null) => {
+				// Standard uniforms
+				textmodifier.setUniform('time', synthContext.time);
+				textmodifier.setUniform('resolution', [synthContext.cols, synthContext.rows]);
 
-        // ============================================================
-        // LAYER DISPOSED HOOK - Clean up synth resources
-        // ============================================================
-        api.registerLayerDisposedHook((layer: TextmodeLayer) => {
-            const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
-            if (state?.renderer) {
-                state.renderer.dispose();
-            }
-            // Note: Ping-pong buffers will be garbage collected
-            // GLFramebuffer doesn't expose a public dispose method
-        });
-    },
+				// Dynamic uniforms (evaluated each frame)
+				for (const [name, updater] of state.compiled!.dynamicUpdaters) {
+					textmodifier.setUniform(name, updater(synthContext));
+				}
 
-    uninstall(_textmodifier, api: TextmodePluginAPI) {
-        // Clean up all synth renderers
-        const allLayers = [api.layerManager.base, ...api.layerManager.all];
-        for (const layer of allLayers) {
-            const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
-            if (state?.renderer) {
-                state.renderer.dispose();
-            }
-            // Note: Ping-pong buffers will be garbage collected
-            // GLFramebuffer doesn't expose a public dispose method
-        }
+				// Static uniforms
+				for (const [name, uniform] of state.compiled!.uniforms) {
+					if (!uniform.isDynamic && typeof uniform.value !== 'function') {
+						textmodifier.setUniform(name, uniform.value);
+					}
+				}
 
-        // Remove layer extensions
-        api.removeLayerExtension('synth');
-        api.removeLayerExtension('clearSynth');
-        api.removeLayerExtension('hasSynth');
-    },
+				// Character mapping uniforms
+				if (state.compiled!.charMapping) {
+					const indices = state.characterResolver.resolve(
+						state.compiled!.charMapping.chars,
+						layer.font as TextmodeFont
+					);
+					textmodifier.setUniform('u_charMap', indices);
+					textmodifier.setUniform('u_charMapSize', indices.length);
+				}
+
+				// Feedback texture uniforms
+				if (feedbackBuffer) {
+					if (usesFeedback) {
+						textmodifier.setUniform('prevBuffer', feedbackBuffer.textures[1]);
+					}
+					if (usesCharFeedback) {
+						textmodifier.setUniform('prevCharBuffer', feedbackBuffer.textures[0]);
+					}
+					if (usesCellColorFeedback) {
+						textmodifier.setUniform('prevCellColorBuffer', feedbackBuffer.textures[2]);
+					}
+				}
+			};
+
+			// Render using textmode.js APIs
+			if (usesAnyFeedback && state.pingPongBuffers) {
+				const readBuffer = state.pingPongBuffers[state.pingPongIndex];
+				const writeBuffer = state.pingPongBuffers[1 - state.pingPongIndex];
+
+				// Render to ping-pong write buffer (for next frame's feedback)
+				writeBuffer.begin();
+				textmodifier.clear();
+				textmodifier.shader(state.shader);
+				setUniforms(readBuffer);
+				textmodifier.rect(grid.cols, grid.rows);
+				writeBuffer.end();
+
+				// Render to draw framebuffer (for layer processing)
+				drawFramebuffer.begin();
+				textmodifier.clear();
+				textmodifier.shader(state.shader);
+				setUniforms(readBuffer);
+				textmodifier.rect(grid.cols, grid.rows);
+				drawFramebuffer.end();
+
+				// Swap ping-pong index
+				state.pingPongIndex = 1 - state.pingPongIndex;
+			} else {
+				// No feedback - render directly
+				drawFramebuffer.begin();
+				textmodifier.clear();
+				textmodifier.shader(state.shader);
+				setUniforms(null);
+				textmodifier.rect(grid.cols, grid.rows);
+				drawFramebuffer.end();
+			}
+		});
+
+		// ============================================================
+		// LAYER DISPOSED HOOK - Clean up synth resources
+		// ============================================================
+		api.registerLayerDisposedHook((layer: TextmodeLayer) => {
+			const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
+			if (state) {
+				if (state.shader?.dispose) {
+					state.shader.dispose();
+				}
+				if (state.pingPongBuffers) {
+					state.pingPongBuffers[0].dispose?.();
+					state.pingPongBuffers[1].dispose?.();
+				}
+			}
+		});
+	},
+
+	uninstall(_textmodifier, api: TextmodePluginAPI) {
+		// Clean up all synth states
+		const allLayers = [api.layerManager.base, ...api.layerManager.all];
+		for (const layer of allLayers) {
+			const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
+			if (state) {
+				if (state.shader?.dispose) {
+					state.shader.dispose();
+				}
+				if (state.pingPongBuffers) {
+					state.pingPongBuffers[0].dispose?.();
+					state.pingPongBuffers[1].dispose?.();
+				}
+			}
+		}
+
+		// Remove layer extensions
+		api.removeLayerExtension('synth');
+	},
 };

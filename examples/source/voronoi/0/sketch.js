@@ -1,5 +1,5 @@
 import { textmode } from 'textmode.js';
-import { SynthPlugin, charNoise, charOsc, osc, noise, solid, voronoi, charVoronoi, charShape, charGradient, shape, gradient } from 'textmode.synth.js';
+import { SynthPlugin, voronoi } from 'textmode.synth.js';
 
 const t = textmode.create({
     width: window.innerWidth,
@@ -9,7 +9,7 @@ const t = textmode.create({
 });
 
 t.layers.base.synth(
-	voronoi(5, 0.3, 0.3)
+    voronoi(5, 0.3, 0.3)
 );
 
 t.draw(() => {
@@ -17,5 +17,5 @@ t.draw(() => {
 });
 
 t.windowResized(() => {
-	t.resizeCanvas(window.innerWidth, window.innerHeight);
+    t.resizeCanvas(window.innerWidth, window.innerHeight);
 });

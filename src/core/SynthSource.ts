@@ -2,7 +2,6 @@ import type {
 	SynthParameterValue,
 	CharacterMapping,
 } from './types';
-import { createCharacterMapping } from './types';
 import { SynthChain, type TransformRecord } from './SynthChain';
 import { ISynthSource } from './ISynthSource';
 
@@ -110,7 +109,15 @@ export class SynthSource implements ISynthSource {
 	// ============================================================
 
 	public charMap(chars: string): this {
-		this._charMapping = createCharacterMapping(chars);
+		const charArray = Array.from(chars);
+		const indices: number[] = [];
+
+		for (const char of charArray) {
+			indices.push(char.codePointAt(0) ?? 32);
+		}
+
+		this._charMapping = { chars, indices };
+		
 		return this;
 	}
 

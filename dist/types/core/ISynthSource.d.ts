@@ -10,13 +10,13 @@ export interface ISynthSource {
      * @example
      * ```ts
      * // Map noise values to ASCII art characters
-     * charNoise(10).charMap('@#%*+=-:. ')
+     * noise(10).charMap('@#%*+=-:. ')
      *
      * // Use block characters
-     * charOsc(8).charMap(' .:-=+*#%@')
+     * osc(1).charMap(' .:-=+*#%@')
      *
      * // Use custom symbols
-     * charGradient().charMap('-<>^v')
+     * gradient().charMap('-<>^v')
      * ```
      */
     charMap(chars: string): this;
@@ -28,19 +28,19 @@ export interface ISynthSource {
      *
      * @example
      * ```ts
-     * // Use oscillator for rainbow colors
-     * charNoise(10).charColor(osc(5, 0.1))
+     * // Use oscillator for grayscale colors
+     * noise(10).charColor(osc(5, 0.1))
      *
      * // Use solid color
-     * charNoise(10).charColor(solid(1, 0.5, 0))
+     * noise(10).charColor(solid(1, 0.5, 0))
      *
      * // Use gradient
-     * charNoise(10).charColor(gradient(0.5).hue(0.3))
+     * noise(10).charColor(gradient(0.5).hue(0.3))
      * ```
      */
     charColor(source: ISynthSource): this;
     /**
-     * Set the cell background color using a color source chain.
+     * Set the cell background colors using a color source chain.
      *
      * @param source A SynthSource producing color values, or RGBA values
      * @returns The SynthSource for chaining
@@ -48,18 +48,37 @@ export interface ISynthSource {
      * @example
      * ```ts
      * // Transparent background
-     * charNoise(10).cellColor(solid(0, 0, 0, 0))
+     * noise(10).cellColor(solid(0, 0, 0, 0))
      *
      * // Complement of character color
-     * charNoise(10).charColor(osc(5)).cellColor(osc(5).invert())
+     * noise(10).charColor(osc(5)).cellColor(osc(5).invert())
      * ```
      */
     cellColor(source: ISynthSource): this;
+    /**
+     * Set the character indices using a character source chain.
+     *
+     * @param source A synth source producing character indices
+     * @param charCount Number of different characters to use from the character mapping
+     * @returns The SynthSource for chaining
+     *
+     * @example
+     * ```ts
+     * // Use noise to select characters
+     * char(noise(10), 16)
+     *
+     * // Use oscillator to select characters
+     * char(osc(5), 8)
+     * ```
+     */
+    char(source: ISynthSource, charCount: number): this;
     /**
      * Set both character foreground and cell background color using the same source chain.
      * This is a convenience method that combines `.charColor()` and `.cellColor()` in one call.
      *
      * After calling `paint()`, you can still override the cell color separately using `.cellColor()`.
+     *
+     * Otherwise useful for pixel art styles where both colors are the same, making the characters redundant.
      *
      * @param source A SynthSource producing color values
      * @returns The SynthSource for chaining
@@ -67,17 +86,12 @@ export interface ISynthSource {
      * @example
      * ```ts
      * // Apply same color to both character and cell background
-     * charNoise(10).paint(osc(5, 0.1).kaleid(4))
+     * noise(10).paint(osc(5, 0.1).kaleid(4))
      *
      * // Apply color to both, then invert just the cell background
-     * charNoise(10)
+     * noise(10)
      *   .paint(voronoi(10, 0.5).mult(osc(20)))
      *   .cellColor(voronoi(10, 0.5).mult(osc(20)).invert())
-     *
-     * // Equivalent to:
-     * // charNoise(10)
-     * //   .charColor(voronoi(10, 0.5).mult(osc(20)))
-     * //   .cellColor(voronoi(10, 0.5).mult(osc(20)))
      * ```
      */
     paint(source: ISynthSource): this;
@@ -93,7 +107,7 @@ export interface ISynthSource {
      * // Create a color chain and use a modified clone for cell color
      * const colorChain = voronoi(10, 0.5).mult(osc(20));
      *
-     * charNoise(10)
+     * noise(10)
      *   .paint(colorChain)
      *   .cellColor(colorChain.clone().invert())
      *
@@ -150,51 +164,24 @@ export interface ISynthSource {
      * rendered output (character foreground color), enabling effects like trails,
      * motion blur, and recursive patterns.
      *
-     * When called without arguments, samples from the current layer's previous frame
-     * (equivalent to hydra's `src(o0)`).
-     *
-     * When called with a SynthOutput from another layer, samples from that layer's
-     * output (equivalent to hydra's `src(o1)`, `src(o2)`, etc.).
-     *
-     * @param output - Optional output reference from another layer
+     * Equivalent to hydra's `src(o0)`.
      *
      * @example
      * ```typescript
-     * // Self-feedback (like src(o0) in hydra)
+     * // Classic hydra-style feedback loop with noise modulation
      * src().modulate(noise(3), 0.005).blend(shape(4), 0.01)
      *
-     * // Cross-layer feedback (like src(o1) in hydra)
-     * const o1 = createOutput(layer1);
-     * layer0.synth(src(o1).hue(0.01).blend(osc(10), 0.1));
+     * // Feedback with color shift
+     * src().hue(0.01).scale(1.01).blend(osc(10), 0.1)
      * ```
      */
-    src?: (output?: SynthParameterValue) => ISynthSource;
-    /**
-     * Sample the previous frame's primary color output for feedback effects.
-     * @deprecated Use src() instead for hydra compatibility
-     *
-     * @example
-     * ```typescript
-     * // Classic feedback loop with noise modulation
-     * prev().modulate(noise(3), 0.005).blend(shape(4), 0.01)
-     *
-     * // Trailing effect with scaling
-     * prev().scale(1.01).blend(charNoise(10), 0.1)
-     * ```
-     */
-    prev?: () => ISynthSource;
+    src?: () => ISynthSource;
     /**
      * Sample the previous frame's character data for feedback effects.
      * Reads from the previous frame's character texture, which contains
      * character index and transform data.
      *
-     * When called without arguments, samples from the current layer's previous frame.
-     * When called with a SynthOutput from another layer, samples from that layer's
-     * character texture.
-     *
      * Use this to create feedback loops that affect character selection.
-     *
-     * @param output - Optional output reference from another layer
      *
      * @example
      * ```typescript
@@ -202,27 +189,21 @@ export interface ISynthSource {
      * charSrc().modulate(noise(3), 0.01)
      * ```
      */
-    charSrc?: (output?: SynthParameterValue) => ISynthSource;
+    charSrc?: () => ISynthSource;
     /**
      * Sample the previous frame's cell/secondary color for feedback effects.
      * Reads from the previous frame's secondary color texture, which contains
      * the cell background color.
      *
-     * When called without arguments, samples from the current layer's previous frame.
-     * When called with a SynthOutput from another layer, samples from that layer's
-     * cell color texture.
-     *
      * Use this to create feedback loops that affect cell background colors.
-     *
-     * @param output - Optional output reference from another layer
      *
      * @example
      * ```typescript
-     * // Cell color feedback (self-reference)
+     * // Cell color feedback
      * cellColorSrc().hue(0.01).blend(solid(0, 0, 0), 0.1)
      * ```
      */
-    cellColorSrc?: (output?: SynthParameterValue) => ISynthSource;
+    cellColorSrc?: () => ISynthSource;
     /**
      * Rotate coordinates.
      * @param angle - Rotation angle in radians (default: 10.0)

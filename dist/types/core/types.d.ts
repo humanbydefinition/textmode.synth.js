@@ -6,7 +6,6 @@
  * context interfaces, and shader compilation types.
  */
 import { SynthSource } from "./SynthSource";
-import type { SynthOutput } from "./SynthOutput";
 /**
  * Transform type categories determining how functions compose in the shader pipeline.
  *
@@ -16,12 +15,9 @@ import type { SynthOutput } from "./SynthOutput";
  * - `color`: Color transforms that modify existing color values
  * - `combine`: Blending operations that combine two color sources
  * - `combineCoord`: Modulation that uses one source to affect another's coordinates
- * - `char`: Character source generators for textmode
  * - `charModify`: Character property modifiers (flip, rotate, invert)
- * - `charColor`: Character foreground color sources
- * - `cellColor`: Cell/background color sources
  */
-export type SynthTransformType = 'src' | 'coord' | 'color' | 'combine' | 'combineCoord' | 'char' | 'charModify' | 'charColor' | 'cellColor';
+export type SynthTransformType = 'src' | 'coord' | 'color' | 'combine' | 'combineCoord' | 'charModify';
 /**
  * GLSL type for transform inputs.
  */
@@ -45,10 +41,9 @@ export interface TransformInput {
  * - `string`: String value (rarely used)
  * - `function`: Evaluated each frame with context
  * - `SynthSource`: Nested synth chain for combine/modulate operations
- * - `SynthOutput`: Reference to another layer's output (for cross-layer feedback)
  * - `null`: Use default value
  */
-export type SynthParameterValue = number | number[] | string | ((ctx: SynthContext) => number) | ((ctx: SynthContext) => number[]) | SynthSource | SynthOutput | null;
+export type SynthParameterValue = number | number[] | string | ((ctx: SynthContext) => number) | ((ctx: SynthContext) => number[]) | SynthSource | null;
 /**
  * Context passed to dynamic parameter functions during rendering.
  */
@@ -57,18 +52,14 @@ export interface SynthContext {
     time: number;
     /** Current frame count */
     frameCount: number;
-    /** Canvas/grid width in pixels */
+    /** Grid width in pixels */
     width: number;
-    /** Canvas/grid height in pixels */
+    /** Grid height in pixels */
     height: number;
     /** Grid columns */
     cols: number;
     /** Grid rows */
     rows: number;
-    /** Normalized mouse X (0-1) */
-    mouseX: number;
-    /** Normalized mouse Y (0-1) */
-    mouseY: number;
 }
 /**
  * Character set mapping for charMap transform.
@@ -102,8 +93,4 @@ export declare const TRANSFORM_TYPE_INFO: Record<SynthTransformType, {
         name: string;
     }>;
 }>;
-/**
- * Create a CharacterMapping from a string of characters.
- */
-export declare function createCharacterMapping(chars: string): CharacterMapping;
 //# sourceMappingURL=types.d.ts.map

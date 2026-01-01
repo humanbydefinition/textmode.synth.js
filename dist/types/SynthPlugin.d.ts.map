@@ -1,1 +1,1 @@
-{"version":3,"file":"SynthPlugin.d.ts","sourceRoot":"","sources":["../../src/SynthPlugin.ts"],"names":[],"mappings":"AAAA;;;;;GAKG;AAEH,OAAO,KAAK,EACR,cAAc,EAEjB,MAAM,aAAa,CAAC;AAyGrB;;;;;;;;;;;;;;;;;;;;;GAqBG;AACH,eAAO,MAAM,WAAW,EAAE,cAqOzB,CAAC"}
+{"version":3,"file":"SynthPlugin.d.ts","sourceRoot":"","sources":["../../src/SynthPlugin.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EACX,cAAc,EAGd,MAAM,aAAa,CAAC;AAyCrB;;;;;;;;;;;;;;;;;;GAkBG;AACH,eAAO,MAAM,WAAW,EAAE,cA8NzB,CAAC"}

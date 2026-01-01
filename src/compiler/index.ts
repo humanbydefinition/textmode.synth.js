@@ -5,5 +5,5 @@
 export * from './types';
 export * from './UniformManager';
 export * from './GLSLGenerator';
-export { compileSynthSource, SYNTH_VERTEX_SHADER } from './SynthCompiler';
+export { compileSynthSource } from './SynthCompiler';
 export type { CompiledSynthShader } from './SynthCompiler';

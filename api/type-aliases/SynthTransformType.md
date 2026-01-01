@@ -3,16 +3,7 @@
 # Type Alias: SynthTransformType
 
 ```ts
-type SynthTransformType = 
-  | "src"
-  | "coord"
-  | "color"
-  | "combine"
-  | "combineCoord"
-  | "char"
-  | "charModify"
-  | "charColor"
-  | "cellColor";
+type SynthTransformType = "src" | "coord" | "color" | "combine" | "combineCoord" | "charModify";
 ```
 
 Transform type categories determining how functions compose in the shader pipeline.

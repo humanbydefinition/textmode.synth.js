@@ -1,21 +1,6 @@
 import type { SynthParameterValue, CharacterMapping } from './types';
 import { SynthChain, type TransformRecord } from './SynthChain';
 import { ISynthSource } from './ISynthSource';
-import { SynthOutput } from './SynthOutput';
-/**
- * Represents an external output reference in a synth chain.
- * Tracks which output is referenced and what type of texture to sample.
- */
-export interface ExternalOutputRef {
-    /** The SynthOutput being referenced */
-    output: SynthOutput;
-    /** Which texture to sample: 'color' | 'char' | 'cellColor' */
-    textureType: 'color' | 'char' | 'cellColor';
-    /** The transform name that uses this reference */
-    transformName: string;
-    /** Index in the transform chain where this reference is used */
-    transformIndex: number;
-}
 /**
  * Options for creating a new SynthSource.
  * @internal
@@ -25,8 +10,9 @@ interface SynthSourceCreateOptions {
     charMapping?: CharacterMapping;
     colorSource?: SynthSource;
     cellColorSource?: SynthSource;
+    charSource?: SynthSource;
+    charCount?: number;
     nestedSources?: Map<number, SynthSource>;
-    externalOutputs?: ExternalOutputRef[];
 }
 /**
  * A chainable synthesis source that accumulates transforms to be compiled into a shader.
@@ -38,11 +24,14 @@ interface SynthSourceCreateOptions {
  * @example
  * ```ts
  * // Create a synth chain with procedural characters and colors
- * const chain = charNoise(10)
- *   .charMap('@#%*+=-:. ')
- *   .charRotate(0.1)
+ * const synth = noise(10)
+ *   .rotate(0.1)
+ *   .scroll(0.1, 0)
+ *
  *   .charColor(osc(5).kaleid(4))
- *   .scroll(0.1, 0);
+ *   .cellColor(osc(5).kaleid(4).invert())
+ *
+ *   .charMap('@#%*+=-:. ');
  * ```
  */
 export declare class SynthSource implements ISynthSource {
@@ -56,8 +45,10 @@ export declare class SynthSource implements ISynthSource {
     private _colorSource?;
     /** Reference to the cell color source chain (if any) */
     private _cellColorSource?;
-    /** External output references used in this chain (for cross-layer feedback) */
-    private readonly _externalOutputs;
+    /** Reference to the character source chain (if any) - used by char() function */
+    private _charSource?;
+    /** Number of unique characters when using char() function */
+    private _charCount?;
     /**
      * Create a new SynthSource.
      * @param options Optional initialization options
@@ -77,6 +68,7 @@ export declare class SynthSource implements ISynthSource {
     addCombineTransform(name: string, source: SynthSource, userArgs: SynthParameterValue[]): this;
     charMap(chars: string): this;
     charColor(source: SynthSource): this;
+    char(source: SynthSource, charCount: number): this;
     cellColor(source: SynthSource): this;
     paint(source: SynthSource): this;
     clone(): SynthSource;
@@ -101,21 +93,20 @@ export declare class SynthSource implements ISynthSource {
      */
     get cellColorSource(): SynthSource | undefined;
     /**
+     * Get the character source if defined (from char() function).
+     * @ignore
+     */
+    get charSource(): SynthSource | undefined;
+    /**
+     * Get the character count if defined (from char() function).
+     * @ignore
+     */
+    get charCount(): number | undefined;
+    /**
      * Get all nested sources for combine operations.
      * @ignore
      */
     get nestedSources(): Map<number, SynthSource>;
-    /**
-     * Get all external output references used in this chain.
-     * Used by the compiler to set up cross-layer texture sampling.
-     * @ignore
-     */
-    get externalOutputs(): readonly ExternalOutputRef[];
-    /**
-     * Collect all external outputs from this source and its nested sources.
-     * @ignore
-     */
-    collectAllExternalOutputs(): ExternalOutputRef[];
 }
 export {};
 //# sourceMappingURL=SynthSource.d.ts.map

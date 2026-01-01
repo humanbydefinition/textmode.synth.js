@@ -25,7 +25,7 @@ export interface ShaderGenerationOptions {
 	cellColorVar: string;
 	/** Character mapping (if any) */
 	charMapping?: CharacterMapping;
-	/** Whether primary color feedback (src/prev) is used */
+	/** Whether primary color feedback (src) is used */
 	usesFeedback?: boolean;
 	/** Whether character feedback (charSrc) is used */
 	usesCharFeedback?: boolean;
@@ -243,21 +243,3 @@ export function generateCharacterOutputCode(
 	int charIdx = int(lum * 255.0);
 	vec4 charOutput = vec4(float(charIdx % 256) / 255.0, float(charIdx / 256) / 255.0, 0.0, 0.0);`;
 }
-
-/**
- * Vertex shader source for synth rendering.
- */
-export const SYNTH_VERTEX_SHADER = `#version 300 es
-precision highp float;
-
-// Use explicit layout location for cross-platform compatibility
-layout(location = 0) in vec2 a_position;
-
-out vec2 v_uv;
-
-void main() {
-	vec2 uv = a_position * 0.5 + 0.5;
-	v_uv = vec2(uv.x, 1.0 - uv.y);
-	gl_Position = vec4(a_position, 0.0, 1.0);
-}
-`;
