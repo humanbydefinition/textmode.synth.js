@@ -5,6 +5,16 @@
 import type { SynthUniform, SynthContext, CharacterMapping } from '../core/types';
 
 /**
+ * Compilation target context determining which texture `src()` samples from.
+ * 
+ * - `char`: Compiling a character source chain → src() samples prevCharBuffer
+ * - `charColor`: Compiling a character color chain → src() samples prevBuffer (primary color)
+ * - `cellColor`: Compiling a cell color chain → src() samples prevCellColorBuffer
+ * - `main`: Compiling the main chain → src() samples prevBuffer (primary color)
+ */
+export type CompilationTarget = 'char' | 'charColor' | 'cellColor' | 'main';
+
+/**
  * Result of compiling a SynthSource.
  */
 export interface CompiledSynthShader {

@@ -172,12 +172,18 @@ export interface ISynthSource {
     solid?: (r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue) => ISynthSource;
 
     /**
-     * Sample the previous frame's primary color output for feedback effects.
-     * This is the core of feedback loops - it reads from the previous frame's
-     * rendered output (character foreground color), enabling effects like trails,
-     * motion blur, and recursive patterns.
+     * Sample the previous frame for feedback effects.
      * 
-     * Equivalent to hydra's `src(o0)`.
+     * **Context-aware behavior:** `src()` automatically samples the appropriate texture
+     * based on where it's used in the synth chain:
+     * 
+     * - Inside `char(...)` → samples previous frame's character data
+     * - Inside `charColor(...)` → samples previous frame's primary color (character foreground)
+     * - Inside `cellColor(...)` → samples previous frame's cell color (character background)
+     * - Outside all three → samples previous frame's primary color
+     * 
+     * This is the core of feedback loops - enabling effects like trails,
+     * motion blur, and recursive patterns. Equivalent to hydra's `src(o0)`.
      * 
      * @example
      * ```typescript
@@ -186,39 +192,19 @@ export interface ISynthSource {
      * 
      * // Feedback with color shift
      * src().hue(0.01).scale(1.01).blend(osc(10), 0.1)
+     * 
+     * // Context-aware: src() samples the appropriate texture automatically
+     * char(noise(10).diff(src()))           // src() → character feedback
+     *   .charColor(osc(5).blend(src(), 0.5)) // src() → primary color feedback
+     *   .cellColor(voronoi().diff(src()))    // src() → cell color feedback
+     * 
+     * // Independent feedback loops for each output
+     * char(noise(0.1).modulateRotate(src().scale(0.5), 0.125))
+     *   .charColor(osc(10).modulateRotate(src().scale(0.5), 0.125))
+     *   .cellColor(voronoi(5).modulateRotate(src().scale(0.5), 0.125))
      * ```
      */
     src?: () => ISynthSource;
-
-    /**
-     * Sample the previous frame's character data for feedback effects.
-     * Reads from the previous frame's character texture, which contains
-     * character index and transform data.
-     * 
-     * Use this to create feedback loops that affect character selection.
-     * 
-     * @example
-     * ```typescript
-     * // Character feedback with modulation
-     * charSrc().modulate(noise(3), 0.01)
-     * ```
-     */
-    charSrc?: () => ISynthSource;
-
-    /**
-     * Sample the previous frame's cell/secondary color for feedback effects.
-     * Reads from the previous frame's secondary color texture, which contains
-     * the cell background color.
-     * 
-     * Use this to create feedback loops that affect cell background colors.
-     * 
-     * @example
-     * ```typescript
-     * // Cell color feedback
-     * cellColorSrc().hue(0.01).blend(solid(0, 0, 0), 0.1)
-     * ```
-     */
-    cellColorSrc?: () => ISynthSource;
 
     // Coordinate transforms
     /**

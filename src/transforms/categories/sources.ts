@@ -124,27 +124,7 @@ export const src = defineTransform({
 	glsl: `
 	return texture(prevBuffer, fract(_st));
 `,
-	description: 'Sample the previous frame primary color for feedback effects',
-});
-
-export const charSrc = defineTransform({
-	name: 'charSrc',
-	type: 'src',
-	inputs: [],
-	glsl: `
-	return texture(prevCharBuffer, fract(_st));
-`,
-	description: 'Sample the previous frame character data for feedback effects',
-});
-
-export const cellColorSrc = defineTransform({
-	name: 'cellColorSrc',
-	type: 'src',
-	inputs: [],
-	glsl: `
-	return texture(prevCellColorBuffer, fract(_st));
-`,
-	description: 'Sample the previous frame cell color for feedback effects',
+	description: 'Sample the previous frame for feedback effects. Context-aware: automatically samples the appropriate texture based on where it is used (char, charColor, or cellColor context).',
 });
 
 /**
@@ -158,6 +138,4 @@ export const SOURCE_TRANSFORMS: TransformDefinition[] = [
 	shape,
 	solid,
 	src,
-	charSrc,
-	cellColorSrc,
 ];

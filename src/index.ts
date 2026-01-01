@@ -465,55 +465,16 @@ export const solid = generatedFunctions['solid'] as (
  * t.layers.base.synth(
  *   src().hue(0.01).scale(1.01).blend(osc(10), 0.1)
  * );
+ * 
+ * // Context-aware: src() samples the appropriate texture automatically
+ * t.layers.base.synth(
+ *   char(noise(10).diff(src()))           // src() → character feedback
+ *     .charColor(osc(5).blend(src(), 0.5)) // src() → primary color feedback
+ *     .cellColor(voronoi().diff(src()))    // src() → cell color feedback
+ * );
  * ```
  */
 export const src = generatedFunctions['src'] as () => SynthSource;
-
-/**
- * Sample the previous frame's character data for feedback effects.
- * Reads from the previous frame's character texture, which contains
- * character index and transform data.
- * 
- * Use this to create feedback loops that affect character selection.
- * 
- * @example
- * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- * 
- * // Character feedback with modulation
- * t.layers.base.synth(
- *   charSrc().modulate(noise(3), 0.01)
- * );
- * ```
- */
-export const charSrc = generatedFunctions['charSrc'] as () => SynthSource;
-
-/**
- * Sample the previous frame's cell/secondary color for feedback effects.
- * Reads from the previous frame's secondary color texture, which contains
- * the cell background color.
- * 
- * Use this to create feedback loops that affect cell background colors.
- * 
- * @example
- * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- * 
- * // Cell color feedback
- * t.layers.base.synth(
- *   cellColorSrc().hue(0.01).blend(solid(0, 0, 0), 0.1)
- * );
- * ```
- */
-export const cellColorSrc = generatedFunctions['cellColorSrc'] as () => SynthSource;
 
 // ============================================================
 // EXPORTS - Utilities

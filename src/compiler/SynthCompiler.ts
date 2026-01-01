@@ -9,7 +9,7 @@
  */
 
 import type { SynthSource } from '../core/SynthSource';
-import type { CompiledSynthShader, ChainCompilationResult } from './types';
+import type { CompiledSynthShader, ChainCompilationResult, CompilationTarget } from './types';
 import { UniformManager } from './UniformManager';
 import { generateFragmentShader, generateCharacterOutputCode } from './GLSLGenerator';
 import { transformRegistry } from '../transforms/TransformRegistry';
@@ -37,6 +37,8 @@ class SynthCompilerContext {
 	private _usesFeedback = false;
 	private _usesCharFeedback = false;
 	private _usesCellColorFeedback = false;
+	/** Current compilation target - determines which texture src() samples */
+	private _currentTarget: CompilationTarget = 'main';
 
 	/**
 	 * Compile a SynthSource into a shader.
@@ -55,7 +57,9 @@ class SynthCompilerContext {
 		const chainResult = this._compileChain(
 			source,
 			'main',
-			'vec4(1.0, 1.0, 1.0, 1.0)'
+			'vec4(1.0, 1.0, 1.0, 1.0)',
+			'v_uv',
+			'main'
 		);
 
 		// Compile character source if using char() function
@@ -65,7 +69,9 @@ class SynthCompilerContext {
 			const charChain = this._compileChain(
 				source.charSource,
 				'charSrc',
-				'vec4(1.0, 1.0, 1.0, 1.0)'
+				'vec4(1.0, 1.0, 1.0, 1.0)',
+				'v_uv',
+				'char'
 			);
 			// The charSource produces a color - we'll convert it to char indices
 			// Store the color var and charCount for the character output code
@@ -85,7 +91,9 @@ class SynthCompilerContext {
 			const colorChain = this._compileChain(
 				source.colorSource,
 				'charColor',
-				'vec4(1.0, 1.0, 1.0, 1.0)'
+				'vec4(1.0, 1.0, 1.0, 1.0)',
+				'v_uv',
+				'charColor'
 			);
 			primaryColorVar = colorChain.colorVar;
 		}
@@ -96,7 +104,9 @@ class SynthCompilerContext {
 			const cellChain = this._compileChain(
 				source.cellColorSource,
 				'cellColor',
-				'vec4(0.0, 0.0, 0.0, 0.0)'
+				'vec4(0.0, 0.0, 0.0, 0.0)',
+				'v_uv',
+				'cellColor'
 			);
 			cellColorVar = cellChain.colorVar;
 		}
@@ -135,13 +145,19 @@ class SynthCompilerContext {
 
 	/**
 	 * Compile a transform chain.
+	 * @param target - The compilation target context (determines src() behavior)
 	 */
 	private _compileChain(
 		source: SynthSource,
 		prefix: string,
 		defaultColor: string,
-		initialCoordExpr: string = 'v_uv'
+		initialCoordExpr: string = 'v_uv',
+		target: CompilationTarget = 'main'
 	): ChainCompilationResult {
+		// Save and set the current compilation target
+		const previousTarget = this._currentTarget;
+		this._currentTarget = target;
+
 		const coordVar = `${prefix}_st`;
 		let colorVar = `${prefix}_c`;
 		let charVar: string | undefined;
@@ -179,18 +195,27 @@ class SynthCompilerContext {
 				return;
 			}
 
-			// Track which feedback sources are used
+			// Track which feedback sources are used (context-aware for src)
 			if (record.name === 'src') {
-				this._usesFeedback = true;
-			}
-			if (record.name === 'charSrc') {
-				this._usesCharFeedback = true;
-			}
-			if (record.name === 'cellColorSrc') {
-				this._usesCellColorFeedback = true;
+				// src() samples different textures based on compilation context
+				switch (this._currentTarget) {
+					case 'char':
+						this._usesCharFeedback = true;
+						break;
+					case 'cellColor':
+						this._usesCellColorFeedback = true;
+						break;
+					case 'charColor':
+					case 'main':
+					default:
+						this._usesFeedback = true;
+						break;
+				}
 			}
 
-			this._glslFunctions.add(def.glslFunction);
+			// Add GLSL function (with context-aware src handling)
+			const glslFunc = this._getContextAwareGlslFunction(def, record.name);
+			this._glslFunctions.add(glslFunc);
 
 			const args = this._processArguments(
 				record.userArgs,
@@ -205,11 +230,13 @@ class SynthCompilerContext {
 				// at the CURRENT transformed coordinates. In hydra, coord transforms
 				// before the combine affect both the main source and the nested source.
 				// The nested source then applies its own coord transforms on top of that.
+				// Nested chains inherit the parent's compilation target for context-aware src()
 				const nestedResult = this._compileChain(
 					nestedSource,
 					`${prefix}_nested_${i}`,
 					defaultColor,
-					coordVar  // Always use current coords, not v_uv
+					coordVar,  // Always use current coords, not v_uv
+					target     // Inherit parent's compilation target
 				);
 				nestedColorVar = nestedResult.colorVar;
 			}
@@ -245,6 +272,9 @@ class SynthCompilerContext {
 			applyTransformAtIndex(i);
 		}
 
+		// Restore previous target after chain compilation
+		this._currentTarget = previousTarget;
+
 		return { coordVar, colorVar, charVar, flagsVar, rotationVar };
 	}
 
@@ -253,6 +283,38 @@ class SynthCompilerContext {
 	 */
 	private _getProcessedTransform(name: string): ProcessedTransform | undefined {
 		return transformRegistry.getProcessed(name);
+	}
+
+	/**
+	 * Get the GLSL function for a transform, with context-aware handling for src().
+	 * 
+	 * When the transform is 'src', this generates a context-specific GLSL function
+	 * that samples the appropriate texture based on the current compilation target:
+	 * - char context → samples prevCharBuffer
+	 * - charColor/main context → samples prevBuffer (primary color)
+	 * - cellColor context → samples prevCellColorBuffer
+	 */
+	private _getContextAwareGlslFunction(def: ProcessedTransform, name: string): string {
+		if (name !== 'src') {
+			return def.glslFunction;
+		}
+
+		// Generate context-specific src function
+		const samplerMap: Record<CompilationTarget, string> = {
+			'char': 'prevCharBuffer',
+			'charColor': 'prevBuffer',
+			'cellColor': 'prevCellColorBuffer',
+			'main': 'prevBuffer'
+		};
+
+		const sampler = samplerMap[this._currentTarget];
+		const funcName = `src_${this._currentTarget}`;
+
+		return `
+vec4 ${funcName}(vec2 _st) {
+	return texture(${sampler}, fract(_st));
+}
+`;
 	}
 
 	/**
@@ -305,6 +367,11 @@ class SynthCompilerContext {
 			return allArgs.join(', ');
 		};
 
+		// Get the function name to call (context-aware for src)
+		const funcName = def.name === 'src' 
+			? `src_${this._currentTarget}` 
+			: def.name;
+
 		let newColorVar = colorVar;
 		let newCharVar = charVar;
 		let newFlagsVar = flagsVar;
@@ -313,35 +380,35 @@ class SynthCompilerContext {
 		switch (def.type) {
 			case 'src': {
 				const newColor = `c${varId}`;
-				this._mainCode.push(`\tvec4 ${newColor} = ${def.name}(${buildArgs(coordVar)});`);
+				this._mainCode.push(`\tvec4 ${newColor} = ${funcName}(${buildArgs(coordVar)});`);
 				newColorVar = newColor;
 				break;
 			}
 
 			case 'coord': {
 				const newCoord = `st${varId}`;
-				this._mainCode.push(`\tvec2 ${newCoord} = ${def.name}(${buildArgs(coordVar)});`);
+				this._mainCode.push(`\tvec2 ${newCoord} = ${funcName}(${buildArgs(coordVar)});`);
 				this._mainCode.push(`\t${coordVar} = ${newCoord};`);
 				break;
 			}
 
 			case 'color': {
 				const newColor = `c${varId}`;
-				this._mainCode.push(`\tvec4 ${newColor} = ${def.name}(${buildArgs(colorVar)});`);
+				this._mainCode.push(`\tvec4 ${newColor} = ${funcName}(${buildArgs(colorVar)});`);
 				newColorVar = newColor;
 				break;
 			}
 
 			case 'combine': {
 				const newColor = `c${varId}`;
-				this._mainCode.push(`\tvec4 ${newColor} = ${def.name}(${buildArgs(colorVar, nestedColorVar ?? 'vec4(0.0)')});`);
+				this._mainCode.push(`\tvec4 ${newColor} = ${funcName}(${buildArgs(colorVar, nestedColorVar ?? 'vec4(0.0)')});`);
 				newColorVar = newColor;
 				break;
 			}
 
 			case 'combineCoord': {
 				const newCoord = `st${varId}`;
-				this._mainCode.push(`\tvec2 ${newCoord} = ${def.name}(${buildArgs(coordVar, nestedColorVar ?? 'vec4(0.0)')});`);
+				this._mainCode.push(`\tvec2 ${newCoord} = ${funcName}(${buildArgs(coordVar, nestedColorVar ?? 'vec4(0.0)')});`);
 				this._mainCode.push(`\t${coordVar} = ${newCoord};`);
 				break;
 			}
@@ -355,7 +422,7 @@ class SynthCompilerContext {
 					this._mainCode.push(`\tfloat ${newFlagsVar} = 0.0;`);
 					this._mainCode.push(`\tfloat ${newRotationVar} = 0.0;`);
 				}
-				this._mainCode.push(`\t${newCharVar} = ${def.name}(${buildArgs(newCharVar)});`);
+				this._mainCode.push(`\t${newCharVar} = ${funcName}(${buildArgs(newCharVar)});`);
 				break;
 			}
 		}
