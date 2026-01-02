@@ -1,12 +1,12 @@
-const O = { src: { returnType: "vec4", args: [{ type: "vec2", name: "_st" }] }, coord: { returnType: "vec2", args: [{ type: "vec2", name: "_st" }] }, color: { returnType: "vec4", args: [{ type: "vec4", name: "_c0" }] }, combine: { returnType: "vec4", args: [{ type: "vec4", name: "_c0" }, { type: "vec4", name: "_c1" }] }, combineCoord: { returnType: "vec2", args: [{ type: "vec2", name: "_st" }, { type: "vec4", name: "_c0" }] }, charModify: { returnType: "vec4", args: [{ type: "vec4", name: "_char" }] } };
-function z(t) {
-  const e = O[t.type], a = [...e.args, ...t.inputs.map((n) => ({ type: n.type, name: n.name }))].map((n) => `${n.type} ${n.name}`).join(", "), r = `
+const Y = { src: { returnType: "vec4", args: [{ type: "vec2", name: "_st" }] }, coord: { returnType: "vec2", args: [{ type: "vec2", name: "_st" }] }, color: { returnType: "vec4", args: [{ type: "vec4", name: "_c0" }] }, combine: { returnType: "vec4", args: [{ type: "vec4", name: "_c0" }, { type: "vec4", name: "_c1" }] }, combineCoord: { returnType: "vec2", args: [{ type: "vec2", name: "_st" }, { type: "vec4", name: "_c0" }] }, charModify: { returnType: "vec4", args: [{ type: "vec4", name: "_char" }] } };
+function U(t) {
+  const e = Y[t.type], a = [...e.args, ...t.inputs.map((r) => ({ type: r.type, name: r.name }))].map((r) => `${r.type} ${r.name}`).join(", "), n = `
 ${e.returnType} ${t.name}(${a}) {
 ${t.glsl}
 }`;
-  return { ...t, glslFunction: r };
+  return { ...t, glslFunction: n };
 }
-class P {
+class X {
   _transforms = /* @__PURE__ */ new Map();
   _processedCache = /* @__PURE__ */ new Map();
   register(e) {
@@ -21,8 +21,8 @@ class P {
   getProcessed(e) {
     let a = this._processedCache.get(e);
     if (!a) {
-      const r = this._transforms.get(e);
-      r && (a = z(r), this._processedCache.set(e, a));
+      const n = this._transforms.get(e);
+      n && (a = U(n), this._processedCache.set(e, a));
     }
     return a;
   }
@@ -51,35 +51,35 @@ class P {
     return this._transforms.size;
   }
 }
-const S = new P(), R = /* @__PURE__ */ new Set(["src"]);
-class V {
+const w = new X(), L = /* @__PURE__ */ new Set(["src"]);
+class B {
   _generatedFunctions = {};
   _synthSourceClass = null;
   setSynthSourceClass(e) {
     this._synthSourceClass = e;
   }
   injectMethods(e) {
-    const a = S.getAll();
-    for (const r of a) this._injectMethod(e, r);
+    const a = w.getAll();
+    for (const n of a) this._injectMethod(e, n);
   }
   _injectMethod(e, a) {
-    const { name: r, inputs: n, type: o } = a;
-    e[r] = o === "combine" || o === "combineCoord" ? function(c, ...i) {
-      const u = n.map((f, p) => i[p] ?? f.default);
-      return this.addCombineTransform(r, c, u);
+    const { name: n, inputs: r, type: o } = a;
+    e[n] = o === "combine" || o === "combineCoord" ? function(c, ...i) {
+      const u = r.map((_, h) => i[h] ?? _.default);
+      return this.addCombineTransform(n, c, u);
     } : function(...c) {
-      const i = n.map((u, f) => c[f] ?? u.default);
-      return this.addTransform(r, i);
+      const i = r.map((u, _) => c[_] ?? u.default);
+      return this.addTransform(n, i);
     };
   }
   generateStandaloneFunctions() {
     if (!this._synthSourceClass) throw new Error("[TransformFactory] SynthSource class not set. Call setSynthSourceClass first.");
-    const e = {}, a = S.getAll(), r = this._synthSourceClass;
-    for (const n of a) if (R.has(n.type)) {
-      const { name: o, inputs: c } = n;
+    const e = {}, a = w.getAll(), n = this._synthSourceClass;
+    for (const r of a) if (L.has(r.type)) {
+      const { name: o, inputs: c } = r;
       e[o] = (...i) => {
-        const u = new r(), f = c.map((p, d) => i[d] ?? p.default);
-        return u.addTransform(o, f);
+        const u = new n(), _ = c.map((h, p) => i[p] ?? h.default);
+        return u.addTransform(o, _);
       };
     }
     return this._generatedFunctions = e, e;
@@ -88,24 +88,24 @@ class V {
     return this._generatedFunctions;
   }
   addTransform(e, a) {
-    if (S.register(e), a && this._injectMethod(a, e), R.has(e.type) && this._synthSourceClass) {
-      const r = this._synthSourceClass, { name: n, inputs: o } = e;
-      this._generatedFunctions[n] = (...c) => {
-        const i = new r(), u = o.map((f, p) => c[p] ?? f.default);
-        return i.addTransform(n, u);
+    if (w.register(e), a && this._injectMethod(a, e), L.has(e.type) && this._synthSourceClass) {
+      const n = this._synthSourceClass, { name: r, inputs: o } = e;
+      this._generatedFunctions[r] = (...c) => {
+        const i = new n(), u = o.map((_, h) => c[h] ?? _.default);
+        return i.addTransform(r, u);
       };
     }
   }
 }
-const w = new V(), Y = { name: "osc", type: "src", inputs: [{ name: "frequency", type: "float", default: 60 }, { name: "sync", type: "float", default: 0.1 }, { name: "offset", type: "float", default: 0 }], glsl: `
+const I = new B(), E = { name: "osc", type: "src", inputs: [{ name: "frequency", type: "float", default: 60 }, { name: "sync", type: "float", default: 0.1 }, { name: "offset", type: "float", default: 0 }], glsl: `
 	vec2 st = _st;
 	float r = sin((st.x - offset/frequency + time*sync) * frequency) * 0.5 + 0.5;
 	float g = sin((st.x + time*sync) * frequency) * 0.5 + 0.5;
 	float b = sin((st.x + offset/frequency + time*sync) * frequency) * 0.5 + 0.5;
 	return vec4(r, g, b, 1.0);
-`, description: "Generate oscillating color pattern" }, X = { name: "noise", type: "src", inputs: [{ name: "scale", type: "float", default: 10 }, { name: "offset", type: "float", default: 0.1 }], glsl: `
+`, description: "Generate oscillating color pattern" }, j = { name: "noise", type: "src", inputs: [{ name: "scale", type: "float", default: 10 }, { name: "offset", type: "float", default: 0.1 }], glsl: `
 	return vec4(vec3(_noise(vec3(_st * scale, offset * time))), 1.0);
-`, description: "Generate noise pattern" }, U = { name: "voronoi", type: "src", inputs: [{ name: "scale", type: "float", default: 5 }, { name: "speed", type: "float", default: 0.3 }, { name: "blending", type: "float", default: 0.3 }], glsl: `
+`, description: "Generate noise pattern" }, D = { name: "voronoi", type: "src", inputs: [{ name: "scale", type: "float", default: 5 }, { name: "speed", type: "float", default: 0.3 }, { name: "blending", type: "float", default: 0.3 }], glsl: `
 	vec3 color = vec3(0.0);
 	vec2 st = _st * scale;
 	vec2 i_st = floor(st);
@@ -129,63 +129,59 @@ const w = new V(), Y = { name: "osc", type: "src", inputs: [{ name: "frequency",
 	color += dot(m_point, vec2(0.3, 0.6));
 	color *= 1.0 - blending * m_dist;
 	return vec4(color, 1.0);
-`, description: "Generate voronoi pattern" }, B = { name: "gradient", type: "src", inputs: [{ name: "speed", type: "float", default: 0 }], glsl: `
+`, description: "Generate voronoi pattern" }, N = { name: "gradient", type: "src", inputs: [{ name: "speed", type: "float", default: 0 }], glsl: `
 	return vec4(_st, sin(time * speed), 1.0);
-`, description: "Generate gradient pattern" }, N = { name: "shape", type: "src", inputs: [{ name: "sides", type: "float", default: 3 }, { name: "radius", type: "float", default: 0.3 }, { name: "smoothing", type: "float", default: 0.01 }], glsl: `
+`, description: "Generate gradient pattern" }, q = { name: "shape", type: "src", inputs: [{ name: "sides", type: "float", default: 3 }, { name: "radius", type: "float", default: 0.3 }, { name: "smoothing", type: "float", default: 0.01 }], glsl: `
 	vec2 st = _st * 2.0 - 1.0;
 	float a = atan(st.x, st.y) + 3.1416;
 	float r = (2.0 * 3.1416) / sides;
 	float d = cos(floor(0.5 + a/r) * r - a) * length(st);
 	return vec4(vec3(1.0 - smoothstep(radius, radius + smoothing + 0.0000001, d)), 1.0);
-`, description: "Generate polygon shape" }, j = { name: "solid", type: "src", inputs: [{ name: "r", type: "float", default: 0 }, { name: "g", type: "float", default: 0 }, { name: "b", type: "float", default: 0 }, { name: "a", type: "float", default: 1 }], glsl: `
+`, description: "Generate polygon shape" }, G = { name: "solid", type: "src", inputs: [{ name: "r", type: "float", default: 0 }, { name: "g", type: "float", default: 0 }, { name: "b", type: "float", default: 0 }, { name: "a", type: "float", default: 1 }], glsl: `
 	return vec4(r, g, b, a);
-`, description: "Generate solid color" }, D = { name: "src", type: "src", inputs: [], glsl: `
+`, description: "Generate solid color" }, K = { name: "src", type: "src", inputs: [], glsl: `
 	return texture(prevBuffer, fract(_st));
-`, description: "Sample the previous frame primary color for feedback effects" }, q = { name: "charSrc", type: "src", inputs: [], glsl: `
-	return texture(prevCharBuffer, fract(_st));
-`, description: "Sample the previous frame character data for feedback effects" }, E = { name: "cellColorSrc", type: "src", inputs: [], glsl: `
-	return texture(prevCellColorBuffer, fract(_st));
-`, description: "Sample the previous frame cell color for feedback effects" }, L = [Y, X, U, B, N, j, D, q, E], K = { name: "rotate", type: "coord", inputs: [{ name: "angle", type: "float", default: 10 }, { name: "speed", type: "float", default: 0 }], glsl: `
+`, description: "Sample the previous frame for feedback effects. Context-aware: automatically samples the appropriate texture based on where it is used (char, charColor, or cellColor context)." }, Q = [E, j, D, N, q, G, K], H = { name: "rotate", type: "coord", inputs: [{ name: "angle", type: "float", default: 10 }, { name: "speed", type: "float", default: 0 }], glsl: `
 	vec2 xy = _st - vec2(0.5);
 	float ang = angle + speed * time;
 	xy = mat2(cos(ang), -sin(ang), sin(ang), cos(ang)) * xy;
 	xy += 0.5;
 	return xy;
-`, description: "Rotate coordinates" }, G = { name: "scale", type: "coord", inputs: [{ name: "amount", type: "float", default: 1.5 }, { name: "xMult", type: "float", default: 1 }, { name: "yMult", type: "float", default: 1 }, { name: "offsetX", type: "float", default: 0.5 }, { name: "offsetY", type: "float", default: 0.5 }], glsl: `
+`, description: "Rotate coordinates" }, W = { name: "scale", type: "coord", inputs: [{ name: "amount", type: "float", default: 1.5 }, { name: "xMult", type: "float", default: 1 }, { name: "yMult", type: "float", default: 1 }, { name: "offsetX", type: "float", default: 0.5 }, { name: "offsetY", type: "float", default: 0.5 }], glsl: `
 	vec2 xy = _st - vec2(offsetX, offsetY);
 	xy *= (1.0 / vec2(amount * xMult, amount * yMult));
 	xy += vec2(offsetX, offsetY);
 	return xy;
-`, description: "Scale coordinates" }, Q = { name: "scroll", type: "coord", inputs: [{ name: "scrollX", type: "float", default: 0.5 }, { name: "scrollY", type: "float", default: 0.5 }, { name: "speedX", type: "float", default: 0 }, { name: "speedY", type: "float", default: 0 }], glsl: `
+`, description: "Scale coordinates" }, J = { name: "scroll", type: "coord", inputs: [{ name: "scrollX", type: "float", default: 0.5 }, { name: "scrollY", type: "float", default: 0.5 }, { name: "speedX", type: "float", default: 0 }, { name: "speedY", type: "float", default: 0 }], glsl: `
 	vec2 st = _st;
 	st.x += scrollX + time * speedX;
 	st.y += scrollY + time * speedY;
 	return fract(st);
-`, description: "Scroll coordinates" }, H = { name: "scrollX", type: "coord", inputs: [{ name: "scrollX", type: "float", default: 0.5 }, { name: "speed", type: "float", default: 0 }], glsl: `
+`, description: "Scroll coordinates" }, Z = { name: "scrollX", type: "coord", inputs: [{ name: "scrollX", type: "float", default: 0.5 }, { name: "speed", type: "float", default: 0 }], glsl: `
 	vec2 st = _st;
 	st.x += scrollX + time * speed;
 	return fract(st);
-`, description: "Scroll X coordinate" }, W = { name: "scrollY", type: "coord", inputs: [{ name: "scrollY", type: "float", default: 0.5 }, { name: "speed", type: "float", default: 0 }], glsl: `
+`, description: "Scroll X coordinate" }, ee = { name: "scrollY", type: "coord", inputs: [{ name: "scrollY", type: "float", default: 0.5 }, { name: "speed", type: "float", default: 0 }], glsl: `
 	vec2 st = _st;
 	st.y += scrollY + time * speed;
 	return fract(st);
-`, description: "Scroll Y coordinate" }, J = { name: "pixelate", type: "coord", inputs: [{ name: "pixelX", type: "float", default: 20 }, { name: "pixelY", type: "float", default: 20 }], glsl: `
+`, description: "Scroll Y coordinate" }, te = { name: "pixelate", type: "coord", inputs: [{ name: "pixelX", type: "float", default: 20 }, { name: "pixelY", type: "float", default: 20 }], glsl: `
 	vec2 xy = vec2(pixelX, pixelY);
 	return (floor(_st * xy) + 0.5) / xy;
-`, description: "Pixelate coordinates" }, Z = { name: "repeat", type: "coord", inputs: [{ name: "repeatX", type: "float", default: 3 }, { name: "repeatY", type: "float", default: 3 }, { name: "offsetX", type: "float", default: 0 }, { name: "offsetY", type: "float", default: 0 }], glsl: `
+`, description: "Pixelate coordinates" }, ne = { name: "repeat", type: "coord", inputs: [{ name: "repeatX", type: "float", default: 3 }, { name: "repeatY", type: "float", default: 3 }, { name: "offsetX", type: "float", default: 0 }, { name: "offsetY", type: "float", default: 0 }], glsl: `
 	vec2 st = _st * vec2(repeatX, repeatY);
 	st.x += step(1.0, mod(st.y, 2.0)) * offsetX;
 	st.y += step(1.0, mod(st.x, 2.0)) * offsetY;
 	return fract(st);
-`, description: "Repeat pattern" }, tt = { name: "repeatX", type: "coord", inputs: [{ name: "reps", type: "float", default: 3 }, { name: "offset", type: "float", default: 0 }], glsl: `
+`, description: "Repeat pattern" }, re = { name: "repeatX", type: "coord", inputs: [{ name: "reps", type: "float", default: 3 }, { name: "offset", type: "float", default: 0 }], glsl: `
 	vec2 st = _st * vec2(reps, 1.0);
 	st.y += step(1.0, mod(st.x, 2.0)) * offset;
 	return fract(st);
-`, description: "Repeat pattern horizontally" }, et = { name: "repeatY", type: "coord", inputs: [{ name: "reps", type: "float", default: 3 }, { name: "offset", type: "float", default: 0 }], glsl: `
+`, description: "Repeat pattern horizontally" }, ae = { name: "repeatY", type: "coord", inputs: [{ name: "reps", type: "float", default: 3 }, { name: "offset", type: "float", default: 0 }], glsl: `
 	vec2 st = _st * vec2(1.0, reps);
 	st.x += step(1.0, mod(st.y, 2.0)) * offset;
 	return fract(st);
-`, description: "Repeat pattern vertically" }, nt = { name: "kaleid", type: "coord", inputs: [{ name: "nSides", type: "float", default: 4 }], glsl: `
+`, description: "Repeat pattern vertically" }, oe = { name: "kaleid", type: "coord", inputs: [{ name: "nSides", type: "float", default: 4 }], glsl: `
 	vec2 st = _st;
 	st -= 0.5;
 	float r = length(st);
@@ -194,97 +190,97 @@ const w = new V(), Y = { name: "osc", type: "src", inputs: [{ name: "frequency",
 	a = mod(a, pi / nSides);
 	a = abs(a - pi / nSides / 2.0);
 	return r * vec2(cos(a), sin(a));
-`, description: "Kaleidoscope effect" }, rt = [K, G, Q, H, W, J, Z, tt, et, nt], at = { name: "brightness", type: "color", inputs: [{ name: "amount", type: "float", default: 0.4 }], glsl: `
+`, description: "Kaleidoscope effect" }, se = [H, W, J, Z, ee, te, ne, re, ae, oe], ce = { name: "brightness", type: "color", inputs: [{ name: "amount", type: "float", default: 0.4 }], glsl: `
 	return vec4(_c0.rgb + vec3(amount), _c0.a);
-`, description: "Adjust brightness" }, ot = { name: "contrast", type: "color", inputs: [{ name: "amount", type: "float", default: 1.6 }], glsl: `
+`, description: "Adjust brightness" }, le = { name: "contrast", type: "color", inputs: [{ name: "amount", type: "float", default: 1.6 }], glsl: `
 	vec4 c = (_c0 - vec4(0.5)) * vec4(amount) + vec4(0.5);
 	return vec4(c.rgb, _c0.a);
-`, description: "Adjust contrast" }, st = { name: "invert", type: "color", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
+`, description: "Adjust contrast" }, ie = { name: "invert", type: "color", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
 	return vec4((1.0 - _c0.rgb) * amount + _c0.rgb * (1.0 - amount), _c0.a);
-`, description: "Invert colors" }, ct = { name: "saturate", type: "color", inputs: [{ name: "amount", type: "float", default: 2 }], glsl: `
+`, description: "Invert colors" }, ue = { name: "saturate", type: "color", inputs: [{ name: "amount", type: "float", default: 2 }], glsl: `
 	const vec3 W = vec3(0.2125, 0.7154, 0.0721);
 	vec3 intensity = vec3(dot(_c0.rgb, W));
 	return vec4(mix(intensity, _c0.rgb, amount), _c0.a);
-`, description: "Adjust saturation" }, lt = { name: "hue", type: "color", inputs: [{ name: "hue", type: "float", default: 0.4 }], glsl: `
+`, description: "Adjust saturation" }, fe = { name: "hue", type: "color", inputs: [{ name: "hue", type: "float", default: 0.4 }], glsl: `
 	vec3 c = _rgbToHsv(_c0.rgb);
 	c.r += hue;
 	return vec4(_hsvToRgb(c), _c0.a);
-`, description: "Shift hue" }, it = { name: "colorama", type: "color", inputs: [{ name: "amount", type: "float", default: 5e-3 }], glsl: `
+`, description: "Shift hue" }, pe = { name: "colorama", type: "color", inputs: [{ name: "amount", type: "float", default: 5e-3 }], glsl: `
 	vec3 c = _rgbToHsv(_c0.rgb);
 	c += vec3(amount);
 	c = _hsvToRgb(c);
 	c = fract(c);
 	return vec4(c, _c0.a);
-`, description: "Color cycle effect" }, ut = { name: "posterize", type: "color", inputs: [{ name: "bins", type: "float", default: 3 }, { name: "gamma", type: "float", default: 0.6 }], glsl: `
+`, description: "Color cycle effect" }, me = { name: "posterize", type: "color", inputs: [{ name: "bins", type: "float", default: 3 }, { name: "gamma", type: "float", default: 0.6 }], glsl: `
 	vec4 c2 = pow(_c0, vec4(gamma));
 	c2 *= vec4(bins);
 	c2 = floor(c2);
 	c2 /= vec4(bins);
 	c2 = pow(c2, vec4(1.0 / gamma));
 	return vec4(c2.xyz, _c0.a);
-`, description: "Posterize colors" }, pt = { name: "luma", type: "color", inputs: [{ name: "threshold", type: "float", default: 0.5 }, { name: "tolerance", type: "float", default: 0.1 }], glsl: `
+`, description: "Posterize colors" }, de = { name: "luma", type: "color", inputs: [{ name: "threshold", type: "float", default: 0.5 }, { name: "tolerance", type: "float", default: 0.1 }], glsl: `
 	float a = smoothstep(threshold - (tolerance + 0.0000001), threshold + (tolerance + 0.0000001), _luminance(_c0.rgb));
 	return vec4(_c0.rgb * a, a);
-`, description: "Luma key" }, ft = { name: "thresh", type: "color", inputs: [{ name: "threshold", type: "float", default: 0.5 }, { name: "tolerance", type: "float", default: 0.04 }], glsl: `
+`, description: "Luma key" }, he = { name: "thresh", type: "color", inputs: [{ name: "threshold", type: "float", default: 0.5 }, { name: "tolerance", type: "float", default: 0.04 }], glsl: `
 	return vec4(vec3(smoothstep(threshold - (tolerance + 0.0000001), threshold + (tolerance + 0.0000001), _luminance(_c0.rgb))), _c0.a);
-`, description: "Threshold" }, mt = { name: "color", type: "color", inputs: [{ name: "r", type: "float", default: 1 }, { name: "g", type: "float", default: 1 }, { name: "b", type: "float", default: 1 }, { name: "a", type: "float", default: 1 }], glsl: `
+`, description: "Threshold" }, ye = { name: "color", type: "color", inputs: [{ name: "r", type: "float", default: 1 }, { name: "g", type: "float", default: 1 }, { name: "b", type: "float", default: 1 }, { name: "a", type: "float", default: 1 }], glsl: `
 	vec4 c = vec4(r, g, b, a);
 	vec4 pos = step(0.0, c);
 	return vec4(mix((1.0 - _c0.rgb) * abs(c.rgb), c.rgb * _c0.rgb, pos.rgb), c.a * _c0.a);
-`, description: "Multiply by color" }, dt = { name: "r", type: "color", inputs: [{ name: "scale", type: "float", default: 1 }, { name: "offset", type: "float", default: 0 }], glsl: `
+`, description: "Multiply by color" }, _e = { name: "r", type: "color", inputs: [{ name: "scale", type: "float", default: 1 }, { name: "offset", type: "float", default: 0 }], glsl: `
 	return vec4(_c0.r * scale + offset);
-`, description: "Extract red channel" }, ht = { name: "g", type: "color", inputs: [{ name: "scale", type: "float", default: 1 }, { name: "offset", type: "float", default: 0 }], glsl: `
+`, description: "Extract red channel" }, ge = { name: "g", type: "color", inputs: [{ name: "scale", type: "float", default: 1 }, { name: "offset", type: "float", default: 0 }], glsl: `
 	return vec4(_c0.g * scale + offset);
-`, description: "Extract green channel" }, yt = { name: "b", type: "color", inputs: [{ name: "scale", type: "float", default: 1 }, { name: "offset", type: "float", default: 0 }], glsl: `
+`, description: "Extract green channel" }, ve = { name: "b", type: "color", inputs: [{ name: "scale", type: "float", default: 1 }, { name: "offset", type: "float", default: 0 }], glsl: `
 	return vec4(_c0.b * scale + offset);
-`, description: "Extract blue channel" }, gt = { name: "shift", type: "color", inputs: [{ name: "r", type: "float", default: 0.5 }, { name: "g", type: "float", default: 0 }, { name: "b", type: "float", default: 0 }, { name: "a", type: "float", default: 0 }], glsl: `
+`, description: "Extract blue channel" }, xe = { name: "shift", type: "color", inputs: [{ name: "r", type: "float", default: 0.5 }, { name: "g", type: "float", default: 0 }, { name: "b", type: "float", default: 0 }, { name: "a", type: "float", default: 0 }], glsl: `
 	vec4 c2 = vec4(_c0);
 	c2.r += fract(r);
 	c2.g += fract(g);
 	c2.b += fract(b);
 	c2.a += fract(a);
 	return vec4(c2.rgba);
-`, description: "Shift color channels by adding offset values" }, _t = { name: "gamma", type: "color", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
+`, description: "Shift color channels by adding offset values" }, Ce = { name: "gamma", type: "color", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
 	return vec4(pow(max(vec3(0.0), _c0.rgb), vec3(1.0 / amount)), _c0.a);
-`, description: "Apply gamma correction" }, vt = { name: "levels", type: "color", inputs: [{ name: "inMin", type: "float", default: 0 }, { name: "inMax", type: "float", default: 1 }, { name: "outMin", type: "float", default: 0 }, { name: "outMax", type: "float", default: 1 }, { name: "gamma", type: "float", default: 1 }], glsl: `
+`, description: "Apply gamma correction" }, be = { name: "levels", type: "color", inputs: [{ name: "inMin", type: "float", default: 0 }, { name: "inMax", type: "float", default: 1 }, { name: "outMin", type: "float", default: 0 }, { name: "outMax", type: "float", default: 1 }, { name: "gamma", type: "float", default: 1 }], glsl: `
 	vec3 v = clamp((_c0.rgb - vec3(inMin)) / (vec3(inMax - inMin) + 0.0000001), 0.0, 1.0);
 	v = pow(v, vec3(1.0 / gamma));
 	v = mix(vec3(outMin), vec3(outMax), v);
 	return vec4(v, _c0.a);
-`, description: "Adjust input/output levels and gamma" }, Ct = { name: "clampColor", type: "color", inputs: [{ name: "min", type: "float", default: 0 }, { name: "max", type: "float", default: 1 }], glsl: `
+`, description: "Adjust input/output levels and gamma" }, Se = { name: "clampColor", type: "color", inputs: [{ name: "min", type: "float", default: 0 }, { name: "max", type: "float", default: 1 }], glsl: `
 	return vec4(clamp(_c0.rgb, vec3(min), vec3(max)), _c0.a);
-`, description: "Clamp color values to a range" }, xt = [at, ot, st, ct, lt, it, ut, pt, ft, mt, dt, ht, yt, gt, _t, vt, Ct], bt = { name: "add", type: "combine", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
+`, description: "Clamp color values to a range" }, $e = [ce, le, ie, ue, fe, pe, me, de, he, ye, _e, ge, ve, xe, Ce, be, Se], Me = { name: "add", type: "combine", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
 	return (_c0 + _c1) * amount + _c0 * (1.0 - amount);
-`, description: "Add another source" }, St = { name: "sub", type: "combine", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
+`, description: "Add another source" }, we = { name: "sub", type: "combine", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
 	return (_c0 - _c1) * amount + _c0 * (1.0 - amount);
-`, description: "Subtract another source" }, Mt = { name: "mult", type: "combine", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
+`, description: "Subtract another source" }, Fe = { name: "mult", type: "combine", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
 	return _c0 * (1.0 - amount) + (_c0 * _c1) * amount;
-`, description: "Multiply with another source" }, $t = { name: "blend", type: "combine", inputs: [{ name: "amount", type: "float", default: 0.5 }], glsl: `
+`, description: "Multiply with another source" }, Te = { name: "blend", type: "combine", inputs: [{ name: "amount", type: "float", default: 0.5 }], glsl: `
 	return _c0 * (1.0 - amount) + _c1 * amount;
-`, description: "Blend with another source" }, wt = { name: "diff", type: "combine", inputs: [], glsl: `
+`, description: "Blend with another source" }, Re = { name: "diff", type: "combine", inputs: [], glsl: `
 	return vec4(abs(_c0.rgb - _c1.rgb), max(_c0.a, _c1.a));
-`, description: "Difference with another source" }, Ft = { name: "layer", type: "combine", inputs: [], glsl: `
+`, description: "Difference with another source" }, Ie = { name: "layer", type: "combine", inputs: [], glsl: `
 	return vec4(mix(_c0.rgb, _c1.rgb, _c1.a), clamp(_c0.a + _c1.a, 0.0, 1.0));
-`, description: "Layer another source on top" }, Tt = { name: "mask", type: "combine", inputs: [], glsl: `
+`, description: "Layer another source on top" }, Pe = { name: "mask", type: "combine", inputs: [], glsl: `
 	float a = _luminance(_c1.rgb);
 	return vec4(_c0.rgb * a, a * _c0.a);
-`, description: "Mask with another source" }, At = [bt, St, Mt, $t, wt, Ft, Tt], Rt = { name: "modulate", type: "combineCoord", inputs: [{ name: "amount", type: "float", default: 0.1 }], glsl: `
+`, description: "Mask with another source" }, Ae = [Me, we, Fe, Te, Re, Ie, Pe], ke = { name: "modulate", type: "combineCoord", inputs: [{ name: "amount", type: "float", default: 0.1 }], glsl: `
 	return _st + _c0.xy * amount;
-`, description: "Modulate coordinates with another source" }, It = { name: "modulateScale", type: "combineCoord", inputs: [{ name: "multiple", type: "float", default: 1 }, { name: "offset", type: "float", default: 1 }], glsl: `
+`, description: "Modulate coordinates with another source" }, Le = { name: "modulateScale", type: "combineCoord", inputs: [{ name: "multiple", type: "float", default: 1 }, { name: "offset", type: "float", default: 1 }], glsl: `
 	vec2 xy = _st - vec2(0.5);
 	xy *= (1.0 / vec2(offset + multiple * _c0.r, offset + multiple * _c0.g));
 	xy += vec2(0.5);
 	return xy;
-`, description: "Modulate scale with another source" }, kt = { name: "modulateRotate", type: "combineCoord", inputs: [{ name: "multiple", type: "float", default: 1 }, { name: "offset", type: "float", default: 0 }], glsl: `
+`, description: "Modulate scale with another source" }, Oe = { name: "modulateRotate", type: "combineCoord", inputs: [{ name: "multiple", type: "float", default: 1 }, { name: "offset", type: "float", default: 0 }], glsl: `
 	vec2 xy = _st - vec2(0.5);
 	float angle = offset + _c0.x * multiple;
 	xy = mat2(cos(angle), -sin(angle), sin(angle), cos(angle)) * xy;
 	xy += 0.5;
 	return xy;
-`, description: "Modulate rotation with another source" }, Ot = { name: "modulatePixelate", type: "combineCoord", inputs: [{ name: "multiple", type: "float", default: 10 }, { name: "offset", type: "float", default: 3 }], glsl: `
+`, description: "Modulate rotation with another source" }, ze = { name: "modulatePixelate", type: "combineCoord", inputs: [{ name: "multiple", type: "float", default: 10 }, { name: "offset", type: "float", default: 3 }], glsl: `
 	vec2 xy = vec2(offset + _c0.x * multiple, offset + _c0.y * multiple);
 	return (floor(_st * xy) + 0.5) / xy;
-`, description: "Modulate pixelation with another source" }, zt = { name: "modulateKaleid", type: "combineCoord", inputs: [{ name: "nSides", type: "float", default: 4 }], glsl: `
+`, description: "Modulate pixelation with another source" }, Ve = { name: "modulateKaleid", type: "combineCoord", inputs: [{ name: "nSides", type: "float", default: 4 }], glsl: `
 	vec2 st = _st - 0.5;
 	float r = length(st);
 	float a = atan(st.y, st.x);
@@ -292,61 +288,61 @@ const w = new V(), Y = { name: "osc", type: "src", inputs: [{ name: "frequency",
 	a = mod(a, pi / nSides);
 	a = abs(a - pi / nSides / 2.0);
 	return (_c0.r + r) * vec2(cos(a), sin(a));
-`, description: "Modulate kaleidoscope with another source" }, Pt = { name: "modulateScrollX", type: "combineCoord", inputs: [{ name: "scrollX", type: "float", default: 0.5 }, { name: "speed", type: "float", default: 0 }], glsl: `
+`, description: "Modulate kaleidoscope with another source" }, Ye = { name: "modulateScrollX", type: "combineCoord", inputs: [{ name: "scrollX", type: "float", default: 0.5 }, { name: "speed", type: "float", default: 0 }], glsl: `
 	vec2 st = _st;
 	st.x += _c0.r * scrollX + time * speed;
 	return fract(st);
-`, description: "Modulate X scroll with another source" }, Vt = { name: "modulateScrollY", type: "combineCoord", inputs: [{ name: "scrollY", type: "float", default: 0.5 }, { name: "speed", type: "float", default: 0 }], glsl: `
+`, description: "Modulate X scroll with another source" }, Ue = { name: "modulateScrollY", type: "combineCoord", inputs: [{ name: "scrollY", type: "float", default: 0.5 }, { name: "speed", type: "float", default: 0 }], glsl: `
 	vec2 st = _st;
 	st.y += _c0.r * scrollY + time * speed;
 	return fract(st);
-`, description: "Modulate Y scroll with another source" }, Yt = { name: "modulateRepeat", type: "combineCoord", inputs: [{ name: "repeatX", type: "float", default: 3 }, { name: "repeatY", type: "float", default: 3 }, { name: "offsetX", type: "float", default: 0.5 }, { name: "offsetY", type: "float", default: 0.5 }], glsl: `
+`, description: "Modulate Y scroll with another source" }, Xe = { name: "modulateRepeat", type: "combineCoord", inputs: [{ name: "repeatX", type: "float", default: 3 }, { name: "repeatY", type: "float", default: 3 }, { name: "offsetX", type: "float", default: 0.5 }, { name: "offsetY", type: "float", default: 0.5 }], glsl: `
 	vec2 st = _st * vec2(repeatX, repeatY);
 	st.x += step(1.0, mod(st.y, 2.0)) + _c0.r * offsetX;
 	st.y += step(1.0, mod(st.x, 2.0)) + _c0.g * offsetY;
 	return fract(st);
-`, description: "Modulate repeat pattern with another source" }, Xt = { name: "modulateRepeatX", type: "combineCoord", inputs: [{ name: "reps", type: "float", default: 3 }, { name: "offset", type: "float", default: 0.5 }], glsl: `
+`, description: "Modulate repeat pattern with another source" }, Be = { name: "modulateRepeatX", type: "combineCoord", inputs: [{ name: "reps", type: "float", default: 3 }, { name: "offset", type: "float", default: 0.5 }], glsl: `
 	vec2 st = _st * vec2(reps, 1.0);
 	st.y += step(1.0, mod(st.x, 2.0)) + _c0.r * offset;
 	return fract(st);
-`, description: "Modulate X repeat with another source" }, Ut = { name: "modulateRepeatY", type: "combineCoord", inputs: [{ name: "reps", type: "float", default: 3 }, { name: "offset", type: "float", default: 0.5 }], glsl: `
+`, description: "Modulate X repeat with another source" }, Ee = { name: "modulateRepeatY", type: "combineCoord", inputs: [{ name: "reps", type: "float", default: 3 }, { name: "offset", type: "float", default: 0.5 }], glsl: `
 	vec2 st = _st * vec2(1.0, reps);
 	st.x += step(1.0, mod(st.y, 2.0)) + _c0.r * offset;
 	return fract(st);
-`, description: "Modulate Y repeat with another source" }, Bt = { name: "modulateHue", type: "combineCoord", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
+`, description: "Modulate Y repeat with another source" }, je = { name: "modulateHue", type: "combineCoord", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
 	return _st + (vec2(_c0.g - _c0.r, _c0.b - _c0.g) * amount * 1.0 / resolution);
-`, description: "Modulate coordinates based on hue differences" }, Nt = [Rt, It, kt, Ot, zt, Pt, Vt, Yt, Xt, Ut, Bt], jt = { name: "charFlipX", type: "charModify", inputs: [{ name: "toggle", type: "float", default: 1 }], glsl: `
+`, description: "Modulate coordinates based on hue differences" }, De = [ke, Le, Oe, ze, Ve, Ye, Ue, Xe, Be, Ee, je], Ne = { name: "charFlipX", type: "charModify", inputs: [{ name: "toggle", type: "float", default: 1 }], glsl: `
 	int flags = int(_char.b * 255.0 + 0.5);
 	if (toggle > 0.5) {
 		flags = flags | 2;
 	}
 	return vec4(_char.rg, float(flags) / 255.0, _char.a);
-`, description: "Flip characters horizontally" }, Dt = { name: "charFlipY", type: "charModify", inputs: [{ name: "toggle", type: "float", default: 1 }], glsl: `
+`, description: "Flip characters horizontally" }, qe = { name: "charFlipY", type: "charModify", inputs: [{ name: "toggle", type: "float", default: 1 }], glsl: `
 	int flags = int(_char.b * 255.0 + 0.5);
 	if (toggle > 0.5) {
 		flags = flags | 4;
 	}
 	return vec4(_char.rg, float(flags) / 255.0, _char.a);
-`, description: "Flip characters vertically" }, qt = { name: "charInvert", type: "charModify", inputs: [{ name: "toggle", type: "float", default: 1 }], glsl: `
+`, description: "Flip characters vertically" }, Ge = { name: "charInvert", type: "charModify", inputs: [{ name: "toggle", type: "float", default: 1 }], glsl: `
 	int flags = int(_char.b * 255.0 + 0.5);
 	if (toggle > 0.5) {
 		flags = flags | 1;
 	}
 	return vec4(_char.rg, float(flags) / 255.0, _char.a);
-`, description: "Invert character colors" }, Et = { name: "charRotate", type: "charModify", inputs: [{ name: "angle", type: "float", default: 0.25 }, { name: "speed", type: "float", default: 0 }], glsl: `
+`, description: "Invert character colors" }, Ke = { name: "charRotate", type: "charModify", inputs: [{ name: "angle", type: "float", default: 0.25 }, { name: "speed", type: "float", default: 0 }], glsl: `
 	float rotation = fract(angle + time * speed);
 	return vec4(_char.rgb, rotation);
-`, description: "Rotate characters" }, Lt = [jt, Dt, qt, Et], Kt = [...L, ...rt, ...xt, ...At, ...Nt, ...Lt];
-class b {
+`, description: "Rotate characters" }, Qe = [Ne, qe, Ge, Ke], He = [...Q, ...se, ...$e, ...Ae, ...De, ...Qe];
+class M {
   _transforms;
   constructor(e) {
     this._transforms = e;
   }
   static empty() {
-    return new b([]);
+    return new M([]);
   }
   static from(e) {
-    return new b([...e]);
+    return new M([...e]);
   }
   get transforms() {
     return this._transforms;
@@ -361,7 +357,7 @@ class b {
     return this._transforms.length === 0;
   }
   append(e) {
-    return new b([...this._transforms, e]);
+    return new M([...this._transforms, e]);
   }
   get(e) {
     return this._transforms[e];
@@ -370,29 +366,34 @@ class b {
     return this._transforms[Symbol.iterator]();
   }
 }
-class _ {
+class x {
   _chain;
   _charMapping;
   _nestedSources;
+  _externalLayerRefs;
   _colorSource;
   _cellColorSource;
   _charSource;
   _charCount;
   constructor(e) {
-    this._chain = e?.chain ?? b.empty(), this._charMapping = e?.charMapping, this._colorSource = e?.colorSource, this._cellColorSource = e?.cellColorSource, this._charSource = e?.charSource, this._charCount = e?.charCount, this._nestedSources = e?.nestedSources ?? /* @__PURE__ */ new Map();
+    this._chain = e?.chain ?? M.empty(), this._charMapping = e?.charMapping, this._colorSource = e?.colorSource, this._cellColorSource = e?.cellColorSource, this._charSource = e?.charSource, this._charCount = e?.charCount, this._nestedSources = e?.nestedSources ?? /* @__PURE__ */ new Map(), this._externalLayerRefs = e?.externalLayerRefs ?? /* @__PURE__ */ new Map();
   }
   addTransform(e, a) {
-    const r = { name: e, userArgs: a };
-    return this._chain.push(r), this;
+    const n = { name: e, userArgs: a };
+    return this._chain.push(n), this;
   }
-  addCombineTransform(e, a, r) {
-    const n = this._chain.length;
-    return this._nestedSources.set(n, a), this.addTransform(e, r);
+  addCombineTransform(e, a, n) {
+    const r = this._chain.length;
+    return this._nestedSources.set(r, a), this.addTransform(e, n);
+  }
+  addExternalLayerRef(e) {
+    const a = this._chain.length;
+    return this._externalLayerRefs.set(a, e), this.addTransform("src", []);
   }
   charMap(e) {
-    const a = Array.from(e), r = [];
-    for (const n of a) r.push(n.codePointAt(0) ?? 32);
-    return this._charMapping = { chars: e, indices: r }, this;
+    const a = Array.from(e), n = [];
+    for (const r of a) n.push(r.codePointAt(0) ?? 32);
+    return this._charMapping = { chars: e, indices: n }, this;
   }
   charColor(e) {
     return this._colorSource = e, this;
@@ -408,8 +409,10 @@ class _ {
   }
   clone() {
     const e = /* @__PURE__ */ new Map();
-    for (const [a, r] of this._nestedSources) e.set(a, r.clone());
-    return new _({ chain: b.from(this._chain.transforms), charMapping: this._charMapping, colorSource: this._colorSource?.clone(), cellColorSource: this._cellColorSource?.clone(), charSource: this._charSource?.clone(), charCount: this._charCount, nestedSources: e });
+    for (const [n, r] of this._nestedSources) e.set(n, r.clone());
+    const a = /* @__PURE__ */ new Map();
+    for (const [n, r] of this._externalLayerRefs) a.set(n, { ...r });
+    return new x({ chain: M.from(this._chain.transforms), charMapping: this._charMapping, colorSource: this._colorSource?.clone(), cellColorSource: this._cellColorSource?.clone(), charSource: this._charSource?.clone(), charCount: this._charCount, nestedSources: e, externalLayerRefs: a });
   }
   get transforms() {
     return this._chain.transforms;
@@ -432,64 +435,67 @@ class _ {
   get nestedSources() {
     return this._nestedSources;
   }
+  get externalLayerRefs() {
+    return this._externalLayerRefs;
+  }
 }
-const F = { linear: (t) => t, easeInQuad: (t) => t * t, easeOutQuad: (t) => t * (2 - t), easeInOutQuad: (t) => t < 0.5 ? 2 * t * t : (4 - 2 * t) * t - 1, easeInCubic: (t) => t * t * t, easeOutCubic: (t) => --t * t * t + 1, easeInOutCubic: (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1, easeInQuart: (t) => t * t * t * t, easeOutQuart: (t) => 1 - --t * t * t * t, easeInOutQuart: (t) => t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t, easeInQuint: (t) => t * t * t * t * t, easeOutQuint: (t) => 1 + --t * t * t * t * t, easeInOutQuint: (t) => t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t, sin: (t) => (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2 };
-function M(t, e) {
+const P = { linear: (t) => t, easeInQuad: (t) => t * t, easeOutQuad: (t) => t * (2 - t), easeInOutQuad: (t) => t < 0.5 ? 2 * t * t : (4 - 2 * t) * t - 1, easeInCubic: (t) => t * t * t, easeOutCubic: (t) => --t * t * t + 1, easeInOutCubic: (t) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1, easeInQuart: (t) => t * t * t * t, easeOutQuart: (t) => 1 - --t * t * t * t, easeInOutQuart: (t) => t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t, easeInQuint: (t) => t * t * t * t * t, easeOutQuint: (t) => 1 + --t * t * t * t * t, easeInOutQuint: (t) => t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t, sin: (t) => (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2 };
+function T(t, e) {
   return (t % e + e) % e;
 }
-function Gt(t, e, a, r, n) {
-  return (t - e) * (n - r) / (a - e) + r;
+function We(t, e, a, n, r) {
+  return (t - e) * (r - n) / (a - e) + n;
 }
-function Qt() {
+function Je() {
   "fast" in Array.prototype || (Array.prototype.fast = function(t = 1) {
     return this._speed = t, this;
   }, Array.prototype.smooth = function(t = 1) {
     return this._smooth = t, this;
   }, Array.prototype.ease = function(t = "linear") {
-    return typeof t == "function" ? (this._smooth = 1, this._ease = t) : F[t] && (this._smooth = 1, this._ease = F[t]), this;
+    return typeof t == "function" ? (this._smooth = 1, this._ease = t) : P[t] && (this._smooth = 1, this._ease = P[t]), this;
   }, Array.prototype.offset = function(t = 0.5) {
     return this._offset = t % 1, this;
   }, Array.prototype.fit = function(t = 0, e = 1) {
-    const a = Math.min(...this), r = Math.max(...this), n = this.map((o) => Gt(o, a, r, t, e));
-    return n._speed = this._speed, n._smooth = this._smooth, n._ease = this._ease, n._offset = this._offset, n;
+    const a = Math.min(...this), n = Math.max(...this), r = this.map((o) => We(o, a, n, t, e));
+    return r._speed = this._speed, r._smooth = this._smooth, r._ease = this._ease, r._offset = this._offset, r;
   });
 }
-function Ht(t, e) {
-  const a = t._speed ?? 1, r = t._smooth ?? 0;
-  let n = e.time * a * 1 + (t._offset ?? 0);
-  if (r !== 0) {
-    const o = t._ease ?? F.linear, c = n - r / 2, i = t[Math.floor(M(c, t.length))], u = t[Math.floor(M(c + 1, t.length))];
-    return o(Math.min(M(c, 1) / r, 1)) * (u - i) + i;
+function Ze(t, e) {
+  const a = t._speed ?? 1, n = t._smooth ?? 0;
+  let r = e.time * a * 1 + (t._offset ?? 0);
+  if (n !== 0) {
+    const o = t._ease ?? P.linear, c = r - n / 2, i = t[Math.floor(T(c, t.length))], u = t[Math.floor(T(c + 1, t.length))];
+    return o(Math.min(T(c, 1) / n, 1)) * (u - i) + i;
   }
-  return t[Math.floor(M(n, t.length))];
+  return t[Math.floor(T(r, t.length))];
 }
-function Wt(t) {
+function et(t) {
   return Array.isArray(t) && t.length > 0 && typeof t[0] == "number";
 }
-class Jt {
+class tt {
   _uniforms = /* @__PURE__ */ new Map();
   _dynamicUpdaters = /* @__PURE__ */ new Map();
-  processArgument(e, a, r) {
-    if (Wt(e)) {
-      const n = `${r}_${a.name}`, o = { name: n, type: a.type, value: a.default ?? 0, isDynamic: !0 }, c = (i) => Ht(e, i);
-      return this._uniforms.set(n, o), this._dynamicUpdaters.set(n, c), { glslValue: n, uniform: o, updater: c };
+  processArgument(e, a, n) {
+    if (et(e)) {
+      const r = `${n}_${a.name}`, o = { name: r, type: a.type, value: a.default ?? 0, isDynamic: !0 }, c = (i) => Ze(e, i);
+      return this._uniforms.set(r, o), this._dynamicUpdaters.set(r, c), { glslValue: r, uniform: o, updater: c };
     }
     if (typeof e == "function") {
-      const n = `${r}_${a.name}`, o = { name: n, type: a.type, value: a.default ?? 0, isDynamic: !0 };
-      return this._uniforms.set(n, o), this._dynamicUpdaters.set(n, e), { glslValue: n, uniform: o, updater: e };
+      const r = `${n}_${a.name}`, o = { name: r, type: a.type, value: a.default ?? 0, isDynamic: !0 };
+      return this._uniforms.set(r, o), this._dynamicUpdaters.set(r, e), { glslValue: r, uniform: o, updater: e };
     }
-    if (typeof e == "number") return { glslValue: y(e) };
+    if (typeof e == "number") return { glslValue: v(e) };
     if (Array.isArray(e) && typeof e[0] == "number") {
-      const n = e;
-      if (n.length === 2) return { glslValue: `vec2(${y(n[0])}, ${y(n[1])})` };
-      if (n.length === 3) return { glslValue: `vec3(${y(n[0])}, ${y(n[1])}, ${y(n[2])})` };
-      if (n.length === 4) return { glslValue: `vec4(${y(n[0])}, ${y(n[1])}, ${y(n[2])}, ${y(n[3])})` };
+      const r = e;
+      if (r.length === 2) return { glslValue: `vec2(${v(r[0])}, ${v(r[1])})` };
+      if (r.length === 3) return { glslValue: `vec3(${v(r[0])}, ${v(r[1])}, ${v(r[2])})` };
+      if (r.length === 4) return { glslValue: `vec4(${v(r[0])}, ${v(r[1])}, ${v(r[2])}, ${v(r[3])})` };
     }
     return this.processDefault(a);
   }
   processDefault(e) {
     const a = e.default;
-    return typeof a == "number" ? { glslValue: y(a) } : Array.isArray(a) ? { glslValue: `vec${a.length}(${a.map(y).join(", ")})` } : { glslValue: "0.0" };
+    return typeof a == "number" ? { glslValue: v(a) } : Array.isArray(a) ? { glslValue: `vec${a.length}(${a.map(v).join(", ")})` } : { glslValue: "0.0" };
   }
   getUniforms() {
     return new Map(this._uniforms);
@@ -501,11 +507,11 @@ class Jt {
     this._uniforms.clear(), this._dynamicUpdaters.clear();
   }
 }
-function y(t) {
+function v(t) {
   const e = t.toString();
   return e.includes(".") ? e : e + ".0";
 }
-const Zt = `
+const nt = `
 // Utility functions
 float _luminance(vec3 rgb) {
 	const vec3 W = vec3(0.2125, 0.7154, 0.0721);
@@ -602,19 +608,23 @@ float _noise(vec3 v) {
 	return 42.0 * dot(m * m, vec4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
 }
 `;
-function te(t) {
-  const { uniforms: e, glslFunctions: a, mainCode: r, charOutputCode: n, primaryColorVar: o, cellColorVar: c, charMapping: i, usesFeedback: u, usesCharFeedback: f, usesCellColorFeedback: p } = t, d = Array.from(e.values()).map((l) => `uniform ${l.type} ${l.name};`).join(`
+function rt(t) {
+  const { uniforms: e, glslFunctions: a, mainCode: n, charOutputCode: r, primaryColorVar: o, cellColorVar: c, charMapping: i, usesFeedback: u, usesCharFeedback: _, usesCellColorFeedback: h, externalLayers: p } = t, y = Array.from(e.values()).map((d) => `uniform ${d.type} ${d.name};`).join(`
 `);
-  let m = "", h = "";
-  i && (m = `uniform int u_charMap[${i.indices.length}];
-uniform int u_charMapSize;`, h = `
+  let g = "", m = "";
+  i && (g = `uniform int u_charMap[${i.indices.length}];
+uniform int u_charMapSize;`, m = `
 	// Apply character mapping
 	int rawCharIdx = int(charOutput.r * 255.0 + charOutput.g * 255.0 * 256.0);
 	int mappedCharIdx = u_charMap[int(mod(float(rawCharIdx), float(u_charMapSize)))];
 	charOutput.r = float(mappedCharIdx % 256) / 255.0;
 	charOutput.g = float(mappedCharIdx / 256) / 255.0;`);
-  const s = [];
-  return u && s.push("uniform sampler2D prevBuffer;"), f && s.push("uniform sampler2D prevCharBuffer;"), p && s.push("uniform sampler2D prevCellColorBuffer;"), `#version 300 es
+  const f = [];
+  u && f.push("uniform sampler2D prevBuffer;"), _ && f.push("uniform sampler2D prevCharBuffer;"), h && f.push("uniform sampler2D prevCellColorBuffer;");
+  const l = f.join(`
+`), s = [];
+  if (p) for (const [, d] of p) d.usesChar && s.push(`uniform sampler2D ${d.uniformPrefix}_char;`), d.usesPrimary && s.push(`uniform sampler2D ${d.uniformPrefix}_primary;`), d.usesCellColor && s.push(`uniform sampler2D ${d.uniformPrefix}_cell;`);
+  return `#version 300 es
 precision highp float;
 
 // Varyings
@@ -628,14 +638,16 @@ layout(location = 2) out vec4 o_secondaryColor;
 // Standard uniforms
 uniform float time;
 uniform vec2 resolution;
+${l}
+${s.length > 0 ? `// External layer samplers
 ${s.join(`
-`)}
-${m}
+`)}` : ""}
+${g}
 
 // Dynamic uniforms
-${d}
+${y}
 
-${Zt}
+${nt}
 
 // Transform functions
 ${Array.from(a).join(`
@@ -643,11 +655,11 @@ ${Array.from(a).join(`
 
 void main() {
 	// Transform chain
-${r.join(`
+${n.join(`
 `)}
 
-${n}
-${h}
+${r}
+${m}
 
 	// Output to MRT
 	o_character = charOutput;
@@ -656,7 +668,7 @@ ${h}
 }
 `;
 }
-function ee(t, e, a) {
+function at(t, e, a) {
   return t ? `
 	// Character output from generator
 	vec4 charOutput = ${e};` : `
@@ -665,196 +677,291 @@ function ee(t, e, a) {
 	int charIdx = int(lum * 255.0);
 	vec4 charOutput = vec4(float(charIdx % 256) / 255.0, float(charIdx / 256) / 255.0, 0.0, 0.0);`;
 }
-function $(t) {
-  return new ne().compile(t);
+function R(t) {
+  return new ot().compile(t);
 }
-class ne {
+class ot {
   _varCounter = 0;
-  _uniformManager = new Jt();
+  _uniformManager = new tt();
   _glslFunctions = /* @__PURE__ */ new Set();
   _mainCode = [];
   _usesFeedback = !1;
   _usesCharFeedback = !1;
   _usesCellColorFeedback = !1;
+  _currentTarget = "main";
+  _externalLayers = /* @__PURE__ */ new Map();
+  _externalLayerCounter = 0;
+  _layerIdToPrefix = /* @__PURE__ */ new Map();
   compile(e) {
-    this._varCounter = 0, this._uniformManager.clear(), this._glslFunctions.clear(), this._mainCode.length = 0, this._usesFeedback = !1, this._usesCharFeedback = !1, this._usesCellColorFeedback = !1;
-    const a = this._compileChain(e, "main", "vec4(1.0, 1.0, 1.0, 1.0)");
-    let r, n = a.charVar;
+    this._varCounter = 0, this._uniformManager.clear(), this._glslFunctions.clear(), this._mainCode.length = 0, this._usesFeedback = !1, this._usesCharFeedback = !1, this._usesCellColorFeedback = !1, this._externalLayers.clear(), this._externalLayerCounter = 0, this._layerIdToPrefix.clear();
+    const a = this._compileChain(e, "main", "vec4(1.0, 1.0, 1.0, 1.0)", "v_uv", "main");
+    let n, r = a.charVar;
     if (e.charSource) {
-      const u = this._compileChain(e.charSource, "charSrc", "vec4(1.0, 1.0, 1.0, 1.0)");
-      n = "charFromSource_" + this._varCounter++, r = e.charCount ?? 256, this._mainCode.push("	// Convert charSource color to character index"), this._mainCode.push(`	float charLum_${n} = _luminance(${u.colorVar}.rgb);`), this._mainCode.push(`	int charIdx_${n} = int(charLum_${n} * ${r.toFixed(1)});`), this._mainCode.push(`	vec4 ${n} = vec4(float(charIdx_${n} % 256) / 255.0, float(charIdx_${n} / 256) / 255.0, 0.0, 0.0);`);
+      const u = this._compileChain(e.charSource, "charSrc", "vec4(1.0, 1.0, 1.0, 1.0)", "v_uv", "char");
+      r = "charFromSource_" + this._varCounter++, n = e.charCount ?? 256, this._mainCode.push("	// Convert charSource color to character index"), this._mainCode.push(`	float charLum_${r} = _luminance(${u.colorVar}.rgb);`), this._mainCode.push(`	int charIdx_${r} = int(charLum_${r} * ${n.toFixed(1)});`), this._mainCode.push(`	vec4 ${r} = vec4(float(charIdx_${r} % 256) / 255.0, float(charIdx_${r} / 256) / 255.0, 0.0, 0.0);`);
     }
     let o = a.colorVar;
-    e.colorSource && (o = this._compileChain(e.colorSource, "charColor", "vec4(1.0, 1.0, 1.0, 1.0)").colorVar);
+    e.colorSource && (o = this._compileChain(e.colorSource, "charColor", "vec4(1.0, 1.0, 1.0, 1.0)", "v_uv", "charColor").colorVar);
     let c = "vec4(0.0, 0.0, 0.0, 0.0)";
-    e.cellColorSource && (c = this._compileChain(e.cellColorSource, "cellColor", "vec4(0.0, 0.0, 0.0, 0.0)").colorVar);
-    const i = ee(!!n, n ?? "vec4(0.0)", a.colorVar);
-    return { fragmentSource: te({ uniforms: this._uniformManager.getUniforms(), glslFunctions: this._glslFunctions, mainCode: this._mainCode, charOutputCode: i, primaryColorVar: o, cellColorVar: c, charMapping: e.charMapping, usesFeedback: this._usesFeedback, usesCharFeedback: this._usesCharFeedback, usesCellColorFeedback: this._usesCellColorFeedback }), uniforms: this._uniformManager.getUniforms(), dynamicUpdaters: this._uniformManager.getDynamicUpdaters(), charMapping: e.charMapping, usesFeedback: this._usesFeedback, usesCharFeedback: this._usesCharFeedback, usesCellColorFeedback: this._usesCellColorFeedback };
+    e.cellColorSource && (c = this._compileChain(e.cellColorSource, "cellColor", "vec4(0.0, 0.0, 0.0, 0.0)", "v_uv", "cellColor").colorVar);
+    const i = at(!!r, r ?? "vec4(0.0)", a.colorVar);
+    return { fragmentSource: rt({ uniforms: this._uniformManager.getUniforms(), glslFunctions: this._glslFunctions, mainCode: this._mainCode, charOutputCode: i, primaryColorVar: o, cellColorVar: c, charMapping: e.charMapping, usesFeedback: this._usesFeedback, usesCharFeedback: this._usesCharFeedback, usesCellColorFeedback: this._usesCellColorFeedback, externalLayers: this._externalLayers }), uniforms: this._uniformManager.getUniforms(), dynamicUpdaters: this._uniformManager.getDynamicUpdaters(), charMapping: e.charMapping, usesFeedback: this._usesFeedback, usesCharFeedback: this._usesCharFeedback, usesCellColorFeedback: this._usesCellColorFeedback, externalLayers: new Map(this._externalLayers) };
   }
-  _compileChain(e, a, r, n = "v_uv") {
-    const o = `${a}_st`;
-    let c, i, u, f = `${a}_c`;
-    this._mainCode.push(`	vec2 ${o} = ${n};`), this._mainCode.push(`	vec4 ${f} = ${r};`);
-    const p = e.transforms, d = p.map((s) => this._getProcessedTransform(s.name)), m = [];
-    for (let s = 0; s < d.length; s++) {
-      const l = d[s];
-      l && (l.type !== "coord" && l.type !== "combineCoord" || m.push(s));
+  _compileChain(e, a, n, r = "v_uv", o = "main") {
+    const c = this._currentTarget;
+    this._currentTarget = o;
+    const i = `${a}_st`;
+    let u, _, h, p = `${a}_c`;
+    this._mainCode.push(`	vec2 ${i} = ${r};`), this._mainCode.push(`	vec4 ${p} = ${n};`);
+    const y = e.transforms, g = y.map((l) => this._getProcessedTransform(l.name)), m = [];
+    for (let l = 0; l < g.length; l++) {
+      const s = g[l];
+      s && (s.type !== "coord" && s.type !== "combineCoord" || m.push(l));
     }
-    const h = (s) => {
-      const l = p[s], C = d[s];
-      if (!C) return void console.warn(`[SynthCompiler] Unknown transform: ${l.name}`);
-      l.name === "src" && (this._usesFeedback = !0), l.name === "charSrc" && (this._usesCharFeedback = !0), l.name === "cellColorSrc" && (this._usesCellColorFeedback = !0), this._glslFunctions.add(C.glslFunction);
-      const I = this._processArguments(l.userArgs, C.inputs, `${a}_${s}_${l.name}`), T = e.nestedSources.get(s);
-      let A;
-      T && (C.type === "combine" || C.type === "combineCoord") && (A = this._compileChain(T, `${a}_nested_${s}`, r, o).colorVar);
-      const k = this._varCounter++, v = this._generateTransformCode(C, k, o, f, c, i, u, I, A);
-      f = v.colorVar, v.charVar && (c = v.charVar), v.flagsVar && (i = v.flagsVar), v.rotationVar && (u = v.rotationVar);
+    const f = (l) => {
+      const s = y[l], d = g[l];
+      if (!d) return void console.warn(`[SynthCompiler] Unknown transform: ${s.name}`);
+      const F = e.externalLayerRefs.get(l);
+      if (s.name === "src") if (F) this._trackExternalLayerUsage(F, this._currentTarget);
+      else switch (this._currentTarget) {
+        case "char":
+          this._usesCharFeedback = !0;
+          break;
+        case "cellColor":
+          this._usesCellColorFeedback = !0;
+          break;
+        default:
+          this._usesFeedback = !0;
+      }
+      const O = this._getContextAwareGlslFunction(d, s.name, F);
+      this._glslFunctions.add(O);
+      const z = this._processArguments(s.userArgs, d.inputs, `${a}_${l}_${s.name}`), A = e.nestedSources.get(l);
+      let k;
+      A && (d.type === "combine" || d.type === "combineCoord") && (k = this._compileChain(A, `${a}_nested_${l}`, n, i, o).colorVar);
+      const V = this._varCounter++, C = this._generateTransformCode(d, V, i, p, u, _, h, z, k, F);
+      p = C.colorVar, C.charVar && (u = C.charVar), C.flagsVar && (_ = C.flagsVar), C.rotationVar && (h = C.rotationVar);
     };
-    for (let s = m.length - 1; s >= 0; s--) h(m[s]);
-    for (let s = 0; s < p.length; s++) {
-      const l = d[s];
-      (!l || l.type !== "coord" && l.type !== "combineCoord") && h(s);
+    for (let l = m.length - 1; l >= 0; l--) f(m[l]);
+    for (let l = 0; l < y.length; l++) {
+      const s = g[l];
+      (!s || s.type !== "coord" && s.type !== "combineCoord") && f(l);
     }
-    return { coordVar: o, colorVar: f, charVar: c, flagsVar: i, rotationVar: u };
+    return this._currentTarget = c, { coordVar: i, colorVar: p, charVar: u, flagsVar: _, rotationVar: h };
   }
   _getProcessedTransform(e) {
-    return S.getProcessed(e);
+    return w.getProcessed(e);
   }
-  _processArguments(e, a, r) {
-    const n = [];
-    for (let o = 0; o < a.length; o++) {
-      const c = a[o], i = e[o] ?? c.default, u = this._uniformManager.processArgument(i, c, r);
-      n.push(u.glslValue);
+  _getContextAwareGlslFunction(e, a, n) {
+    if (a !== "src") return e.glslFunction;
+    if (n) {
+      const o = this._getExternalLayerPrefix(n.layerId), c = { char: `${o}_char`, charColor: `${o}_primary`, cellColor: `${o}_cell`, main: `${o}_primary` }[this._currentTarget];
+      return `
+vec4 ${`src_ext_${o}_${this._currentTarget}`}(vec2 _st) {
+	return texture(${c}, fract(_st));
+}
+`;
     }
-    return n;
+    const r = { char: "prevCharBuffer", charColor: "prevBuffer", cellColor: "prevCellColorBuffer", main: "prevBuffer" }[this._currentTarget];
+    return `
+vec4 ${`src_${this._currentTarget}`}(vec2 _st) {
+	return texture(${r}, fract(_st));
+}
+`;
   }
-  _generateTransformCode(e, a, r, n, o, c, i, u, f) {
-    const p = (...l) => [...l, ...u].join(", ");
-    let d = n, m = o, h = c, s = i;
+  _getExternalLayerPrefix(e) {
+    let a = this._layerIdToPrefix.get(e);
+    return a || (a = "extLayer" + this._externalLayerCounter++, this._layerIdToPrefix.set(e, a)), a;
+  }
+  _trackExternalLayerUsage(e, a) {
+    const n = this._getExternalLayerPrefix(e.layerId);
+    let r = this._externalLayers.get(e.layerId);
+    switch (r || (r = { layerId: e.layerId, uniformPrefix: n, usesChar: !1, usesPrimary: !1, usesCellColor: !1 }, this._externalLayers.set(e.layerId, r)), a) {
+      case "char":
+        r.usesChar = !0;
+        break;
+      case "cellColor":
+        r.usesCellColor = !0;
+        break;
+      default:
+        r.usesPrimary = !0;
+    }
+  }
+  _processArguments(e, a, n) {
+    const r = [];
+    for (let o = 0; o < a.length; o++) {
+      const c = a[o], i = e[o] ?? c.default, u = this._uniformManager.processArgument(i, c, n);
+      r.push(u.glslValue);
+    }
+    return r;
+  }
+  _generateTransformCode(e, a, n, r, o, c, i, u, _, h) {
+    const p = (...s) => [...s, ...u].join(", ");
+    let y = e.name;
+    e.name === "src" && (h ? y = `src_ext_${this._getExternalLayerPrefix(h.layerId)}_${this._currentTarget}` : y = `src_${this._currentTarget}`);
+    let g = r, m = o, f = c, l = i;
     switch (e.type) {
       case "src": {
-        const l = `c${a}`;
-        this._mainCode.push(`	vec4 ${l} = ${e.name}(${p(r)});`), d = l;
+        const s = `c${a}`;
+        this._mainCode.push(`	vec4 ${s} = ${y}(${p(n)});`), g = s;
         break;
       }
       case "coord": {
-        const l = `st${a}`;
-        this._mainCode.push(`	vec2 ${l} = ${e.name}(${p(r)});`), this._mainCode.push(`	${r} = ${l};`);
+        const s = `st${a}`;
+        this._mainCode.push(`	vec2 ${s} = ${y}(${p(n)});`), this._mainCode.push(`	${n} = ${s};`);
         break;
       }
       case "color": {
-        const l = `c${a}`;
-        this._mainCode.push(`	vec4 ${l} = ${e.name}(${p(n)});`), d = l;
+        const s = `c${a}`;
+        this._mainCode.push(`	vec4 ${s} = ${y}(${p(r)});`), g = s;
         break;
       }
       case "combine": {
-        const l = `c${a}`;
-        this._mainCode.push(`	vec4 ${l} = ${e.name}(${p(n, f ?? "vec4(0.0)")});`), d = l;
+        const s = `c${a}`;
+        this._mainCode.push(`	vec4 ${s} = ${y}(${p(r, _ ?? "vec4(0.0)")});`), g = s;
         break;
       }
       case "combineCoord": {
-        const l = `st${a}`;
-        this._mainCode.push(`	vec2 ${l} = ${e.name}(${p(r, f ?? "vec4(0.0)")});`), this._mainCode.push(`	${r} = ${l};`);
+        const s = `st${a}`;
+        this._mainCode.push(`	vec2 ${s} = ${y}(${p(n, _ ?? "vec4(0.0)")});`), this._mainCode.push(`	${n} = ${s};`);
         break;
       }
       case "charModify":
-        m || (m = `char${a}`, h = `flags${a}`, s = `rot${a}`, this._mainCode.push(`	vec4 ${m} = vec4(0.0);`), this._mainCode.push(`	float ${h} = 0.0;`), this._mainCode.push(`	float ${s} = 0.0;`)), this._mainCode.push(`	${m} = ${e.name}(${p(m)});`);
+        m || (m = `char${a}`, f = `flags${a}`, l = `rot${a}`, this._mainCode.push(`	vec4 ${m} = vec4(0.0);`), this._mainCode.push(`	float ${f} = 0.0;`), this._mainCode.push(`	float ${l} = 0.0;`)), this._mainCode.push(`	${m} = ${y}(${p(m)});`);
     }
-    return { colorVar: d, charVar: m, flagsVar: h, rotationVar: s };
+    return { colorVar: g, charVar: m, flagsVar: f, rotationVar: l };
   }
 }
-class re {
+class st {
   _resolvedIndices;
   _lastFontCharacterCount = 0;
   _lastChars = "";
   resolve(e, a) {
-    const r = a.characters.length;
-    if (this._resolvedIndices && this._lastFontCharacterCount === r && this._lastChars === e) return this._resolvedIndices;
-    const n = Array.from(e), o = new Int32Array(n.length), c = a.characterMap, i = a.characters;
-    for (let u = 0; u < n.length; u++) {
-      const f = n[u], p = c.get(f);
-      if (p !== void 0) o[u] = i.indexOf(p);
+    const n = a.characters.length;
+    if (this._resolvedIndices && this._lastFontCharacterCount === n && this._lastChars === e) return this._resolvedIndices;
+    const r = Array.from(e), o = new Int32Array(r.length), c = a.characterMap, i = a.characters;
+    for (let u = 0; u < r.length; u++) {
+      const _ = r[u], h = c.get(_);
+      if (h !== void 0) o[u] = i.indexOf(h);
       else {
-        const d = c.get(" ");
-        o[u] = d !== void 0 ? i.indexOf(d) : 0;
+        const p = c.get(" ");
+        o[u] = p !== void 0 ? i.indexOf(p) : 0;
       }
     }
-    return this._resolvedIndices = o, this._lastFontCharacterCount = r, this._lastChars = e, o;
+    return this._resolvedIndices = o, this._lastFontCharacterCount = n, this._lastChars = e, o;
   }
   invalidate() {
     this._resolvedIndices = void 0, this._lastFontCharacterCount = 0, this._lastChars = "";
   }
 }
-const x = "textmode.synth.js", oe = { name: x, version: "1.0.0", install(t, e) {
+const b = "textmode.synth.js";
+function $(t) {
+  const e = /* @__PURE__ */ new Map();
+  for (const [, a] of t.externalLayerRefs) e.set(a.layerId, a.layer);
+  for (const [, a] of t.nestedSources) {
+    const n = $(a);
+    for (const [r, o] of n) e.set(r, o);
+  }
+  if (t.charSource) {
+    const a = $(t.charSource);
+    for (const [n, r] of a) e.set(n, r);
+  }
+  if (t.colorSource) {
+    const a = $(t.colorSource);
+    for (const [n, r] of a) e.set(n, r);
+  }
+  if (t.cellColorSource) {
+    const a = $(t.cellColorSource);
+    for (const [n, r] of a) e.set(n, r);
+  }
+  return e;
+}
+const it = { name: b, version: "1.0.0", install(t, e) {
   e.extendLayer("synth", function(a) {
-    const r = performance.now() / 1e3, n = this.grid !== void 0 && this.drawFramebuffer !== void 0;
-    let o = this.getPluginState(x);
-    o ? (o.source = a, o.startTime = r, o.needsCompile = !0, o.characterResolver.invalidate(), n && (o.compiled = $(a))) : o = { source: a, compiled: n ? $(a) : void 0, shader: void 0, characterResolver: new re(), startTime: r, needsCompile: !0, pingPongBuffers: void 0, pingPongIndex: 0 }, this.setPluginState(x, o);
+    const n = performance.now() / 1e3, r = this.grid !== void 0 && this.drawFramebuffer !== void 0;
+    let o = this.getPluginState(b);
+    o ? (o.source = a, o.startTime = n, o.needsCompile = !0, o.characterResolver.invalidate(), r && (o.compiled = R(a))) : o = { source: a, compiled: r ? R(a) : void 0, shader: void 0, characterResolver: new st(), startTime: n, needsCompile: !0, pingPongBuffers: void 0, pingPongIndex: 0 }, this.setPluginState(b, o);
   }), e.registerLayerPreRenderHook(async (a) => {
-    const r = a.getPluginState(x);
-    if (!r) return;
-    const n = a.grid, o = a.drawFramebuffer;
-    if (!n || !o || (r.compiled || (r.compiled = $(r.source), r.needsCompile = !0), r.needsCompile && r.compiled && (r.shader?.dispose && r.shader.dispose(), r.shader = await t.createFilterShader(r.compiled.fragmentSource), r.needsCompile = !1), !r.shader || !r.compiled)) return;
-    const c = r.compiled.usesFeedback, i = r.compiled.usesCharFeedback, u = r.compiled.usesCellColorFeedback, f = c || i || u;
-    f && !r.pingPongBuffers && (r.pingPongBuffers = [t.createFramebuffer({ width: n.cols, height: n.rows, attachments: 3 }), t.createFramebuffer({ width: n.cols, height: n.rows, attachments: 3 })], r.pingPongIndex = 0);
-    const p = { time: t.millis() / 1e3, frameCount: t.frameCount, width: n.width, height: n.height, cols: n.cols, rows: n.rows }, d = (m) => {
-      t.setUniform("time", p.time), t.setUniform("resolution", [p.cols, p.rows]);
-      for (const [h, s] of r.compiled.dynamicUpdaters) t.setUniform(h, s(p));
-      for (const [h, s] of r.compiled.uniforms) s.isDynamic || typeof s.value == "function" || t.setUniform(h, s.value);
-      if (r.compiled.charMapping) {
-        const h = r.characterResolver.resolve(r.compiled.charMapping.chars, a.font);
-        t.setUniform("u_charMap", h), t.setUniform("u_charMapSize", h.length);
+    const n = a.getPluginState(b);
+    if (!n) return;
+    const r = a.grid, o = a.drawFramebuffer;
+    if (!r || !o || (n.compiled || (n.compiled = R(n.source), n.externalLayerMap = $(n.source), n.needsCompile = !0), n.needsCompile && n.compiled && (n.shader?.dispose && n.shader.dispose(), n.externalLayerMap = $(n.source), n.shader = await t.createFilterShader(n.compiled.fragmentSource), n.needsCompile = !1), !n.shader || !n.compiled)) return;
+    const c = n.compiled.usesFeedback, i = n.compiled.usesCharFeedback, u = n.compiled.usesCellColorFeedback, _ = c || i || u;
+    _ && !n.pingPongBuffers && (n.pingPongBuffers = [t.createFramebuffer({ width: r.cols, height: r.rows, attachments: 3 }), t.createFramebuffer({ width: r.cols, height: r.rows, attachments: 3 })], n.pingPongIndex = 0);
+    const h = { time: t.millis() / 1e3, frameCount: t.frameCount, width: r.width, height: r.height, cols: r.cols, rows: r.rows }, p = (y) => {
+      t.setUniform("time", h.time), t.setUniform("resolution", [h.cols, h.rows]);
+      for (const [m, f] of n.compiled.dynamicUpdaters) t.setUniform(m, f(h));
+      for (const [m, f] of n.compiled.uniforms) f.isDynamic || typeof f.value == "function" || t.setUniform(m, f.value);
+      if (n.compiled.charMapping) {
+        const m = n.characterResolver.resolve(n.compiled.charMapping.chars, a.font);
+        t.setUniform("u_charMap", m), t.setUniform("u_charMapSize", m.length);
       }
-      m && (c && t.setUniform("prevBuffer", m.textures[1]), i && t.setUniform("prevCharBuffer", m.textures[0]), u && t.setUniform("prevCellColorBuffer", m.textures[2]));
+      y && (c && t.setUniform("prevBuffer", y.textures[1]), i && t.setUniform("prevCharBuffer", y.textures[0]), u && t.setUniform("prevCellColorBuffer", y.textures[2]));
+      const g = n.compiled.externalLayers;
+      if (g && g.size > 0 && n.externalLayerMap) for (const [m, f] of g) {
+        const l = n.externalLayerMap.get(m);
+        if (!l) {
+          console.warn(`[SynthPlugin] External layer not found: ${m}`);
+          continue;
+        }
+        const s = l.getPluginState(b);
+        let d;
+        s?.pingPongBuffers ? d = s.pingPongBuffers[s.pingPongIndex].textures : l.drawFramebuffer && (d = l.drawFramebuffer.textures), d && (f.usesChar && t.setUniform(`${f.uniformPrefix}_char`, d[0]), f.usesPrimary && t.setUniform(`${f.uniformPrefix}_primary`, d[1]), f.usesCellColor && t.setUniform(`${f.uniformPrefix}_cell`, d[2]));
+      }
     };
-    if (f && r.pingPongBuffers) {
-      const m = r.pingPongBuffers[r.pingPongIndex], h = r.pingPongBuffers[1 - r.pingPongIndex];
-      h.begin(), t.clear(), t.shader(r.shader), d(m), t.rect(n.cols, n.rows), h.end(), o.begin(), t.clear(), t.shader(r.shader), d(m), t.rect(n.cols, n.rows), o.end(), r.pingPongIndex = 1 - r.pingPongIndex;
-    } else o.begin(), t.clear(), t.shader(r.shader), d(null), t.rect(n.cols, n.rows), o.end();
+    if (_ && n.pingPongBuffers) {
+      const y = n.pingPongBuffers[n.pingPongIndex], g = n.pingPongBuffers[1 - n.pingPongIndex];
+      g.begin(), t.clear(), t.shader(n.shader), p(y), t.rect(r.cols, r.rows), g.end(), o.begin(), t.clear(), t.shader(n.shader), p(y), t.rect(r.cols, r.rows), o.end(), n.pingPongIndex = 1 - n.pingPongIndex;
+    } else o.begin(), t.clear(), t.shader(n.shader), p(null), t.rect(r.cols, r.rows), o.end();
   }), e.registerLayerDisposedHook((a) => {
-    const r = a.getPluginState(x);
-    r && (r.shader?.dispose && r.shader.dispose(), r.pingPongBuffers && (r.pingPongBuffers[0].dispose?.(), r.pingPongBuffers[1].dispose?.()));
+    const n = a.getPluginState(b);
+    n && (n.shader?.dispose && n.shader.dispose(), n.pingPongBuffers && (n.pingPongBuffers[0].dispose?.(), n.pingPongBuffers[1].dispose?.()));
   });
 }, uninstall(t, e) {
   const a = [e.layerManager.base, ...e.layerManager.all];
-  for (const r of a) {
-    const n = r.getPluginState(x);
-    n && (n.shader?.dispose && n.shader.dispose(), n.pingPongBuffers && (n.pingPongBuffers[0].dispose?.(), n.pingPongBuffers[1].dispose?.()));
+  for (const n of a) {
+    const r = n.getPluginState(b);
+    r && (r.shader?.dispose && r.shader.dispose(), r.pingPongBuffers && (r.pingPongBuffers[0].dispose?.(), r.pingPongBuffers[1].dispose?.()));
   }
   e.removeLayerExtension("synth");
 } };
-Qt(), S.registerMany(Kt), w.setSynthSourceClass(_), w.injectMethods(_.prototype);
-const g = w.generateStandaloneFunctions();
-function ae() {
+Je(), w.registerMany(He), I.setSynthSourceClass(x), I.injectMethods(x.prototype);
+const S = I.generateStandaloneFunctions();
+function ct() {
   return (t, e = 256) => {
-    const a = new _();
+    const a = new x();
     return a._charSource = t, a._charCount = e, a;
   };
 }
-const se = ae(), ce = (t) => {
-  const e = new _();
+const ut = ct(), ft = (t) => {
+  const e = new x();
   return e._colorSource = t, e;
-}, le = (t) => {
-  const e = new _();
+}, pt = (t) => {
+  const e = new x();
   return e._cellColorSource = t, e;
-}, ie = (t) => {
-  const e = new _();
+}, mt = (t) => {
+  const e = new x();
   return e._colorSource = t, e._cellColorSource = t, e;
-}, ue = g.osc, pe = g.noise, fe = g.voronoi, me = g.gradient, de = g.shape, he = g.solid, ye = g.src, ge = g.charSrc, _e = g.cellColorSrc;
+}, dt = S.osc, ht = S.noise, yt = S.voronoi, _t = S.gradient, gt = S.shape, vt = S.solid, xt = lt();
+function lt() {
+  const t = S.src;
+  return (e) => {
+    if (!e) return t();
+    const a = new x(), n = e.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+    return a.addExternalLayerRef({ layerId: n, layer: e }), a;
+  };
+}
 export {
-  oe as SynthPlugin,
-  _ as SynthSource,
-  le as cellColor,
-  _e as cellColorSrc,
-  se as char,
-  ce as charColor,
-  ge as charSrc,
-  me as gradient,
-  pe as noise,
-  ue as osc,
-  ie as paint,
-  de as shape,
-  he as solid,
-  ye as src,
-  fe as voronoi
+  it as SynthPlugin,
+  x as SynthSource,
+  pt as cellColor,
+  ut as char,
+  ft as charColor,
+  _t as gradient,
+  ht as noise,
+  dt as osc,
+  mt as paint,
+  gt as shape,
+  vt as solid,
+  xt as src,
+  yt as voronoi
 };

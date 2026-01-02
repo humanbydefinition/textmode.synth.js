@@ -330,7 +330,20 @@ export declare const solid: (r?: number | number[] | ((ctx: SynthContext) => num
  * character foreground color, enabling effects like trails, motion blur,
  * and recursive patterns.
  *
+ * **Context-aware behavior:** When called without arguments, `src()` automatically
+ * samples the appropriate texture based on where it's used in the synth chain:
+ * - Inside `char(...)` → samples previous frame's character data
+ * - Inside `charColor(...)` → samples previous frame's primary color
+ * - Inside `cellColor(...)` → samples previous frame's cell color
+ *
+ * **Cross-layer sampling:** When called with a layer argument, `src(layer)` samples
+ * from another layer's output, enabling hydra-style multi-output compositions:
+ * - The sampled texture is still context-aware based on the current compilation target
+ *
  * Equivalent to hydra's `src(o0)`.
+ *
+ * @param layer - Optional TextmodeLayer to sample from. If omitted, samples from self (feedback).
+ * @returns A new SynthSource that samples the specified layer or self
  *
  * @example
  * ```typescript
@@ -345,57 +358,26 @@ export declare const solid: (r?: number | number[] | ((ctx: SynthContext) => num
  *   src().modulate(noise(3), 0.005).blend(shape(4), 0.01)
  * );
  *
- * // Feedback with color shift and scaling
+ * // Cross-layer sampling (hydra-style o0, o1, etc.)
+ * const layer1 = t.layers.add();
+ * const layer2 = t.layers.add();
+ *
+ * layer1.synth(noise(10).mult(osc(20)));
+ *
+ * layer2.synth(
+ *   char(voronoi(5).diff(src(layer1)))  // Sample layer1's char texture
+ *     .charColor(osc(10).blend(src(layer1), 0.5))  // Sample layer1's primary color
+ * );
+ *
+ * // Complex multi-layer composition
  * t.layers.base.synth(
- *   src().hue(0.01).scale(1.01).blend(osc(10), 0.1)
+ *   noise(3, 0.3).thresh(0.3).diff(src(layer2), 0.3)
  * );
  * ```
  */
-export declare const src: () => SynthSource;
-/**
- * Sample the previous frame's character data for feedback effects.
- * Reads from the previous frame's character texture, which contains
- * character index and transform data.
- *
- * Use this to create feedback loops that affect character selection.
- *
- * @example
- * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- *
- * // Character feedback with modulation
- * t.layers.base.synth(
- *   charSrc().modulate(noise(3), 0.01)
- * );
- * ```
- */
-export declare const charSrc: () => SynthSource;
-/**
- * Sample the previous frame's cell/secondary color for feedback effects.
- * Reads from the previous frame's secondary color texture, which contains
- * the cell background color.
- *
- * Use this to create feedback loops that affect cell background colors.
- *
- * @example
- * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- *
- * // Cell color feedback
- * t.layers.base.synth(
- *   cellColorSrc().hue(0.01).blend(solid(0, 0, 0), 0.1)
- * );
- * ```
- */
-export declare const cellColorSrc: () => SynthSource;
+export declare const src: (layer?: {
+    id?: string;
+}) => SynthSource;
 export type { ModulatedArray, EasingFunction } from './lib/ArrayUtils';
 declare module 'textmode.js' {
     interface TextmodeLayer {

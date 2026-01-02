@@ -5,6 +5,7 @@
  * shader from collected functions, uniforms, and main code.
  */
 import type { SynthUniform, CharacterMapping } from '../core/types';
+import type { ExternalLayerInfo } from './types';
 /**
  * Options for shader generation.
  */
@@ -29,6 +30,8 @@ export interface ShaderGenerationOptions {
     usesCharFeedback?: boolean;
     /** Whether cell color feedback (cellColorSrc) is used */
     usesCellColorFeedback?: boolean;
+    /** External layer references used in this shader */
+    externalLayers?: Map<string, ExternalLayerInfo>;
 }
 /**
  * Generate the complete fragment shader.

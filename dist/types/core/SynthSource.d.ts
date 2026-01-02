@@ -1,4 +1,4 @@
-import type { SynthParameterValue, CharacterMapping } from './types';
+import type { SynthParameterValue, CharacterMapping, ExternalLayerReference } from './types';
 import { SynthChain, type TransformRecord } from './SynthChain';
 import { ISynthSource } from './ISynthSource';
 /**
@@ -13,6 +13,7 @@ interface SynthSourceCreateOptions {
     charSource?: SynthSource;
     charCount?: number;
     nestedSources?: Map<number, SynthSource>;
+    externalLayerRefs?: Map<number, ExternalLayerReference>;
 }
 /**
  * A chainable synthesis source that accumulates transforms to be compiled into a shader.
@@ -41,6 +42,8 @@ export declare class SynthSource implements ISynthSource {
     private _charMapping?;
     /** Nested sources for combine operations (indexed by transform position) */
     private readonly _nestedSources;
+    /** External layer references for cross-layer sampling (indexed by transform position) */
+    private readonly _externalLayerRefs;
     /** Reference to the color source chain (if any) */
     private _colorSource?;
     /** Reference to the cell color source chain (if any) */
@@ -66,6 +69,12 @@ export declare class SynthSource implements ISynthSource {
      * @ignore
      */
     addCombineTransform(name: string, source: SynthSource, userArgs: SynthParameterValue[]): this;
+    /**
+     * Add an external layer reference at the current transform index.
+     * Used by src(layer) to track cross-layer sampling.
+     * @ignore
+     */
+    addExternalLayerRef(ref: ExternalLayerReference): this;
     charMap(chars: string): this;
     charColor(source: SynthSource): this;
     char(source: SynthSource, charCount: number): this;
@@ -107,6 +116,11 @@ export declare class SynthSource implements ISynthSource {
      * @ignore
      */
     get nestedSources(): Map<number, SynthSource>;
+    /**
+     * Get all external layer references for cross-layer sampling.
+     * @ignore
+     */
+    get externalLayerRefs(): Map<number, ExternalLayerReference>;
 }
 export {};
 //# sourceMappingURL=SynthSource.d.ts.map

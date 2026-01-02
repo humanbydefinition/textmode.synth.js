@@ -71,6 +71,16 @@ export interface CharacterMapping {
     indices: number[];
 }
 /**
+ * Reference to an external layer for cross-layer sampling.
+ * Used by src(layer) to enable hydra-style output references.
+ */
+export interface ExternalLayerReference {
+    /** Unique identifier for the layer (typically layer.id or generated) */
+    layerId: string;
+    /** The layer object reference (opaque to the compiler, used by plugin) */
+    layer: unknown;
+}
+/**
  * Uniform definition for compiled shaders.
  */
 export interface SynthUniform {

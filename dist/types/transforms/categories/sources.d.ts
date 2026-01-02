@@ -12,8 +12,6 @@ export declare const gradient: TransformDefinition;
 export declare const shape: TransformDefinition;
 export declare const solid: TransformDefinition;
 export declare const src: TransformDefinition;
-export declare const charSrc: TransformDefinition;
-export declare const cellColorSrc: TransformDefinition;
 /**
  * All source generator transforms.
  */

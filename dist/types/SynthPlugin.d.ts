@@ -1,4 +1,4 @@
-import type { TextmodePlugin } from 'textmode.js';
+import type { TextmodePlugin } from 'textmode.js/plugins';
 /**
  * The `textmode.synth.js` plugin to install.
  *
