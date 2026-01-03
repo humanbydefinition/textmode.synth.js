@@ -1,15 +1,15 @@
 # textmode.synth.js
 
-A `hydra`-inspired chainable visual synthesis system for `textmode.js`.
-Enables procedural generation of characters, colors, and visual effects
-through method chaining.
+`textmode.synth.js` is an add-on library for `textmode.js` that provides a
+visual synthesis system for procedural generation of characters, colors,
+and visual effects through method chaining.
+
+The system is inspired by the [hydra-synth](https://github.com/ojack/hydra-synth)
+project by [ojack](https://github.com/ojack).
 
 ## Example
 
 ```ts
-import { textmode } from 'textmode.js';
-import { SynthPlugin, osc, noise } from 'textmode.synth.js';
-
 // Create textmode instance with SynthPlugin
 const t = textmode.create({
   width: 800,
@@ -58,10 +58,8 @@ t.layers.base.synth(synth);
 | Variable | Description |
 | ------ | ------ |
 | [cellColor](variables/cellColor.md) | Create a synth source with cell background color defined. |
-| [cellColorSrc](variables/cellColorSrc.md) | Sample the previous frame's cell/secondary color for feedback effects. Reads from the previous frame's secondary color texture, which contains the cell background color. |
 | [char](variables/char.md) | Create a character source from any color/pattern source. |
 | [charColor](variables/charColor.md) | Create a synth source with character foreground color defined. |
-| [charSrc](variables/charSrc.md) | Sample the previous frame's character data for feedback effects. Reads from the previous frame's character texture, which contains character index and transform data. |
 | [gradient](variables/gradient.md) | Generate a rotating radial gradient. |
 | [noise](variables/noise.md) | Generate Perlin noise patterns. |
 | [osc](variables/osc.md) | Generate oscillating patterns using sine waves. |

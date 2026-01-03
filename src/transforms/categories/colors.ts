@@ -226,8 +226,8 @@ export const levels = defineTransform({
 	description: 'Adjust input/output levels and gamma',
 });
 
-export const clampColor = defineTransform({
-	name: 'clampColor',
+export const clamp = defineTransform({
+	name: 'clamp',
 	type: 'color',
 	inputs: [
 		{ name: 'min', type: 'float', default: 0.0 },
@@ -259,5 +259,5 @@ export const COLOR_TRANSFORMS: TransformDefinition[] = [
 	shift,
 	gamma,
 	levels,
-	clampColor,
+	clamp,
 ];

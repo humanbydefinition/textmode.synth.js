@@ -329,8 +329,8 @@ export class SynthSource implements ISynthSource {
 		return this.addTransform('levels', [inMin ?? 0.0, inMax ?? 1.0, outMin ?? 0.0, outMax ?? 1.0, gamma ?? 1.0]);
 	}
 
-	public clampColor(min?: SynthParameterValue, max?: SynthParameterValue): this {
-		return this.addTransform('clampColor', [min ?? 0.0, max ?? 1.0]);
+	public clamp(min?: SynthParameterValue, max?: SynthParameterValue): this {
+		return this.addTransform('clamp', [min ?? 0.0, max ?? 1.0]);
 	}
 
 	// ============================================================
@@ -395,34 +395,6 @@ export class SynthSource implements ISynthSource {
 
 	public modulateScrollY(source: SynthSource, scrollY?: SynthParameterValue, speed?: SynthParameterValue): this {
 		return this.addCombineTransform('modulateScrollY', source, [scrollY ?? 0.5, speed ?? 0.0]);
-	}
-
-	// ============================================================
-	// CHARACTER GENERATORS
-	// ============================================================
-
-	public charNoise(scale?: SynthParameterValue, speed?: SynthParameterValue, charCount?: SynthParameterValue): this {
-		return this.addTransform('charNoise', [scale ?? 10.0, speed ?? 0.1, charCount ?? 256]);
-	}
-
-	public charOsc(frequency?: SynthParameterValue, sync?: SynthParameterValue, charCount?: SynthParameterValue): this {
-		return this.addTransform('charOsc', [frequency ?? 60.0, sync ?? 0.1, charCount ?? 256]);
-	}
-
-	public charGradient(charCount?: SynthParameterValue, direction?: SynthParameterValue): this {
-		return this.addTransform('charGradient', [charCount ?? 256, direction ?? 0.0]);
-	}
-
-	public charVoronoi(scale?: SynthParameterValue, speed?: SynthParameterValue, charCount?: SynthParameterValue): this {
-		return this.addTransform('charVoronoi', [scale ?? 5.0, speed ?? 0.3, charCount ?? 256]);
-	}
-
-	public charShape(sides?: SynthParameterValue, innerChar?: SynthParameterValue, outerChar?: SynthParameterValue, radius?: SynthParameterValue): this {
-		return this.addTransform('charShape', [sides ?? 3, innerChar ?? 0, outerChar ?? 1, radius ?? 0.3]);
-	}
-
-	public charSolid(charIndex?: SynthParameterValue): this {
-		return this.addTransform('charSolid', [charIndex ?? 0]);
 	}
 
 	// ============================================================

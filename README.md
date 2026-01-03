@@ -157,24 +157,14 @@ layer.synth(
 - [Compositional API Guide](./docs/COMPOSITIONAL-API.md)
 - [Examples](./examples/)
 
-## Backward Compatibility
-
-The old `charOsc()`, `charNoise()`, etc. functions still work:
-
-```javascript
-// Old style (still works)
-charOsc(10, 0.1, 0, 16)
-  .charColor(osc(10, 0.1));
-
-// New style (recommended)
-char(osc(10, 0.1), 16)
-  .charColor(osc(10, 0.1));
-```
 
 ## License
 
-MIT
+Distributed under the AGPL-3.0 License. See [LICENSE](./LICENSE) for more information.
 
 ## Credits
 
-Inspired by [hydra-synth](https://github.com/hydra-synth/hydra-synth) by Olivia Jack.
+This project is a derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/olivia-jack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.
+
+- **hydra-synth**: The core synthesis logic, GLSL shader generation, and functional API design are heavily based on `hydra-synth`.
+- **Modifications**: The engine has been adapted to support `textmode.js`'s unique three-texture rendering pipeline *(characters, foreground colors, background colors)* and integrate with its plugin system.

@@ -8,11 +8,10 @@ Context passed to dynamic parameter functions during rendering.
 
 | Property | Type | Description |
 | ------ | ------ | ------ |
+| <a id="bpm"></a> `bpm` | `number` | Current BPM (beats per minute) for array modulation timing |
 | <a id="cols"></a> `cols` | `number` | Grid columns |
 | <a id="framecount"></a> `frameCount` | `number` | Current frame count |
-| <a id="height"></a> `height` | `number` | Canvas/grid height in pixels |
-| <a id="mousex"></a> `mouseX` | `number` | Normalized mouse X (0-1) |
-| <a id="mousey"></a> `mouseY` | `number` | Normalized mouse Y (0-1) |
+| <a id="height"></a> `height` | `number` | Grid height in pixels |
 | <a id="rows"></a> `rows` | `number` | Grid rows |
 | <a id="time"></a> `time` | `number` | Current time in seconds |
-| <a id="width"></a> `width` | `number` | Canvas/grid width in pixels |
+| <a id="width"></a> `width` | `number` | Grid width in pixels |
