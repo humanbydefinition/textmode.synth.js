@@ -134,6 +134,14 @@ char(noise(10)).charMap('@#%*+=-:. ');  // ASCII gradient
 char(voronoi(5)).charMap('█▓▒░ ');       // Block characters
 ```
 
+## Documentation
+
+There's a lot more to explore beyond this overview:
+
+- **[Online documentation](https://code.textmode.art/docs/synth)** - Full guides and tutorials
+- **[API reference](./api/index.md)** - Complete API documentation
+- **[synth.textmode.art](https://synth.textmode.art)** - Live coding environment
+
 ## License
 
 Distributed under the **AGPL-3.0** License. See [LICENSE](./LICENSE) for more information.
