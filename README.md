@@ -1,14 +1,16 @@
 # textmode.synth.js
 
-A `hydra`-inspired chainable visual synthesis system for `textmode.js`. Create procedural ASCII/text animations with simple, expressive code.
+`textmode.synth.js` is a derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/olivia-jack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.
+
+It provides a `hydra`-inspired chainable visual synthesis system for `textmode.js`, enabling you to create procedural ASCII/text animations with simple, expressive code.
 
 ## Features
 
-- 🎨 **Procedural Generation**: Generate characters, colors, and patterns using oscillators, noise, voronoi, and more
-- 🔗 **Method Chaining**: Hydra-style fluent API for building complex visual effects
-- 🎯 **Three-Texture System**: Independent control over characters, character colors, and cell backgrounds
+- 🎨 **Procedural generation**: Generate characters, colors, and patterns using oscillators, noise, voronoi, and more
+- 🔗 **Method chaining**: Hydra-style fluent API for building complex visual effects
+- 🎯 **Three-texture system**: Independent control over characters, character colors, and cell backgrounds
 - ⚡ **WebGL Powered**: Compiled to optimized GLSL shaders for real-time performance
-- 🔄 **Feedback Loops**: Create trails, motion blur, and recursive patterns
+- 🔄 **Feedback loops**: Create trails, motion blur, and recursive patterns
 - 📦 **Compositional API**: Start with any aspect (char, color, background) and build from there
 
 ## Installation
@@ -31,20 +33,22 @@ const t = textmode.create({
 });
 
 // Create a simple animated pattern
-const pattern = osc(10, 0.1, 1.5);
+const charChain = osc(1, -0.1, 0.5).kaleid(50);
+const colorChain = osc(25, -0.1, 0.5).kaleid(50);
+
 t.layers.base.synth(
-  char(pattern)
-    .charMap('@#%*+=-:. ')
-    .charColor(pattern.clone())
-    .cellColor(pattern.clone().invert())
+  char(charChain)
+		.charMap('@#%*+=-:. ')
+		.charColor(colorChain)
+		.cellColor(colorChain.clone().invert())
 );
 ```
 
 ## Core Concepts
 
-### The New Compositional API
+### The Compositional API
 
-textmode.synth.js provides three standalone functions for defining different aspects of your visual:
+Since `textmode.js` is a three-texture system, `textmode.synth.js` provides three standalone functions for defining different aspects of your visual:
 
 - **`char(source, charCount?)`** - Define which pattern drives character generation
 - **`charColor(source)`** - Define character foreground colors
@@ -70,6 +74,25 @@ cellColor(solid(0, 0, 0, 0.8))
   .charColor(osc(5).kaleid(4));
 ```
 
+Besides the three individual functions, you can also use `paint()` to effectively create pixel art, coloring the foreground and background of each cell based on a single source, making the rendered characters invisible/redundant:
+
+```javascript
+t.fontSize(16);
+paint(noise(10), 16);
+
+// With a font size of 1, you are virtually able to recreate most hydra visuals 1:1
+t.fontSize(1);
+paint(noise(10), 16);
+```
+
+Additionally, you don't need to use any of those functions, and just use `synth()` with a source generator as the first argument:
+
+```javascript
+t.synth(noise(10));
+```
+
+In this case, both the characters and foreground colors are driven by the same source generator, and the background is solid black. In many cases it makes sense to use separate character source though, since character cycling is much more rapid than color cycling.
+
 ### Source Generators
 
 Create patterns using these generators:
@@ -80,15 +103,16 @@ Create patterns using these generators:
 - `gradient(speed)` - Rotating radial gradient
 - `shape(sides, radius, smoothing)` - Geometric shapes
 - `solid(r, g, b, a)` - Solid colors
+- `src(layer?)` - Previous output of another layer as a source, or the layers own previous output
 
 ### Transforms
 
 Chain transforms to modify patterns:
 
-**Geometry:** `rotate()`, `scale()`, `scroll()`, `pixelate()`, `repeat()`, `kaleid()`
-**Color:** `brightness()`, `contrast()`, `invert()`, `hue()`, `saturate()`, `colorama()`
-**Blend:** `add()`, `sub()`, `mult()`, `blend()`, `diff()`, `layer()`, `mask()`
-**Modulate:** `modulate()`, `modulateScale()`, `modulateRotate()`, `modulateScrollX()`, etc.
+- **Geometry:** `rotate()`, `scale()`, `scroll()`, `pixelate()`, `repeat()`, `kaleid()`
+- **Color:** `brightness()`, `contrast()`, `invert()`, `hue()`, `saturate()`, `colorama()`
+- **Blend:** `add()`, `sub()`, `mult()`, `blend()`, `diff()`, `layer()`, `mask()`
+- **Modulate:** `modulate()`, `modulateScale()`, `modulateRotate()`, `modulateScrollX()`, etc.
 
 ### Character Mapping
 

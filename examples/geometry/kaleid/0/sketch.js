@@ -13,7 +13,7 @@ const colorChain = osc(25, -0.1, 0.5).kaleid(50);
 
 t.layers.base.synth(
 	char(charChain)
-
+		.charMap('@#%*+=-:. ')
 		.charColor(colorChain)
 		.cellColor(colorChain.clone().invert())
 );
