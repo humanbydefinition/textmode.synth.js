@@ -46,6 +46,7 @@ import { SynthSource } from './core/SynthSource';
 import type { SynthContext, /* TransformInput */ } from './core/types';
 // import type { TransformRecord as CoreTransformRecord } from './core/SynthChain';
 import { initArrayUtils } from './lib/ArrayUtils';
+import { setGlobalBpm } from './core/GlobalState';
 
 // Initialize array utilities (adds .fast(), .smooth(), .ease() to Array.prototype)
 initArrayUtils();
@@ -76,11 +77,11 @@ function createCharFunction(): (source: SynthSource, charCount?: number) => Synt
 		// Create a new SynthSource with the charSource set
 		// We use Object.create to properly instantiate while setting internal properties
 		const result = new SynthSource();
-		
+
 		// Access private properties via any cast (internal API)
 		(result as any)._charSource = source;
 		(result as any)._charCount = charCount;
-		
+
 		return result;
 	};
 }
@@ -237,6 +238,48 @@ export const paint: (source: SynthSource) => SynthSource = (source) => {
 	(result as any)._cellColorSource = source;
 	return result;
 };
+
+/**
+ * Set the global BPM (Beats Per Minute) for array modulation timing.
+ * 
+ * This sets the master tempo for all layers. Individual layers can override
+ * this with `layer.bpm(value)` for polyrhythmic compositions.
+ * 
+ * In live coding, BPM controls how fast arrays cycle through their values.
+ * By default, BPM is 60, meaning arrays advance 1 element per second.
+ * At BPM 120, they advance 2 elements per second.
+ * 
+ * @param value - BPM value (beats per minute)
+ * @returns The BPM value that was set (for chaining)
+ * 
+ * @example
+ * ```typescript
+ * import { textmode } from 'textmode.js';
+ * import { SynthPlugin, bpm, osc, shape } from 'textmode.synth.js';
+ * 
+ * const t = textmode.create({ plugins: [SynthPlugin] });
+ * 
+ * // Set global tempo to 120 BPM (2 beats per second)
+ * bpm(120);
+ * 
+ * // All layers cycle through arrays at this speed by default
+ * t.layers.base.synth(
+ *   shape([3, 4, 5, 6]) // Cycles through shapes twice per second
+ *     .rotate([0, 3.14].smooth())
+ * );
+ * 
+ * // Layer with custom BPM override (polyrhythm)
+ * const layer2 = t.layers.add();
+ * layer2.bpm(90); // This layer runs at 90 BPM
+ * layer2.synth(
+ *   osc([1, 2, 4, 8]) // Independent timing from base layer
+ * );
+ * ```
+ */
+export function bpm(value: number): number {
+	setGlobalBpm(value);
+	return value;
+}
 
 // ============================================================
 // EXPORTS - Core types
@@ -500,22 +543,22 @@ export const src = createSrcFunction();
 function createSrcFunction(): (layer?: { id?: string }) => SynthSource {
 	// Get the base src function for self-feedback
 	const baseSrc = generatedFunctions['src'] as () => SynthSource;
-	
+
 	return (layer?: { id?: string }): SynthSource => {
 		if (!layer) {
 			// No layer provided - use self-feedback (context-aware)
 			return baseSrc();
 		}
-		
+
 		// Layer provided - create external layer reference
 		const source = new SynthSource();
 		const layerId = layer.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-		
+
 		source.addExternalLayerRef({
 			layerId,
 			layer,
 		});
-		
+
 		return source;
 	};
 }
@@ -542,5 +585,32 @@ declare module 'textmode.js' {
 		 * @param source A SynthSource chain defining the procedural generation
 		 */
 		synth(source: SynthSource): void;
+
+		/**
+		 * Set layer-specific BPM override for array modulation timing.
+		 * 
+		 * This overrides the global BPM set by `bpm()` for this specific layer,
+		 * allowing polyrhythmic compositions where different layers cycle at
+		 * different speeds.
+		 * 
+		 * @param value BPM value (beats per minute) for this layer
+		 * 
+		 * @example
+		 * ```typescript
+		 * import { bpm, osc } from 'textmode.synth.js';
+		 * 
+		 * // Set global BPM to 120
+		 * bpm(120);
+		 * 
+		 * // Base layer uses global BPM (120)
+		 * t.layers.base.synth(osc([1, 2, 4]));
+		 * 
+		 * // Layer 2 runs at half speed (60 BPM)
+		 * const layer2 = t.layers.add();
+		 * layer2.bpm(60);
+		 * layer2.synth(osc([8, 16, 32]));
+		 * ```
+		 */
+		bpm(value: number): void;
 	}
 }

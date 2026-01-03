@@ -79,6 +79,8 @@ export interface SynthContext {
 	cols: number;
 	/** Grid rows */
 	rows: number;
+	/** Current BPM (beats per minute) for array modulation timing */
+	bpm: number;
 }
 
 /**

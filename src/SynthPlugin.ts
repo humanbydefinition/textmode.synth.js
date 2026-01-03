@@ -15,6 +15,7 @@ import { compileSynthSource } from './compiler/SynthCompiler';
 import type { CompiledSynthShader } from './compiler/types';
 import type { SynthContext } from './core/types';
 import { CharacterResolver } from './utils/CharacterResolver';
+import { getGlobalBpm } from './core/GlobalState';
 
 /**
  * Per-layer synth state stored via plugin state API.
@@ -47,6 +48,11 @@ interface LayerSynthState {
 	 * Populated during compilation from the source's external layer refs.
 	 */
 	externalLayerMap?: Map<string, TextmodeLayer>;
+	/**
+	 * Layer-specific BPM override.
+	 * If set, this overrides the global BPM for this layer's array modulation.
+	 */
+	bpm?: number;
 }
 
 const PLUGIN_NAME = 'textmode.synth.js';
@@ -56,12 +62,12 @@ const PLUGIN_NAME = 'textmode.synth.js';
  */
 function collectExternalLayerRefs(source: SynthSource): Map<string, TextmodeLayer> {
 	const layers = new Map<string, TextmodeLayer>();
-	
+
 	// Collect from main source
 	for (const [, ref] of source.externalLayerRefs) {
 		layers.set(ref.layerId, ref.layer as TextmodeLayer);
 	}
-	
+
 	// Collect from nested sources
 	for (const [, nested] of source.nestedSources) {
 		const nestedRefs = collectExternalLayerRefs(nested);
@@ -69,7 +75,7 @@ function collectExternalLayerRefs(source: SynthSource): Map<string, TextmodeLaye
 			layers.set(id, layer);
 		}
 	}
-	
+
 	// Collect from charSource
 	if (source.charSource) {
 		const charRefs = collectExternalLayerRefs(source.charSource);
@@ -77,7 +83,7 @@ function collectExternalLayerRefs(source: SynthSource): Map<string, TextmodeLaye
 			layers.set(id, layer);
 		}
 	}
-	
+
 	// Collect from colorSource
 	if (source.colorSource) {
 		const colorRefs = collectExternalLayerRefs(source.colorSource);
@@ -85,7 +91,7 @@ function collectExternalLayerRefs(source: SynthSource): Map<string, TextmodeLaye
 			layers.set(id, layer);
 		}
 	}
-	
+
 	// Collect from cellColorSource
 	if (source.cellColorSource) {
 		const cellRefs = collectExternalLayerRefs(source.cellColorSource);
@@ -93,7 +99,7 @@ function collectExternalLayerRefs(source: SynthSource): Map<string, TextmodeLaye
 			layers.set(id, layer);
 		}
 	}
-	
+
 	return layers;
 }
 
@@ -151,6 +157,34 @@ export const SynthPlugin: TextmodePlugin = {
 					needsCompile: true,
 					pingPongBuffers: undefined,
 					pingPongIndex: 0,
+				};
+			}
+
+			this.setPluginState(PLUGIN_NAME, state);
+		});
+
+		// ============================================================
+		// EXTEND LAYER WITH .bpm() METHOD
+		// ============================================================
+		api.extendLayer('bpm', function (this: TextmodeLayer, value: number): void {
+			let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+
+			if (state) {
+				// Update existing state
+				state.bpm = value;
+			} else {
+				// Create minimal state to store BPM
+				const now = performance.now() / 1000;
+				state = {
+					source: new SynthSource(), // Placeholder, will be replaced on synth call
+					compiled: undefined,
+					shader: undefined,
+					characterResolver: new CharacterResolver(),
+					startTime: now,
+					needsCompile: false,
+					pingPongBuffers: undefined,
+					pingPongIndex: 0,
+					bpm: value,
 				};
 			}
 
@@ -221,13 +255,15 @@ export const SynthPlugin: TextmodePlugin = {
 			}
 
 			// Build synth context
+			const effectiveBpm = state.bpm ?? getGlobalBpm();
 			const synthContext: SynthContext = {
 				time: textmodifier.millis() / 1000,
 				frameCount: textmodifier.frameCount,
 				width: grid.width,
 				height: grid.height,
 				cols: grid.cols,
-				rows: grid.rows
+				rows: grid.rows,
+				bpm: effectiveBpm
 			};
 
 			// Helper to set all uniforms
@@ -283,12 +319,12 @@ export const SynthPlugin: TextmodePlugin = {
 
 						// Get the external layer's synth state to access its ping-pong buffers
 						const extState = extLayer.getPluginState<LayerSynthState>(PLUGIN_NAME);
-						
+
 						// Determine which buffer to sample from the external layer
 						// If the external layer has ping-pong buffers (uses feedback), sample from the read buffer
 						// Otherwise, sample from the draw framebuffer
 						let extTextures: any[] | undefined;
-						
+
 						if (extState?.pingPongBuffers) {
 							// External layer uses feedback - sample from its current read buffer
 							const extReadBuffer = extState.pingPongBuffers[extState.pingPongIndex];
