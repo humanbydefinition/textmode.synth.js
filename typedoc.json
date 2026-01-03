@@ -18,7 +18,6 @@
     "plugin": [
         "typedoc-plugin-markdown",
         "typedoc-vitepress-theme",
-        "./typedoc-plugins/flattened-namespaces-router.js"
     ],
     "router": "flattened-namespaces",
     "indexFormat": "table",
