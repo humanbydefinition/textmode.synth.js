@@ -1,4 +1,21 @@
 import type { SynthParameterValue } from './types';
+/**
+ * Interface defining all chainable methods available on SynthSource.
+ *
+ * This interface serves as the authoritative documentation for all
+ * synthesis methods. The SynthSource class implements this interface
+ * and inherits the JSDoc documentation from it.
+ *
+ * Methods are organized by category:
+ * - Special textmode methods (charMap, charColor, cellColor, etc.)
+ * - Source generators (osc, noise, voronoi, gradient, shape, solid, src)
+ * - Coordinate transforms (rotate, scale, scroll, pixelate, repeat, kaleid)
+ * - Color transforms (brightness, contrast, invert, saturate, hue, etc.)
+ * - Combine operations (add, sub, mult, blend, diff, layer, mask)
+ * - Modulation (modulate, modulateScale, modulateRotate, etc.)
+ * - Character generators (charNoise, charOsc, charVoronoi, etc.)
+ * - Character modifiers (charFlipX, charFlipY, charInvert, charRotate)
+ */
 export interface ISynthSource {
     /**
      * Map character indices to a specific character set.
@@ -124,32 +141,32 @@ export interface ISynthSource {
      * @param sync - Synchronization offset (default: 0.1)
      * @param offset - Phase offset (default: 0.0)
      */
-    osc?: (frequency?: SynthParameterValue, sync?: SynthParameterValue, offset?: SynthParameterValue) => ISynthSource;
+    osc(frequency?: SynthParameterValue, sync?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
      * Generate Perlin noise patterns.
      * @param scale - Scale of the noise pattern (default: 10.0)
      * @param speed - Animation speed (default: 0.1)
      */
-    noise?: (scale?: SynthParameterValue, speed?: SynthParameterValue) => ISynthSource;
+    noise(scale?: SynthParameterValue, speed?: SynthParameterValue): this;
     /**
      * Generate Voronoi (cellular) patterns.
      * @param scale - Scale of Voronoi cells (default: 5.0)
      * @param speed - Animation speed (default: 0.3)
      * @param blending - Blending between cell regions (default: 0.3)
      */
-    voronoi?: (scale?: SynthParameterValue, speed?: SynthParameterValue, blending?: SynthParameterValue) => ISynthSource;
+    voronoi(scale?: SynthParameterValue, speed?: SynthParameterValue, blending?: SynthParameterValue): this;
     /**
      * Generate a rotating radial gradient.
      * @param speed - Rotation speed (default: 0.0)
      */
-    gradient?: (speed?: SynthParameterValue) => ISynthSource;
+    gradient(speed?: SynthParameterValue): this;
     /**
      * Generate geometric shapes (polygons).
      * @param sides - Number of sides (default: 3)
      * @param radius - Radius of the shape (default: 0.3)
      * @param smoothing - Edge smoothing amount (default: 0.01)
      */
-    shape?: (sides?: SynthParameterValue, radius?: SynthParameterValue, smoothing?: SynthParameterValue) => ISynthSource;
+    shape(sides?: SynthParameterValue, radius?: SynthParameterValue, smoothing?: SynthParameterValue): this;
     /**
      * Generate a solid color.
      * @param r - Red channel (0-1, default: 0.0)
@@ -157,7 +174,7 @@ export interface ISynthSource {
      * @param b - Blue channel (0-1, default: 0.0)
      * @param a - Alpha channel (0-1, default: 1.0)
      */
-    solid?: (r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue) => ISynthSource;
+    solid(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
     /**
      * Sample the previous frame for feedback effects, or sample from another layer.
      *
@@ -191,25 +208,9 @@ export interface ISynthSource {
      * char(noise(10).diff(src()))           // src() → character feedback
      *   .charColor(osc(5).blend(src(), 0.5)) // src() → primary color feedback
      *   .cellColor(voronoi().diff(src()))    // src() → cell color feedback
-     *
-     * // Cross-layer sampling (hydra-style o0, o1, o2, o3)
-     * const layer1 = t.layers.add();
-     * const layer2 = t.layers.add();
-     *
-     * layer1.synth(noise(10).mult(osc(20)));
-     *
-     * layer2.synth(
-     *   char(voronoi(5).diff(src(layer1)))  // Sample layer1's char texture
-     *     .charColor(osc(10).blend(src(layer1), 0.5))  // Sample layer1's primary color
-     * );
-     *
-     * // Complex multi-layer composition
-     * t.layers.base.synth(
-     *   noise(3, 0.3).thresh(0.3).diff(src(layer2), 0.3)
-     * );
      * ```
      */
-    src?: (layer?: unknown) => ISynthSource;
+    src(layer?: unknown): this;
     /**
      * Rotate coordinates.
      * @param angle - Rotation angle in radians (default: 10.0)
@@ -223,7 +224,7 @@ export interface ISynthSource {
      *   .charColor(osc(50).rotate((ctx) => ctx.time % 360));
      * ```
      */
-    rotate?: (angle?: SynthParameterValue, speed?: SynthParameterValue) => ISynthSource;
+    rotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this;
     /**
      * Scale coordinates.
      * @param amount - Scale amount (default: 1.5)
@@ -238,7 +239,7 @@ export interface ISynthSource {
      * charShape(3).scale(1.5, 1, 1);
      * ```
      */
-    scale?: (amount?: SynthParameterValue, xMult?: SynthParameterValue, yMult?: SynthParameterValue, offsetX?: SynthParameterValue, offsetY?: SynthParameterValue) => ISynthSource;
+    scale(amount?: SynthParameterValue, xMult?: SynthParameterValue, yMult?: SynthParameterValue, offsetX?: SynthParameterValue, offsetY?: SynthParameterValue): this;
     /**
      * Scroll coordinates in both X and Y directions.
      * @param scrollX - X scroll amount (default: 0.5)
@@ -252,19 +253,19 @@ export interface ISynthSource {
      * charShape(3).scroll(0.1, -0.3);
      * ```
      */
-    scroll?: (scrollX?: SynthParameterValue, scrollY?: SynthParameterValue, speedX?: SynthParameterValue, speedY?: SynthParameterValue) => ISynthSource;
+    scroll(scrollX?: SynthParameterValue, scrollY?: SynthParameterValue, speedX?: SynthParameterValue, speedY?: SynthParameterValue): this;
     /**
      * Scroll coordinates in X direction.
      * @param scrollX - X scroll amount (default: 0.5)
      * @param speed - Scroll speed (default: 0.0)
      */
-    scrollX?: (scrollX?: SynthParameterValue, speed?: SynthParameterValue) => ISynthSource;
+    scrollX(scrollX?: SynthParameterValue, speed?: SynthParameterValue): this;
     /**
      * Scroll coordinates in Y direction.
      * @param scrollY - Y scroll amount (default: 0.5)
      * @param speed - Scroll speed (default: 0.0)
      */
-    scrollY?: (scrollY?: SynthParameterValue, speed?: SynthParameterValue) => ISynthSource;
+    scrollY(scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
     /**
      * Pixelate the output.
      * @param pixelX - Pixel size in X (default: 20.0)
@@ -278,7 +279,7 @@ export interface ISynthSource {
      *   .charColor(noise().pixelate(20, 20));
      * ```
      */
-    pixelate?: (pixelX?: SynthParameterValue, pixelY?: SynthParameterValue) => ISynthSource;
+    pixelate(pixelX?: SynthParameterValue, pixelY?: SynthParameterValue): this;
     /**
      * Repeat coordinates in both X and Y directions.
      * @param repeatX - Number of X repetitions (default: 3.0)
@@ -294,19 +295,19 @@ export interface ISynthSource {
      *   .charColor(shape().repeat(3, 3, 0, 0));
      * ```
      */
-    repeat?: (repeatX?: SynthParameterValue, repeatY?: SynthParameterValue, offsetX?: SynthParameterValue, offsetY?: SynthParameterValue) => ISynthSource;
+    repeat(repeatX?: SynthParameterValue, repeatY?: SynthParameterValue, offsetX?: SynthParameterValue, offsetY?: SynthParameterValue): this;
     /**
      * Repeat coordinates in X direction.
      * @param reps - Number of repetitions (default: 3.0)
      * @param offset - Offset between repetitions (default: 0.0)
      */
-    repeatX?: (reps?: SynthParameterValue, offset?: SynthParameterValue) => ISynthSource;
+    repeatX(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
      * Repeat coordinates in Y direction.
      * @param reps - Number of repetitions (default: 3.0)
      * @param offset - Offset between repetitions (default: 0.0)
      */
-    repeatY?: (reps?: SynthParameterValue, offset?: SynthParameterValue) => ISynthSource;
+    repeatY(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
      * Apply kaleidoscope effect.
      * @param nSides - Number of kaleidoscope sides (default: 4.0)
@@ -319,7 +320,7 @@ export interface ISynthSource {
      *   .charColor(osc(25, -0.1, 0.5).kaleid(50));
      * ```
      */
-    kaleid?: (nSides?: SynthParameterValue) => ISynthSource;
+    kaleid(nSides?: SynthParameterValue): this;
     /**
      * Adjust brightness.
      * @param amount - Brightness adjustment amount (default: 0.4)
@@ -333,7 +334,7 @@ export interface ISynthSource {
      *   );
      * ```
      */
-    brightness?: (amount?: SynthParameterValue) => ISynthSource;
+    brightness(amount?: SynthParameterValue): this;
     /**
      * Adjust contrast.
      * @param amount - Contrast amount (default: 1.6)
@@ -347,7 +348,7 @@ export interface ISynthSource {
      *   );
      * ```
      */
-    contrast?: (amount?: SynthParameterValue) => ISynthSource;
+    contrast(amount?: SynthParameterValue): this;
     /**
      * Invert colors.
      * @param amount - Inversion amount (default: 1.0)
@@ -360,7 +361,7 @@ export interface ISynthSource {
      *   .cellColor(solid(1, 1, 1).invert([1, 0]));
      * ```
      */
-    invert?: (amount?: SynthParameterValue) => ISynthSource;
+    invert(amount?: SynthParameterValue): this;
     /**
      * Adjust color saturation.
      * @param amount - Saturation amount (default: 2.0)
@@ -374,7 +375,7 @@ export interface ISynthSource {
      *   );
      * ```
      */
-    saturate?: (amount?: SynthParameterValue) => ISynthSource;
+    saturate(amount?: SynthParameterValue): this;
     /**
      * Shift hue.
      * @param hue - Hue shift amount (default: 0.4)
@@ -388,12 +389,12 @@ export interface ISynthSource {
      *   );
      * ```
      */
-    hue?: (hue?: SynthParameterValue) => ISynthSource;
+    hue(hue?: SynthParameterValue): this;
     /**
      * Apply colorama effect (hue rotation based on luminance).
      * @param amount - Effect amount (default: 0.005)
      */
-    colorama?: (amount?: SynthParameterValue) => ISynthSource;
+    colorama(amount?: SynthParameterValue): this;
     /**
      * Posterize colors to limited palette.
      * @param bins - Number of color bins (default: 3.0)
@@ -409,19 +410,19 @@ export interface ISynthSource {
      *   );
      * ```
      */
-    posterize?: (bins?: SynthParameterValue, gamma?: SynthParameterValue) => ISynthSource;
+    posterize(bins?: SynthParameterValue, gamma?: SynthParameterValue): this;
     /**
      * Apply threshold based on luminance.
      * @param threshold - Threshold value (default: 0.5)
      * @param tolerance - Tolerance range (default: 0.1)
      */
-    luma?: (threshold?: SynthParameterValue, tolerance?: SynthParameterValue) => ISynthSource;
+    luma(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
     /**
      * Apply hard threshold.
      * @param threshold - Threshold value (default: 0.5)
      * @param tolerance - Tolerance range (default: 0.04)
      */
-    thresh?: (threshold?: SynthParameterValue, tolerance?: SynthParameterValue) => ISynthSource;
+    thresh(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
     /**
      * Set color channels.
      * @param r - Red channel (default: 1.0)
@@ -429,25 +430,25 @@ export interface ISynthSource {
      * @param b - Blue channel (default: 1.0)
      * @param a - Alpha channel (default: 1.0)
      */
-    color?: (r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue) => ISynthSource;
+    color(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
     /**
      * Scale and offset red channel.
      * @param scale - Scale multiplier (default: 1.0)
      * @param offset - Offset amount (default: 0.0)
      */
-    r?: (scale?: SynthParameterValue, offset?: SynthParameterValue) => ISynthSource;
+    r(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
      * Scale and offset green channel.
      * @param scale - Scale multiplier (default: 1.0)
      * @param offset - Offset amount (default: 0.0)
      */
-    g?: (scale?: SynthParameterValue, offset?: SynthParameterValue) => ISynthSource;
+    g(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
      * Scale and offset blue channel.
      * @param scale - Scale multiplier (default: 1.0)
      * @param offset - Offset amount (default: 0.0)
      */
-    b?: (scale?: SynthParameterValue, offset?: SynthParameterValue) => ISynthSource;
+    b(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
      * Shift color channels by adding offset values.
      * @param r - Red channel shift (default: 0.5)
@@ -455,7 +456,7 @@ export interface ISynthSource {
      * @param b - Blue channel shift (default: 0.0)
      * @param a - Alpha channel shift (default: 0.0)
      */
-    shift?: (r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue) => ISynthSource;
+    shift(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
     /**
      * Apply gamma correction for nonlinear brightness control.
      * @param amount - Gamma value (default: 1.0, < 1.0 brightens, > 1.0 darkens)
@@ -471,7 +472,7 @@ export interface ISynthSource {
      *   .charColor(osc(5).gamma([1.0, 1.5, 2.0].smooth(4)))
      * ```
      */
-    gamma?: (amount?: SynthParameterValue) => ISynthSource;
+    gamma(amount?: SynthParameterValue): this;
     /**
      * Adjust input/output levels and gamma for precise tonal control.
      * @param inMin - Input minimum (default: 0.0)
@@ -491,7 +492,7 @@ export interface ISynthSource {
      *   .charColor(voronoi(5).levels(0.0, 1.0, 0.2, 0.9, 0.8))
      * ```
      */
-    levels?: (inMin?: SynthParameterValue, inMax?: SynthParameterValue, outMin?: SynthParameterValue, outMax?: SynthParameterValue, gamma?: SynthParameterValue) => ISynthSource;
+    levels(inMin?: SynthParameterValue, inMax?: SynthParameterValue, outMin?: SynthParameterValue, outMax?: SynthParameterValue, gamma?: SynthParameterValue): this;
     /**
      * Clamp color values to a specified range for stability.
      * @param min - Minimum value (default: 0.0)
@@ -510,7 +511,7 @@ export interface ISynthSource {
      *   .charColor(noise(5).brightness(0.5).clampColor(0.3, 0.7))
      * ```
      */
-    clampColor?: (min?: SynthParameterValue, max?: SynthParameterValue) => ISynthSource;
+    clampColor(min?: SynthParameterValue, max?: SynthParameterValue): this;
     /**
      * Add another source.
      * @param source - Source to add
@@ -528,19 +529,19 @@ export interface ISynthSource {
      *   );
      * ```
      */
-    add?: (source: ISynthSource, amount?: SynthParameterValue) => ISynthSource;
+    add(source: ISynthSource, amount?: SynthParameterValue): this;
     /**
      * Subtract another source.
      * @param source - Source to subtract
      * @param amount - Blend amount (default: 0.5)
      */
-    sub?: (source: ISynthSource, amount?: SynthParameterValue) => ISynthSource;
+    sub(source: ISynthSource, amount?: SynthParameterValue): this;
     /**
      * Multiply with another source.
      * @param source - Source to multiply
      * @param amount - Blend amount (default: 0.5)
      */
-    mult?: (source: ISynthSource, amount?: SynthParameterValue) => ISynthSource;
+    mult(source: ISynthSource, amount?: SynthParameterValue): this;
     /**
      * Blend with another source.
      * @param source - Source to blend
@@ -558,7 +559,7 @@ export interface ISynthSource {
      *   );
      * ```
      */
-    blend?: (source: ISynthSource, amount?: SynthParameterValue) => ISynthSource;
+    blend(source: ISynthSource, amount?: SynthParameterValue): this;
     /**
      * Difference with another source.
      * @param source - Source to compare
@@ -572,12 +573,12 @@ export interface ISynthSource {
      *   );
      * ```
      */
-    diff?: (source: ISynthSource) => ISynthSource;
+    diff(source: ISynthSource): this;
     /**
      * Layer another source on top.
      * @param source - Source to layer
      */
-    layer?: (source: ISynthSource) => ISynthSource;
+    layer(source: ISynthSource): this;
     /**
      * Mask using another source.
      * @param source - Source to use as mask
@@ -591,7 +592,7 @@ export interface ISynthSource {
      *   );
      * ```
      */
-    mask?: (source: ISynthSource) => ISynthSource;
+    mask(source: ISynthSource): this;
     /**
      * Modulate coordinates using another source.
      * @param source - Modulation source
@@ -611,75 +612,75 @@ export interface ISynthSource {
      *   );
      * ```
      */
-    modulate?: (source: ISynthSource, amount?: SynthParameterValue) => ISynthSource;
+    modulate(source: ISynthSource, amount?: SynthParameterValue): this;
     /**
      * Modulate scale using another source.
      * @param source - Modulation source
      * @param multiple - Scale multiplier (default: 1.0)
      * @param offset - Offset amount (default: 1.0)
      */
-    modulateScale?: (source: ISynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue) => ISynthSource;
+    modulateScale(source: ISynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
      * Modulate rotation using another source.
      * @param source - Modulation source
      * @param multiple - Rotation multiplier (default: 1.0)
      * @param offset - Offset amount (default: 0.0)
      */
-    modulateRotate?: (source: ISynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue) => ISynthSource;
+    modulateRotate(source: ISynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
      * Modulate pixelation using another source.
      * @param source - Modulation source
      * @param multiple - Pixelation multiplier (default: 10.0)
      * @param offset - Offset amount (default: 3.0)
      */
-    modulatePixelate?: (source: ISynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue) => ISynthSource;
+    modulatePixelate(source: ISynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
      * Modulate kaleidoscope using another source.
      * @param source - Modulation source
      * @param nSides - Number of sides (default: 4.0)
      */
-    modulateKaleid?: (source: ISynthSource, nSides?: SynthParameterValue) => ISynthSource;
+    modulateKaleid(source: ISynthSource, nSides?: SynthParameterValue): this;
     /**
      * Modulate X scroll using another source.
      * @param source - Modulation source
      * @param scrollX - X scroll amount (default: 0.5)
      * @param speed - Scroll speed (default: 0.0)
      */
-    modulateScrollX?: (source: ISynthSource, scrollX?: SynthParameterValue, speed?: SynthParameterValue) => ISynthSource;
+    modulateScrollX(source: ISynthSource, scrollX?: SynthParameterValue, speed?: SynthParameterValue): this;
     /**
      * Modulate Y scroll using another source.
      * @param source - Modulation source
      * @param scrollY - Y scroll amount (default: 0.5)
      * @param speed - Scroll speed (default: 0.0)
      */
-    modulateScrollY?: (source: ISynthSource, scrollY?: SynthParameterValue, speed?: SynthParameterValue) => ISynthSource;
+    modulateScrollY(source: ISynthSource, scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
     /**
      * Generate character indices using Perlin noise.
      * @param scale - Scale of the noise pattern (default: 10.0)
      * @param speed - Animation speed (default: 0.1)
      * @param charCount - Number of different characters to use (default: 256)
      */
-    charNoise?: (scale?: SynthParameterValue, speed?: SynthParameterValue, charCount?: SynthParameterValue) => ISynthSource;
+    charNoise(scale?: SynthParameterValue, speed?: SynthParameterValue, charCount?: SynthParameterValue): this;
     /**
      * Generate character indices using oscillating sine waves.
      * @param frequency - Frequency of the oscillation (default: 60.0)
      * @param sync - Synchronization offset (default: 0.1)
      * @param charCount - Number of different characters to use (default: 256)
      */
-    charOsc?: (frequency?: SynthParameterValue, sync?: SynthParameterValue, charCount?: SynthParameterValue) => ISynthSource;
+    charOsc(frequency?: SynthParameterValue, sync?: SynthParameterValue, charCount?: SynthParameterValue): this;
     /**
      * Generate character indices using a gradient.
      * @param charCount - Number of different characters to use (default: 256)
      * @param direction - Gradient direction (default: 0.0)
      */
-    charGradient?: (charCount?: SynthParameterValue, direction?: SynthParameterValue) => ISynthSource;
+    charGradient(charCount?: SynthParameterValue, direction?: SynthParameterValue): this;
     /**
      * Generate character indices using Voronoi (cellular) patterns.
      * @param scale - Scale of Voronoi cells (default: 5.0)
      * @param speed - Animation speed (default: 0.3)
      * @param charCount - Number of different characters to use (default: 256)
      */
-    charVoronoi?: (scale?: SynthParameterValue, speed?: SynthParameterValue, charCount?: SynthParameterValue) => ISynthSource;
+    charVoronoi(scale?: SynthParameterValue, speed?: SynthParameterValue, charCount?: SynthParameterValue): this;
     /**
      * Generate character indices based on geometric shapes (polygons).
      * @param sides - Number of sides (default: 3)
@@ -687,32 +688,32 @@ export interface ISynthSource {
      * @param outerChar - Character index for outside the shape (default: 1)
      * @param radius - Radius of the shape (default: 0.3)
      */
-    charShape?: (sides?: SynthParameterValue, innerChar?: SynthParameterValue, outerChar?: SynthParameterValue, radius?: SynthParameterValue) => ISynthSource;
+    charShape(sides?: SynthParameterValue, innerChar?: SynthParameterValue, outerChar?: SynthParameterValue, radius?: SynthParameterValue): this;
     /**
      * Generate a solid character index across the entire canvas.
      * @param charIndex - Character index to use (default: 0)
      */
-    charSolid?: (charIndex?: SynthParameterValue) => ISynthSource;
+    charSolid(charIndex?: SynthParameterValue): this;
     /**
      * Flip characters horizontally.
      * @param toggle - Toggle flip (default: 1.0)
      */
-    charFlipX?: (toggle?: SynthParameterValue) => ISynthSource;
+    charFlipX(toggle?: SynthParameterValue): this;
     /**
      * Flip characters vertically.
      * @param toggle - Toggle flip (default: 1.0)
      */
-    charFlipY?: (toggle?: SynthParameterValue) => ISynthSource;
+    charFlipY(toggle?: SynthParameterValue): this;
     /**
      * Invert character indices.
      * @param toggle - Toggle invert (default: 1.0)
      */
-    charInvert?: (toggle?: SynthParameterValue) => ISynthSource;
+    charInvert(toggle?: SynthParameterValue): this;
     /**
      * Rotate characters.
      * @param angle - Rotation angle in radians (default: 0.0)
      * @param speed - Rotation speed (default: 0.0)
      */
-    charRotate?: (angle?: SynthParameterValue, speed?: SynthParameterValue) => ISynthSource;
+    charRotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this;
 }
 //# sourceMappingURL=ISynthSource.d.ts.map
