@@ -1,17 +1,24 @@
 # textmode.synth.js
 
-`textmode.synth.js` is a derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/olivia-jack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.
+**A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/olivia-jack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.**
 
-It provides a `hydra`-inspired chainable visual synthesis system for `textmode.js`, enabling you to create procedural ASCII/text animations with simple, expressive code.
+Create procedural ASCII/text animations with a `hydra`-inspired, chainable visual synthesis system.
 
 ## Features
 
-- 🎨 **Procedural generation**: Generate characters, colors, and patterns using oscillators, noise, voronoi, and more
-- 🔗 **Method chaining**: Hydra-style fluent API for building complex visual effects
-- 🎯 **Three-texture system**: Independent control over characters, character colors, and cell backgrounds
-- ⚡ **WebGL Powered**: Compiled to optimized GLSL shaders for real-time performance
-- 🔄 **Feedback loops**: Create trails, motion blur, and recursive patterns
-- 📦 **Compositional API**: Start with any aspect (char, color, background) and build from there
+- 🎨 **Procedural generation** - Oscillators, noise, voronoi, and more
+- 🔗 **Method chaining** - Hydra-style fluent API for complex visuals
+- 🎯 **Three-texture system** - Independent control over characters, foreground, and background
+- ⚡ **WebGL powered** - Compiled to optimized GLSL shaders
+- 🔄 **Feedback loops** - Trails, motion blur, and recursive patterns
+- 📦 **Compositional API** - Start from any aspect and build organically
+- 📚 **Extensible** - Add your own sources, transforms, and more
+
+## Try it online first
+
+To go along with the release of this library, we've created a **live coding environment** where you can explore everything in the browser: [synth.textmode.art](https://synth.textmode.art)
+
+It features IntelliSense & auto-completion, documentation on hover, curated examples to explore, and a lot more. The whole `textmode.js` ecosystem is available at your fingertips.
 
 ## Installation
 
@@ -19,176 +26,121 @@ It provides a `hydra`-inspired chainable visual synthesis system for `textmode.j
 npm install textmode.synth.js
 ```
 
-## Quick Start
+## Quick start
 
 ```javascript
 import { textmode } from 'textmode.js';
-import { SynthPlugin, char, osc, noise, solid } from 'textmode.synth.js';
+import { SynthPlugin, char, osc } from 'textmode.synth.js';
 
 const t = textmode.create({
-  width: 800,
-  height: 600,
-  fontSize: 12,
+  width: window.innerWidth,
+  height: window.innerHeight,
+  fontSize: 16,
   plugins: [SynthPlugin]
 });
 
-// Create a simple animated pattern
 const charChain = osc(1, -0.1, 0.5).kaleid(50);
 const colorChain = osc(25, -0.1, 0.5).kaleid(50);
 
 t.layers.base.synth(
   char(charChain)
-		.charMap('@#%*+=-:. ')
-		.charColor(colorChain)
-		.cellColor(colorChain.clone().invert())
+    .charMap('@#%*+=-:. ')
+    .charColor(colorChain)
+    .cellColor(colorChain.clone().invert())
 );
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
-## Core Concepts
+## Core concepts
 
-### The Compositional API
+### Compositional API
 
-Since `textmode.js` is a three-texture system, `textmode.synth.js` provides three standalone functions for defining different aspects of your visual:
+`textmode.js` renders to three textures: characters, foreground colors, and background colors. `textmode.synth.js` provides functions to drive each independently:
 
-- **`char(source, charCount?)`** - Define which pattern drives character generation
-- **`charColor(source)`** - Define character foreground colors
-- **`cellColor(source)`** - Define cell background colors
+| Function | Purpose |
+|----------|---------|
+| `char(source, charCount?)` | Character generation |
+| `charColor(source)` | Foreground color |
+| `cellColor(source)` | Background color |
+| `paint(source)` | Both foreground & background |
 
-You can start with any of these and chain the others:
+Start from any entry point and chain the others:
 
 ```javascript
-// Start with character generation
-char(noise(10), 16)
-  .charMap('@#%*+=-:. ')
-  .charColor(osc(5))
-  .cellColor(solid(0, 0, 0, 0.5));
+// From characters
+char(noise(10)).charColor(osc(5)).cellColor(solid(0,0,0,0.5));
 
-// Start with colors
-charColor(voronoi(5).mult(osc(20)))
-  .char(noise(10), 16)
-  .cellColor(gradient(0.5));
+// From colors
+charColor(voronoi(5)).char(noise(10)).cellColor(gradient(0.5));
 
-// Start with background
-cellColor(solid(0, 0, 0, 0.8))
-  .char(noise(10))
-  .charColor(osc(5).kaleid(4));
+// Shorthand for pixel art style
+paint(noise(10));
 ```
 
-Besides the three individual functions, you can also use `paint()` to effectively create pixel art, coloring the foreground and background of each cell based on a single source, making the rendered characters invisible/redundant:
+### Pixel art mode
+
+Use `paint()` to color both foreground and background identically, effectively hiding the characters:
 
 ```javascript
 t.fontSize(16);
-paint(noise(10), 16);
-
-// With a font size of 1, you are virtually able to recreate most hydra visuals 1:1
-t.fontSize(1);
-paint(noise(10), 16);
+t.layers.base.synth(paint(noise(10)));
 ```
 
-Additionally, you don't need to use any of those functions, and just use `synth()` with a source generator as the first argument:
+> **Tip:** With `t.fontSize(1)`, you can recreate most hydra visuals 1:1.
+
+### Direct source usage
+
+You can also pass a source directly to `.synth()` without any wrapper function:
 
 ```javascript
-t.synth(noise(10));
+t.layers.base.synth(noise(10));
 ```
 
-In this case, both the characters and foreground colors are driven by the same source generator, and the background is solid black. In many cases it makes sense to use separate character source though, since character cycling is much more rapid than color cycling.
+This drives both characters *and* foreground colors from the same source *(background defaults to black)*. In practice, using separate sources for characters often looks better - character cycling is more rapid than color changes.
 
-### Source Generators
+### Source generators
 
-Create patterns using these generators:
-
-- `osc(frequency, sync, offset)` - Oscillating sine wave patterns
-- `noise(scale, offset)` - Perlin noise
-- `voronoi(scale, speed, blending)` - Cellular/voronoi patterns
-- `gradient(speed)` - Rotating radial gradient
-- `shape(sides, radius, smoothing)` - Geometric shapes
-- `solid(r, g, b, a)` - Solid colors
-- `src(layer?)` - Previous output of another layer as a source, or the layers own previous output
+| Generator | Description |
+|-----------|-------------|
+| `osc(freq, sync, offset)` | Sine wave patterns |
+| `noise(scale, offset)` | Perlin noise |
+| `voronoi(scale, speed, blend)` | Cellular patterns |
+| `gradient(speed)` | Radial gradient |
+| `shape(sides, radius, smooth)` | Geometric polygons |
+| `solid(r, g, b, a)` | Solid colors |
+| `src(layer?)` | Feedback / cross-layer sampling |
+| `...` | ...and many more..? |
 
 ### Transforms
 
 Chain transforms to modify patterns:
 
-- **Geometry:** `rotate()`, `scale()`, `scroll()`, `pixelate()`, `repeat()`, `kaleid()`
-- **Color:** `brightness()`, `contrast()`, `invert()`, `hue()`, `saturate()`, `colorama()`
-- **Blend:** `add()`, `sub()`, `mult()`, `blend()`, `diff()`, `layer()`, `mask()`
-- **Modulate:** `modulate()`, `modulateScale()`, `modulateRotate()`, `modulateScrollX()`, etc.
+| Category | Methods |
+|----------|---------|
+| **Geometry** | `rotate`, `scale`, `scroll`, `pixelate`, `repeat`, `kaleid`, ... |
+| **Color** | `brightness`, `contrast`, `invert`, `hue`, `saturate`, `colorama`, ... |
+| **Blend** | `add`, `sub`, `mult`, `blend`, `diff`, `layer`, `mask`, ... |
+| **Modulate** | `modulate`, `modulateScale`, `modulateRotate`, `modulateKaleid`, ... |
 
-### Character Mapping
+### Character mapping
 
-Use `.charMap()` to define which characters to display:
+Use `.charMap()` to define the character set. By default, all characters available in the layer's font are used.
 
 ```javascript
-char(noise(10))
-  .charMap('@#%*+=-:. ')      // ASCII gradient
-  .charColor(osc(5));
-
-char(voronoi(5))
-  .charMap('█▓▒░ ')            // Block characters
-  .charColor(gradient(0.5));
+char(noise(10)).charMap('@#%*+=-:. ');  // ASCII gradient
+char(voronoi(5)).charMap('█▓▒░ ');       // Block characters
 ```
-
-## Examples
-
-### Same Pattern for Everything
-```javascript
-const pattern = osc([10, 30, 60].fast(2), 0.1);
-layer.synth(
-  char(pattern)
-    .charMap('@#%*+=-:. ')
-    .charColor(pattern.clone())
-    .cellColor(pattern.clone().invert())
-);
-```
-
-### Different Patterns for Each Aspect
-```javascript
-const charPattern = noise(5);
-const colorPattern = voronoi(10, 0.5).mult(osc(20));
-const bgPattern = gradient(0.2);
-
-layer.synth(
-  char(charPattern, 16)
-    .charMap(' .:-=+*#%@')
-    .charColor(colorPattern)
-    .cellColor(bgPattern.invert())
-);
-```
-
-### Feedback Loop
-```javascript
-// Classic hydra-style feedback
-layer.synth(
-  src()
-    .modulate(noise(3), 0.005)
-    .blend(shape(4), 0.01)
-);
-```
-
-### Array Modulation
-```javascript
-// Animate between multiple values
-layer.synth(
-  char(osc([1, 10, 50, 100].fast(2), 0.1), 16)
-    .charMap('@#%*+=-:. ')
-    .charColor(osc([1, 10, 50, 100].fast(2), 0.1))
-);
-```
-
-## Documentation
-
-- [Full API Documentation](./api/index.md)
-- [Compositional API Guide](./docs/COMPOSITIONAL-API.md)
-- [Examples](./examples/)
-
 
 ## License
 
-Distributed under the AGPL-3.0 License. See [LICENSE](./LICENSE) for more information.
+Distributed under the **AGPL-3.0** License. See [LICENSE](./LICENSE) for more information.
 
 ## Credits
 
 This project is a derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/olivia-jack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.
 
-- **hydra-synth**: The core synthesis logic, GLSL shader generation, and functional API design are heavily based on `hydra-synth`.
-- **Modifications**: The engine has been adapted to support `textmode.js`'s unique three-texture rendering pipeline *(characters, foreground colors, background colors)* and integrate with its plugin system.
+- **hydra-synth**: Core synthesis logic, GLSL shader generation, and functional API design.
+- **Modifications**: Adapted for `textmode.js`'s three-texture rendering pipeline *(characters, foreground colors, background colors)* and plugin system.
