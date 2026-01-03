@@ -4,7 +4,7 @@ import type {
 	ExternalLayerReference,
 } from './types';
 import { SynthChain, type TransformRecord } from './SynthChain';
-import { ISynthSource } from './ISynthSource';
+import type { ISynthSource } from './ISynthSource';
 
 /**
  * Options for creating a new SynthSource.
@@ -122,7 +122,7 @@ export class SynthSource implements ISynthSource {
 	}
 
 	// ============================================================
-	// SPECIAL TEXTMODE METHODS (not dynamically generated)
+	// SPECIAL TEXTMODE METHODS
 	// ============================================================
 
 	public charMap(chars: string): this {
@@ -134,7 +134,7 @@ export class SynthSource implements ISynthSource {
 		}
 
 		this._charMapping = { chars, indices };
-		
+
 		return this;
 	}
 
@@ -183,6 +183,266 @@ export class SynthSource implements ISynthSource {
 			nestedSources: clonedNestedSources,
 			externalLayerRefs: clonedExternalLayerRefs,
 		});
+	}
+
+	// ============================================================
+	// SOURCE GENERATORS
+	// ============================================================
+
+	public osc(frequency?: SynthParameterValue, sync?: SynthParameterValue, offset?: SynthParameterValue): this {
+		return this.addTransform('osc', [frequency ?? 60.0, sync ?? 0.1, offset ?? 0.0]);
+	}
+
+	public noise(scale?: SynthParameterValue, speed?: SynthParameterValue): this {
+		return this.addTransform('noise', [scale ?? 10.0, speed ?? 0.1]);
+	}
+
+	public voronoi(scale?: SynthParameterValue, speed?: SynthParameterValue, blending?: SynthParameterValue): this {
+		return this.addTransform('voronoi', [scale ?? 5.0, speed ?? 0.3, blending ?? 0.3]);
+	}
+
+	public gradient(speed?: SynthParameterValue): this {
+		return this.addTransform('gradient', [speed ?? 0.0]);
+	}
+
+	public shape(sides?: SynthParameterValue, radius?: SynthParameterValue, smoothing?: SynthParameterValue): this {
+		return this.addTransform('shape', [sides ?? 3, radius ?? 0.3, smoothing ?? 0.01]);
+	}
+
+	public solid(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this {
+		return this.addTransform('solid', [r ?? 0.0, g ?? 0.0, b ?? 0.0, a ?? 1.0]);
+	}
+
+	public src(_layer?: unknown): this {
+		return this.addTransform('src', []);
+	}
+
+	// ============================================================
+	// COORDINATE TRANSFORMS
+	// ============================================================
+
+	public rotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this {
+		return this.addTransform('rotate', [angle ?? 10.0, speed ?? 0.0]);
+	}
+
+	public scale(amount?: SynthParameterValue, xMult?: SynthParameterValue, yMult?: SynthParameterValue, offsetX?: SynthParameterValue, offsetY?: SynthParameterValue): this {
+		return this.addTransform('scale', [amount ?? 1.5, xMult ?? 1.0, yMult ?? 1.0, offsetX ?? 0.5, offsetY ?? 0.5]);
+	}
+
+	public scroll(scrollX?: SynthParameterValue, scrollY?: SynthParameterValue, speedX?: SynthParameterValue, speedY?: SynthParameterValue): this {
+		return this.addTransform('scroll', [scrollX ?? 0.5, scrollY ?? 0.5, speedX ?? 0.0, speedY ?? 0.0]);
+	}
+
+	public scrollX(scrollX?: SynthParameterValue, speed?: SynthParameterValue): this {
+		return this.addTransform('scrollX', [scrollX ?? 0.5, speed ?? 0.0]);
+	}
+
+	public scrollY(scrollY?: SynthParameterValue, speed?: SynthParameterValue): this {
+		return this.addTransform('scrollY', [scrollY ?? 0.5, speed ?? 0.0]);
+	}
+
+	public pixelate(pixelX?: SynthParameterValue, pixelY?: SynthParameterValue): this {
+		return this.addTransform('pixelate', [pixelX ?? 20.0, pixelY ?? 20.0]);
+	}
+
+	public repeat(repeatX?: SynthParameterValue, repeatY?: SynthParameterValue, offsetX?: SynthParameterValue, offsetY?: SynthParameterValue): this {
+		return this.addTransform('repeat', [repeatX ?? 3.0, repeatY ?? 3.0, offsetX ?? 0.0, offsetY ?? 0.0]);
+	}
+
+	public repeatX(reps?: SynthParameterValue, offset?: SynthParameterValue): this {
+		return this.addTransform('repeatX', [reps ?? 3.0, offset ?? 0.0]);
+	}
+
+	public repeatY(reps?: SynthParameterValue, offset?: SynthParameterValue): this {
+		return this.addTransform('repeatY', [reps ?? 3.0, offset ?? 0.0]);
+	}
+
+	public kaleid(nSides?: SynthParameterValue): this {
+		return this.addTransform('kaleid', [nSides ?? 4.0]);
+	}
+
+	// ============================================================
+	// COLOR TRANSFORMS
+	// ============================================================
+
+	public brightness(amount?: SynthParameterValue): this {
+		return this.addTransform('brightness', [amount ?? 0.4]);
+	}
+
+	public contrast(amount?: SynthParameterValue): this {
+		return this.addTransform('contrast', [amount ?? 1.6]);
+	}
+
+	public invert(amount?: SynthParameterValue): this {
+		return this.addTransform('invert', [amount ?? 1.0]);
+	}
+
+	public saturate(amount?: SynthParameterValue): this {
+		return this.addTransform('saturate', [amount ?? 2.0]);
+	}
+
+	public hue(hue?: SynthParameterValue): this {
+		return this.addTransform('hue', [hue ?? 0.4]);
+	}
+
+	public colorama(amount?: SynthParameterValue): this {
+		return this.addTransform('colorama', [amount ?? 0.005]);
+	}
+
+	public posterize(bins?: SynthParameterValue, gamma?: SynthParameterValue): this {
+		return this.addTransform('posterize', [bins ?? 3.0, gamma ?? 0.6]);
+	}
+
+	public luma(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this {
+		return this.addTransform('luma', [threshold ?? 0.5, tolerance ?? 0.1]);
+	}
+
+	public thresh(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this {
+		return this.addTransform('thresh', [threshold ?? 0.5, tolerance ?? 0.04]);
+	}
+
+	public color(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this {
+		return this.addTransform('color', [r ?? 1.0, g ?? 1.0, b ?? 1.0, a ?? 1.0]);
+	}
+
+	public r(scale?: SynthParameterValue, offset?: SynthParameterValue): this {
+		return this.addTransform('r', [scale ?? 1.0, offset ?? 0.0]);
+	}
+
+	public g(scale?: SynthParameterValue, offset?: SynthParameterValue): this {
+		return this.addTransform('g', [scale ?? 1.0, offset ?? 0.0]);
+	}
+
+	public b(scale?: SynthParameterValue, offset?: SynthParameterValue): this {
+		return this.addTransform('b', [scale ?? 1.0, offset ?? 0.0]);
+	}
+
+	public shift(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this {
+		return this.addTransform('shift', [r ?? 0.5, g ?? 0.0, b ?? 0.0, a ?? 0.0]);
+	}
+
+	public gamma(amount?: SynthParameterValue): this {
+		return this.addTransform('gamma', [amount ?? 1.0]);
+	}
+
+	public levels(inMin?: SynthParameterValue, inMax?: SynthParameterValue, outMin?: SynthParameterValue, outMax?: SynthParameterValue, gamma?: SynthParameterValue): this {
+		return this.addTransform('levels', [inMin ?? 0.0, inMax ?? 1.0, outMin ?? 0.0, outMax ?? 1.0, gamma ?? 1.0]);
+	}
+
+	public clampColor(min?: SynthParameterValue, max?: SynthParameterValue): this {
+		return this.addTransform('clampColor', [min ?? 0.0, max ?? 1.0]);
+	}
+
+	// ============================================================
+	// COMBINE OPERATIONS
+	// ============================================================
+
+	public add(source: SynthSource, amount?: SynthParameterValue): this {
+		return this.addCombineTransform('add', source, [amount ?? 0.5]);
+	}
+
+	public sub(source: SynthSource, amount?: SynthParameterValue): this {
+		return this.addCombineTransform('sub', source, [amount ?? 0.5]);
+	}
+
+	public mult(source: SynthSource, amount?: SynthParameterValue): this {
+		return this.addCombineTransform('mult', source, [amount ?? 0.5]);
+	}
+
+	public blend(source: SynthSource, amount?: SynthParameterValue): this {
+		return this.addCombineTransform('blend', source, [amount ?? 0.5]);
+	}
+
+	public diff(source: SynthSource): this {
+		return this.addCombineTransform('diff', source, []);
+	}
+
+	public layer(source: SynthSource): this {
+		return this.addCombineTransform('layer', source, []);
+	}
+
+	public mask(source: SynthSource): this {
+		return this.addCombineTransform('mask', source, []);
+	}
+
+	// ============================================================
+	// MODULATION (combineCoord)
+	// ============================================================
+
+	public modulate(source: SynthSource, amount?: SynthParameterValue): this {
+		return this.addCombineTransform('modulate', source, [amount ?? 0.1]);
+	}
+
+	public modulateScale(source: SynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue): this {
+		return this.addCombineTransform('modulateScale', source, [multiple ?? 1.0, offset ?? 1.0]);
+	}
+
+	public modulateRotate(source: SynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue): this {
+		return this.addCombineTransform('modulateRotate', source, [multiple ?? 1.0, offset ?? 0.0]);
+	}
+
+	public modulatePixelate(source: SynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue): this {
+		return this.addCombineTransform('modulatePixelate', source, [multiple ?? 10.0, offset ?? 3.0]);
+	}
+
+	public modulateKaleid(source: SynthSource, nSides?: SynthParameterValue): this {
+		return this.addCombineTransform('modulateKaleid', source, [nSides ?? 4.0]);
+	}
+
+	public modulateScrollX(source: SynthSource, scrollX?: SynthParameterValue, speed?: SynthParameterValue): this {
+		return this.addCombineTransform('modulateScrollX', source, [scrollX ?? 0.5, speed ?? 0.0]);
+	}
+
+	public modulateScrollY(source: SynthSource, scrollY?: SynthParameterValue, speed?: SynthParameterValue): this {
+		return this.addCombineTransform('modulateScrollY', source, [scrollY ?? 0.5, speed ?? 0.0]);
+	}
+
+	// ============================================================
+	// CHARACTER GENERATORS
+	// ============================================================
+
+	public charNoise(scale?: SynthParameterValue, speed?: SynthParameterValue, charCount?: SynthParameterValue): this {
+		return this.addTransform('charNoise', [scale ?? 10.0, speed ?? 0.1, charCount ?? 256]);
+	}
+
+	public charOsc(frequency?: SynthParameterValue, sync?: SynthParameterValue, charCount?: SynthParameterValue): this {
+		return this.addTransform('charOsc', [frequency ?? 60.0, sync ?? 0.1, charCount ?? 256]);
+	}
+
+	public charGradient(charCount?: SynthParameterValue, direction?: SynthParameterValue): this {
+		return this.addTransform('charGradient', [charCount ?? 256, direction ?? 0.0]);
+	}
+
+	public charVoronoi(scale?: SynthParameterValue, speed?: SynthParameterValue, charCount?: SynthParameterValue): this {
+		return this.addTransform('charVoronoi', [scale ?? 5.0, speed ?? 0.3, charCount ?? 256]);
+	}
+
+	public charShape(sides?: SynthParameterValue, innerChar?: SynthParameterValue, outerChar?: SynthParameterValue, radius?: SynthParameterValue): this {
+		return this.addTransform('charShape', [sides ?? 3, innerChar ?? 0, outerChar ?? 1, radius ?? 0.3]);
+	}
+
+	public charSolid(charIndex?: SynthParameterValue): this {
+		return this.addTransform('charSolid', [charIndex ?? 0]);
+	}
+
+	// ============================================================
+	// CHARACTER MODIFIERS
+	// ============================================================
+
+	public charFlipX(toggle?: SynthParameterValue): this {
+		return this.addTransform('charFlipX', [toggle ?? 1.0]);
+	}
+
+	public charFlipY(toggle?: SynthParameterValue): this {
+		return this.addTransform('charFlipY', [toggle ?? 1.0]);
+	}
+
+	public charInvert(toggle?: SynthParameterValue): this {
+		return this.addTransform('charInvert', [toggle ?? 1.0]);
+	}
+
+	public charRotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this {
+		return this.addTransform('charRotate', [angle ?? 0.0, speed ?? 0.0]);
 	}
 
 	// ============================================================
