@@ -46,7 +46,7 @@ import { SynthSource } from './core/SynthSource';
 import type { SynthContext, /* TransformInput */ } from './core/types';
 // import type { TransformRecord as CoreTransformRecord } from './core/SynthChain';
 import { initArrayUtils } from './lib/ArrayUtils';
-import { setGlobalBpm } from './core/GlobalState';
+
 
 // Initialize array utilities (adds .fast(), .smooth(), .ease() to Array.prototype)
 initArrayUtils();
@@ -239,47 +239,7 @@ export const paint: (source: SynthSource) => SynthSource = (source) => {
 	return result;
 };
 
-/**
- * Set the global BPM (Beats Per Minute) for array modulation timing.
- * 
- * This sets the master tempo for all layers. Individual layers can override
- * this with `layer.bpm(value)` for polyrhythmic compositions.
- * 
- * In live coding, BPM controls how fast arrays cycle through their values.
- * By default, BPM is 60, meaning arrays advance 1 element per second.
- * At BPM 120, they advance 2 elements per second.
- * 
- * @param value - BPM value (beats per minute)
- * @returns The BPM value that was set (for chaining)
- * 
- * @example
- * ```typescript
- * import { textmode } from 'textmode.js';
- * import { SynthPlugin, bpm, osc, shape } from 'textmode.synth.js';
- * 
- * const t = textmode.create({ plugins: [SynthPlugin] });
- * 
- * // Set global tempo to 120 BPM (2 beats per second)
- * bpm(120);
- * 
- * // All layers cycle through arrays at this speed by default
- * t.layers.base.synth(
- *   shape([3, 4, 5, 6]) // Cycles through shapes twice per second
- *     .rotate([0, 3.14].smooth())
- * );
- * 
- * // Layer with custom BPM override (polyrhythm)
- * const layer2 = t.layers.add();
- * layer2.bpm(90); // This layer runs at 90 BPM
- * layer2.synth(
- *   osc([1, 2, 4, 8]) // Independent timing from base layer
- * );
- * ```
- */
-export function bpm(value: number): number {
-	setGlobalBpm(value);
-	return value;
-}
+
 
 // ============================================================
 // EXPORTS - Core types
@@ -587,9 +547,29 @@ declare module 'textmode.js' {
 		synth(source: SynthSource): void;
 
 		/**
+		 * Clear the synth from this layer.
+		 * 
+		 * This disposes all synth-related resources including the compiled shader
+		 * and any ping-pong framebuffers used for feedback effects. After calling
+		 * this method, the layer will no longer render synth content.
+		 * 
+		 * Use this to reset a layer's synth state without removing the layer itself.
+		 * 
+		 * @example
+		 * ```typescript
+		 * // Apply a synth
+		 * t.layers.base.synth(osc(10));
+		 * 
+		 * // Later, clear it
+		 * t.layers.base.clearSynth();
+		 * ```
+		 */
+		clearSynth(): void;
+
+		/**
 		 * Set layer-specific BPM override for array modulation timing.
 		 * 
-		 * This overrides the global BPM set by `bpm()` for this specific layer,
+		 * This overrides the global BPM set by `t.bpm()` for this specific layer,
 		 * allowing polyrhythmic compositions where different layers cycle at
 		 * different speeds.
 		 * 
@@ -597,10 +577,10 @@ declare module 'textmode.js' {
 		 * 
 		 * @example
 		 * ```typescript
-		 * import { bpm, osc } from 'textmode.synth.js';
+		 * import { SynthPlugin, osc } from 'textmode.synth.js';
 		 * 
 		 * // Set global BPM to 120
-		 * bpm(120);
+		 * t.bpm(120);
 		 * 
 		 * // Base layer uses global BPM (120)
 		 * t.layers.base.synth(osc([1, 2, 4]));
@@ -612,5 +592,39 @@ declare module 'textmode.js' {
 		 * ```
 		 */
 		bpm(value: number): void;
+	}
+
+	interface Textmodifier {
+		/**
+		 * Set the global BPM (Beats Per Minute) for array modulation timing.
+		 * 
+		 * This sets the master tempo for all layers. Individual layers can override
+		 * this with `layer.bpm(value)` for polyrhythmic compositions.
+		 * 
+		 * In live coding, BPM controls how fast arrays cycle through their values.
+		 * By default, BPM is 60, meaning arrays advance 1 element per second.
+		 * At BPM 120, they advance 2 elements per second.
+		 * 
+		 * @param value - BPM value (beats per minute)
+		 * @returns The BPM value that was set (for chaining)
+		 * 
+		 * @example
+		 * ```typescript
+		 * import { textmode } from 'textmode.js';
+		 * import { SynthPlugin, osc, shape } from 'textmode.synth.js';
+		 * 
+		 * const t = textmode.create({ plugins: [SynthPlugin] });
+		 * 
+		 * // Set global tempo to 120 BPM (2 beats per second)
+		 * t.bpm(120);
+		 * 
+		 * // All layers cycle through arrays at this speed by default
+		 * t.layers.base.synth(
+		 *   shape([3, 4, 5, 6]) // Cycles through shapes twice per second
+		 *     .rotate([0, 3.14].smooth())
+		 * );
+		 * ```
+		 */
+		bpm(value: number): number;
 	}
 }

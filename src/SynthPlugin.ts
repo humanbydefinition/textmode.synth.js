@@ -15,7 +15,7 @@ import { compileSynthSource } from './compiler/SynthCompiler';
 import type { CompiledSynthShader } from './compiler/types';
 import type { SynthContext } from './core/types';
 import { CharacterResolver } from './utils/CharacterResolver';
-import { getGlobalBpm } from './core/GlobalState';
+import { getGlobalBpm, setGlobalBpm } from './core/GlobalState';
 
 /**
  * Per-layer synth state stored via plugin state API.
@@ -128,6 +128,14 @@ export const SynthPlugin: TextmodePlugin = {
 
 	install(textmodifier, api: TextmodePluginAPI) {
 		// ============================================================
+		// EXTEND TEXTMODIFIER WITH .bpm() METHOD
+		// ============================================================
+		textmodifier.bpm = function (value: number): number {
+			setGlobalBpm(value);
+			return value;
+		};
+
+		// ============================================================
 		// EXTEND LAYER WITH .synth() METHOD
 		// ============================================================
 		api.extendLayer('synth', function (this: TextmodeLayer, source: SynthSource): void {
@@ -189,6 +197,28 @@ export const SynthPlugin: TextmodePlugin = {
 			}
 
 			this.setPluginState(PLUGIN_NAME, state);
+		});
+
+		// ============================================================
+		// EXTEND LAYER WITH .clearSynth() METHOD
+		// ============================================================
+		api.extendLayer('clearSynth', function (this: TextmodeLayer): void {
+			const state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+			if (!state) return;
+
+			// Dispose shader
+			if (state.shader?.dispose) {
+				state.shader.dispose();
+			}
+
+			// Dispose ping-pong buffers
+			if (state.pingPongBuffers) {
+				state.pingPongBuffers[0].dispose?.();
+				state.pingPongBuffers[1].dispose?.();
+			}
+
+			// Clear plugin state
+			this.setPluginState(PLUGIN_NAME, undefined);
 		});
 
 
@@ -416,7 +446,12 @@ export const SynthPlugin: TextmodePlugin = {
 			}
 		}
 
+		// Remove textmodifier extensions
+		delete (_textmodifier as any).bpm;
+
 		// Remove layer extensions
 		api.removeLayerExtension('synth');
+		api.removeLayerExtension('bpm');
+		api.removeLayerExtension('clearSynth');
 	},
 };
