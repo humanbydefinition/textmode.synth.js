@@ -1,6 +1,6 @@
 # textmode.synth.js
 
-**A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/olivia-jack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.**
+**A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.**
 
 Create procedural ASCII/text animations with a `hydra`-inspired, chainable visual synthesis system.
 
@@ -140,7 +140,7 @@ Distributed under the **AGPL-3.0** License. See [LICENSE](./LICENSE) for more in
 
 ## Credits
 
-This project is a derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/olivia-jack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.
+This project is a derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.
 
 - **hydra-synth**: Core synthesis logic, GLSL shader generation, and functional API design.
 - **Modifications**: Adapted for `textmode.js`'s three-texture rendering pipeline *(characters, foreground colors, background colors)* and plugin system.
