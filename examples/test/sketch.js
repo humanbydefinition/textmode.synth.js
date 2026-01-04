@@ -34,7 +34,3 @@ layer2.synth(
 layer3.synth(
   paint(gradient([0.3, 0.3, 3]).diff(src(t.layers.base)).blend(src(layer1)))
 );
-
-t.layers.base.draw(() => {
-
-});

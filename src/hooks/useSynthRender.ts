@@ -85,7 +85,7 @@ export async function useSynthRender(layer: TextmodeLayer, textmodifier: any) {
     // Helper to set all uniforms
     const setUniforms = (feedbackBuffer: TextmodeFramebuffer | null) => {
         // Standard uniforms
-        textmodifier.setUniform('time', textmodifier.millis);
+        textmodifier.setUniform('time', textmodifier.secs);
         textmodifier.setUniform('resolution', [synthContext.cols, synthContext.rows]);
 
         // Dynamic uniforms (evaluated each frame)
