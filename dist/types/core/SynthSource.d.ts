@@ -114,7 +114,7 @@ export declare class SynthSource implements ISynthSource {
     shift(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
     gamma(amount?: SynthParameterValue): this;
     levels(inMin?: SynthParameterValue, inMax?: SynthParameterValue, outMin?: SynthParameterValue, outMax?: SynthParameterValue, gamma?: SynthParameterValue): this;
-    clampColor(min?: SynthParameterValue, max?: SynthParameterValue): this;
+    clamp(min?: SynthParameterValue, max?: SynthParameterValue): this;
     add(source: SynthSource, amount?: SynthParameterValue): this;
     sub(source: SynthSource, amount?: SynthParameterValue): this;
     mult(source: SynthSource, amount?: SynthParameterValue): this;
@@ -129,12 +129,6 @@ export declare class SynthSource implements ISynthSource {
     modulateKaleid(source: SynthSource, nSides?: SynthParameterValue): this;
     modulateScrollX(source: SynthSource, scrollX?: SynthParameterValue, speed?: SynthParameterValue): this;
     modulateScrollY(source: SynthSource, scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
-    charNoise(scale?: SynthParameterValue, speed?: SynthParameterValue, charCount?: SynthParameterValue): this;
-    charOsc(frequency?: SynthParameterValue, sync?: SynthParameterValue, charCount?: SynthParameterValue): this;
-    charGradient(charCount?: SynthParameterValue, direction?: SynthParameterValue): this;
-    charVoronoi(scale?: SynthParameterValue, speed?: SynthParameterValue, charCount?: SynthParameterValue): this;
-    charShape(sides?: SynthParameterValue, innerChar?: SynthParameterValue, outerChar?: SynthParameterValue, radius?: SynthParameterValue): this;
-    charSolid(charIndex?: SynthParameterValue): this;
     charFlipX(toggle?: SynthParameterValue): this;
     charFlipY(toggle?: SynthParameterValue): this;
     charInvert(toggle?: SynthParameterValue): this;

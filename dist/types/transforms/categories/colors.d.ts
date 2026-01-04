@@ -21,7 +21,7 @@ export declare const b: TransformDefinition;
 export declare const shift: TransformDefinition;
 export declare const gamma: TransformDefinition;
 export declare const levels: TransformDefinition;
-export declare const clampColor: TransformDefinition;
+export declare const clamp: TransformDefinition;
 /**
  * All color transforms.
  */

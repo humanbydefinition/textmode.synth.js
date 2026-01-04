@@ -1,13 +1,13 @@
 /**
- * A `hydra`-inspired chainable visual synthesis system for `textmode.js`.
- * Enables procedural generation of characters, colors, and visual effects
- * through method chaining.
+ * `textmode.synth.js` is an add-on library for `textmode.js` that provides a
+ * visual synthesis system for procedural generation of characters, colors,
+ * and visual effects through method chaining.
+ *
+ * The system is inspired by the [hydra-synth](https://github.com/ojack/hydra-synth)
+ * project by [ojack](https://github.com/ojack).
  *
  * @example
  * ```ts
- * import { textmode } from 'textmode.js';
- * import { SynthPlugin, osc, noise } from 'textmode.synth.js';
- *
  * // Create textmode instance with SynthPlugin
  * const t = textmode.create({
  *   width: 800,

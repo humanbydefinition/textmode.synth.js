@@ -1,0 +1,1 @@
+{"version":3,"file":"collectExternalLayerRefs.d.ts","sourceRoot":"","sources":["../../../src/utils/collectExternalLayerRefs.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,sBAAsB,CAAC;AAC1D,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,qBAAqB,CAAC;AAEvD;;GAEG;AACH,wBAAgB,wBAAwB,CAAC,MAAM,EAAE,WAAW,GAAG,GAAG,CAAC,MAAM,EAAE,aAAa,CAAC,CAyCxF"}

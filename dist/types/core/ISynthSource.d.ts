@@ -13,7 +13,6 @@ import type { SynthParameterValue } from './types';
  * - Color transforms (brightness, contrast, invert, saturate, hue, etc.)
  * - Combine operations (add, sub, mult, blend, diff, layer, mask)
  * - Modulation (modulate, modulateScale, modulateRotate, etc.)
- * - Character generators (charNoise, charOsc, charVoronoi, etc.)
  * - Character modifiers (charFlipX, charFlipY, charInvert, charRotate)
  */
 export interface ISynthSource {
@@ -29,8 +28,8 @@ export interface ISynthSource {
      * // Map noise values to ASCII art characters
      * noise(10).charMap('@#%*+=-:. ')
      *
-     * // Use block characters
-     * osc(1).charMap(' .:-=+*#%@')
+     * // Use lowercase alphabet characters
+     * osc(1).charMap('abcdefghijklmnopqrstuvwxyz')
      *
      * // Use custom symbols
      * gradient().charMap('-<>^v')
@@ -85,7 +84,7 @@ export interface ISynthSource {
      * char(noise(10), 16)
      *
      * // Use oscillator to select characters
-     * char(osc(5), 8)
+     * char(osc(5), 32)
      * ```
      */
     char(source: ISynthSource, charCount: number): this;
@@ -158,6 +157,11 @@ export interface ISynthSource {
     /**
      * Generate a rotating radial gradient.
      * @param speed - Rotation speed (default: 0.0)
+     *
+     * @example
+     * ```typescript
+     * gradient([1,2,4])
+     * ```
      */
     gradient(speed?: SynthParameterValue): this;
     /**
@@ -219,7 +223,7 @@ export interface ISynthSource {
      * @example
      * ```typescript
      * // Rotate shape continuously
-     * charOsc(50, 0, 0, 16)
+     * osc(50, 0, 0, 16)
      *   .rotate((ctx) => ctx.time % 360)
      *   .charColor(osc(50).rotate((ctx) => ctx.time % 360));
      * ```
@@ -236,7 +240,7 @@ export interface ISynthSource {
      * @example
      * ```typescript
      * // Scale a triangle shape
-     * charShape(3).scale(1.5, 1, 1);
+     * shape(3).scale(1.5, 1, 1);
      * ```
      */
     scale(amount?: SynthParameterValue, xMult?: SynthParameterValue, yMult?: SynthParameterValue, offsetX?: SynthParameterValue, offsetY?: SynthParameterValue): this;
@@ -250,7 +254,7 @@ export interface ISynthSource {
      * @example
      * ```typescript
      * // Scroll a shape diagonally
-     * charShape(3).scroll(0.1, -0.3);
+     * shape(3).scroll(0.1, -0.3);
      * ```
      */
     scroll(scrollX?: SynthParameterValue, scrollY?: SynthParameterValue, speedX?: SynthParameterValue, speedY?: SynthParameterValue): this;
@@ -274,7 +278,7 @@ export interface ISynthSource {
      * @example
      * ```typescript
      * // Pixelate noise pattern
-     * charNoise(1, 0.05)
+     * noise(1, 0.05)
      *   .pixelate(20, 20)
      *   .charColor(noise().pixelate(20, 20));
      * ```
@@ -290,7 +294,7 @@ export interface ISynthSource {
      * @example
      * ```typescript
      * // Repeat a shape in a 3x3 grid
-     * charShape(3)
+     * shape(3)
      *   .repeat(3, 3, 0, 0)
      *   .charColor(shape().repeat(3, 3, 0, 0));
      * ```
@@ -315,7 +319,7 @@ export interface ISynthSource {
      * @example
      * ```typescript
      * // Create a 50-sided kaleidoscope pattern
-     * charOsc(25, -0.1, 0.5, 32)
+     * osc(25, -0.1, 0.5, 32)
      *   .kaleid(50)
      *   .charColor(osc(25, -0.1, 0.5).kaleid(50));
      * ```
@@ -327,11 +331,10 @@ export interface ISynthSource {
      *
      * @example
      * ```typescript
-     * // Animate brightness with sine wave
-     * charOsc(20, 0, 2, 16)
+     * osc(1)
      *   .charColor(
-     *     osc(20, 0, 2).brightness((ctx) => Math.sin(ctx.time))
-     *   );
+     *     osc(20, 0, 2).brightness(() => Math.sin(t.secs()))
+     *   )
      * ```
      */
     brightness(amount?: SynthParameterValue): this;
@@ -341,11 +344,10 @@ export interface ISynthSource {
      *
      * @example
      * ```typescript
-     * // Animate contrast
-     * charOsc(20, 0.1, 0, 16)
+     * osc(1)
      *   .charColor(
      *     osc(20).contrast((ctx) => Math.sin(ctx.time) * 5)
-     *   );
+     *   )
      * ```
      */
     contrast(amount?: SynthParameterValue): this;
@@ -355,10 +357,9 @@ export interface ISynthSource {
      *
      * @example
      * ```typescript
-     * // Toggle inversion with array
-     * charSolid(16)
-     *   .charColor(solid(1, 1, 1).invert([0, 1]))
-     *   .cellColor(solid(1, 1, 1).invert([1, 0]));
+     *  solid(0.2, 0, 0, 1)
+     *     .charColor(solid(1, 1, 1).invert([0, 1]))
+     *     .cellColor(solid(1, 1, 1).invert([1, 0]))
      * ```
      */
     invert(amount?: SynthParameterValue): this;
@@ -369,7 +370,7 @@ export interface ISynthSource {
      * @example
      * ```typescript
      * // Animate saturation
-     * charOsc(10, 0, 1, 16)
+     * osc(10, 0, 1, 16)
      *   .charColor(
      *     osc(10, 0, 1).saturate((ctx) => Math.sin(ctx.time) * 10)
      *   );
@@ -382,17 +383,22 @@ export interface ISynthSource {
      *
      * @example
      * ```typescript
-     * // Animate hue shift
-     * charOsc(30, 0.1, 1, 16)
+     * osc(1)
      *   .charColor(
      *     osc(30, 0.1, 1).hue((ctx) => Math.sin(ctx.time))
-     *   );
+     *   )
      * ```
      */
     hue(hue?: SynthParameterValue): this;
     /**
      * Apply colorama effect (hue rotation based on luminance).
      * @param amount - Effect amount (default: 0.005)
+     *
+     * @example
+     * ```typescript
+     * // Create color cycle effect on oscillator
+     * noise(4).colorama(0.3)
+     * ```
      */
     colorama(amount?: SynthParameterValue): this;
     /**
@@ -403,7 +409,7 @@ export interface ISynthSource {
      * @example
      * ```typescript
      * // Posterize gradient with array modulation
-     * charGradient(0, 16)
+     * gradient(0, 16)
      *   .rotate(1.57)
      *   .charColor(
      *     gradient(0).posterize([1, 5, 15, 30], 0.5)
@@ -415,6 +421,12 @@ export interface ISynthSource {
      * Apply threshold based on luminance.
      * @param threshold - Threshold value (default: 0.5)
      * @param tolerance - Tolerance range (default: 0.1)
+     *
+     * @example
+     * ```typescript
+     * // Apply threshold to oscillator
+     * osc(10,0,1).luma(0.5,0.1)
+     * ```
      */
     luma(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
     /**
@@ -424,29 +436,61 @@ export interface ISynthSource {
      */
     thresh(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
     /**
-     * Set color channels.
-     * @param r - Red channel (default: 1.0)
-     * @param g - Green channel (default: 1.0)
-     * @param b - Blue channel (default: 1.0)
-     * @param a - Alpha channel (default: 1.0)
+     * Colorize a grayscale source or multiply an existing color source.
+     *
+     * This is the recommended way to add color to grayscale sources like `osc()`,
+     * `noise()`, or `voronoi()`.
+     *
+     * @param r - Red channel multiplier (default: 1.0)
+     * @param g - Green channel multiplier (default: 1.0)
+     * @param b - Blue channel multiplier (default: 1.0)
+     * @param a - Alpha channel multiplier (default: 1.0)
+     *
+     * @example
+     * ```typescript
+     * // Create a blue oscillator
+     * osc(10).color(0, 0.5, 1.0)
+     *
+     * // Colorize noise with a red tint
+     * noise(5).color(1, 0.2, 0.2)
+     * ```
      */
     color(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
     /**
-     * Scale and offset red channel.
+     * Extract the red channel as a grayscale value.
      * @param scale - Scale multiplier (default: 1.0)
      * @param offset - Offset amount (default: 0.0)
+     *
+     * @example
+     * ```typescript
+     * // Extract red channel as grayscale
+     * voronoi(5).hue(0.4).r()
+     *
+     * // Convert red intensity to character indices
+     * char(osc(10).hue(0.5).r(), 16)
+     * ```
      */
     r(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
-     * Scale and offset green channel.
+     * Extract the green channel as a grayscale value.
      * @param scale - Scale multiplier (default: 1.0)
      * @param offset - Offset amount (default: 0.0)
+     *
+     * @example
+     * ```typescript
+     * osc(4,0.1,1.5).layer(gradient().g())
+     * ```
      */
     g(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
-     * Scale and offset blue channel.
+     * Extract the blue channel as a grayscale value.
      * @param scale - Scale multiplier (default: 1.0)
      * @param offset - Offset amount (default: 0.0)
+     *
+     * @example
+     * ```typescript
+     * osc(8,0.1,1.5).layer(gradient().colorama(1).b())
+     * ```
      */
     b(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
@@ -463,12 +507,7 @@ export interface ISynthSource {
      *
      * @example
      * ```typescript
-     * // Brighten midtones
-     * charNoise(10)
-     *   .charColor(gradient(0).gamma(0.7))
-     *
-     * // Darken with animation
-     * charOsc(8)
+     * osc(1)
      *   .charColor(osc(5).gamma([1.0, 1.5, 2.0].smooth(4)))
      * ```
      */
@@ -484,11 +523,11 @@ export interface ISynthSource {
      * @example
      * ```typescript
      * // Expand tonal range from 0.2-0.8 to 0-1
-     * charNoise(10)
+     * noise(10)
      *   .charColor(noise(5).levels(0.2, 0.8, 0.0, 1.0, 1.0))
      *
      * // Compress highlights, boost shadows
-     * charVoronoi(8)
+     * voronoi(8)
      *   .charColor(voronoi(5).levels(0.0, 1.0, 0.2, 0.9, 0.8))
      * ```
      */
@@ -500,18 +539,10 @@ export interface ISynthSource {
      *
      * @example
      * ```typescript
-     * // Prevent overflow after multiple blend operations
-     * charOsc(10)
-     *   .charColor(
-     *     osc(5).add(osc(8), 0.8).add(osc(12), 0.6).clampColor(0.0, 1.0)
-     *   )
-     *
-     * // Create hard clip effect
-     * charNoise(8)
-     *   .charColor(noise(5).brightness(0.5).clampColor(0.3, 0.7))
+     * osc(5).add(osc(8), 0.8).add(osc(12), 0.6).clamp(0.2, 0.8)
      * ```
      */
-    clampColor(min?: SynthParameterValue, max?: SynthParameterValue): this;
+    clamp(min?: SynthParameterValue, max?: SynthParameterValue): this;
     /**
      * Add another source.
      * @param source - Source to add
@@ -520,13 +551,9 @@ export interface ISynthSource {
      * @example
      * ```typescript
      * // Add two shapes with animated blend amount
-     * charShape(3)
+     * shape(3)
      *   .scale(0.5)
-     *   .charColor(
-     *     shape(3)
-     *       .scale(0.5)
-     *       .add(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
-     *   );
+     *   .add(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
      * ```
      */
     add(source: ISynthSource, amount?: SynthParameterValue): this;
@@ -550,13 +577,9 @@ export interface ISynthSource {
      * @example
      * ```typescript
      * // Blend two shapes
-     * charShape(3)
+     * shape(3)
      *   .scale(0.5)
-     *   .charColor(
-     *     shape(3)
-     *       .scale(0.5)
-     *       .blend(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
-     *   );
+     *   .blend(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
      * ```
      */
     blend(source: ISynthSource, amount?: SynthParameterValue): this;
@@ -566,17 +589,20 @@ export interface ISynthSource {
      *
      * @example
      * ```typescript
-     * // Create difference pattern between two oscillators
-     * charOsc(9, 0.1, 2, 16)
-     *   .charColor(
-     *     osc(9, 0.1, 2).diff(osc(13, 0.5, 5))
-     *   );
+     * osc(1, 0.1, 2).diff(osc(1, 0.5, 5))
      * ```
      */
     diff(source: ISynthSource): this;
     /**
      * Layer another source on top.
      * @param source - Source to layer
+     *
+     * @example
+     * ```typescript
+     *   osc(1)
+     *   .charColor(osc(30).layer(osc(15).rotate(1).luma()))
+     *   .cellColor(osc(30).layer(osc(15).rotate(1).luma()).invert())
+     * ```
      */
     layer(source: ISynthSource): this;
     /**
@@ -586,10 +612,7 @@ export interface ISynthSource {
      * @example
      * ```typescript
      * // Mask gradient with voronoi pattern
-     * charGradient(0, 16)
-     *   .charColor(
-     *     gradient(5).mask(voronoi()).invert([0, 1])
-     *   );
+     * gradient(5).mask(voronoi()).invert([0, 1])
      * ```
      */
     mask(source: ISynthSource): this;
@@ -600,16 +623,8 @@ export interface ISynthSource {
      *
      * @example
      * ```typescript
-     * // Modulate voronoi with kaleidoscope pattern
-     * charVoronoi(5, 0.3, 16)
-     *   .rotate((ctx) => (ctx.time % 360) / 2)
-     *   .modulate(
-     *     osc(25, 0.1, 0.5)
-     *       .kaleid(50)
-     *       .scale((ctx) => Math.sin(ctx.time) * 0.5 + 1)
-     *       .modulate(noise(0.6, 0.5)),
-     *     0.5
-     *   );
+     * osc(3, 0, 2)
+     *     .modulate(noise().add(gradient(), -1), 1)
      * ```
      */
     modulate(source: ISynthSource, amount?: SynthParameterValue): this;
@@ -632,12 +647,23 @@ export interface ISynthSource {
      * @param source - Modulation source
      * @param multiple - Pixelation multiplier (default: 10.0)
      * @param offset - Offset amount (default: 3.0)
+     *
+     * @example
+     * ```typescript
+     * noise(3).modulatePixelate(noise(1, 0).pixelate(8, 8), 1024, 8)
+     * ```
      */
     modulatePixelate(source: ISynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue): this;
     /**
      * Modulate kaleidoscope using another source.
      * @param source - Modulation source
      * @param nSides - Number of sides (default: 4.0)
+     *
+     * @example
+     * ```typescript
+     * osc(2, 0.1, 2)
+     *     .modulateKaleid(osc(16).kaleid(999), 1)
+     * ```
      */
     modulateKaleid(source: ISynthSource, nSides?: SynthParameterValue): this;
     /**
@@ -654,46 +680,6 @@ export interface ISynthSource {
      * @param speed - Scroll speed (default: 0.0)
      */
     modulateScrollY(source: ISynthSource, scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
-    /**
-     * Generate character indices using Perlin noise.
-     * @param scale - Scale of the noise pattern (default: 10.0)
-     * @param speed - Animation speed (default: 0.1)
-     * @param charCount - Number of different characters to use (default: 256)
-     */
-    charNoise(scale?: SynthParameterValue, speed?: SynthParameterValue, charCount?: SynthParameterValue): this;
-    /**
-     * Generate character indices using oscillating sine waves.
-     * @param frequency - Frequency of the oscillation (default: 60.0)
-     * @param sync - Synchronization offset (default: 0.1)
-     * @param charCount - Number of different characters to use (default: 256)
-     */
-    charOsc(frequency?: SynthParameterValue, sync?: SynthParameterValue, charCount?: SynthParameterValue): this;
-    /**
-     * Generate character indices using a gradient.
-     * @param charCount - Number of different characters to use (default: 256)
-     * @param direction - Gradient direction (default: 0.0)
-     */
-    charGradient(charCount?: SynthParameterValue, direction?: SynthParameterValue): this;
-    /**
-     * Generate character indices using Voronoi (cellular) patterns.
-     * @param scale - Scale of Voronoi cells (default: 5.0)
-     * @param speed - Animation speed (default: 0.3)
-     * @param charCount - Number of different characters to use (default: 256)
-     */
-    charVoronoi(scale?: SynthParameterValue, speed?: SynthParameterValue, charCount?: SynthParameterValue): this;
-    /**
-     * Generate character indices based on geometric shapes (polygons).
-     * @param sides - Number of sides (default: 3)
-     * @param innerChar - Character index for inside the shape (default: 0)
-     * @param outerChar - Character index for outside the shape (default: 1)
-     * @param radius - Radius of the shape (default: 0.3)
-     */
-    charShape(sides?: SynthParameterValue, innerChar?: SynthParameterValue, outerChar?: SynthParameterValue, radius?: SynthParameterValue): this;
-    /**
-     * Generate a solid character index across the entire canvas.
-     * @param charIndex - Character index to use (default: 0)
-     */
-    charSolid(charIndex?: SynthParameterValue): this;
     /**
      * Flip characters horizontally.
      * @param toggle - Toggle flip (default: 1.0)
