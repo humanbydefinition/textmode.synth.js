@@ -73,7 +73,7 @@ export async function useSynthRender(layer: TextmodeLayer, textmodifier: any) {
     // Build synth context
     const effectiveBpm = state.bpm ?? getGlobalBpm();
     const synthContext: SynthContext = {
-        time: textmodifier.millis() / 1000,
+        time: textmodifier.secs,
         frameCount: textmodifier.frameCount,
         width: grid.width,
         height: grid.height,
