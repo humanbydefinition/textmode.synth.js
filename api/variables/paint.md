@@ -11,7 +11,7 @@ Create a synth source with both character and cell colors defined.
 This function creates a SynthSource where both the character foreground color
 and the cell background color are driven by the same source pattern.
 This is a convenience function equivalent to calling both `charColor()` and
-`cellColor()` with the same source.
+`cellColor()` with the same source, allowing for easy pixel art without visible characters.
 
 ## Parameters
 
@@ -35,11 +35,8 @@ const t = textmode.create({
 });
 
 // Use same pattern for both foreground and background colors
-const colorPattern = osc(10, 0.1).mult(voronoi(5));
 t.layers.base.synth(
-  paint(colorPattern)
-    .char(noise(10), 16)
-    .charMap('@#%*+=-:. ')
+  paint(osc(10, 0.1).mult(voronoi(5)))
 );
 
 // Paint with gradient

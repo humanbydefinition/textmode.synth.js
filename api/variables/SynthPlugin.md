@@ -13,7 +13,7 @@ Install this plugin to enable `.synth()` on TextmodeLayer instances.
 ## Example
 
 ```typescript
-import { textmode } from 'textmode.js';
+import { textmode } from 'textmode.js'; // es module imports
 import { SynthPlugin, noise, osc } from 'textmode.synth.js';
 
 const t = textmode.create({ plugins: [SynthPlugin] });

@@ -176,7 +176,7 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 	// Feedback buffer declarations (self-feedback)
 	const feedbackDecls: string[] = [];
 	if (usesFeedback) {
-		feedbackDecls.push('uniform sampler2D prevBuffer;');
+		feedbackDecls.push('uniform sampler2D prevCharColorBuffer;');
 	}
 	if (usesCharFeedback) {
 		feedbackDecls.push('uniform sampler2D prevCharBuffer;');
@@ -201,7 +201,7 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 			}
 		}
 	}
-	const externalLayerDecl = externalLayerDecls.length > 0 
+	const externalLayerDecl = externalLayerDecls.length > 0
 		? `// External layer samplers\n${externalLayerDecls.join('\n')}`
 		: '';
 

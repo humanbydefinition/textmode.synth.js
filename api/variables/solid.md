@@ -34,9 +34,6 @@ const t = textmode.create({
 t.layers.base.synth(
   solid(0.6, 0, 0, 1)
     .charColor(solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1))
-    .cellColor(
-      solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1)
-        .invert()
-    )
+    .cellColor(solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1).invert())
 );
 ```

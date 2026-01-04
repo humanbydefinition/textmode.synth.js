@@ -6,13 +6,13 @@
 const voronoi: (scale?, speed?, blending?) => SynthSource;
 ```
 
-Generate Voronoi (cellular) patterns.
+Generate voronoi patterns.
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `scale?` | `number` \| `number`[] \| (`ctx`) => `number` | Scale of Voronoi cells (default: 5.0) |
+| `scale?` | `number` \| `number`[] \| (`ctx`) => `number` | Scale of voronoi cells (default: 5.0) |
 | `speed?` | `number` \| `number`[] \| (`ctx`) => `number` | Animation speed (default: 0.3) |
 | `blending?` | `number` \| `number`[] \| (`ctx`) => `number` | Blending between cell regions (default: 0.3) |
 
@@ -32,6 +32,5 @@ const t = textmode.create({
 // Animated Voronoi pattern
 t.layers.base.synth(
   voronoi(5, 0.3, 0.3)
-    .charColor(voronoi(5, 0.3, 0.3))
 );
 ```

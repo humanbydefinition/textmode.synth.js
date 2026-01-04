@@ -11,10 +11,6 @@ Create a character source from any color/pattern source.
 This function converts any pattern (like `osc()`, `noise()`, `voronoi()`) into
 character indices. The pattern's luminance or color values are mapped to character indices.
 
-This is the recommended way to define character generation in textmode.synth.js,
-as it provides a unified, compositional API where the same patterns can drive
-characters, character colors, and cell colors.
-
 ## Parameters
 
 | Parameter | Type | Description |
@@ -33,13 +29,13 @@ A new SynthSource configured for character generation
 ```typescript
 // Simple usage - same pattern for chars and colors
 const pattern = osc(1, 0.1);
-layer.synth(
+t.layers.base.synth(
   char(pattern)
     .charColor(pattern.clone())
 );
 
 // With limited character count
-layer.synth(
+t.layers.base.synth(
   char(noise(10), 16)
     .charMap('@#%*+=-:. ')
 );

@@ -122,7 +122,7 @@ export const src = defineTransform({
 	type: 'src',
 	inputs: [],
 	glsl: `
-	return texture(prevBuffer, fract(_st));
+	return texture(prevCharColorBuffer, fract(_st));
 `,
 	description: 'Sample the previous frame for feedback effects. Context-aware: automatically samples the appropriate texture based on where it is used (char, charColor, or cellColor context).',
 });

@@ -8,9 +8,9 @@ import type { SynthUniform, SynthContext, CharacterMapping } from '../core/types
  * Compilation target context determining which texture `src()` samples from.
  * 
  * - `char`: Compiling a character source chain → src() samples prevCharBuffer
- * - `charColor`: Compiling a character color chain → src() samples prevBuffer (primary color)
+ * - `charColor`: Compiling a character color chain → src() samples prevCharColorBuffer
  * - `cellColor`: Compiling a cell color chain → src() samples prevCellColorBuffer
- * - `main`: Compiling the main chain → src() samples prevBuffer (primary color)
+ * - `main`: Compiling the main chain → src() samples prevCharColorBuffer
  */
 export type CompilationTarget = 'char' | 'charColor' | 'cellColor' | 'main';
 
@@ -43,7 +43,7 @@ export interface CompiledSynthShader {
 	dynamicUpdaters: Map<string, (ctx: SynthContext) => number | number[]>;
 	/** Character mapping if charMap was used */
 	charMapping?: CharacterMapping;
-	/** Whether this shader uses feedback (src/prev) - reads from prevBuffer */
+	/** Whether this shader uses feedback (src) - reads from prevCharColorBuffer */
 	usesFeedback: boolean;
 	/** Whether this shader uses character feedback (charSrc) - reads from prevCharBuffer */
 	usesCharFeedback: boolean;

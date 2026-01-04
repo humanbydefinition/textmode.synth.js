@@ -30,10 +30,5 @@ const t = textmode.create({
 // Animated gradient with array modulation
 t.layers.base.synth(
   gradient([1, 2, 4])
-    .charColor(gradient([1, 2, 4]))
-    .cellColor(
-      gradient([1, 2, 4])
-        .invert((ctx) => Math.sin(ctx.time) * 2)
-    )
 );
 ```

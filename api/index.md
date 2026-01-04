@@ -1,11 +1,9 @@
 # textmode.synth.js
 
-`textmode.synth.js` is an add-on library for `textmode.js` that provides a
-visual synthesis system for procedural generation of characters, colors,
+A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), 
+adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem, providing
+a visual synthesis system for procedural generation of characters, colors,
 and visual effects through method chaining.
-
-The system is inspired by the [hydra-synth](https://github.com/ojack/hydra-synth)
-project by [ojack](https://github.com/ojack).
 
 ## Example
 
@@ -42,21 +40,21 @@ t.layers.base.synth(synth);
 
 | Interface | Description |
 | ------ | ------ |
-| [ModulatedArray](interfaces/ModulatedArray.md) | Extended array interface with modulation methods. |
 | [SynthContext](interfaces/SynthContext.md) | Context passed to dynamic parameter functions during rendering. |
+| [ModulatedArray](interfaces/ModulatedArray.md) | Extended array interface with modulation methods. |
 
 ## Type Aliases
 
 | Type Alias | Description |
 | ------ | ------ |
-| [EasingFunction](type-aliases/EasingFunction.md) | Easing functions from https://gist.github.com/gre/1650294 |
 | [SynthParameterValue](type-aliases/SynthParameterValue.md) | Dynamic parameter value types supported by the synth system. |
-| [SynthTransformType](type-aliases/SynthTransformType.md) | Transform type categories determining how functions compose in the shader pipeline. |
+| [EasingFunction](type-aliases/EasingFunction.md) | Easing functions from https://gist.github.com/gre/1650294 |
 
 ## Variables
 
 | Variable | Description |
 | ------ | ------ |
+| [SynthPlugin](variables/SynthPlugin.md) | The `textmode.synth.js` plugin to install. |
 | [cellColor](variables/cellColor.md) | Create a synth source with cell background color defined. |
 | [char](variables/char.md) | Create a character source from any color/pattern source. |
 | [charColor](variables/charColor.md) | Create a synth source with character foreground color defined. |
@@ -66,6 +64,5 @@ t.layers.base.synth(synth);
 | [paint](variables/paint.md) | Create a synth source with both character and cell colors defined. |
 | [shape](variables/shape.md) | Generate geometric shapes (polygons). |
 | [solid](variables/solid.md) | Generate a solid color. |
-| [src](variables/src.md) | Sample the previous frame's primary color output for feedback effects. This is the core of feedback loops - it reads from the previous frame's character foreground color, enabling effects like trails, motion blur, and recursive patterns. |
-| [SynthPlugin](variables/SynthPlugin.md) | The `textmode.synth.js` plugin to install. |
-| [voronoi](variables/voronoi.md) | Generate Voronoi (cellular) patterns. |
+| [src](variables/src.md) | Sample the previous frame's output for feedback effects. |
+| [voronoi](variables/voronoi.md) | Generate voronoi patterns. |

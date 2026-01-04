@@ -14,12 +14,14 @@
     "exclude": [
         "**/node_modules/**"
     ],
+    "sort": [
+        "source-order"
+    ],
     "logLevel": "Verbose",
     "plugin": [
         "typedoc-plugin-markdown",
         "typedoc-vitepress-theme",
     ],
-    "router": "flattened-namespaces",
     "indexFormat": "table",
     "parametersFormat": "table",
     "interfacePropertiesFormat": "table",

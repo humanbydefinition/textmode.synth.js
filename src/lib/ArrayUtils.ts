@@ -54,18 +54,18 @@ export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => num
 /**
  * Extended array interface with modulation methods.
  * 
- * Arrays in textmode.synth.js behave like Hydra - they cycle through values over time,
+ * Arrays in textmode.synth.js behave like hydra - they cycle through values over time,
  * creating dynamic, time-varying parameters. This enables complex animations without
  * manually tracking time or state.
  */
 export interface ModulatedArray extends Array<number> {
-	/** Speed multiplier for array cycling */
+	/** Speed multiplier for array cycling @ignore */
 	_speed?: number;
-	/** Smoothing amount (0-1) for interpolation */
+	/** Smoothing amount (0-1) for interpolation @ignore */
 	_smooth?: number;
-	/** Easing function for interpolation */
+	/** Easing function for interpolation @ignore */
 	_ease?: (t: number) => number;
-	/** Time offset for array cycling */
+	/** Time offset for array cycling @ignore */
 	_offset?: number;
 
 	/**

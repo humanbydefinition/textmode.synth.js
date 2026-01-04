@@ -165,8 +165,8 @@ export interface ISynthSource {
     noise(scale?: SynthParameterValue, speed?: SynthParameterValue): this;
 
     /**
-     * Generate Voronoi (cellular) patterns.
-     * @param scale - Scale of Voronoi cells (default: 5.0)
+     * Generate voronoi patterns.
+     * @param scale - Scale of voronoi cells (default: 5.0)
      * @param speed - Animation speed (default: 0.3)
      * @param blending - Blending between cell regions (default: 0.3)
      */

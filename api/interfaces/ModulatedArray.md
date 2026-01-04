@@ -4,7 +4,7 @@
 
 Extended array interface with modulation methods.
 
-Arrays in textmode.synth.js behave like Hydra - they cycle through values over time,
+Arrays in textmode.synth.js behave like hydra - they cycle through values over time,
 creating dynamic, time-varying parameters. This enables complex animations without
 manually tracking time or state.
 
@@ -18,16 +18,86 @@ manually tracking time or state.
 [n: number]: number
 ```
 
-## Properties
-
-| Property | Type | Description |
-| ------ | ------ | ------ |
-| <a id="_ease"></a> `_ease?` | (`t`) => `number` | Easing function for interpolation |
-| <a id="_offset"></a> `_offset?` | `number` | Time offset for array cycling |
-| <a id="_smooth"></a> `_smooth?` | `number` | Smoothing amount (0-1) for interpolation |
-| <a id="_speed"></a> `_speed?` | `number` | Speed multiplier for array cycling |
-
 ## Methods
+
+### fast()
+
+```ts
+fast(speed): this;
+```
+
+Set speed multiplier for array cycling.
+
+Controls how fast the array cycles through its values over time.
+A speed of 1 is the default rate. Values > 1 cycle faster, values < 1 cycle slower.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `speed` | `number` | Speed multiplier (default: 1) |
+
+#### Returns
+
+`this`
+
+The array for chaining
+
+#### Example
+
+```typescript
+// Fast cycling through frequencies
+osc([1, 2, 4].fast(2), 0.1, 1.5)
+
+// Slow cycling through scroll positions
+shape(4).scrollX([-0.5, 0.5].fast(0.3))
+
+// Use same array for multiple parameters
+const speeds = [1, 3, 6].fast(2);
+osc(speeds, 0.1, 1.5, 16)
+  .charColor(osc(speeds, 0.1, 1.5))
+```
+
+***
+
+### smooth()
+
+```ts
+smooth(amount?): this;
+```
+
+Enable smooth interpolation between array values.
+
+Instead of jumping from one value to the next, smooth() creates gradual
+transitions. The amount parameter controls the smoothing duration.
+When amount is 1 (default), smoothing is applied across the full transition.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `amount?` | `number` | Smoothing amount 0-1 (default: 1) |
+
+#### Returns
+
+`this`
+
+The array for chaining
+
+#### Example
+
+```typescript
+// Smooth scrolling between positions
+shape(999).scrollX([-0.2, 0.2].smooth())
+
+// Gentle rotation animation
+shape(4).rotate([-3.14, 0, 3.14].smooth(0.8))
+
+// Smooth color transitions
+solid([0, 0.5, 1].smooth(), 0, 0)
+```
+
+***
 
 ### ease()
 
@@ -81,90 +151,6 @@ shape(5).scale([0.8, 1.2].ease(bounce))
 
 ***
 
-### fast()
-
-```ts
-fast(speed): this;
-```
-
-Set speed multiplier for array cycling.
-
-Controls how fast the array cycles through its values over time.
-A speed of 1 is the default rate. Values > 1 cycle faster, values < 1 cycle slower.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `speed` | `number` | Speed multiplier (default: 1) |
-
-#### Returns
-
-`this`
-
-The array for chaining
-
-#### Example
-
-```typescript
-// Fast cycling through frequencies
-osc([1, 2, 4].fast(2), 0.1, 1.5)
-
-// Slow cycling through scroll positions
-shape(4).scrollX([-0.5, 0.5].fast(0.3))
-
-// Use same array for multiple parameters
-const speeds = [1, 3, 6].fast(2);
-osc(speeds, 0.1, 1.5, 16)
-  .charColor(osc(speeds, 0.1, 1.5))
-```
-
-***
-
-### fit()
-
-```ts
-fit(low, high): ModulatedArray;
-```
-
-Fit (remap) array values to a new range.
-
-Takes the minimum and maximum values in the array and linearly maps them
-to the specified low and high values. All intermediate values are scaled
-proportionally. The original array is not modified.
-
-Preserves any modulation settings (speed, smooth, ease, offset) from the
-original array.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `low` | `number` | New minimum value |
-| `high` | `number` | New maximum value |
-
-#### Returns
-
-`ModulatedArray`
-
-A new ModulatedArray with remapped values
-
-#### Example
-
-```typescript
-// Remap 0-4 range to -0.2 to 0.2 for subtle scrolling
-shape(999).scrollX([0, 1, 2, 3, 4].fit(-0.2, 0.2))
-
-// Normalize arbitrary values to 0-1 range
-const values = [50, 100, 75, 125].fit(0, 1);
-solid(values, 0, 0)
-
-// Combine with other modulation
-shape(3).scale([0, 100].fit(0.5, 1.5).smooth().fast(0.5))
-```
-
-***
-
 ### offset()
 
 ```ts
@@ -213,39 +199,44 @@ osc([5, 10].offset(0)).add(
 
 ***
 
-### smooth()
+### fit()
 
 ```ts
-smooth(amount?): this;
+fit(low, high): ModulatedArray;
 ```
 
-Enable smooth interpolation between array values.
+Fit (remap) array values to a new range.
 
-Instead of jumping from one value to the next, smooth() creates gradual
-transitions. The amount parameter controls the smoothing duration.
-When amount is 1 (default), smoothing is applied across the full transition.
+Takes the minimum and maximum values in the array and linearly maps them
+to the specified low and high values. All intermediate values are scaled
+proportionally. The original array is not modified.
+
+Preserves any modulation settings (speed, smooth, ease, offset) from the
+original array.
 
 #### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `amount?` | `number` | Smoothing amount 0-1 (default: 1) |
+| `low` | `number` | New minimum value |
+| `high` | `number` | New maximum value |
 
 #### Returns
 
-`this`
+`ModulatedArray`
 
-The array for chaining
+A new ModulatedArray with remapped values
 
 #### Example
 
 ```typescript
-// Smooth scrolling between positions
-shape(999).scrollX([-0.2, 0.2].smooth())
+// Remap 0-4 range to -0.2 to 0.2 for subtle scrolling
+shape(999).scrollX([0, 1, 2, 3, 4].fit(-0.2, 0.2))
 
-// Gentle rotation animation
-shape(4).rotate([-3.14, 0, 3.14].smooth(0.8))
+// Normalize arbitrary values to 0-1 range
+const values = [50, 100, 75, 125].fit(0, 1);
+solid(values, 0, 0)
 
-// Smooth color transitions
-solid([0, 0.5, 1].smooth(), 0, 0)
+// Combine with other modulation
+shape(3).scale([0, 100].fit(0.5, 1.5).smooth().fast(0.5))
 ```

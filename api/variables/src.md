@@ -6,10 +6,10 @@
 const src: (layer?) => SynthSource;
 ```
 
-Sample the previous frame's primary color output for feedback effects.
-This is the core of feedback loops - it reads from the previous frame's
-character foreground color, enabling effects like trails, motion blur, 
-and recursive patterns.
+Sample the previous frame's output for feedback effects.
+
+This is the core of feedback loops - it reads from the previous frame, 
+enabling effects like trails, motion blur, and recursive patterns.
 
 **Context-aware behavior:** When called without arguments, `src()` automatically 
 samples the appropriate texture based on where it's used in the synth chain:
@@ -27,8 +27,7 @@ Equivalent to hydra's `src(o0)`.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `layer?` | \{ `id?`: `string`; \} | Optional TextmodeLayer to sample from. If omitted, samples from self (feedback). |
-| `layer.id?` | `string` | - |
+| `layer?` | `TextmodeLayer` | Optional TextmodeLayer to sample from. If omitted, samples from self (feedback). |
 
 ## Returns
 

@@ -32,12 +32,10 @@ const t = textmode.create({
 // Triangle
 t.layers.base.synth(
   shape(3)
-    .charMap('. ')
 );
 
-// High-sided polygon (circle-like)
+// High-sided polygon (ellipse-like)
 t.layers.base.synth(
   shape(100)
-    .charMap('. ')
 );
 ```

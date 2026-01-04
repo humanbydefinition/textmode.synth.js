@@ -71,7 +71,6 @@ export async function useSynthRender(layer: TextmodeLayer, textmodifier: any) {
     }
 
     // Build synth context
-    const effectiveBpm = state.bpm ?? getGlobalBpm();
     const synthContext: SynthContext = {
         time: textmodifier.secs,
         frameCount: textmodifier.frameCount,
@@ -79,7 +78,7 @@ export async function useSynthRender(layer: TextmodeLayer, textmodifier: any) {
         height: grid.height,
         cols: grid.cols,
         rows: grid.rows,
-        bpm: effectiveBpm
+        bpm: state.bpm ?? getGlobalBpm()
     };
 
     // Helper to set all uniforms
@@ -113,7 +112,7 @@ export async function useSynthRender(layer: TextmodeLayer, textmodifier: any) {
         // Feedback texture uniforms
         if (feedbackBuffer) {
             if (usesFeedback) {
-                textmodifier.setUniform('prevBuffer', feedbackBuffer.textures[1]);
+                textmodifier.setUniform('prevCharColorBuffer', feedbackBuffer.textures[1]);
             }
             if (usesCharFeedback) {
                 textmodifier.setUniform('prevCharBuffer', feedbackBuffer.textures[0]);
