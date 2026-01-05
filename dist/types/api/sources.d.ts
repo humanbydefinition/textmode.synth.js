@@ -1,9 +1,6 @@
 /**
  * Typed source function exports for the public API.
  *
- * This module provides all standalone source functions with complete
- * JSDoc documentation for TypeDoc generation.
- *
  * @module
  */
 import type { SynthContext } from '../core/types';
@@ -125,7 +122,7 @@ export declare const charColor: (source: SynthSource) => SynthSource;
  * );
  * ```
  */
-export declare const gradient: (speed?: number | number[] | ((ctx: SynthContext) => number)) => SynthSource;
+export declare function gradient(speed?: number | number[] | ((ctx: SynthContext) => number)): SynthSource;
 /**
  * Generate Perlin noise patterns.
  * @param scale - Scale of the noise pattern (default: 10.0)
@@ -145,7 +142,7 @@ export declare const gradient: (speed?: number | number[] | ((ctx: SynthContext)
  * );
  * ```
  */
-export declare const noise: (scale?: number | number[] | ((ctx: SynthContext) => number), offset?: number | number[] | ((ctx: SynthContext) => number)) => SynthSource;
+export declare function noise(scale?: number | number[] | ((ctx: SynthContext) => number), offset?: number | number[] | ((ctx: SynthContext) => number)): SynthSource;
 /**
  * Generate oscillating patterns using sine waves.
  * @param frequency - Frequency of the oscillation (default: 60.0)
@@ -172,7 +169,7 @@ export declare const noise: (scale?: number | number[] | ((ctx: SynthContext) =>
  * );
  * ```
  */
-export declare const osc: (frequency?: number | number[] | ((ctx: SynthContext) => number), sync?: number | number[] | ((ctx: SynthContext) => number), offset?: number | number[] | ((ctx: SynthContext) => number)) => SynthSource;
+export declare function osc(frequency?: number | number[] | ((ctx: SynthContext) => number), sync?: number | number[] | ((ctx: SynthContext) => number), offset?: number | number[] | ((ctx: SynthContext) => number)): SynthSource;
 /**
  * Create a synth source with both character and cell colors defined.
  *
@@ -229,7 +226,7 @@ export declare const paint: (source: SynthSource) => SynthSource;
  * );
  * ```
  */
-export declare const shape: (sides?: number | number[] | ((ctx: SynthContext) => number), radius?: number | number[] | ((ctx: SynthContext) => number), smoothing?: number | number[] | ((ctx: SynthContext) => number)) => SynthSource;
+export declare function shape(sides?: number | number[] | ((ctx: SynthContext) => number), radius?: number | number[] | ((ctx: SynthContext) => number), smoothing?: number | number[] | ((ctx: SynthContext) => number)): SynthSource;
 /**
  * Generate a solid color.
  * @param r - Red channel (0-1, default: 0.0)
@@ -253,7 +250,7 @@ export declare const shape: (sides?: number | number[] | ((ctx: SynthContext) =>
  * );
  * ```
  */
-export declare const solid: (r?: number | number[] | ((ctx: SynthContext) => number), g?: number | number[] | ((ctx: SynthContext) => number), b?: number | number[] | ((ctx: SynthContext) => number), a?: number | number[] | ((ctx: SynthContext) => number)) => SynthSource;
+export declare function solid(r?: number | number[] | ((ctx: SynthContext) => number), g?: number | number[] | ((ctx: SynthContext) => number), b?: number | number[] | ((ctx: SynthContext) => number), a?: number | number[] | ((ctx: SynthContext) => number)): SynthSource;
 /**
  * Sample the previous frame's output for feedback effects.
  *
@@ -326,5 +323,5 @@ export declare const src: (layer?: TextmodeLayer) => SynthSource;
  * );
  * ```
  */
-export declare const voronoi: (scale?: number | number[] | ((ctx: SynthContext) => number), speed?: number | number[] | ((ctx: SynthContext) => number), blending?: number | number[] | ((ctx: SynthContext) => number)) => SynthSource;
+export declare function voronoi(scale?: number | number[] | ((ctx: SynthContext) => number), speed?: number | number[] | ((ctx: SynthContext) => number), blending?: number | number[] | ((ctx: SynthContext) => number)): SynthSource;
 //# sourceMappingURL=sources.d.ts.map

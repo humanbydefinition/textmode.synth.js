@@ -39,16 +39,4 @@ export declare function processTransform(def: TransformDefinition): ProcessedTra
 export declare function defineTransform<T extends SynthTransformType>(definition: TransformDefinition & {
     type: T;
 }): TransformDefinition;
-/**
- * Get default values for a transform's inputs.
- */
-export declare function getDefaultArgs(def: TransformDefinition): (number | number[] | null)[];
-/**
- * Check if a transform type requires a nested source.
- */
-export declare function requiresNestedSource(type: SynthTransformType): boolean;
-/**
- * Check if a transform type is a source generator.
- */
-export declare function isSourceType(type: SynthTransformType): boolean;
 //# sourceMappingURL=TransformDefinition.d.ts.map

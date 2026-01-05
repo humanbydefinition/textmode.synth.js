@@ -23,5 +23,4 @@ import type { CompiledSynthShader } from './types';
  * @returns A compiled shader with fragment source and uniform definitions
  */
 export declare function compileSynthSource(source: SynthSource): CompiledSynthShader;
-export type { CompiledSynthShader } from './types';
 //# sourceMappingURL=SynthCompiler.d.ts.map

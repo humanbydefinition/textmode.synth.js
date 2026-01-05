@@ -1,9 +1,3 @@
-/**
- * TransformCodeGenerator - Generates GLSL code for individual transforms.
- *
- * This module handles the code generation logic for each transform type,
- * including context-aware function naming for src() operations.
- */
 import type { ProcessedTransform } from '../transforms/TransformDefinition';
 import type { CompilationTarget } from './types';
 import type { ExternalLayerReference } from '../core/types';
@@ -23,12 +17,8 @@ export interface TransformCodeResult {
 /**
  * Generates GLSL code for individual transforms.
  *
- * Handles:
- * - Source generators (src, osc, noise, etc.)
- * - Coordinate transforms (rotate, scale, etc.)
- * - Color transforms (brightness, contrast, etc.)
- * - Combine operations (add, mult, blend, etc.)
- * - CombineCoord operations (modulate, modulateScale, etc.)
+ * This module handles the code generation logic for each transform type,
+ * including context-aware function naming for src() operations.
  */
 export declare class TransformCodeGenerator {
     /**

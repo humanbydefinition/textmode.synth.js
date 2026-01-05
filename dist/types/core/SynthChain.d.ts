@@ -18,7 +18,6 @@ export declare class SynthChain {
     private _transforms;
     /**
      * Create a new SynthChain with the given transforms.
-     * @internal Use static factory methods instead.
      */
     private constructor();
     /**
@@ -35,7 +34,6 @@ export declare class SynthChain {
     get transforms(): readonly TransformRecord[];
     /**
      * Push a transform to this chain (internal mutation).
-     * @internal
      */
     push(record: TransformRecord): void;
     /**

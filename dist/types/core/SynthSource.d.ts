@@ -5,7 +5,6 @@ export interface SynthSource extends ISynthSource {
 }
 /**
  * Options for creating a new SynthSource.
- * @internal
  */
 interface SynthSourceCreateOptions {
     chain?: SynthChain;

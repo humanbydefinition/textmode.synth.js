@@ -1,16 +1,10 @@
-/**
- * FeedbackTracker - Tracks feedback texture usage during compilation.
- *
- * This module manages the state of which feedback textures are used
- * during shader compilation, enabling context-aware src() sampling.
- */
 import type { CompilationTarget } from './types';
 /**
  * Feedback usage state returned by the tracker.
  */
 export interface FeedbackUsage {
-    /** Whether primary color feedback (prevCharColorBuffer) is used */
-    usesFeedback: boolean;
+    /** Whether character color feedback (prevCharColorBuffer) is used */
+    usesCharColorFeedback: boolean;
     /** Whether character feedback (prevCharBuffer) is used */
     usesCharFeedback: boolean;
     /** Whether cell color feedback (prevCellColorBuffer) is used */
@@ -20,7 +14,7 @@ export interface FeedbackUsage {
  * Tracks which feedback textures are used during compilation.
  *
  * The synth system supports three separate feedback buffers:
- * - Primary color (character foreground)
+ * - Character color (character foreground)
  * - Character data (character indices)
  * - Cell color (character background)
  *
@@ -33,7 +27,6 @@ export declare class FeedbackTracker {
     private _usesCellColorFeedback;
     /**
      * Track feedback usage for a given compilation target.
-     *
      * @param target - The current compilation target context
      */
     trackUsage(target: CompilationTarget): void;
@@ -50,8 +43,8 @@ export declare class FeedbackTracker {
      * Check if any feedback is used.
      */
     get usesAnyFeedback(): boolean;
-    /** Whether primary color feedback is used */
-    get usesFeedback(): boolean;
+    /** Whether character color feedback is used */
+    get usesCharColorFeedback(): boolean;
     /** Whether character feedback is used */
     get usesCharFeedback(): boolean;
     /** Whether cell color feedback is used */

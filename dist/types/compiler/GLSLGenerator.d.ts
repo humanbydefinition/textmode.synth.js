@@ -26,9 +26,9 @@ export interface ShaderGenerationOptions {
     charMapping?: CharacterMapping;
     /** Whether primary color feedback (src) is used */
     usesFeedback?: boolean;
-    /** Whether character feedback (charSrc) is used */
+    /** Whether character feedback (src) is used */
     usesCharFeedback?: boolean;
-    /** Whether cell color feedback (cellColorSrc) is used */
+    /** Whether cell color feedback (src) is used */
     usesCellColorFeedback?: boolean;
     /** External layer references used in this shader */
     externalLayers?: Map<string, ExternalLayerInfo>;

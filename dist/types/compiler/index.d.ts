@@ -11,7 +11,7 @@
  */
 export * from './types';
 export { compileSynthSource } from './SynthCompiler';
-export type { CompiledSynthShader } from './SynthCompiler';
+export type { CompiledSynthShader } from './types';
 export { FeedbackTracker, type FeedbackUsage } from './FeedbackTracker';
 export { ExternalLayerManager } from './ExternalLayerManager';
 export { TransformCodeGenerator, type TransformCodeResult } from './TransformCodeGenerator';

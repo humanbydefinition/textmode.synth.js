@@ -10,5 +10,4 @@ export { SynthChain, type TransformRecord } from './SynthChain';
 export { SynthSource } from './SynthSource';
 export type { ISynthSource } from './ISynthSource';
 export { setGlobalBpm, getGlobalBpm } from './GlobalState';
-export type { LayerSynthState } from './LayerSynthState';
 //# sourceMappingURL=index.d.ts.map
