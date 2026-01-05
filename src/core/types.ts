@@ -65,6 +65,19 @@ export type SynthParameterValue =
 
 /**
  * Context passed to dynamic parameter functions during rendering.
+ * 
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ * 
+ * t.layers.base.synth(
+ *   noise((ctx) => Math.sin(ctx.time) * 10)
+ * );
+ * ```
  */
 export interface SynthContext {
 	/** Current time in seconds */

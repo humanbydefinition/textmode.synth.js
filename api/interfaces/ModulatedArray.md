@@ -8,6 +8,22 @@ Arrays in textmode.synth.js behave like hydra - they cycle through values over t
 creating dynamic, time-varying parameters. This enables complex animations without
 manually tracking time or state.
 
+## Example
+
+```typescript
+const t = textmode.create({
+  width: 800,
+  height: 600,
+  plugins: [SynthPlugin]
+});
+
+// Rotating shape with eased animation
+t.layers.base.synth(
+  shape(4)
+    .rotate([-3.14, 3.14].ease('easeInOutCubic'))
+);
+```
+
 ## Extends
 
 - `Array`\<`number`\>

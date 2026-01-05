@@ -1,9 +1,9 @@
 [textmode.synth.js](../index.md) / charColor
 
-# Variable: charColor()
+# Function: charColor()
 
 ```ts
-const charColor: (source) => SynthSource;
+function charColor(source): SynthSource;
 ```
 
 Create a synth source with character foreground color defined.

@@ -1,6 +1,6 @@
 # textmode.synth.js
 
-A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), 
+A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack),
 adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem, providing
 a visual synthesis system for procedural generation of characters, colors,
 and visual effects through method chaining.
@@ -54,15 +54,20 @@ t.layers.base.synth(synth);
 
 | Variable | Description |
 | ------ | ------ |
-| [SynthPlugin](variables/SynthPlugin.md) | The `textmode.synth.js` plugin to install. |
-| [cellColor](variables/cellColor.md) | Create a synth source with cell background color defined. |
-| [char](variables/char.md) | Create a character source from any color/pattern source. |
-| [charColor](variables/charColor.md) | Create a synth source with character foreground color defined. |
 | [gradient](variables/gradient.md) | Generate a rotating radial gradient. |
 | [noise](variables/noise.md) | Generate Perlin noise patterns. |
 | [osc](variables/osc.md) | Generate oscillating patterns using sine waves. |
-| [paint](variables/paint.md) | Create a synth source with both character and cell colors defined. |
 | [shape](variables/shape.md) | Generate geometric shapes (polygons). |
 | [solid](variables/solid.md) | Generate a solid color. |
-| [src](variables/src.md) | Sample the previous frame's output for feedback effects. |
 | [voronoi](variables/voronoi.md) | Generate voronoi patterns. |
+| [SynthPlugin](variables/SynthPlugin.md) | The `textmode.synth.js` plugin to install. |
+
+## Functions
+
+| Function | Description |
+| ------ | ------ |
+| [cellColor](functions/cellColor.md) | Create a synth source with cell background color defined. |
+| [char](functions/char.md) | Create a character source from any color/pattern source. |
+| [charColor](functions/charColor.md) | Create a synth source with character foreground color defined. |
+| [paint](functions/paint.md) | Create a synth source with both character and cell colors defined. |
+| [src](functions/src.md) | Sample the previous frame's output for feedback effects. |

@@ -1,9 +1,9 @@
 [textmode.synth.js](../index.md) / cellColor
 
-# Variable: cellColor()
+# Function: cellColor()
 
 ```ts
-const cellColor: (source) => SynthSource;
+function cellColor(source): SynthSource;
 ```
 
 Create a synth source with cell background color defined.

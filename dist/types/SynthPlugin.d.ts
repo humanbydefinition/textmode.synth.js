@@ -6,7 +6,7 @@ import type { TextmodePlugin } from 'textmode.js/plugins';
  *
  * @example
  * ```typescript
- * import { textmode } from 'textmode.js';
+ * import { textmode } from 'textmode.js'; // es module imports
  * import { SynthPlugin, noise, osc } from 'textmode.synth.js';
  *
  * const t = textmode.create({ plugins: [SynthPlugin] });

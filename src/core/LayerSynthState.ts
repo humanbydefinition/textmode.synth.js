@@ -1,13 +1,15 @@
 import type {
     TextmodeFramebuffer,
+    TextmodeShader,
 } from 'textmode.js';
 import type { TextmodeLayer } from 'textmode.js/layering';
-import type { SynthSource } from '../core/SynthSource';
+import type { SynthSource } from './SynthSource';
 import type { CompiledSynthShader } from '../compiler/types';
 import type { CharacterResolver } from '../utils/CharacterResolver';
 
 /**
  * Per-layer synth state stored via plugin state API.
+ * @internal
  */
 export interface LayerSynthState {
     /** The original SynthSource */
@@ -15,7 +17,7 @@ export interface LayerSynthState {
     /** Compiled shader data */
     compiled?: CompiledSynthShader;
     /** The compiled GLShader instance */
-    shader?: any; // GLShader type from textmode.js
+    shader?: TextmodeShader;
     /** Character resolver for this layer's synth */
     characterResolver: CharacterResolver;
     /** Time when synth was set */

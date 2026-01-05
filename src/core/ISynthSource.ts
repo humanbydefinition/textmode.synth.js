@@ -14,7 +14,6 @@ import type { SynthParameterValue } from './types';
  * - Color transforms (brightness, contrast, invert, saturate, hue, etc.)
  * - Combine operations (add, sub, mult, blend, diff, layer, mask)
  * - Modulation (modulate, modulateScale, modulateRotate, etc.)
- * - Character modifiers (charFlipX, charFlipY, charInvert, charRotate)
  */
 export interface ISynthSource {
     // ============================================================
@@ -758,33 +757,4 @@ export interface ISynthSource {
      * @param speed - Scroll speed (default: 0.0)
      */
     modulateScrollY(source: ISynthSource, scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
-
-    // ============================================================
-    // CHARACTER MODIFIERS
-    // ============================================================
-
-    /**
-     * Flip characters horizontally.
-     * @param toggle - Toggle flip (default: 1.0)
-     */
-    charFlipX(toggle?: SynthParameterValue): this;
-
-    /**
-     * Flip characters vertically.
-     * @param toggle - Toggle flip (default: 1.0)
-     */
-    charFlipY(toggle?: SynthParameterValue): this;
-
-    /**
-     * Invert character indices.
-     * @param toggle - Toggle invert (default: 1.0)
-     */
-    charInvert(toggle?: SynthParameterValue): this;
-
-    /**
-     * Rotate characters.
-     * @param angle - Rotation angle in radians (default: 0.0)
-     * @param speed - Rotation speed (default: 0.0)
-     */
-    charRotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this;
 }

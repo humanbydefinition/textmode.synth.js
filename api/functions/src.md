@@ -1,23 +1,23 @@
 [textmode.synth.js](../index.md) / src
 
-# Variable: src()
+# Function: src()
 
 ```ts
-const src: (layer?) => SynthSource;
+function src(layer?): SynthSource;
 ```
 
 Sample the previous frame's output for feedback effects.
 
-This is the core of feedback loops - it reads from the previous frame, 
+This is the core of feedback loops - it reads from the previous frame,
 enabling effects like trails, motion blur, and recursive patterns.
 
-**Context-aware behavior:** When called without arguments, `src()` automatically 
+**Context-aware behavior:** When called without arguments, `src()` automatically
 samples the appropriate texture based on where it's used in the synth chain:
 - Inside `char(...)` → samples previous frame's character data
 - Inside `charColor(...)` → samples previous frame's primary color
 - Inside `cellColor(...)` → samples previous frame's cell color
 
-**Cross-layer sampling:** When called with a layer argument, `src(layer)` samples 
+**Cross-layer sampling:** When called with a layer argument, `src(layer)` samples
 from another layer's output, enabling hydra-style multi-output compositions:
 - The sampled texture is still context-aware based on the current compilation target
 

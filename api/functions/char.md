@@ -1,9 +1,9 @@
 [textmode.synth.js](../index.md) / char
 
-# Variable: char()
+# Function: char()
 
 ```ts
-const char: (source, charCount?) => SynthSource;
+function char(source, charCount?): SynthSource;
 ```
 
 Create a character source from any color/pattern source.

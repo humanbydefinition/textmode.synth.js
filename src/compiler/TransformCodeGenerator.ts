@@ -42,7 +42,6 @@ const SELF_FEEDBACK_SAMPLERS: Record<CompilationTarget, string> = {
  * - Color transforms (brightness, contrast, etc.)
  * - Combine operations (add, mult, blend, etc.)
  * - CombineCoord operations (modulate, modulateScale, etc.)
- * - Character modifiers (charFlipX, charRotate, etc.)
  */
 export class TransformCodeGenerator {
     /**

@@ -398,26 +398,6 @@ export class SynthSource implements ISynthSource {
 	}
 
 	// ============================================================
-	// CHARACTER MODIFIERS
-	// ============================================================
-
-	public charFlipX(toggle?: SynthParameterValue): this {
-		return this.addTransform('charFlipX', [toggle ?? 1.0]);
-	}
-
-	public charFlipY(toggle?: SynthParameterValue): this {
-		return this.addTransform('charFlipY', [toggle ?? 1.0]);
-	}
-
-	public charInvert(toggle?: SynthParameterValue): this {
-		return this.addTransform('charInvert', [toggle ?? 1.0]);
-	}
-
-	public charRotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this {
-		return this.addTransform('charRotate', [angle ?? 0.0, speed ?? 0.0]);
-	}
-
-	// ============================================================
 	// ACCESSORS (for compiler use)
 	// ============================================================
 

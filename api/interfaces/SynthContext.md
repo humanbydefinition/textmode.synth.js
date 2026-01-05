@@ -4,6 +4,20 @@
 
 Context passed to dynamic parameter functions during rendering.
 
+## Example
+
+```typescript
+const t = textmode.create({
+  width: 800,
+  height: 600,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  noise((ctx) => Math.sin(ctx.time) * 10)
+);
+```
+
 ## Properties
 
 | Property | Type | Description |

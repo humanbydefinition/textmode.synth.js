@@ -1,1 +1,1 @@
-{"version":3,"file":"useSynthRender.d.ts","sourceRoot":"","sources":["../../../src/hooks/useSynthRender.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,sBAAsB,CAAC;AAU1D;;GAEG;AACH,wBAAsB,cAAc,CAAC,KAAK,EAAE,aAAa,EAAE,YAAY,EAAE,GAAG,iBA0L3E"}
+{"version":3,"file":"useSynthRender.d.ts","sourceRoot":"","sources":["../../../src/hooks/useSynthRender.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,aAAa,EAAE,MAAM,sBAAsB,CAAC;AAU1D;;GAEG;AACH,wBAAsB,cAAc,CAAC,KAAK,EAAE,aAAa,EAAE,YAAY,EAAE,GAAG,iBAyL3E"}

@@ -6,6 +6,13 @@
  *   - Target 0: Character data (indexLow, indexHigh, packedFlags, rotation)
  *   - Target 1: Primary/foreground color (RGBA)
  *   - Target 2: Secondary/cell background color (RGBA)
+ *
+ * The compilation process is modular, delegating to:
+ *   - FeedbackTracker: Manages feedback texture usage
+ *   - ExternalLayerManager: Manages cross-layer sampling
+ *   - TransformCodeGenerator: Generates GLSL for individual transforms
+ *   - UniformManager: Manages shader uniforms
+ *   - GLSLGenerator: Assembles the final shader
  */
 import type { SynthSource } from '../core/SynthSource';
 import type { CompiledSynthShader } from './types';

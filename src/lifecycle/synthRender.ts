@@ -1,17 +1,26 @@
+/**
+ * Synth render lifecycle callback.
+ *
+ * Renders synth sources before the user draw callback.
+ *
+ * @internal
+ */
+
 import type { TextmodeLayer } from 'textmode.js/layering';
 import type { TextmodeFont } from 'textmode.js/loadables';
 import type { TextmodeFramebuffer } from 'textmode.js';
-import { PLUGIN_NAME } from '../constants';
+import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
 import { collectExternalLayerRefs } from '../utils/collectExternalLayerRefs';
 import { getGlobalBpm } from '../core/GlobalState';
 import type { SynthContext } from '../core/types';
-import type { LayerSynthState } from '../types/LayerSynthState';
+import type { LayerSynthState } from '../core/LayerSynthState';
 
 /**
- * Hook to render synth before user draw.
+ * Render synth before user draw callback.
+ * @internal
  */
-export async function useSynthRender(layer: TextmodeLayer, textmodifier: any) {
+export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
     const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
     if (!state) return;
 
@@ -128,7 +137,7 @@ export async function useSynthRender(layer: TextmodeLayer, textmodifier: any) {
             for (const [layerId, info] of externalLayers) {
                 const extLayer = state.externalLayerMap.get(layerId);
                 if (!extLayer) {
-                    console.warn(`[SynthPlugin] External layer not found: ${layerId}`);
+                    console.warn(`[textmode.synth.js] External layer not found: ${layerId}`);
                     continue;
                 }
 

@@ -1,9 +1,9 @@
 [textmode.synth.js](../index.md) / paint
 
-# Variable: paint()
+# Function: paint()
 
 ```ts
-const paint: (source) => SynthSource;
+function paint(source): SynthSource;
 ```
 
 Create a synth source with both character and cell colors defined.
