@@ -1,10 +1,3 @@
-/**
- * TransformCodeGenerator - Generates GLSL code for individual transforms.
- * 
- * This module handles the code generation logic for each transform type,
- * including context-aware function naming for src() operations.
- */
-
 import type { ProcessedTransform } from '../transforms/TransformDefinition';
 import type { CompilationTarget } from './types';
 import type { ExternalLayerReference } from '../core/types';
@@ -36,12 +29,8 @@ const SELF_FEEDBACK_SAMPLERS: Record<CompilationTarget, string> = {
 /**
  * Generates GLSL code for individual transforms.
  * 
- * Handles:
- * - Source generators (src, osc, noise, etc.)
- * - Coordinate transforms (rotate, scale, etc.)
- * - Color transforms (brightness, contrast, etc.)
- * - Combine operations (add, mult, blend, etc.)
- * - CombineCoord operations (modulate, modulateScale, etc.)
+ * This module handles the code generation logic for each transform type,
+ * including context-aware function naming for src() operations.
  */
 export class TransformCodeGenerator {
     /**
@@ -182,19 +171,6 @@ export class TransformCodeGenerator {
                 const newCoord = `st${varId}`;
                 mainCode.push(`\tvec2 ${newCoord} = ${funcName}(${buildArgs(coordVar, nestedColorVar ?? 'vec4(0.0)')});`);
                 mainCode.push(`\t${coordVar} = ${newCoord};`);
-                break;
-            }
-
-            case 'charModify': {
-                if (!newCharVar) {
-                    newCharVar = `char${varId}`;
-                    newFlagsVar = `flags${varId}`;
-                    newRotationVar = `rot${varId}`;
-                    mainCode.push(`\tvec4 ${newCharVar} = vec4(0.0);`);
-                    mainCode.push(`\tfloat ${newFlagsVar} = 0.0;`);
-                    mainCode.push(`\tfloat ${newRotationVar} = 0.0;`);
-                }
-                mainCode.push(`\t${newCharVar} = ${funcName}(${buildArgs(newCharVar)});`);
                 break;
             }
         }

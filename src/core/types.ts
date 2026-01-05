@@ -17,15 +17,13 @@ import { SynthSource } from "./SynthSource";
  * - `color`: Color transforms that modify existing color values
  * - `combine`: Blending operations that combine two color sources
  * - `combineCoord`: Modulation that uses one source to affect another's coordinates
- * - `charModify`: Character property modifiers (flip, rotate, invert)
  */
 export type SynthTransformType =
 	| 'src'
 	| 'coord'
 	| 'color'
 	| 'combine'
-	| 'combineCoord'
-	| 'charModify';
+	| 'combineCoord';
 
 /**
  * GLSL type for transform inputs.
@@ -166,9 +164,5 @@ export const TRANSFORM_TYPE_INFO: Record<
 			{ type: 'vec2', name: '_st' },
 			{ type: 'vec4', name: '_c0' },
 		],
-	},
-	charModify: {
-		returnType: 'vec4',
-		args: [{ type: 'vec4', name: '_char' }],
 	}
 };
