@@ -54,12 +54,6 @@ t.layers.base.synth(synth);
 
 | Variable | Description |
 | ------ | ------ |
-| [gradient](variables/gradient.md) | Generate a rotating radial gradient. |
-| [noise](variables/noise.md) | Generate Perlin noise patterns. |
-| [osc](variables/osc.md) | Generate oscillating patterns using sine waves. |
-| [shape](variables/shape.md) | Generate geometric shapes (polygons). |
-| [solid](variables/solid.md) | Generate a solid color. |
-| [voronoi](variables/voronoi.md) | Generate voronoi patterns. |
 | [SynthPlugin](variables/SynthPlugin.md) | The `textmode.synth.js` plugin to install. |
 
 ## Functions
@@ -69,5 +63,11 @@ t.layers.base.synth(synth);
 | [cellColor](functions/cellColor.md) | Create a synth source with cell background color defined. |
 | [char](functions/char.md) | Create a character source from any color/pattern source. |
 | [charColor](functions/charColor.md) | Create a synth source with character foreground color defined. |
+| [gradient](functions/gradient.md) | Generate a rotating radial gradient. |
+| [noise](functions/noise.md) | Generate Perlin noise patterns. |
+| [osc](functions/osc.md) | Generate oscillating patterns using sine waves. |
 | [paint](functions/paint.md) | Create a synth source with both character and cell colors defined. |
+| [shape](functions/shape.md) | Generate geometric shapes (polygons). |
+| [solid](functions/solid.md) | Generate a solid color. |
 | [src](functions/src.md) | Sample the previous frame's output for feedback effects. |
+| [voronoi](functions/voronoi.md) | Generate voronoi patterns. |

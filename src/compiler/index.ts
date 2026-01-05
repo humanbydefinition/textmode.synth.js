@@ -15,7 +15,7 @@ export * from './types';
 
 // Core compiler
 export { compileSynthSource } from './SynthCompiler';
-export type { CompiledSynthShader } from './SynthCompiler';
+export type { CompiledSynthShader } from './types';
 
 // Modular components
 export { FeedbackTracker, type FeedbackUsage } from './FeedbackTracker';

@@ -1,9 +1,9 @@
 [textmode.synth.js](../index.md) / gradient
 
-# Variable: gradient()
+# Function: gradient()
 
 ```ts
-const gradient: (speed?) => SynthSource;
+function gradient(speed?): SynthSource;
 ```
 
 Generate a rotating radial gradient.

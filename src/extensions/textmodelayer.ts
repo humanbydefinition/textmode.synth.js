@@ -12,7 +12,7 @@ import type { TextmodeLayer } from 'textmode.js/layering';
 import type { SynthSource } from '../core/SynthSource';
 import { SynthSource as SynthSourceClass } from '../core/SynthSource';
 import { PLUGIN_NAME } from '../plugin/constants';
-import type { LayerSynthState } from '../core/LayerSynthState';
+import type { LayerSynthState } from '../core/types';
 import { compileSynthSource } from '../compiler/SynthCompiler';
 import { CharacterResolver } from '../utils/CharacterResolver';
 
@@ -31,7 +31,6 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
         compiled: partial.compiled,
         shader: partial.shader,
         characterResolver: partial.characterResolver ?? new CharacterResolver(),
-        startTime: partial.startTime ?? performance.now() / 1000,
         needsCompile: partial.needsCompile ?? false,
         pingPongBuffers: partial.pingPongBuffers,
         pingPongIndex: partial.pingPongIndex ?? 0,
@@ -45,7 +44,6 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
  */
 export function extendLayerSynth(api: TextmodePluginAPI) {
     api.extendLayer('synth', function (this: TextmodeLayer, source: SynthSource): void {
-        const now = performance.now() / 1000;
         const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
 
         let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
@@ -53,7 +51,6 @@ export function extendLayerSynth(api: TextmodePluginAPI) {
         if (state) {
             // Update existing state
             state.source = source;
-            state.startTime = now;
             state.needsCompile = true;
             state.characterResolver.invalidate();
 
@@ -65,7 +62,6 @@ export function extendLayerSynth(api: TextmodePluginAPI) {
             state = createLayerSynthState({
                 source,
                 compiled: isInitialized ? compileSynthSource(source) : undefined,
-                startTime: now,
                 needsCompile: true,
             });
         }

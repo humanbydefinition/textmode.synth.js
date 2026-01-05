@@ -1,9 +1,12 @@
 [textmode.synth.js](../index.md) / voronoi
 
-# Variable: voronoi()
+# Function: voronoi()
 
 ```ts
-const voronoi: (scale?, speed?, blending?) => SynthSource;
+function voronoi(
+   scale?, 
+   speed?, 
+   blending?): SynthSource;
 ```
 
 Generate voronoi patterns.

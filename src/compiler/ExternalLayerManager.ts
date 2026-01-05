@@ -49,7 +49,7 @@ export class ExternalLayerManager {
                 layerId: ref.layerId,
                 uniformPrefix: prefix,
                 usesChar: false,
-                usesPrimary: false,
+                usesCharColor: false,
                 usesCellColor: false,
             };
             this._externalLayers.set(ref.layerId, info);
@@ -66,7 +66,7 @@ export class ExternalLayerManager {
             case 'charColor':
             case 'main':
             default:
-                info.usesPrimary = true;
+                info.usesCharColor = true;
                 break;
         }
     }

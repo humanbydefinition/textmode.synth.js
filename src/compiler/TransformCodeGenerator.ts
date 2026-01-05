@@ -33,6 +33,7 @@ const SELF_FEEDBACK_SAMPLERS: Record<CompilationTarget, string> = {
  * including context-aware function naming for src() operations.
  */
 export class TransformCodeGenerator {
+    
     /**
      * Generate a context-aware GLSL function for src().
      * 

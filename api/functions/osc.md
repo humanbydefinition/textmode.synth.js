@@ -1,9 +1,12 @@
 [textmode.synth.js](../index.md) / osc
 
-# Variable: osc()
+# Function: osc()
 
 ```ts
-const osc: (frequency?, sync?, offset?) => SynthSource;
+function osc(
+   frequency?, 
+   sync?, 
+   offset?): SynthSource;
 ```
 
 Generate oscillating patterns using sine waves.

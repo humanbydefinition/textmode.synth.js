@@ -1,9 +1,9 @@
 [textmode.synth.js](../index.md) / noise
 
-# Variable: noise()
+# Function: noise()
 
 ```ts
-const noise: (scale?, offset?) => SynthSource;
+function noise(scale?, offset?): SynthSource;
 ```
 
 Generate Perlin noise patterns.

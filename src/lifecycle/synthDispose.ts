@@ -6,7 +6,7 @@
 
 import type { TextmodeLayer } from 'textmode.js/layering';
 import { PLUGIN_NAME } from '../plugin/constants';
-import type { LayerSynthState } from '../core/LayerSynthState';
+import type { LayerSynthState } from '../core/types';
 
 /**
  * Clean up synth resources when a layer is disposed.

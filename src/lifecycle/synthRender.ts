@@ -11,8 +11,7 @@ import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
 import { collectExternalLayerRefs } from '../utils/collectExternalLayerRefs';
 import { getGlobalBpm } from '../core/GlobalState';
-import type { SynthContext } from '../core/types';
-import type { LayerSynthState } from '../core/LayerSynthState';
+import type { SynthContext, LayerSynthState } from '../core/types';
 
 /**
  * Render synth before user draw callback.
@@ -54,7 +53,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
     if (!state.shader || !state.compiled) return;
 
     // Check if feedback is used
-    const usesFeedback = state.compiled.usesFeedback;
+    const usesFeedback = state.compiled.usesCharColorFeedback;
     const usesCharFeedback = state.compiled.usesCharFeedback;
     const usesCellColorFeedback = state.compiled.usesCellColorFeedback;
     const usesAnyFeedback = usesFeedback || usesCharFeedback || usesCellColorFeedback;
@@ -159,7 +158,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
                     if (info.usesChar) {
                         textmodifier.setUniform(`${info.uniformPrefix}_char`, extTextures[0]);
                     }
-                    if (info.usesPrimary) {
+                    if (info.usesCharColor) {
                         textmodifier.setUniform(`${info.uniformPrefix}_primary`, extTextures[1]);
                     }
                     if (info.usesCellColor) {

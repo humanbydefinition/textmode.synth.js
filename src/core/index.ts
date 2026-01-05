@@ -18,4 +18,3 @@ export type { ISynthSource } from './ISynthSource';
 
 // State
 export { setGlobalBpm, getGlobalBpm } from './GlobalState';
-export type { LayerSynthState } from './LayerSynthState';

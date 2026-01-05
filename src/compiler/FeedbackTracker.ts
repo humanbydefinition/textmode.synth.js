@@ -1,18 +1,11 @@
-/**
- * FeedbackTracker - Tracks feedback texture usage during compilation.
- * 
- * This module manages the state of which feedback textures are used
- * during shader compilation, enabling context-aware src() sampling.
- */
-
 import type { CompilationTarget } from './types';
 
 /**
  * Feedback usage state returned by the tracker.
  */
 export interface FeedbackUsage {
-    /** Whether primary color feedback (prevCharColorBuffer) is used */
-    usesFeedback: boolean;
+    /** Whether character color feedback (prevCharColorBuffer) is used */
+    usesCharColorFeedback: boolean;
     /** Whether character feedback (prevCharBuffer) is used */
     usesCharFeedback: boolean;
     /** Whether cell color feedback (prevCellColorBuffer) is used */
@@ -23,7 +16,7 @@ export interface FeedbackUsage {
  * Tracks which feedback textures are used during compilation.
  * 
  * The synth system supports three separate feedback buffers:
- * - Primary color (character foreground)
+ * - Character color (character foreground)
  * - Character data (character indices)
  * - Cell color (character background)
  * 
@@ -37,7 +30,6 @@ export class FeedbackTracker {
 
     /**
      * Track feedback usage for a given compilation target.
-     * 
      * @param target - The current compilation target context
      */
     public trackUsage(target: CompilationTarget): void {
@@ -71,7 +63,7 @@ export class FeedbackTracker {
      */
     public getUsage(): FeedbackUsage {
         return {
-            usesFeedback: this._usesFeedback,
+            usesCharColorFeedback: this._usesFeedback,
             usesCharFeedback: this._usesCharFeedback,
             usesCellColorFeedback: this._usesCellColorFeedback,
         };
@@ -84,8 +76,8 @@ export class FeedbackTracker {
         return this._usesFeedback || this._usesCharFeedback || this._usesCellColorFeedback;
     }
 
-    /** Whether primary color feedback is used */
-    public get usesFeedback(): boolean {
+    /** Whether character color feedback is used */
+    public get usesCharColorFeedback(): boolean {
         return this._usesFeedback;
     }
 

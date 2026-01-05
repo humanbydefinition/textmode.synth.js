@@ -22,256 +22,11 @@ const synth = noise(10)
   .charMap('@#%*+=-:. ');
 ```
 
-## Implements
+## Extends
 
 - `ISynthSource`
 
 ## Methods
-
-### charMap()
-
-```ts
-charMap(chars): this;
-```
-
-Map character indices to a specific character set.
-This is the primary textmode-native way to define which characters to use.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `chars` | `string` | A string of characters to map indices to |
-
-#### Returns
-
-`this`
-
-The SynthSource for chaining
-
-#### Example
-
-```ts
-// Map noise values to ASCII art characters
-noise(10).charMap('@#%*+=-:. ')
-
-// Use lowercase alphabet characters
-osc(1).charMap('abcdefghijklmnopqrstuvwxyz')
-
-// Use custom symbols
-gradient().charMap('-<>^v')
-```
-
-#### Implementation of
-
-```ts
-ISynthSource.charMap
-```
-
-***
-
-### charColor()
-
-```ts
-charColor(source): this;
-```
-
-Set the character foreground color using a color source chain.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `source` | `SynthSource` | A SynthSource producing color values, or RGBA values |
-
-#### Returns
-
-`this`
-
-The SynthSource for chaining
-
-#### Example
-
-```ts
-// Use oscillator for grayscale colors
-noise(10).charColor(osc(5, 0.1))
-
-// Use solid color
-noise(10).charColor(solid(1, 0.5, 0))
-
-// Use gradient
-noise(10).charColor(gradient(0.5).hue(0.3))
-```
-
-#### Implementation of
-
-```ts
-ISynthSource.charColor
-```
-
-***
-
-### char()
-
-```ts
-char(source, charCount): this;
-```
-
-Set the character indices using a character source chain.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `source` | `SynthSource` | A synth source producing character indices |
-| `charCount` | `number` | Number of different characters to use from the character mapping |
-
-#### Returns
-
-`this`
-
-The SynthSource for chaining
-
-#### Example
-
-```ts
-// Use noise to select characters
-char(noise(10), 16)
-
-// Use oscillator to select characters
-char(osc(5), 32)
-```
-
-#### Implementation of
-
-```ts
-ISynthSource.char
-```
-
-***
-
-### cellColor()
-
-```ts
-cellColor(source): this;
-```
-
-Set the cell background colors using a color source chain.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `source` | `SynthSource` | A SynthSource producing color values, or RGBA values |
-
-#### Returns
-
-`this`
-
-The SynthSource for chaining
-
-#### Example
-
-```ts
-// Transparent background
-noise(10).cellColor(solid(0, 0, 0, 0))
-
-// Complement of character color
-noise(10).charColor(osc(5)).cellColor(osc(5).invert())
-```
-
-#### Implementation of
-
-```ts
-ISynthSource.cellColor
-```
-
-***
-
-### paint()
-
-```ts
-paint(source): this;
-```
-
-Set both character foreground and cell background color using the same source chain.
-This is a convenience method that combines `.charColor()` and `.cellColor()` in one call.
-
-After calling `paint()`, you can still override the cell color separately using `.cellColor()`.
-
-Otherwise useful for pixel art styles where both colors are the same, making the characters redundant.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `source` | `SynthSource` | A SynthSource producing color values |
-
-#### Returns
-
-`this`
-
-The SynthSource for chaining
-
-#### Example
-
-```ts
-// Apply same color to both character and cell background
-noise(10).paint(osc(5, 0.1).kaleid(4))
-
-// Apply color to both, then invert just the cell background
-noise(10)
-  .paint(voronoi(10, 0.5).mult(osc(20)))
-  .cellColor(voronoi(10, 0.5).mult(osc(20)).invert())
-```
-
-#### Implementation of
-
-```ts
-ISynthSource.paint
-```
-
-***
-
-### clone()
-
-```ts
-clone(): SynthSource;
-```
-
-Create a deep clone of this SynthSource.
-Useful when you want to create a modified version of an existing chain
-without affecting the original.
-
-#### Returns
-
-`SynthSource`
-
-A new SynthSource with the same transform chain
-
-#### Example
-
-```ts
-// Create a color chain and use a modified clone for cell color
-const colorChain = voronoi(10, 0.5).mult(osc(20));
-
-noise(10)
-  .paint(colorChain)
-  .cellColor(colorChain.clone().invert())
-
-// Or use it to create variations of a base pattern
-const base = osc(10, 0.1);
-const rotated = base.clone().rotate(0.5);
-const scaled = base.clone().scale(2);
-```
-
-#### Implementation of
-
-```ts
-ISynthSource.clone
-```
-
-***
 
 ### osc()
 
@@ -296,7 +51,7 @@ Generate oscillating patterns using sine waves.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.osc
@@ -323,7 +78,7 @@ Generate Perlin noise patterns.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.noise
@@ -354,7 +109,7 @@ Generate voronoi patterns.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.voronoi
@@ -386,7 +141,7 @@ Generate a rotating radial gradient.
 gradient([1,2,4])
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.gradient
@@ -417,7 +172,7 @@ Generate geometric shapes (polygons).
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.shape
@@ -450,7 +205,7 @@ Generate a solid color.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.solid
@@ -461,7 +216,7 @@ ISynthSource.solid
 ### src()
 
 ```ts
-src(_layer?): this;
+src(layer?): this;
 ```
 
 Sample the previous frame for feedback effects, or sample from another layer.
@@ -484,9 +239,9 @@ Equivalent to hydra's `src(o0)`.
 
 #### Parameters
 
-| Parameter | Type |
-| ------ | ------ |
-| `_layer?` | `unknown` |
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `layer?` | `unknown` | Optional TextmodeLayer to sample from. If omitted, samples from self (feedback). |
 
 #### Returns
 
@@ -507,7 +262,7 @@ char(noise(10).diff(src()))           // src() → character feedback
   .cellColor(voronoi().diff(src()))    // src() → cell color feedback
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.src
@@ -543,7 +298,7 @@ osc(50, 0, 0, 16)
   .charColor(osc(50).rotate((ctx) => ctx.time % 360));
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.rotate
@@ -585,7 +340,7 @@ Scale coordinates.
 shape(3).scale(1.5, 1, 1);
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.scale
@@ -625,7 +380,7 @@ Scroll coordinates in both X and Y directions.
 shape(3).scroll(0.1, -0.3);
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.scroll
@@ -652,7 +407,7 @@ Scroll coordinates in X direction.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.scrollX
@@ -679,7 +434,7 @@ Scroll coordinates in Y direction.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.scrollY
@@ -715,7 +470,7 @@ noise(1, 0.05)
   .charColor(noise().pixelate(20, 20));
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.pixelate
@@ -757,7 +512,7 @@ shape(3)
   .charColor(shape().repeat(3, 3, 0, 0));
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.repeat
@@ -784,7 +539,7 @@ Repeat coordinates in X direction.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.repeatX
@@ -811,7 +566,7 @@ Repeat coordinates in Y direction.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.repeatY
@@ -846,7 +601,7 @@ osc(25, -0.1, 0.5, 32)
   .charColor(osc(25, -0.1, 0.5).kaleid(50));
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.kaleid
@@ -881,7 +636,7 @@ osc(1)
   )
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.brightness
@@ -916,7 +671,7 @@ osc(1)
   )
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.contrast
@@ -950,7 +705,7 @@ Invert colors.
     .cellColor(solid(1, 1, 1).invert([1, 0]))
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.invert
@@ -986,7 +741,7 @@ osc(10, 0, 1, 16)
   );
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.saturate
@@ -1021,7 +776,7 @@ osc(1)
   )
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.hue
@@ -1054,7 +809,7 @@ Apply colorama effect (hue rotation based on luminance).
 noise(4).colorama(0.3)
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.colorama
@@ -1092,7 +847,7 @@ gradient(0, 16)
   );
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.posterize
@@ -1126,7 +881,7 @@ Apply threshold based on luminance.
 osc(10,0,1).luma(0.5,0.1)
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.luma
@@ -1153,7 +908,7 @@ Apply hard threshold.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.thresh
@@ -1199,7 +954,7 @@ osc(10).color(0, 0.5, 1.0)
 noise(5).color(1, 0.2, 0.2)
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.color
@@ -1236,7 +991,7 @@ voronoi(5).hue(0.4).r()
 char(osc(10).hue(0.5).r(), 16)
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.r
@@ -1269,7 +1024,7 @@ Extract the green channel as a grayscale value.
 osc(4,0.1,1.5).layer(gradient().g())
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.g
@@ -1302,7 +1057,7 @@ Extract the blue channel as a grayscale value.
 osc(8,0.1,1.5).layer(gradient().colorama(1).b())
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.b
@@ -1335,7 +1090,7 @@ Shift color channels by adding offset values.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.shift
@@ -1368,7 +1123,7 @@ osc(1)
   .charColor(osc(5).gamma([1.0, 1.5, 2.0].smooth(4)))
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.gamma
@@ -1415,7 +1170,7 @@ voronoi(8)
   .charColor(voronoi(5).levels(0.0, 1.0, 0.2, 0.9, 0.8))
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.levels
@@ -1448,7 +1203,7 @@ Clamp color values to a specified range for stability.
 osc(5).add(osc(8), 0.8).add(osc(12), 0.6).clamp(0.2, 0.8)
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.clamp
@@ -1468,7 +1223,7 @@ Add another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Source to add |
+| `source` | `ISynthSource` | Source to add |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 0.5) |
 
 #### Returns
@@ -1484,7 +1239,7 @@ shape(3)
   .add(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.add
@@ -1504,14 +1259,14 @@ Subtract another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Source to subtract |
+| `source` | `ISynthSource` | Source to subtract |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 0.5) |
 
 #### Returns
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.sub
@@ -1531,14 +1286,14 @@ Multiply with another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Source to multiply |
+| `source` | `ISynthSource` | Source to multiply |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 0.5) |
 
 #### Returns
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.mult
@@ -1558,7 +1313,7 @@ Blend with another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Source to blend |
+| `source` | `ISynthSource` | Source to blend |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 0.5) |
 
 #### Returns
@@ -1574,7 +1329,7 @@ shape(3)
   .blend(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.blend
@@ -1594,7 +1349,7 @@ Difference with another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Source to compare |
+| `source` | `ISynthSource` | Source to compare |
 
 #### Returns
 
@@ -1606,7 +1361,7 @@ Difference with another source.
 osc(1, 0.1, 2).diff(osc(1, 0.5, 5))
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.diff
@@ -1626,7 +1381,7 @@ Layer another source on top.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Source to layer |
+| `source` | `ISynthSource` | Source to layer |
 
 #### Returns
 
@@ -1640,7 +1395,7 @@ Layer another source on top.
   .cellColor(osc(30).layer(osc(15).rotate(1).luma()).invert())
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.layer
@@ -1660,7 +1415,7 @@ Mask using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Source to use as mask |
+| `source` | `ISynthSource` | Source to use as mask |
 
 #### Returns
 
@@ -1673,7 +1428,7 @@ Mask using another source.
 gradient(5).mask(voronoi()).invert([0, 1])
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.mask
@@ -1693,7 +1448,7 @@ Modulate coordinates using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Modulation source |
+| `source` | `ISynthSource` | Modulation source |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Modulation amount (default: 0.1) |
 
 #### Returns
@@ -1707,7 +1462,7 @@ osc(3, 0, 2)
     .modulate(noise().add(gradient(), -1), 1)
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.modulate
@@ -1730,7 +1485,7 @@ Modulate scale using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Modulation source |
+| `source` | `ISynthSource` | Modulation source |
 | `multiple?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Scale multiplier (default: 1.0) |
 | `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 1.0) |
 
@@ -1738,7 +1493,7 @@ Modulate scale using another source.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.modulateScale
@@ -1761,7 +1516,7 @@ Modulate rotation using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Modulation source |
+| `source` | `ISynthSource` | Modulation source |
 | `multiple?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Rotation multiplier (default: 1.0) |
 | `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 0.0) |
 
@@ -1769,7 +1524,7 @@ Modulate rotation using another source.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.modulateRotate
@@ -1792,7 +1547,7 @@ Modulate pixelation using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Modulation source |
+| `source` | `ISynthSource` | Modulation source |
 | `multiple?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Pixelation multiplier (default: 10.0) |
 | `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 3.0) |
 
@@ -1806,7 +1561,7 @@ Modulate pixelation using another source.
 noise(3).modulatePixelate(noise(1, 0).pixelate(8, 8), 1024, 8)
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.modulatePixelate
@@ -1826,7 +1581,7 @@ Modulate kaleidoscope using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Modulation source |
+| `source` | `ISynthSource` | Modulation source |
 | `nSides?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Number of sides (default: 4.0) |
 
 #### Returns
@@ -1840,7 +1595,7 @@ osc(2, 0.1, 2)
     .modulateKaleid(osc(16).kaleid(999), 1)
 ```
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.modulateKaleid
@@ -1863,7 +1618,7 @@ Modulate X scroll using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Modulation source |
+| `source` | `ISynthSource` | Modulation source |
 | `scrollX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | X scroll amount (default: 0.5) |
 | `speed?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Scroll speed (default: 0.0) |
 
@@ -1871,7 +1626,7 @@ Modulate X scroll using another source.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.modulateScrollX
@@ -1894,7 +1649,7 @@ Modulate Y scroll using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `SynthSource` | Modulation source |
+| `source` | `ISynthSource` | Modulation source |
 | `scrollY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Y scroll amount (default: 0.5) |
 | `speed?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Scroll speed (default: 0.0) |
 
@@ -1902,7 +1657,7 @@ Modulate Y scroll using another source.
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
 ISynthSource.modulateScrollY
@@ -1910,105 +1665,139 @@ ISynthSource.modulateScrollY
 
 ***
 
-### charFlipX()
+### charMap()
 
 ```ts
-charFlipX(toggle?): this;
+charMap(chars): this;
 ```
-
-Flip characters horizontally.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `toggle?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Toggle flip (default: 1.0) |
+| Parameter | Type |
+| ------ | ------ |
+| `chars` | `string` |
 
 #### Returns
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
-ISynthSource.charFlipX
+ISynthSource.charMap
 ```
 
 ***
 
-### charFlipY()
+### charColor()
 
 ```ts
-charFlipY(toggle?): this;
+charColor(source): this;
 ```
-
-Flip characters vertically.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `toggle?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Toggle flip (default: 1.0) |
+| Parameter | Type |
+| ------ | ------ |
+| `source` | `SynthSource` |
 
 #### Returns
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
-ISynthSource.charFlipY
+ISynthSource.charColor
 ```
 
 ***
 
-### charInvert()
+### char()
 
 ```ts
-charInvert(toggle?): this;
+char(source, charCount): this;
 ```
-
-Invert character indices.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `toggle?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Toggle invert (default: 1.0) |
+| Parameter | Type |
+| ------ | ------ |
+| `source` | `SynthSource` |
+| `charCount` | `number` |
 
 #### Returns
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
-ISynthSource.charInvert
+ISynthSource.char
 ```
 
 ***
 
-### charRotate()
+### cellColor()
 
 ```ts
-charRotate(angle?, speed?): this;
+cellColor(source): this;
 ```
-
-Rotate characters.
 
 #### Parameters
 
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `angle?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Rotation angle in radians (default: 0.0) |
-| `speed?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Rotation speed (default: 0.0) |
+| Parameter | Type |
+| ------ | ------ |
+| `source` | `SynthSource` |
 
 #### Returns
 
 `this`
 
-#### Implementation of
+#### Inherited from
 
 ```ts
-ISynthSource.charRotate
+ISynthSource.cellColor
+```
+
+***
+
+### paint()
+
+```ts
+paint(source): this;
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `source` | `SynthSource` |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.paint
+```
+
+***
+
+### clone()
+
+```ts
+clone(): SynthSource;
+```
+
+#### Returns
+
+`SynthSource`
+
+#### Inherited from
+
+```ts
+ISynthSource.clone
 ```

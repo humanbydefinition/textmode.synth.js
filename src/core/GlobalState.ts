@@ -22,13 +22,11 @@ let globalBpm = 60;
  * 
  * @example
  * ```typescript
- * import { bpm, osc } from 'textmode.synth.js';
- * 
  * // Set global tempo to 120 BPM (2 beats per second)
- * bpm(120);
+ * t.bpm(120);
  * 
  * // All layers will now cycle through arrays at this speed
- * layer.synth(osc([1, 2, 4, 8])); // Cycles twice as fast as default
+ * t.layers.base.synth(osc([1, 2, 4, 8])); // Cycles twice as fast as default
  * ```
  */
 export function setGlobalBpm(value: number): void {

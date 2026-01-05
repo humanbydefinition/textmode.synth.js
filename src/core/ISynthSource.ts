@@ -4,16 +4,7 @@ import type { SynthParameterValue } from './types';
  * Interface defining all chainable methods available on SynthSource.
  * 
  * This interface serves as the authoritative documentation for all
- * synthesis methods. The SynthSource class implements this interface
- * and inherits the JSDoc documentation from it.
- * 
- * Methods are organized by category:
- * - Special textmode methods (charMap, charColor, cellColor, etc.)
- * - Source generators (osc, noise, voronoi, gradient, shape, solid, src)
- * - Coordinate transforms (rotate, scale, scroll, pixelate, repeat, kaleid)
- * - Color transforms (brightness, contrast, invert, saturate, hue, etc.)
- * - Combine operations (add, sub, mult, blend, diff, layer, mask)
- * - Modulation (modulate, modulateScale, modulateRotate, etc.)
+ * synthesis methods.
  */
 export interface ISynthSource {
 

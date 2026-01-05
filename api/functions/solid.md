@@ -1,9 +1,13 @@
 [textmode.synth.js](../index.md) / solid
 
-# Variable: solid()
+# Function: solid()
 
 ```ts
-const solid: (r?, g?, b?, a?) => SynthSource;
+function solid(
+   r?, 
+   g?, 
+   b?, 
+   a?): SynthSource;
 ```
 
 Generate a solid color.

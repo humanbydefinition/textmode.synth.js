@@ -26,7 +26,7 @@ export interface ExternalLayerInfo {
 	/** Whether the character texture is sampled */
 	usesChar: boolean;
 	/** Whether the primary color texture is sampled */
-	usesPrimary: boolean;
+	usesCharColor: boolean;
 	/** Whether the cell color texture is sampled */
 	usesCellColor: boolean;
 }
@@ -43,11 +43,11 @@ export interface CompiledSynthShader {
 	dynamicUpdaters: Map<string, (ctx: SynthContext) => number | number[]>;
 	/** Character mapping if charMap was used */
 	charMapping?: CharacterMapping;
-	/** Whether this shader uses feedback (src) - reads from prevCharColorBuffer */
-	usesFeedback: boolean;
-	/** Whether this shader uses character feedback (charSrc) - reads from prevCharBuffer */
+	/** Whether this shader uses character color feedback (src) - reads from prevCharColorBuffer */
+	usesCharColorFeedback: boolean;
+	/** Whether this shader uses character feedback (src) - reads from prevCharBuffer */
 	usesCharFeedback: boolean;
-	/** Whether this shader uses cell color feedback (cellColorSrc) - reads from prevCellColorBuffer */
+	/** Whether this shader uses cell color feedback (src) - reads from prevCellColorBuffer */
 	usesCellColorFeedback: boolean;
 	/** External layer references used in this shader, keyed by layer ID */
 	externalLayers: Map<string, ExternalLayerInfo>;

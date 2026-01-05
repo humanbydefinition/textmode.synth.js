@@ -1,19 +1,16 @@
-/**
- * TransformRegistry - Centralized registry for all synthesis transforms.
- * 
- * This module provides a singleton registry for managing transform definitions.
- * Transforms can be registered at startup or dynamically added at runtime,
- * enabling extensibility through user-defined transforms.
- */
-
 import type { TransformDefinition, ProcessedTransform } from './TransformDefinition';
 import { processTransform } from './TransformDefinition';
 import type { SynthTransformType } from '../core/types';
 
 /**
  * Centralized registry for synthesis transforms.
+ * 
+ * This module provides a singleton registry for managing transform definitions.
+ * Transforms can be registered at startup or dynamically added at runtime,
+ * enabling extensibility through user-defined transforms.
  */
 class TransformRegistry {
+	
 	/** Map of transform name to definition */
 	private readonly _transforms = new Map<string, TransformDefinition>();
 	

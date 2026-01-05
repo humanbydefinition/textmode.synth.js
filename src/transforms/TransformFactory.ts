@@ -1,11 +1,3 @@
-/**
- * TransformFactory - Dynamic method generation for SynthSource.
- * 
- * This module handles the dynamic generation of chainable methods on
- * SynthSource based on registered transform definitions. It eliminates
- * the need to manually write boilerplate methods for each transform.
- */
-
 import type { TransformDefinition } from './TransformDefinition';
 import { transformRegistry } from './TransformRegistry';
 import type { SynthParameterValue } from '../core/types';
@@ -33,6 +25,10 @@ export interface GeneratedFunctions {
 
 /**
  * Factory for generating dynamic transform methods.
+ * 
+ * Handles the dynamic generation of chainable methods on
+ * SynthSource based on registered transform definitions. It eliminates
+ * the need to manually write boilerplate methods for each transform.
  */
 class TransformFactory {
 	private _generatedFunctions: GeneratedFunctions = {};

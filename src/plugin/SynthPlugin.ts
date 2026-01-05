@@ -11,7 +11,7 @@ import {
     extendTextmodifierBpm,
 } from '../extensions';
 import { synthRender, synthDispose } from '../lifecycle';
-import type { LayerSynthState } from '../core/LayerSynthState';
+import type { LayerSynthState } from '../core/types';
 
 /**
  * The `textmode.synth.js` plugin to install.

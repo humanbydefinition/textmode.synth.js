@@ -1,9 +1,6 @@
 /**
  * Typed source function exports for the public API.
  *
- * This module provides all standalone source functions with complete
- * JSDoc documentation for TypeDoc generation.
- *
  * @module
  */
 
@@ -147,9 +144,11 @@ export const charColor = (source: SynthSource): SynthSource => {
  * );
  * ```
  */
-export const gradient = generatedFunctions['gradient'] as (
+export function gradient(
     speed?: number | number[] | ((ctx: SynthContext) => number)
-) => SynthSource;
+): SynthSource {
+    return (generatedFunctions['gradient'] as Function)(speed);
+}
 
 /**
  * Generate Perlin noise patterns.
@@ -170,10 +169,12 @@ export const gradient = generatedFunctions['gradient'] as (
  * );
  * ```
  */
-export const noise = generatedFunctions['noise'] as (
+export function noise(
     scale?: number | number[] | ((ctx: SynthContext) => number),
     offset?: number | number[] | ((ctx: SynthContext) => number)
-) => SynthSource;
+): SynthSource {
+    return (generatedFunctions['noise'] as Function)(scale, offset);
+}
 
 /**
  * Generate oscillating patterns using sine waves.
@@ -201,11 +202,13 @@ export const noise = generatedFunctions['noise'] as (
  * );
  * ```
  */
-export const osc = generatedFunctions['osc'] as (
+export function osc(
     frequency?: number | number[] | ((ctx: SynthContext) => number),
     sync?: number | number[] | ((ctx: SynthContext) => number),
     offset?: number | number[] | ((ctx: SynthContext) => number)
-) => SynthSource;
+): SynthSource {
+    return (generatedFunctions['osc'] as Function)(frequency, sync, offset);
+}
 
 /**
  * Create a synth source with both character and cell colors defined.
@@ -269,11 +272,13 @@ export const paint = (source: SynthSource): SynthSource => {
  * );
  * ```
  */
-export const shape = generatedFunctions['shape'] as (
+export function shape(
     sides?: number | number[] | ((ctx: SynthContext) => number),
     radius?: number | number[] | ((ctx: SynthContext) => number),
     smoothing?: number | number[] | ((ctx: SynthContext) => number)
-) => SynthSource;
+): SynthSource {
+    return (generatedFunctions['shape'] as Function)(sides, radius, smoothing);
+}
 
 /**
  * Generate a solid color.
@@ -298,12 +303,14 @@ export const shape = generatedFunctions['shape'] as (
  * );
  * ```
  */
-export const solid = generatedFunctions['solid'] as (
+export function solid(
     r?: number | number[] | ((ctx: SynthContext) => number),
     g?: number | number[] | ((ctx: SynthContext) => number),
     b?: number | number[] | ((ctx: SynthContext) => number),
     a?: number | number[] | ((ctx: SynthContext) => number)
-) => SynthSource;
+): SynthSource {
+    return (generatedFunctions['solid'] as Function)(r, g, b, a);
+}
 
 /**
  * Sample the previous frame's output for feedback effects.
@@ -397,8 +404,10 @@ export const src = (layer?: TextmodeLayer): SynthSource => {
  * );
  * ```
  */
-export const voronoi = generatedFunctions['voronoi'] as (
+export function voronoi(
     scale?: number | number[] | ((ctx: SynthContext) => number),
     speed?: number | number[] | ((ctx: SynthContext) => number),
     blending?: number | number[] | ((ctx: SynthContext) => number)
-) => SynthSource;
+): SynthSource {
+    return (generatedFunctions['voronoi'] as Function)(scale, speed, blending);
+}

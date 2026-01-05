@@ -61,24 +61,3 @@ export function defineTransform<T extends SynthTransformType>(
 ): TransformDefinition {
 	return definition;
 }
-
-/**
- * Get default values for a transform's inputs.
- */
-export function getDefaultArgs(def: TransformDefinition): (number | number[] | null)[] {
-	return def.inputs.map((input) => input.default);
-}
-
-/**
- * Check if a transform type requires a nested source.
- */
-export function requiresNestedSource(type: SynthTransformType): boolean {
-	return type === 'combine' || type === 'combineCoord';
-}
-
-/**
- * Check if a transform type is a source generator.
- */
-export function isSourceType(type: SynthTransformType): boolean {
-	return type === 'src';
-}

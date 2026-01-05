@@ -32,20 +32,27 @@ import type { ProcessedTransform } from '../transforms/TransformDefinition';
  * @returns A compiled shader with fragment source and uniform definitions
  */
 export function compileSynthSource(source: SynthSource): CompiledSynthShader {
-	const compiler = new SynthCompilerContext();
+	const compiler = new SynthCompiler();
 	return compiler.compile(source);
 }
 
 /**
- * Internal compiler context that maintains state during compilation.
+ * Internal compiler class that compiles SynthSource chains into MRT GLSL shaders.
+ *
+ * This compiler takes a SynthSource chain and produces a GLSL fragment shader
+ * that outputs to textmode.js's triple-target MRT rendering:
+ *   - Target 0: Character data (indexLow, indexHigh, packedFlags, rotation)
+ *   - Target 1: Primary/foreground color (RGBA)
+ *   - Target 2: Secondary/cell background color (RGBA)
  * 
- * Uses composition to delegate specific responsibilities to focused classes:
- * - FeedbackTracker for feedback buffer tracking
- * - ExternalLayerManager for cross-layer references
- * - TransformCodeGenerator for GLSL code generation
- * - UniformManager for uniform handling
+ * The compilation process is modular, delegating to:
+ *   - FeedbackTracker: Manages feedback texture usage
+ *   - ExternalLayerManager: Manages cross-layer sampling
+ *   - TransformCodeGenerator: Generates GLSL for individual transforms
+ *   - UniformManager: Manages shader uniforms
+ *   - GLSLGenerator: Assembles the final shader
  */
-class SynthCompilerContext {
+class SynthCompiler {
 	// Delegated managers
 	private readonly _uniformManager = new UniformManager();
 	private readonly _feedbackTracker = new FeedbackTracker();
@@ -124,7 +131,7 @@ class SynthCompilerContext {
 			primaryColorVar,
 			cellColorVar,
 			charMapping: source.charMapping,
-			usesFeedback: feedbackUsage.usesFeedback,
+			usesFeedback: feedbackUsage.usesCharColorFeedback,
 			usesCharFeedback: feedbackUsage.usesCharFeedback,
 			usesCellColorFeedback: feedbackUsage.usesCellColorFeedback,
 			externalLayers: this._externalLayerManager.getExternalLayers(),
@@ -135,7 +142,7 @@ class SynthCompilerContext {
 			uniforms: this._uniformManager.getUniforms(),
 			dynamicUpdaters: this._uniformManager.getDynamicUpdaters(),
 			charMapping: source.charMapping,
-			usesFeedback: feedbackUsage.usesFeedback,
+			usesCharColorFeedback: feedbackUsage.usesCharColorFeedback,
 			usesCharFeedback: feedbackUsage.usesCharFeedback,
 			usesCellColorFeedback: feedbackUsage.usesCellColorFeedback,
 			externalLayers: this._externalLayerManager.getExternalLayers(),
@@ -361,6 +368,3 @@ class SynthCompilerContext {
 		return result;
 	}
 }
-
-// Re-export for convenience
-export type { CompiledSynthShader } from './types';

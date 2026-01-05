@@ -1,9 +1,12 @@
 [textmode.synth.js](../index.md) / shape
 
-# Variable: shape()
+# Function: shape()
 
 ```ts
-const shape: (sides?, radius?, smoothing?) => SynthSource;
+function shape(
+   sides?, 
+   radius?, 
+   smoothing?): SynthSource;
 ```
 
 Generate geometric shapes (polygons).
