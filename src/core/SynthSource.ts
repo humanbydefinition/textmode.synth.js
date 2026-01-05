@@ -183,12 +183,6 @@ export class SynthSource {
 		});
 	}
 
-	// ───────────────────────────────────────────────────────────────────────────
-	// Transform methods (osc, noise, rotate, add, modulate, etc.) are:
-	// - Typed via declaration merging with ISynthSource above
-	// - Implemented at runtime by TransformFactory.injectMethods() in bootstrap.ts
-	// ───────────────────────────────────────────────────────────────────────────
-
 	/**
 	 * Get the transform records.
 	 * @ignore
