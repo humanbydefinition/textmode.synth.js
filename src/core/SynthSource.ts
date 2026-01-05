@@ -1,14 +1,10 @@
-import type {
-	SynthParameterValue,
-	CharacterMapping,
-	ExternalLayerReference,
-} from './types';
+import type { SynthParameterValue, CharacterMapping, ExternalLayerReference } from './types';
 import { SynthChain, type TransformRecord } from './SynthChain';
 import type { ISynthSource } from './ISynthSource';
 
 // Declaration merging: TypeScript knows SynthSource has all ISynthSource methods
 // The actual method implementations are injected at runtime by TransformFactory
-export interface SynthSource extends ISynthSource { }
+export interface SynthSource extends ISynthSource {}
 
 /**
  * Options for creating a new SynthSource.
@@ -26,11 +22,11 @@ interface SynthSourceCreateOptions {
 
 /**
  * A chainable synthesis source that accumulates transforms to be compiled into a shader.
- * 
+ *
  * This is the core class that enables hydra-like method chaining for
  * generating procedural textmode visuals. Each method call adds a
  * transform to the chain, which is later compiled into a GLSL shader.
- * 
+ *
  * @example
  * ```ts
  * // Create a synth chain with procedural characters and colors
@@ -103,7 +99,11 @@ export class SynthSource {
 	 * Add a combine transform that references another source.
 	 * @ignore
 	 */
-	public addCombineTransform(name: string, source: SynthSource, userArgs: SynthParameterValue[]): this {
+	public addCombineTransform(
+		name: string,
+		source: SynthSource,
+		userArgs: SynthParameterValue[]
+	): this {
 		const index = this._chain.length;
 		this._nestedSources.set(index, source);
 		return this.addTransform(name, userArgs);

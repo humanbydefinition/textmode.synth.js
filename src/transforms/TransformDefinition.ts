@@ -1,6 +1,6 @@
 /**
  * Transform definition types and interfaces.
- * 
+ *
  * This module provides the base types and helper functions for defining
  * synthesis transforms in a declarative way.
  */

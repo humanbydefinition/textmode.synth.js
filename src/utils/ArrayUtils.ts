@@ -1,6 +1,6 @@
 /**
  * ArrayUtils - Hydra-style array modulation utilities.
- * 
+ *
  * Provides methods for arrays to modulate values over time,
  * similar to Hydra's array functionality.
  */
@@ -14,26 +14,28 @@ export const EASING_FUNCTIONS = {
 	linear: (t: number) => t,
 	easeInQuad: (t: number) => t * t,
 	easeOutQuad: (t: number) => t * (2 - t),
-	easeInOutQuad: (t: number) => t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t,
+	easeInOutQuad: (t: number) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
 	easeInCubic: (t: number) => t * t * t,
-	easeOutCubic: (t: number) => (--t) * t * t + 1,
-	easeInOutCubic: (t: number) => t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1,
+	easeOutCubic: (t: number) => --t * t * t + 1,
+	easeInOutCubic: (t: number) =>
+		t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1,
 	easeInQuart: (t: number) => t * t * t * t,
-	easeOutQuart: (t: number) => 1 - (--t) * t * t * t,
-	easeInOutQuart: (t: number) => t < 0.5 ? 8 * t * t * t * t : 1 - 8 * (--t) * t * t * t,
+	easeOutQuart: (t: number) => 1 - --t * t * t * t,
+	easeInOutQuart: (t: number) => (t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t),
 	easeInQuint: (t: number) => t * t * t * t * t,
-	easeOutQuint: (t: number) => 1 + (--t) * t * t * t * t,
-	easeInOutQuint: (t: number) => t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * (--t) * t * t * t * t,
+	easeOutQuint: (t: number) => 1 + --t * t * t * t * t,
+	easeInOutQuint: (t: number) =>
+		t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t,
 	sin: (t: number) => (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2,
 };
 
 /**
  * Easing functions from https://gist.github.com/gre/1650294
- * 
+ *
  * Available easing functions: `'linear'`, `'easeInQuad'`, `'easeOutQuad'`, `'easeInOutQuad'`,
  * `'easeInCubic'`, `'easeOutCubic'`, `'easeInOutCubic'`, `'easeInQuart'`, `'easeOutQuart'`,
  * `'easeInOutQuart'`, `'easeInQuint'`, `'easeOutQuint'`, `'easeInOutQuint'`, `'sin'`
- * 
+ *
  * @example
  * ```typescript
  * const t = textmode.create({
@@ -41,7 +43,7 @@ export const EASING_FUNCTIONS = {
  *   height: 600,
  *   plugins: [SynthPlugin]
  * });
- * 
+ *
  * // Rotating shape with eased animation
  * t.layers.base.synth(
  *   shape(4)
@@ -53,11 +55,11 @@ export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => num
 
 /**
  * Extended array interface with modulation methods.
- * 
+ *
  * Arrays in textmode.synth.js behave like hydra - they cycle through values over time,
  * creating dynamic, time-varying parameters. This enables complex animations without
  * manually tracking time or state.
- * 
+ *
  * @example
  * ```typescript
  * const t = textmode.create({
@@ -65,7 +67,7 @@ export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => num
  *   height: 600,
  *   plugins: [SynthPlugin]
  * });
- * 
+ *
  * // Rotating shape with eased animation
  * t.layers.base.synth(
  *   shape(4)
@@ -85,21 +87,21 @@ export interface ModulatedArray extends Array<number> {
 
 	/**
 	 * Set speed multiplier for array cycling.
-	 * 
+	 *
 	 * Controls how fast the array cycles through its values over time.
 	 * A speed of 1 is the default rate. Values > 1 cycle faster, values < 1 cycle slower.
-	 * 
+	 *
 	 * @param speed - Speed multiplier (default: 1)
 	 * @returns The array for chaining
-	 * 
+	 *
 	 * @example
 	 * ```typescript
 	 * // Fast cycling through frequencies
 	 * osc([1, 2, 4].fast(2), 0.1, 1.5)
-	 * 
+	 *
 	 * // Slow cycling through scroll positions
 	 * shape(4).scrollX([-0.5, 0.5].fast(0.3))
-	 * 
+	 *
 	 * // Use same array for multiple parameters
 	 * const speeds = [1, 3, 6].fast(2);
 	 * osc(speeds, 0.1, 1.5, 16)
@@ -110,22 +112,22 @@ export interface ModulatedArray extends Array<number> {
 
 	/**
 	 * Enable smooth interpolation between array values.
-	 * 
+	 *
 	 * Instead of jumping from one value to the next, smooth() creates gradual
 	 * transitions. The amount parameter controls the smoothing duration.
 	 * When amount is 1 (default), smoothing is applied across the full transition.
-	 * 
+	 *
 	 * @param amount - Smoothing amount 0-1 (default: 1)
 	 * @returns The array for chaining
-	 * 
+	 *
 	 * @example
 	 * ```typescript
 	 * // Smooth scrolling between positions
 	 * shape(999).scrollX([-0.2, 0.2].smooth())
-	 * 
+	 *
 	 * // Gentle rotation animation
 	 * shape(4).rotate([-3.14, 0, 3.14].smooth(0.8))
-	 * 
+	 *
 	 * // Smooth color transitions
 	 * solid([0, 0.5, 1].smooth(), 0, 0)
 	 * ```
@@ -134,27 +136,27 @@ export interface ModulatedArray extends Array<number> {
 
 	/**
 	 * Apply easing function to interpolation between array values.
-	 * 
+	 *
 	 * Easing controls the acceleration curve of transitions between values.
 	 * Automatically enables smoothing when applied. Use built-in easing names
 	 * or provide a custom function that takes a value 0-1 and returns 0-1.
-	 * 
-	 * Available easing functions: `'linear'`, `'easeInQuad'`, `'easeOutQuad'`, 
-	 * `'easeInOutQuad'`, `'easeInCubic'`, `'easeOutCubic'`, `'easeInOutCubic'`, 
-	 * `'easeInQuart'`, `'easeOutQuart'`, `'easeInOutQuart'`, `'easeInQuint'`, 
+	 *
+	 * Available easing functions: `'linear'`, `'easeInQuad'`, `'easeOutQuad'`,
+	 * `'easeInOutQuad'`, `'easeInCubic'`, `'easeOutCubic'`, `'easeInOutCubic'`,
+	 * `'easeInQuart'`, `'easeOutQuart'`, `'easeInOutQuart'`, `'easeInQuint'`,
 	 * `'easeOutQuint'`, `'easeInOutQuint'`, `'sin'`
-	 * 
+	 *
 	 * @param ease - Easing function name or custom function (default: 'linear')
 	 * @returns The array for chaining
-	 * 
+	 *
 	 * @example
 	 * ```typescript
 	 * // Smooth rotation with cubic easing
 	 * shape(4).rotate([-3.14, 3.14].ease('easeInOutCubic'))
-	 * 
+	 *
 	 * // Sine wave easing for natural motion
 	 * shape(3).scale([0.5, 1.5].ease('sin'))
-	 * 
+	 *
 	 * // Custom easing function (bounce effect)
 	 * const bounce = (t) => {
 	 *   const n1 = 7.5625;
@@ -171,27 +173,27 @@ export interface ModulatedArray extends Array<number> {
 
 	/**
 	 * Set time offset for array cycling.
-	 * 
+	 *
 	 * Shifts when the array starts cycling through its values.
 	 * Useful for creating phase-shifted animations where multiple arrays
 	 * cycle with the same speed but at different times.
-	 * 
+	 *
 	 * The offset wraps around at 1.0, so offset(0.5) starts halfway through
 	 * the cycle, and offset(1.5) is equivalent to offset(0.5).
-	 * 
+	 *
 	 * @param offset - Time offset 0-1, wraps at 1.0 (default: 0)
 	 * @returns The array for chaining
-	 * 
+	 *
 	 * @example
 	 * ```typescript
 	 * // Two shapes scrolling in opposite phase
 	 * shape(999).scrollX([-0.2, 0.2])
 	 *   .add(shape(4).scrollX([-0.2, 0.2].offset(0.5)))
-	 * 
+	 *
 	 * // Create layered animations with phase shifts
 	 * const positions = [-0.3, 0.3];
 	 * shape(3).scroll(positions, positions.offset(0.25))
-	 * 
+	 *
 	 * // Three oscillators with 120° phase difference
 	 * osc([5, 10].offset(0)).add(
 	 *   osc([5, 10].offset(0.33)), 0.5
@@ -204,27 +206,27 @@ export interface ModulatedArray extends Array<number> {
 
 	/**
 	 * Fit (remap) array values to a new range.
-	 * 
+	 *
 	 * Takes the minimum and maximum values in the array and linearly maps them
 	 * to the specified low and high values. All intermediate values are scaled
 	 * proportionally. The original array is not modified.
-	 * 
+	 *
 	 * Preserves any modulation settings (speed, smooth, ease, offset) from the
 	 * original array.
-	 * 
+	 *
 	 * @param low - New minimum value
 	 * @param high - New maximum value
 	 * @returns A new ModulatedArray with remapped values
-	 * 
+	 *
 	 * @example
 	 * ```typescript
 	 * // Remap 0-4 range to -0.2 to 0.2 for subtle scrolling
 	 * shape(999).scrollX([0, 1, 2, 3, 4].fit(-0.2, 0.2))
-	 * 
+	 *
 	 * // Normalize arbitrary values to 0-1 range
 	 * const values = [50, 100, 75, 125].fit(0, 1);
 	 * solid(values, 0, 0)
-	 * 
+	 *
 	 * // Combine with other modulation
 	 * shape(3).scale([0, 100].fit(0.5, 1.5).smooth().fast(0.5))
 	 * ```
@@ -263,7 +265,10 @@ export function initArrayUtils(): void {
 		return this;
 	};
 
-	(Array.prototype as any).ease = function (this: ModulatedArray, ease: EasingFunction = 'linear') {
+	(Array.prototype as any).ease = function (
+		this: ModulatedArray,
+		ease: EasingFunction = 'linear'
+	) {
 		if (typeof ease === 'function') {
 			this._smooth = 1;
 			this._ease = ease;
@@ -279,7 +284,11 @@ export function initArrayUtils(): void {
 		return this;
 	};
 
-	(Array.prototype as any).fit = function (this: ModulatedArray, low = 0, high = 1): ModulatedArray {
+	(Array.prototype as any).fit = function (
+		this: ModulatedArray,
+		low = 0,
+		high = 1
+	): ModulatedArray {
 		const lowest = Math.min(...this);
 		const highest = Math.max(...this);
 		const newArr = this.map((num) => map(num, lowest, highest, low, high)) as ModulatedArray;
@@ -325,9 +334,5 @@ export function getArrayValue(arr: ModulatedArray, ctx: SynthContext): number {
  * even without explicit .fast() or .smooth() modulation.
  */
 export function isModulatedArray(value: unknown): value is ModulatedArray {
-	return (
-		Array.isArray(value) &&
-		value.length > 0 &&
-		typeof value[0] === 'number'
-	);
+	return Array.isArray(value) && value.length > 0 && typeof value[0] === 'number';
 }

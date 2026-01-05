@@ -7,13 +7,7 @@
  */
 
 // TextmodeLayer extensions
-export {
-    extendLayerSynth,
-    extendLayerClearSynth,
-    extendLayerBpm,
-} from './textmodelayer';
+export { extendLayerSynth, extendLayerClearSynth, extendLayerBpm } from './textmodelayer';
 
 // Textmodifier extensions
-export {
-    extendTextmodifierBpm
-} from './textmodifier';
+export { extendTextmodifierBpm } from './textmodifier';

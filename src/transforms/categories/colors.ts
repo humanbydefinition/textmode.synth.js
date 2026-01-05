@@ -1,6 +1,6 @@
 /**
  * Color transform definitions.
- * 
+ *
  * These transforms modify color output values, enabling effects like
  * brightness, contrast, saturation, hue shifting, and color manipulation.
  */

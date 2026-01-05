@@ -6,7 +6,7 @@ import type { SynthUniform, SynthContext, CharacterMapping } from '../core/types
 
 /**
  * Compilation target context determining which texture `src()` samples from.
- * 
+ *
  * - `char`: Compiling a character source chain → src() samples prevCharBuffer
  * - `charColor`: Compiling a character color chain → src() samples prevCharColorBuffer
  * - `cellColor`: Compiling a cell color chain → src() samples prevCellColorBuffer

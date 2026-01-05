@@ -16,7 +16,7 @@ export interface ProcessedArgument {
 
 /**
  * Handles uniform extraction and management.
- * 
+ *
  * This module processes transform arguments and creates uniform
  * definitions for dynamic values that need to be updated each frame.
  */
@@ -84,9 +84,13 @@ export class UniformManager {
 			if (nums.length === 2) {
 				return { glslValue: `vec2(${formatNumber(nums[0])}, ${formatNumber(nums[1])})` };
 			} else if (nums.length === 3) {
-				return { glslValue: `vec3(${formatNumber(nums[0])}, ${formatNumber(nums[1])}, ${formatNumber(nums[2])})` };
+				return {
+					glslValue: `vec3(${formatNumber(nums[0])}, ${formatNumber(nums[1])}, ${formatNumber(nums[2])})`,
+				};
 			} else if (nums.length === 4) {
-				return { glslValue: `vec4(${formatNumber(nums[0])}, ${formatNumber(nums[1])}, ${formatNumber(nums[2])}, ${formatNumber(nums[3])})` };
+				return {
+					glslValue: `vec4(${formatNumber(nums[0])}, ${formatNumber(nums[1])}, ${formatNumber(nums[2])}, ${formatNumber(nums[3])})`,
+				};
 			}
 		}
 

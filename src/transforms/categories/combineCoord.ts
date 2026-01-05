@@ -1,6 +1,6 @@
 /**
  * Combine coordinate transform definitions (modulation).
- * 
+ *
  * These transforms use one source to modulate the coordinates
  * of another, enabling effects like displacement and warping.
  */

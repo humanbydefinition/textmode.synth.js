@@ -26,89 +26,89 @@ import { CharacterResolver } from '../utils/CharacterResolver';
  * @returns A complete LayerSynthState object
  */
 function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSynthState {
-    return {
-        source: partial.source ?? new SynthSourceClass(),
-        compiled: partial.compiled,
-        shader: partial.shader,
-        characterResolver: partial.characterResolver ?? new CharacterResolver(),
-        needsCompile: partial.needsCompile ?? false,
-        pingPongBuffers: partial.pingPongBuffers,
-        pingPongIndex: partial.pingPongIndex ?? 0,
-        externalLayerMap: partial.externalLayerMap,
-        bpm: partial.bpm,
-    };
+	return {
+		source: partial.source ?? new SynthSourceClass(),
+		compiled: partial.compiled,
+		shader: partial.shader,
+		characterResolver: partial.characterResolver ?? new CharacterResolver(),
+		needsCompile: partial.needsCompile ?? false,
+		pingPongBuffers: partial.pingPongBuffers,
+		pingPongIndex: partial.pingPongIndex ?? 0,
+		externalLayerMap: partial.externalLayerMap,
+		bpm: partial.bpm,
+	};
 }
 
 /**
  * Extend layer with synth() method.
  */
 export function extendLayerSynth(api: TextmodePluginAPI) {
-    api.extendLayer('synth', function (this: TextmodeLayer, source: SynthSource): void {
-        const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
+	api.extendLayer('synth', function (this: TextmodeLayer, source: SynthSource): void {
+		const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
 
-        let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+		let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
 
-        if (state) {
-            // Update existing state
-            state.source = source;
-            state.needsCompile = true;
-            state.characterResolver.invalidate();
+		if (state) {
+			// Update existing state
+			state.source = source;
+			state.needsCompile = true;
+			state.characterResolver.invalidate();
 
-            if (isInitialized) {
-                state.compiled = compileSynthSource(source);
-            }
-        } else {
-            // Create new state using factory
-            state = createLayerSynthState({
-                source,
-                compiled: isInitialized ? compileSynthSource(source) : undefined,
-                needsCompile: true,
-            });
-        }
+			if (isInitialized) {
+				state.compiled = compileSynthSource(source);
+			}
+		} else {
+			// Create new state using factory
+			state = createLayerSynthState({
+				source,
+				compiled: isInitialized ? compileSynthSource(source) : undefined,
+				needsCompile: true,
+			});
+		}
 
-        this.setPluginState(PLUGIN_NAME, state);
-    });
+		this.setPluginState(PLUGIN_NAME, state);
+	});
 }
 
 /**
  * Extend layer with clearSynth() method.
  */
 export function extendLayerClearSynth(api: TextmodePluginAPI) {
-    api.extendLayer('clearSynth', function (this: TextmodeLayer): void {
-        const state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
-        if (!state) return;
+	api.extendLayer('clearSynth', function (this: TextmodeLayer): void {
+		const state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+		if (!state) return;
 
-        // Dispose shader
-        if (state.shader?.dispose) {
-            state.shader.dispose();
-        }
+		// Dispose shader
+		if (state.shader?.dispose) {
+			state.shader.dispose();
+		}
 
-        // Dispose ping-pong buffers
-        if (state.pingPongBuffers) {
-            state.pingPongBuffers[0].dispose?.();
-            state.pingPongBuffers[1].dispose?.();
-        }
+		// Dispose ping-pong buffers
+		if (state.pingPongBuffers) {
+			state.pingPongBuffers[0].dispose?.();
+			state.pingPongBuffers[1].dispose?.();
+		}
 
-        // Clear plugin state
-        this.setPluginState(PLUGIN_NAME, undefined);
-    });
+		// Clear plugin state
+		this.setPluginState(PLUGIN_NAME, undefined);
+	});
 }
 
 /**
  * Extend layer with bpm() method.
  */
 export function extendLayerBpm(api: TextmodePluginAPI) {
-    api.extendLayer('bpm', function (this: TextmodeLayer, value: number): void {
-        let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+	api.extendLayer('bpm', function (this: TextmodeLayer, value: number): void {
+		let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
 
-        if (state) {
-            // Update existing state
-            state.bpm = value;
-        } else {
-            // Create minimal state to store BPM using factory
-            state = createLayerSynthState({ bpm: value });
-        }
+		if (state) {
+			// Update existing state
+			state.bpm = value;
+		} else {
+			// Create minimal state to store BPM using factory
+			state = createLayerSynthState({ bpm: value });
+		}
 
-        this.setPluginState(PLUGIN_NAME, state);
-    });
+		this.setPluginState(PLUGIN_NAME, state);
+	});
 }

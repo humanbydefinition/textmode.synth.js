@@ -39,15 +39,11 @@ import './bootstrap';
 // Extend textmode.js interfaces (imported for side effects)
 import './augmentations';
 
-
 export { SynthPlugin } from './plugin';
 
 export { SynthSource } from './core/SynthSource';
 
-export type {
-	SynthParameterValue,
-	SynthContext,
-} from './core/types';
+export type { SynthParameterValue, SynthContext } from './core/types';
 
 export {
 	cellColor,

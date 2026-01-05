@@ -25,7 +25,7 @@ export interface GeneratedFunctions {
 
 /**
  * Factory for generating dynamic transform methods.
- * 
+ *
  * Handles the dynamic generation of chainable methods on
  * SynthSource based on registered transform definitions. It eliminates
  * the need to manually write boilerplate methods for each transform.
@@ -48,7 +48,7 @@ class TransformFactory {
 	 */
 	public injectMethods(prototype: SynthSourcePrototype): void {
 		const transforms = transformRegistry.getAll();
-		
+
 		for (const transform of transforms) {
 			this._injectMethod(prototype, transform);
 		}
@@ -59,7 +59,7 @@ class TransformFactory {
 	 */
 	private _injectMethod(prototype: SynthSourcePrototype, transform: TransformDefinition): void {
 		const { name, inputs, type } = transform;
-		
+
 		// Handle combine and combineCoord types specially (they take a source as first arg)
 		if (type === 'combine' || type === 'combineCoord') {
 			(prototype as unknown as Record<string, unknown>)[name] = function (
@@ -88,7 +88,9 @@ class TransformFactory {
 	 */
 	public generateStandaloneFunctions(): GeneratedFunctions {
 		if (!this._synthSourceClass) {
-			throw new Error('[TransformFactory] SynthSource class not set. Call setSynthSourceClass first.');
+			throw new Error(
+				'[TransformFactory] SynthSource class not set. Call setSynthSourceClass first.'
+			);
 		}
 
 		const functions: GeneratedFunctions = {};
@@ -98,7 +100,7 @@ class TransformFactory {
 		for (const transform of transforms) {
 			if (SOURCE_TYPE_TRANSFORMS.has(transform.type)) {
 				const { name, inputs } = transform;
-				
+
 				functions[name] = (...args: SynthParameterValue[]) => {
 					const source = new SynthSource();
 					const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);
@@ -135,7 +137,7 @@ class TransformFactory {
 		if (SOURCE_TYPE_TRANSFORMS.has(transform.type) && this._synthSourceClass) {
 			const SynthSource = this._synthSourceClass;
 			const { name, inputs } = transform;
-			
+
 			this._generatedFunctions[name] = (...args: SynthParameterValue[]) => {
 				const source = new SynthSource();
 				const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);

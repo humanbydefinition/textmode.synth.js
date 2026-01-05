@@ -1,6 +1,6 @@
 /**
  * Combine transform definitions.
- * 
+ *
  * These transforms blend two sources together using various
  * blending modes like add, multiply, blend, difference, and layer.
  */
@@ -81,12 +81,4 @@ export const mask = defineTransform({
 /**
  * All combine transforms.
  */
-export const COMBINE_TRANSFORMS: TransformDefinition[] = [
-	add,
-	sub,
-	mult,
-	blend,
-	diff,
-	layer,
-	mask,
-];
+export const COMBINE_TRANSFORMS: TransformDefinition[] = [add, sub, mult, blend, diff, layer, mask];

@@ -6,7 +6,7 @@
  *   - Target 0: Character data (indexLow, indexHigh, packedFlags, rotation)
  *   - Target 1: Primary/foreground color (RGBA)
  *   - Target 2: Secondary/cell background color (RGBA)
- * 
+ *
  * The compilation process is modular, delegating to:
  *   - FeedbackTracker: Manages feedback texture usage
  *   - ExternalLayerManager: Manages cross-layer sampling
@@ -44,7 +44,7 @@ export function compileSynthSource(source: SynthSource): CompiledSynthShader {
  *   - Target 0: Character data (indexLow, indexHigh, packedFlags, rotation)
  *   - Target 1: Primary/foreground color (RGBA)
  *   - Target 2: Secondary/cell background color (RGBA)
- * 
+ *
  * The compilation process is modular, delegating to:
  *   - FeedbackTracker: Manages feedback texture usage
  *   - ExternalLayerManager: Manages cross-layer sampling
@@ -180,8 +180,12 @@ class SynthCompiler {
 		// Generate code to convert color luminance to character index
 		this._mainCode.push(`\t// Convert charSource color to character index`);
 		this._mainCode.push(`\tfloat charLum_${charVar} = _luminance(${charChain.colorVar}.rgb);`);
-		this._mainCode.push(`\tint charIdx_${charVar} = int(charLum_${charVar} * ${charCount.toFixed(1)});`);
-		this._mainCode.push(`\tvec4 ${charVar} = vec4(float(charIdx_${charVar} % 256) / 255.0, float(charIdx_${charVar} / 256) / 255.0, 0.0, 0.0);`);
+		this._mainCode.push(
+			`\tint charIdx_${charVar} = int(charLum_${charVar} * ${charCount.toFixed(1)});`
+		);
+		this._mainCode.push(
+			`\tvec4 ${charVar} = vec4(float(charIdx_${charVar} % 256) / 255.0, float(charIdx_${charVar} / 256) / 255.0, 0.0, 0.0);`
+		);
 
 		return charVar;
 	}

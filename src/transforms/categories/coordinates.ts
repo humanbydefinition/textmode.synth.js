@@ -1,6 +1,6 @@
 /**
  * Coordinate transform definitions.
- * 
+ *
  * These transforms modify UV coordinates before sampling,
  * enabling effects like rotation, scaling, scrolling, and tiling.
  */

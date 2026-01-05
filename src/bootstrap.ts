@@ -18,16 +18,20 @@ initArrayUtils();
 transformRegistry.registerMany(ALL_TRANSFORMS);
 
 // Set up the SynthSource class for method injection
-transformFactory.setSynthSourceClass(SynthSource as unknown as new () => {
-    addTransform(name: string, userArgs: unknown[]): unknown;
-    addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
-});
+transformFactory.setSynthSourceClass(
+	SynthSource as unknown as new () => {
+		addTransform(name: string, userArgs: unknown[]): unknown;
+		addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
+	}
+);
 
 // Inject chainable methods into SynthSource prototype
-transformFactory.injectMethods(SynthSource.prototype as unknown as {
-    addTransform(name: string, userArgs: unknown[]): unknown;
-    addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
-});
+transformFactory.injectMethods(
+	SynthSource.prototype as unknown as {
+		addTransform(name: string, userArgs: unknown[]): unknown;
+		addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
+	}
+);
 
 /**
  * Generated standalone functions for source transforms (e.g., osc(), noise())

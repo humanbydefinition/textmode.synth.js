@@ -16,7 +16,6 @@ export interface TransformRecord {
  * existing fluent API, the returned readonly arrays provide a consistent view.
  */
 export class SynthChain {
-	
 	/** The transforms in this chain */
 	private _transforms: TransformRecord[];
 

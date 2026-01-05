@@ -1,6 +1,6 @@
 /**
  * GLSLGenerator - Generates GLSL shader code from compiled data.
- * 
+ *
  * This module is responsible for assembling the final GLSL fragment
  * shader from collected functions, uniforms, and main code.
  */
@@ -201,9 +201,10 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 			}
 		}
 	}
-	const externalLayerDecl = externalLayerDecls.length > 0
-		? `// External layer samplers\n${externalLayerDecls.join('\n')}`
-		: '';
+	const externalLayerDecl =
+		externalLayerDecls.length > 0
+			? `// External layer samplers\n${externalLayerDecls.join('\n')}`
+			: '';
 
 	return `#version 300 es
 precision highp float;

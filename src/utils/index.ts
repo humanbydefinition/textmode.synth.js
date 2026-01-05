@@ -9,12 +9,12 @@
 
 // Array modulation utilities (Hydra-style)
 export {
-    EASING_FUNCTIONS,
-    initArrayUtils,
-    getArrayValue,
-    isModulatedArray,
-    type EasingFunction,
-    type ModulatedArray,
+	EASING_FUNCTIONS,
+	initArrayUtils,
+	getArrayValue,
+	isModulatedArray,
+	type EasingFunction,
+	type ModulatedArray,
 } from './ArrayUtils';
 
 // Character resolution

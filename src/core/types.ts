@@ -1,15 +1,12 @@
 /**
  * Core types for the textmode.js synthesis system.
- * 
+ *
  * This module contains foundational type definitions used throughout
  * the synth engine, including transform types, parameter values,
  * context interfaces, and shader compilation types.
  */
 
-import type {
-    TextmodeFramebuffer,
-    TextmodeShader,
-} from 'textmode.js';
+import type { TextmodeFramebuffer, TextmodeShader } from 'textmode.js';
 import type { TextmodeLayer } from 'textmode.js/layering';
 import type { SynthSource } from './SynthSource';
 import type { CompiledSynthShader } from '../compiler/types';
@@ -17,7 +14,7 @@ import type { CharacterResolver } from '../utils/CharacterResolver';
 
 /**
  * Transform type categories determining how functions compose in the shader pipeline.
- * 
+ *
  * Each type has specific input/output signatures:
  * - `src`: Source generators that produce colors from UV coordinates
  * - `coord`: Coordinate transforms that modify UV before sampling
@@ -25,12 +22,7 @@ import type { CharacterResolver } from '../utils/CharacterResolver';
  * - `combine`: Blending operations that combine two color sources
  * - `combineCoord`: Modulation that uses one source to affect another's coordinates
  */
-export type SynthTransformType =
-	| 'src'
-	| 'coord'
-	| 'color'
-	| 'combine'
-	| 'combineCoord';
+export type SynthTransformType = 'src' | 'coord' | 'color' | 'combine' | 'combineCoord';
 
 /**
  * GLSL type for transform inputs.
@@ -51,7 +43,7 @@ export interface TransformInput {
 
 /**
  * Dynamic parameter value types supported by the synth system.
- * 
+ *
  * - `number`: Static numeric value
  * - `number[]`: Array of numbers for vector types or modulated arrays (hydra-like)
  * - `string`: String value (rarely used)
@@ -70,7 +62,7 @@ export type SynthParameterValue =
 
 /**
  * Context passed to dynamic parameter functions during rendering.
- * 
+ *
  * @example
  * ```typescript
  * const t = textmode.create({
@@ -78,7 +70,7 @@ export type SynthParameterValue =
  *   height: 600,
  *   plugins: [SynthPlugin]
  * });
- * 
+ *
  * t.layers.base.synth(
  *   noise((ctx) => Math.sin(ctx.time) * 10)
  * );
@@ -207,5 +199,5 @@ export const TRANSFORM_TYPE_INFO: Record<
 			{ type: 'vec2', name: '_st' },
 			{ type: 'vec4', name: '_c0' },
 		],
-	}
+	},
 };

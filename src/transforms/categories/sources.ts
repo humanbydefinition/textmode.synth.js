@@ -1,6 +1,6 @@
 /**
  * Source generator transforms.
- * 
+ *
  * These transforms create base visual patterns from UV coordinates.
  * They are the starting point of most synth chains.
  */
@@ -124,7 +124,8 @@ export const src = defineTransform({
 	glsl: `
 	return texture(prevCharColorBuffer, fract(_st));
 `,
-	description: 'Sample the previous frame for feedback effects. Context-aware: automatically samples the appropriate texture based on where it is used (char, charColor, or cellColor context).',
+	description:
+		'Sample the previous frame for feedback effects. Context-aware: automatically samples the appropriate texture based on where it is used (char, charColor, or cellColor context).',
 });
 
 /**

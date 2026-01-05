@@ -1,6 +1,6 @@
 /**
  * Compiler module exports.
- * 
+ *
  * The compiler system is modular, with responsibilities split across:
  * - SynthCompiler: Main compilation orchestration
  * - FeedbackTracker: Feedback texture usage tracking
