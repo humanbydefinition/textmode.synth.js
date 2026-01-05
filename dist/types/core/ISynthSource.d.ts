@@ -679,5 +679,20 @@ export interface ISynthSource {
      * @param speed - Scroll speed (default: 0.0)
      */
     modulateScrollY(source: ISynthSource, scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
+    /**
+     * Add a transform to the chain.
+     * @ignore
+     */
+    addTransform(name: string, userArgs: SynthParameterValue[]): this;
+    /**
+     * Add a combine transform that references another source.
+     * @ignore
+     */
+    addCombineTransform(name: string, source: ISynthSource, userArgs: SynthParameterValue[]): this;
+    /**
+     * Add an external layer reference at the current transform index.
+     * @ignore
+     */
+    addExternalLayerRef(ref: unknown): this;
 }
 //# sourceMappingURL=ISynthSource.d.ts.map

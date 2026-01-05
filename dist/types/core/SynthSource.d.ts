@@ -1,6 +1,8 @@
 import type { SynthParameterValue, CharacterMapping, ExternalLayerReference } from './types';
 import { SynthChain, type TransformRecord } from './SynthChain';
 import type { ISynthSource } from './ISynthSource';
+export interface SynthSource extends ISynthSource {
+}
 /**
  * Options for creating a new SynthSource.
  * @internal
@@ -35,7 +37,7 @@ interface SynthSourceCreateOptions {
  *   .charMap('@#%*+=-:. ');
  * ```
  */
-export declare class SynthSource implements ISynthSource {
+export declare class SynthSource {
     /** The immutable chain of transforms */
     private readonly _chain;
     /** Character mapping for charMap transform */
@@ -81,54 +83,6 @@ export declare class SynthSource implements ISynthSource {
     cellColor(source: SynthSource): this;
     paint(source: SynthSource): this;
     clone(): SynthSource;
-    osc(frequency?: SynthParameterValue, sync?: SynthParameterValue, offset?: SynthParameterValue): this;
-    noise(scale?: SynthParameterValue, speed?: SynthParameterValue): this;
-    voronoi(scale?: SynthParameterValue, speed?: SynthParameterValue, blending?: SynthParameterValue): this;
-    gradient(speed?: SynthParameterValue): this;
-    shape(sides?: SynthParameterValue, radius?: SynthParameterValue, smoothing?: SynthParameterValue): this;
-    solid(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
-    src(_layer?: unknown): this;
-    rotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this;
-    scale(amount?: SynthParameterValue, xMult?: SynthParameterValue, yMult?: SynthParameterValue, offsetX?: SynthParameterValue, offsetY?: SynthParameterValue): this;
-    scroll(scrollX?: SynthParameterValue, scrollY?: SynthParameterValue, speedX?: SynthParameterValue, speedY?: SynthParameterValue): this;
-    scrollX(scrollX?: SynthParameterValue, speed?: SynthParameterValue): this;
-    scrollY(scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
-    pixelate(pixelX?: SynthParameterValue, pixelY?: SynthParameterValue): this;
-    repeat(repeatX?: SynthParameterValue, repeatY?: SynthParameterValue, offsetX?: SynthParameterValue, offsetY?: SynthParameterValue): this;
-    repeatX(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
-    repeatY(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
-    kaleid(nSides?: SynthParameterValue): this;
-    brightness(amount?: SynthParameterValue): this;
-    contrast(amount?: SynthParameterValue): this;
-    invert(amount?: SynthParameterValue): this;
-    saturate(amount?: SynthParameterValue): this;
-    hue(hue?: SynthParameterValue): this;
-    colorama(amount?: SynthParameterValue): this;
-    posterize(bins?: SynthParameterValue, gamma?: SynthParameterValue): this;
-    luma(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
-    thresh(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
-    color(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
-    r(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
-    g(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
-    b(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
-    shift(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
-    gamma(amount?: SynthParameterValue): this;
-    levels(inMin?: SynthParameterValue, inMax?: SynthParameterValue, outMin?: SynthParameterValue, outMax?: SynthParameterValue, gamma?: SynthParameterValue): this;
-    clamp(min?: SynthParameterValue, max?: SynthParameterValue): this;
-    add(source: SynthSource, amount?: SynthParameterValue): this;
-    sub(source: SynthSource, amount?: SynthParameterValue): this;
-    mult(source: SynthSource, amount?: SynthParameterValue): this;
-    blend(source: SynthSource, amount?: SynthParameterValue): this;
-    diff(source: SynthSource): this;
-    layer(source: SynthSource): this;
-    mask(source: SynthSource): this;
-    modulate(source: SynthSource, amount?: SynthParameterValue): this;
-    modulateScale(source: SynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue): this;
-    modulateRotate(source: SynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue): this;
-    modulatePixelate(source: SynthSource, multiple?: SynthParameterValue, offset?: SynthParameterValue): this;
-    modulateKaleid(source: SynthSource, nSides?: SynthParameterValue): this;
-    modulateScrollX(source: SynthSource, scrollX?: SynthParameterValue, speed?: SynthParameterValue): this;
-    modulateScrollY(source: SynthSource, scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
     /**
      * Get the transform records.
      * @ignore
