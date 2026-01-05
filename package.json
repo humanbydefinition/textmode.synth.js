@@ -27,7 +27,7 @@
     "@types/node": "^24.5.2",
     "prettier": "^3.7.4",
     "terser": "^5.44.0",
-    "textmode.js": "^0.9.0-beta.1",
+    "textmode.js": "^0.9.0-beta.2",
     "typedoc": "^0.28.13",
     "typedoc-plugin-markdown": "^4.7.0",
     "typedoc-vitepress-theme": "^1.1.2",
@@ -35,7 +35,7 @@
     "vite": "^7.1.7"
   },
   "peerDependencies": {
-    "textmode.js": "^0.9.0-beta.1"
+    "textmode.js": "^0.9.0-beta.2"
   },
   "repository": {
     "type": "git",
