@@ -1,0 +1,33 @@
+{
+    "entryPoints": [
+        "src/index.ts",
+    ],
+    "out": "api",
+    "readme": "none",
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "excludeExternals": false,
+    "includeVersion": false,
+    "disableSources": true,
+    "useCodeBlocks": true,
+    "tsconfig": "tsconfig.json",
+    "exclude": [
+        "**/node_modules/**"
+    ],
+    "sort": [
+        "source-order"
+    ],
+    "logLevel": "Verbose",
+    "plugin": [
+        "typedoc-plugin-markdown",
+        "typedoc-vitepress-theme",
+    ],
+    "indexFormat": "table",
+    "parametersFormat": "table",
+    "interfacePropertiesFormat": "table",
+    "classPropertiesFormat": "list",
+    "enumMembersFormat": "table",
+    "propertyMembersFormat": "table",
+    "typeDeclarationFormat": "table",
+    "cleanOutputDir": true,
+}
