@@ -6,7 +6,6 @@ export { COORD_TRANSFORMS, rotate, scale, scroll, scrollX, scrollY, pixelate, re
 export { COLOR_TRANSFORMS, brightness, contrast, invert, saturate, hue, colorama, posterize, luma, thresh, color, r, g, b } from './colors';
 export { COMBINE_TRANSFORMS, add, sub, mult, blend, diff, layer, mask } from './combine';
 export { COMBINE_COORD_TRANSFORMS, modulate, modulateScale, modulateRotate, modulatePixelate, modulateKaleid, modulateScrollX, modulateScrollY } from './combineCoord';
-export { CHAR_MODIFY_TRANSFORMS, charFlipX, charFlipY, charInvert, charRotate } from './charModifiers';
 import type { TransformDefinition } from '../TransformDefinition';
 /**
  * All built-in transforms combined.

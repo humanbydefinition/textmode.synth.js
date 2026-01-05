@@ -129,10 +129,6 @@ export declare class SynthSource implements ISynthSource {
     modulateKaleid(source: SynthSource, nSides?: SynthParameterValue): this;
     modulateScrollX(source: SynthSource, scrollX?: SynthParameterValue, speed?: SynthParameterValue): this;
     modulateScrollY(source: SynthSource, scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
-    charFlipX(toggle?: SynthParameterValue): this;
-    charFlipY(toggle?: SynthParameterValue): this;
-    charInvert(toggle?: SynthParameterValue): this;
-    charRotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this;
     /**
      * Get the transform records.
      * @ignore

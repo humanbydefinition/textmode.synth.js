@@ -8,8 +8,7 @@
  * @module
  */
 /**
- * Generated standalone functions for source-type transforms.
- * These allow starting a chain without explicitly creating a SynthSource.
+ * Generated standalone functions for source transforms (e.g., osc(), noise())
  */
 export declare const generatedFunctions: import("./transforms").GeneratedFunctions;
 //# sourceMappingURL=bootstrap.d.ts.map

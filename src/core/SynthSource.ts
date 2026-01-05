@@ -82,10 +82,6 @@ export class SynthSource implements ISynthSource {
 		this._externalLayerRefs = options?.externalLayerRefs ?? new Map();
 	}
 
-	// ============================================================
-	// CORE CHAIN MANAGEMENT
-	// ============================================================
-
 	/**
 	 * Add a transform to the chain.
 	 * This method is called by dynamically injected transform methods.
@@ -120,10 +116,6 @@ export class SynthSource implements ISynthSource {
 		this._externalLayerRefs.set(index, ref);
 		return this.addTransform('src', []);
 	}
-
-	// ============================================================
-	// SPECIAL TEXTMODE METHODS
-	// ============================================================
 
 	public charMap(chars: string): this {
 		const charArray = Array.from(chars);
@@ -185,10 +177,6 @@ export class SynthSource implements ISynthSource {
 		});
 	}
 
-	// ============================================================
-	// SOURCE GENERATORS
-	// ============================================================
-
 	public osc(frequency?: SynthParameterValue, sync?: SynthParameterValue, offset?: SynthParameterValue): this {
 		return this.addTransform('osc', [frequency ?? 60.0, sync ?? 0.1, offset ?? 0.0]);
 	}
@@ -216,10 +204,6 @@ export class SynthSource implements ISynthSource {
 	public src(_layer?: unknown): this {
 		return this.addTransform('src', []);
 	}
-
-	// ============================================================
-	// COORDINATE TRANSFORMS
-	// ============================================================
 
 	public rotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this {
 		return this.addTransform('rotate', [angle ?? 10.0, speed ?? 0.0]);
@@ -260,10 +244,6 @@ export class SynthSource implements ISynthSource {
 	public kaleid(nSides?: SynthParameterValue): this {
 		return this.addTransform('kaleid', [nSides ?? 4.0]);
 	}
-
-	// ============================================================
-	// COLOR TRANSFORMS
-	// ============================================================
 
 	public brightness(amount?: SynthParameterValue): this {
 		return this.addTransform('brightness', [amount ?? 0.4]);
@@ -333,10 +313,6 @@ export class SynthSource implements ISynthSource {
 		return this.addTransform('clamp', [min ?? 0.0, max ?? 1.0]);
 	}
 
-	// ============================================================
-	// COMBINE OPERATIONS
-	// ============================================================
-
 	public add(source: SynthSource, amount?: SynthParameterValue): this {
 		return this.addCombineTransform('add', source, [amount ?? 0.5]);
 	}
@@ -365,10 +341,6 @@ export class SynthSource implements ISynthSource {
 		return this.addCombineTransform('mask', source, []);
 	}
 
-	// ============================================================
-	// MODULATION (combineCoord)
-	// ============================================================
-
 	public modulate(source: SynthSource, amount?: SynthParameterValue): this {
 		return this.addCombineTransform('modulate', source, [amount ?? 0.1]);
 	}
@@ -396,10 +368,6 @@ export class SynthSource implements ISynthSource {
 	public modulateScrollY(source: SynthSource, scrollY?: SynthParameterValue, speed?: SynthParameterValue): this {
 		return this.addCombineTransform('modulateScrollY', source, [scrollY ?? 0.5, speed ?? 0.0]);
 	}
-
-	// ============================================================
-	// ACCESSORS (for compiler use)
-	// ============================================================
 
 	/**
 	 * Get the transform records.

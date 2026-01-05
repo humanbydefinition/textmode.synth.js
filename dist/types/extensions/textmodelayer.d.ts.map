@@ -1,0 +1,1 @@
+{"version":3,"file":"textmodelayer.d.ts","sourceRoot":"","sources":["../../../src/extensions/textmodelayer.ts"],"names":[],"mappings":"AAAA;;;;;;;;;GASG;AAEH,OAAO,KAAK,EAAE,iBAAiB,EAAE,MAAM,qBAAqB,CAAC;AAkC7D;;;GAGG;AACH,wBAAgB,gBAAgB,CAAC,GAAG,EAAE,iBAAiB,QA6BtD;AAED;;;GAGG;AACH,wBAAgB,qBAAqB,CAAC,GAAG,EAAE,iBAAiB,QAmB3D;AAED;;;GAGG;AACH,wBAAgB,cAAc,CAAC,GAAG,EAAE,iBAAiB,QAcpD"}

@@ -53,6 +53,21 @@ export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => num
  * Arrays in textmode.synth.js behave like hydra - they cycle through values over time,
  * creating dynamic, time-varying parameters. This enables complex animations without
  * manually tracking time or state.
+ *
+ * @example
+ * ```typescript
+ * const t = textmode.create({
+ *   width: 800,
+ *   height: 600,
+ *   plugins: [SynthPlugin]
+ * });
+ *
+ * // Rotating shape with eased animation
+ * t.layers.base.synth(
+ *   shape(4)
+ *     .rotate([-3.14, 3.14].ease('easeInOutCubic'))
+ * );
+ * ```
  */
 export interface ModulatedArray extends Array<number> {
     /** Speed multiplier for array cycling @ignore */

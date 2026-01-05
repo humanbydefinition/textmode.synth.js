@@ -33,24 +33,12 @@
  * @packageDocumentation
  */
 
-// ============================================================
-// BOOTSTRAP
 // Initialize the synth system (runs on import)
-// ============================================================
-
 import './bootstrap';
 
-// ============================================================
-// TYPE AUGMENTATIONS
 // Extend textmode.js interfaces (imported for side effects)
-// ============================================================
-
 import './augmentations';
 
-// ============================================================
-// CORE EXPORTS
-// Plugin, classes, and types
-// ============================================================
 
 export { SynthPlugin } from './plugin';
 
@@ -60,11 +48,6 @@ export type {
 	SynthParameterValue,
 	SynthContext,
 } from './core/types';
-
-// ============================================================
-// API EXPORTS
-// Standalone functions for creating synth chains
-// ============================================================
 
 export {
 	cellColor,
@@ -79,10 +62,5 @@ export {
 	src,
 	voronoi,
 } from './api';
-
-// ============================================================
-// UTILITY EXPORTS
-// Array modulation types
-// ============================================================
 
 export type { ModulatedArray, EasingFunction } from './utils/ArrayUtils';

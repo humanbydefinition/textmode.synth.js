@@ -9,7 +9,7 @@ const t = textmode.create({
 });
 
 const synthChain = shape(100, 0.01, 1)
-	.invert(() => Math.sin(t.millis() / 1000) * 2);
+	.invert(() => Math.sin(t.secs / 1000) * 2);
 
 t.layers.base.synth(
 	char(synthChain, 2)

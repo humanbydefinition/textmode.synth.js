@@ -12,10 +12,6 @@ import { SynthSource } from '../core/SynthSource';
 import { generatedFunctions } from '../bootstrap';
 import { TextmodeLayer } from 'textmode.js';
 
-// ============================================================
-// CELL COLOR
-// ============================================================
-
 /**
  * Create a synth source with cell background color defined.
  *
@@ -57,10 +53,6 @@ export const cellColor = (source: SynthSource): SynthSource => {
     return result;
 };
 
-// ============================================================
-// CHAR
-// ============================================================
-
 /**
  * Create a character source from any color/pattern source.
  *
@@ -96,11 +88,6 @@ export const char = (source: SynthSource, charCount?: number): SynthSource => {
 
     return result;
 };
-
-
-// ============================================================
-// CHAR COLOR
-// ============================================================
 
 /**
  * Create a synth source with character foreground color defined.
@@ -142,10 +129,6 @@ export const charColor = (source: SynthSource): SynthSource => {
     return result;
 };
 
-// ============================================================
-// GRADIENT
-// ============================================================
-
 /**
  * Generate a rotating radial gradient.
  * @param speed - Rotation speed (default: 0.0)
@@ -167,10 +150,6 @@ export const charColor = (source: SynthSource): SynthSource => {
 export const gradient = generatedFunctions['gradient'] as (
     speed?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
-
-// ============================================================
-// NOISE
-// ============================================================
 
 /**
  * Generate Perlin noise patterns.
@@ -195,10 +174,6 @@ export const noise = generatedFunctions['noise'] as (
     scale?: number | number[] | ((ctx: SynthContext) => number),
     offset?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
-
-// ============================================================
-// OSC
-// ============================================================
 
 /**
  * Generate oscillating patterns using sine waves.
@@ -231,10 +206,6 @@ export const osc = generatedFunctions['osc'] as (
     sync?: number | number[] | ((ctx: SynthContext) => number),
     offset?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
-
-// ============================================================
-// PAINT
-// ============================================================
 
 /**
  * Create a synth source with both character and cell colors defined.
@@ -273,10 +244,6 @@ export const paint = (source: SynthSource): SynthSource => {
     return result;
 };
 
-// ============================================================
-// SHAPE
-// ============================================================
-
 /**
  * Generate geometric shapes (polygons).
  * @param sides - Number of sides (default: 3)
@@ -308,10 +275,6 @@ export const shape = generatedFunctions['shape'] as (
     smoothing?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
 
-// ============================================================
-// SOLID
-// ============================================================
-
 /**
  * Generate a solid color.
  * @param r - Red channel (0-1, default: 0.0)
@@ -341,10 +304,6 @@ export const solid = generatedFunctions['solid'] as (
     b?: number | number[] | ((ctx: SynthContext) => number),
     a?: number | number[] | ((ctx: SynthContext) => number)
 ) => SynthSource;
-
-// ============================================================
-// SRC
-// ============================================================
 
 /**
  * Sample the previous frame's output for feedback effects.
@@ -417,10 +376,6 @@ export const src = (layer?: TextmodeLayer): SynthSource => {
 
     return source;
 };
-
-// ============================================================
-// VORONOI
-// ============================================================
 
 /**
  * Generate voronoi patterns.

@@ -16,9 +16,6 @@ import type { SynthParameterValue } from './types';
  * - Modulation (modulate, modulateScale, modulateRotate, etc.)
  */
 export interface ISynthSource {
-    // ============================================================
-    // SPECIAL TEXTMODE METHODS
-    // ============================================================
 
     /**
      * Map character indices to a specific character set.
@@ -144,10 +141,6 @@ export interface ISynthSource {
      */
     clone(): ISynthSource;
 
-    // ============================================================
-    // SOURCE GENERATORS
-    // ============================================================
-
     /**
      * Generate oscillating patterns using sine waves.
      * @param frequency - Frequency of the oscillation (default: 60.0)
@@ -235,10 +228,6 @@ export interface ISynthSource {
      * ```
      */
     src(layer?: unknown): this;
-
-    // ============================================================
-    // COORDINATE TRANSFORMS
-    // ============================================================
 
     /**
      * Rotate coordinates.
@@ -359,10 +348,6 @@ export interface ISynthSource {
      * ```
      */
     kaleid(nSides?: SynthParameterValue): this;
-
-    // ============================================================
-    // COLOR TRANSFORMS
-    // ============================================================
 
     /**
      * Adjust brightness.
@@ -599,10 +584,6 @@ export interface ISynthSource {
      */
     clamp(min?: SynthParameterValue, max?: SynthParameterValue): this;
 
-    // ============================================================
-    // COMBINE OPERATIONS
-    // ============================================================
-
     /**
      * Add another source.
      * @param source - Source to add
@@ -682,10 +663,6 @@ export interface ISynthSource {
      * ```
      */
     mask(source: ISynthSource): this;
-
-    // ============================================================
-    // MODULATION (combineCoord)
-    // ============================================================
 
     /**
      * Modulate coordinates using another source.

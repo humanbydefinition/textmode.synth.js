@@ -8,6 +8,7 @@
  */
 import type { SynthContext } from '../core/types';
 import { SynthSource } from '../core/SynthSource';
+import { TextmodeLayer } from 'textmode.js';
 /**
  * Create a synth source with cell background color defined.
  *
@@ -304,7 +305,7 @@ export declare const solid: (r?: number | number[] | ((ctx: SynthContext) => num
  * );
  * ```
  */
-export declare const src: (layer?: import("textmode.js").TextmodeLayer) => SynthSource;
+export declare const src: (layer?: TextmodeLayer) => SynthSource;
 /**
  * Generate voronoi patterns.
  * @param scale - Scale of voronoi cells (default: 5.0)

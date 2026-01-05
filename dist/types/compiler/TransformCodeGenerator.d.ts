@@ -29,7 +29,6 @@ export interface TransformCodeResult {
  * - Color transforms (brightness, contrast, etc.)
  * - Combine operations (add, mult, blend, etc.)
  * - CombineCoord operations (modulate, modulateScale, etc.)
- * - Character modifiers (charFlipX, charRotate, etc.)
  */
 export declare class TransformCodeGenerator {
     /**
