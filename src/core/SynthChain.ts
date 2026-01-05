@@ -21,7 +21,6 @@ export class SynthChain {
 
 	/**
 	 * Create a new SynthChain with the given transforms.
-	 * @internal Use static factory methods instead.
 	 */
 	private constructor(transforms: TransformRecord[]) {
 		this._transforms = transforms;
@@ -50,7 +49,6 @@ export class SynthChain {
 
 	/**
 	 * Push a transform to this chain (internal mutation).
-	 * @internal
 	 */
 	public push(record: TransformRecord): void {
 		this._transforms.push(record);

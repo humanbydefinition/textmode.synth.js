@@ -6,15 +6,12 @@ import type {
 import { SynthChain, type TransformRecord } from './SynthChain';
 import type { ISynthSource } from './ISynthSource';
 
-// ─────────────────────────────────────────────────────────────────────────────
 // Declaration merging: TypeScript knows SynthSource has all ISynthSource methods
 // The actual method implementations are injected at runtime by TransformFactory
-// ─────────────────────────────────────────────────────────────────────────────
 export interface SynthSource extends ISynthSource { }
 
 /**
  * Options for creating a new SynthSource.
- * @internal
  */
 interface SynthSourceCreateOptions {
 	chain?: SynthChain;

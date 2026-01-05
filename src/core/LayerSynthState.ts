@@ -9,7 +9,6 @@ import type { CharacterResolver } from '../utils/CharacterResolver';
 
 /**
  * Per-layer synth state stored via plugin state API.
- * @internal
  */
 export interface LayerSynthState {
     /** The original SynthSource */

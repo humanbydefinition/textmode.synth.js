@@ -2,8 +2,6 @@
  * Synth render lifecycle callback.
  *
  * Renders synth sources before the user draw callback.
- *
- * @internal
  */
 
 import type { TextmodeLayer } from 'textmode.js/layering';
@@ -18,7 +16,6 @@ import type { LayerSynthState } from '../core/LayerSynthState';
 
 /**
  * Render synth before user draw callback.
- * @internal
  */
 export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
     const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);

@@ -3,9 +3,6 @@
  *
  * This module handles all side-effect initialization required for
  * the synth system to function. It runs once when the library is imported.
- *
- * @internal
- * @module
  */
 
 import { transformRegistry } from './transforms/TransformRegistry';

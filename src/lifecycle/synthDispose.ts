@@ -2,8 +2,6 @@
  * Synth dispose lifecycle callback.
  *
  * Cleans up synth resources when a layer is disposed.
- *
- * @internal
  */
 
 import type { TextmodeLayer } from 'textmode.js/layering';
@@ -12,7 +10,6 @@ import type { LayerSynthState } from '../core/LayerSynthState';
 
 /**
  * Clean up synth resources when a layer is disposed.
- * @internal
  */
 export function synthDispose(layer: TextmodeLayer) {
     const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);

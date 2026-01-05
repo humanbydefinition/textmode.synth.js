@@ -5,8 +5,6 @@
  * - `synth()` - Apply a synth source to the layer
  * - `clearSynth()` - Remove synth from the layer
  * - `bpm()` - Set layer-specific BPM override
- *
- * @internal
  */
 
 import type { TextmodePluginAPI } from 'textmode.js/plugins';
@@ -26,7 +24,6 @@ import { CharacterResolver } from '../utils/CharacterResolver';
  *
  * @param partial - Partial state to override defaults
  * @returns A complete LayerSynthState object
- * @internal
  */
 function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSynthState {
     return {
@@ -45,7 +42,6 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
 
 /**
  * Extend layer with synth() method.
- * @internal
  */
 export function extendLayerSynth(api: TextmodePluginAPI) {
     api.extendLayer('synth', function (this: TextmodeLayer, source: SynthSource): void {
@@ -80,7 +76,6 @@ export function extendLayerSynth(api: TextmodePluginAPI) {
 
 /**
  * Extend layer with clearSynth() method.
- * @internal
  */
 export function extendLayerClearSynth(api: TextmodePluginAPI) {
     api.extendLayer('clearSynth', function (this: TextmodeLayer): void {
@@ -105,7 +100,6 @@ export function extendLayerClearSynth(api: TextmodePluginAPI) {
 
 /**
  * Extend layer with bpm() method.
- * @internal
  */
 export function extendLayerBpm(api: TextmodePluginAPI) {
     api.extendLayer('bpm', function (this: TextmodeLayer, value: number): void {
