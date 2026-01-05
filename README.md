@@ -4,6 +4,11 @@
 
 Create procedural ASCII/text animations with a `hydra`-inspired, chainable visual synthesis system.
 
+> [!NOTE]
+> This project is work-in-progress and not yet ready for production use.
+>
+> `textmode.synth.js` becomes usable once `textmode.js` v0.9.0 is released.
+
 ## Features
 
 - 🎨 **Procedural generation** - Oscillators, noise, voronoi, and more
@@ -19,6 +24,9 @@ Create procedural ASCII/text animations with a `hydra`-inspired, chainable visua
 To go along with the release of this library, we've created a **live coding environment** where you can explore everything in the browser: [synth.textmode.art](https://synth.textmode.art)
 
 It features IntelliSense & auto-completion, documentation on hover, curated examples to explore, and a lot more. The whole `textmode.js` ecosystem is available at your fingertips.
+
+> [!NOTE]
+> The live coding environment is not yet live. It will be available in the next few days.
 
 ## Installation
 
