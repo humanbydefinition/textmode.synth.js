@@ -1,6 +1,6 @@
 {
   "name": "textmode.synth.js",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "Synth engine for textmode.js",
   "type": "module",
   "types": "./dist/types/index.d.ts",
