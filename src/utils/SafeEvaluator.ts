@@ -1,9 +1,9 @@
 /**
- * SafeEvaluator - Safe evaluation of dynamic parameters for live coding environments.
+ * SafeEvaluator - Dynamic parameter evaluation with error notification for live coding environments.
  *
- * This module provides defensive error handling around user-provided dynamic
- * parameter functions, preventing runtime errors from crashing the render loop.
- * Essential for live coding scenarios where users may introduce broken code.
+ * This module provides error handling around user-provided dynamic parameter functions.
+ * Errors are caught, reported to subscribers via callback, and then re-thrown so that
+ * live coding environments can detect them and handle recovery at the sketch level.
  */
 
 import type { SynthContext } from '../core/types';
@@ -22,11 +22,9 @@ import type { SynthContext } from '../core/types';
 export type DynamicErrorCallback = (error: unknown, uniformName: string) => void;
 
 /**
- * Options for safe dynamic parameter evaluation.
+ * Options for dynamic parameter evaluation.
  */
 export interface SafeEvalOptions {
-    /** Fallback value to return when evaluation fails or returns non-finite */
-    fallback: number | number[];
     /** Optional callback invoked when an error occurs (overrides global callback) */
     onError?: DynamicErrorCallback;
 }
@@ -42,6 +40,8 @@ let globalErrorCallback: DynamicErrorCallback | null = null;
  *
  * This provides a centralized way for live coding environments to receive
  * notifications whenever any dynamic parameter fails to evaluate.
+ * After the callback is invoked, the error is re-thrown so environments
+ * can handle recovery at the sketch level.
  *
  * @param callback - The callback to invoke on errors, or null to disable
  *
@@ -72,23 +72,8 @@ export function getGlobalErrorCallback(): DynamicErrorCallback | null {
 }
 
 /**
- * Cache for storing last known good values per uniform.
- * This allows recovery to the most recent successful value rather than
- * always falling back to the initial default.
- */
-const lastGoodValues = new Map<string, number | number[]>();
-
-/**
- * Throttle tracking to avoid flooding the console with repeated errors.
- * Maps uniform name to last error time.
- */
-const errorThrottle = new Map<string, number>();
-const ERROR_THROTTLE_MS = 1000; // Only log same error once per second
-
-/**
  * Helper to invoke the appropriate error callback.
- * Uses the provided callback, falling back to global callback,
- * and finally falling back to console.warn for beginner-friendliness.
+ * Uses the provided callback, falling back to global callback.
  */
 function invokeErrorCallback(
     error: unknown,
@@ -103,88 +88,65 @@ function invokeErrorCallback(
         } catch {
             // Ignore errors in the error callback itself
         }
-    } else {
-        // Default behavior: log to console with throttling for beginner-friendliness
-        // This ensures users always get feedback about bad dynamic parameters
-        const now = Date.now();
-        const lastErrorTime = errorThrottle.get(uniformName) ?? 0;
-
-        if (now - lastErrorTime >= ERROR_THROTTLE_MS) {
-            errorThrottle.set(uniformName, now);
-
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            console.warn(
-                `[textmode.synth.js] Dynamic parameter error in "${uniformName}": ${errorMessage}`
-            );
-        }
     }
 }
 
 /**
- * Safely evaluate a dynamic parameter function.
+ * Evaluate a dynamic parameter function with error notification.
  *
- * Wraps the evaluation in a try-catch to prevent errors from propagating
- * and crashing the render loop. Returns a safe fallback value on:
- * - Any thrown exception
+ * Validates the result and notifies subscribers of any errors via callback.
+ * Errors are then re-thrown so live coding environments can detect them
+ * and handle recovery at the sketch level.
+ *
+ * Throws on:
+ * - Any exception from the function
  * - undefined result
  * - NaN result
  * - Infinite result
  *
- * Error callback is invoked for both exceptions AND invalid values.
- *
  * @param fn - The dynamic parameter function to evaluate
- * @param uniformName - Name of the uniform (for error reporting and caching)
- * @param options - Evaluation options including fallback and error callback
- * @returns The evaluated value, last good value, or fallback
+ * @param uniformName - Name of the uniform (for error reporting)
+ * @param options - Evaluation options including error callback
+ * @returns The evaluated value
+ * @throws Error if the function throws or returns an invalid value
  *
  * @example
  * ```typescript
- * const value = safeEvaluateDynamic(
+ * const value = evaluateDynamic(
  *   () => updater(synthContext),
  *   'u_freq',
- *   { fallback: 1.0, onError: console.error }
+ *   { onError: console.error }
  * );
  * ```
  */
-export function safeEvaluateDynamic(
+export function evaluateDynamic(
     fn: () => number | number[],
     uniformName: string,
-    options: SafeEvalOptions
+    options: SafeEvalOptions = {}
 ): number | number[] {
+    let result: number | number[];
+
     try {
-        const result = fn();
-
-        // Validate the result
-        if (!isValidValue(result)) {
-            // Result is undefined, NaN, Infinity, or otherwise invalid
-            // Report this as an error so the user gets feedback
-            const invalidValueError = new Error(
-                `Invalid dynamic parameter value: ${formatInvalidValue(result)}`
-            );
-            invokeErrorCallback(invalidValueError, uniformName, options.onError);
-
-            // Try to return last good value, otherwise use fallback
-            const lastGood = lastGoodValues.get(uniformName);
-            if (lastGood !== undefined) {
-                return lastGood;
-            }
-            return options.fallback;
-        }
-
-        // Cache this as the last known good value
-        lastGoodValues.set(uniformName, result);
-        return result;
+        result = fn();
     } catch (error) {
-        // Invoke error callback for exception
+        // Notify subscribers
         invokeErrorCallback(error, uniformName, options.onError);
-
-        // Try to return last good value, otherwise use fallback
-        const lastGood = lastGoodValues.get(uniformName);
-        if (lastGood !== undefined) {
-            return lastGood;
-        }
-        return options.fallback;
+        // Re-throw for environment to handle
+        throw error;
     }
+
+    // Validate the result
+    if (!isValidValue(result)) {
+        const invalidValueError = new Error(
+            `[textmode.synth.js] Invalid dynamic parameter value for "${uniformName}": ${formatInvalidValue(result)}`
+        );
+        // Notify subscribers
+        invokeErrorCallback(invalidValueError, uniformName, options.onError);
+        // Throw for environment to handle
+        throw invalidValueError;
+    }
+
+    return result;
 }
 
 /**
@@ -227,31 +189,17 @@ function isValidValue(value: unknown): value is number | number[] {
 }
 
 /**
- * Clear the last known good values cache.
- * Useful when switching synth sources or recompiling.
- */
-export function clearSafeEvalCache(): void {
-    lastGoodValues.clear();
-}
-
-/**
- * Create a wrapped updater function that safely evaluates the original.
- *
- * This is useful for pre-wrapping updaters during compilation so that
- * the render loop doesn't need to handle try-catch directly.
+ * Create a wrapped updater function that evaluates with error notification.
  *
  * @param updater - The original dynamic updater function
  * @param uniformName - Name of the uniform
- * @param fallback - Fallback value on error
  * @param onError - Optional error callback
- * @returns A wrapped function that will never throw
+ * @returns A wrapped function that notifies on errors and re-throws
  */
-export function createSafeUpdater(
+export function createDynamicUpdater(
     updater: (ctx: SynthContext) => number | number[],
     uniformName: string,
-    fallback: number | number[],
     onError?: DynamicErrorCallback
 ): (ctx: SynthContext) => number | number[] {
-    return (ctx: SynthContext) =>
-        safeEvaluateDynamic(() => updater(ctx), uniformName, { fallback, onError });
+    return (ctx: SynthContext) => evaluateDynamic(() => updater(ctx), uniformName, { onError });
 }

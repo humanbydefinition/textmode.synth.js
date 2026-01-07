@@ -23,15 +23,16 @@ export { CharacterResolver } from './CharacterResolver';
 // External layer reference collection
 export { collectExternalLayerRefs } from './collectExternalLayerRefs';
 
-// Safe dynamic parameter evaluation
+// Dynamic parameter evaluation with error notification
 export {
-	safeEvaluateDynamic,
-	createSafeUpdater,
-	clearSafeEvalCache,
+	evaluateDynamic,
+	createDynamicUpdater,
 	setGlobalErrorCallback,
 	getGlobalErrorCallback,
 	type DynamicErrorCallback,
 	type SafeEvalOptions,
 } from './SafeEvaluator';
+
+
 
 
