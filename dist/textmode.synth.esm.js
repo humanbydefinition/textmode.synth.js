@@ -958,18 +958,14 @@ function U(t, e, n) {
   } catch {
   }
 }
-function gt(t, e, n = {}) {
-  let a;
+function gt(t, e, n, a = {}) {
+  let r;
   try {
-    a = t();
-  } catch (r) {
-    throw U(r, e, n.onError), r;
+    r = t();
+  } catch (o) {
+    return U(o, e, a.onError), n;
   }
-  if (!_t(a)) {
-    const r = new Error(`[textmode.synth.js] Invalid dynamic parameter value for "${e}": ${N(a)}`);
-    throw U(r, e, n.onError), r;
-  }
-  return a;
+  return _t(r) ? r : (U(new Error(`[textmode.synth.js] Invalid dynamic parameter value for "${e}": ${N(r)}`), e, a.onError), n);
 }
 function N(t) {
   if (t === void 0) return "undefined";
@@ -996,8 +992,8 @@ async function vt(t, e) {
   i && !n.pingPongBuffers && (n.pingPongBuffers = [e.createFramebuffer({ width: a.cols, height: a.rows, attachments: 3 }), e.createFramebuffer({ width: a.cols, height: a.rows, attachments: 3 })], n.pingPongIndex = 0);
   const m = { time: e.secs, frameCount: e.frameCount, width: a.width, height: a.height, cols: a.cols, rows: a.rows, bpm: n.bpm ?? ht() }, h = /* @__PURE__ */ new Map();
   for (const [g, v] of n.compiled.dynamicUpdaters) {
-    const p = gt(() => v(m), g, { onError: n.onDynamicError });
-    h.set(g, p);
+    const p = n.compiled.uniforms.get(g), u = gt(() => v(m), g, p?.value ?? 0, { onError: n.onDynamicError });
+    h.set(g, u);
   }
   const y = (g) => {
     e.setUniform("time", e.secs), e.setUniform("resolution", [m.cols, m.rows]);

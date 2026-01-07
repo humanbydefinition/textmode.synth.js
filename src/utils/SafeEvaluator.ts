@@ -1,62 +1,45 @@
 /**
- * SafeEvaluator - Dynamic parameter evaluation with error notification for live coding environments.
+ * DynamicEvaluator - Dynamic parameter evaluation for live coding environments.
  *
- * This module provides error handling around user-provided dynamic parameter functions.
- * Errors are caught, reported to subscribers via callback, and then re-thrown so that
- * live coding environments can detect them and handle recovery at the sketch level.
+ * Provides graceful error handling for user-provided dynamic parameter functions.
+ * When evaluation fails, errors are reported via callback and a fallback value
+ * is returned, allowing rendering to continue with safe defaults.
  */
 
 import type { SynthContext } from '../core/types';
 
 /**
- * Error callback signature for dynamic parameter evaluation errors.
- *
- * Live coding environments can use this to:
- * - Log errors to their console
- * - Display visual error indicators
- * - Track which uniforms are failing
- *
- * @param error - The error that was caught
- * @param uniformName - Name of the uniform whose evaluation failed
+ * Callback signature for dynamic parameter evaluation errors.
+ * Live coding environments can use this to display errors without interrupting rendering.
  */
 export type DynamicErrorCallback = (error: unknown, uniformName: string) => void;
 
 /**
  * Options for dynamic parameter evaluation.
  */
-export interface SafeEvalOptions {
-    /** Optional callback invoked when an error occurs (overrides global callback) */
+export interface EvalOptions {
+    /** Callback invoked when an error occurs (overrides global callback) */
     onError?: DynamicErrorCallback;
 }
 
 /**
  * Global error callback for all dynamic parameter errors.
- * Live coding environments can set this once to receive all error notifications.
  */
 let globalErrorCallback: DynamicErrorCallback | null = null;
 
 /**
- * Set a global error callback for all dynamic parameter evaluation errors.
+ * Set a global error callback for dynamic parameter evaluation errors.
  *
- * This provides a centralized way for live coding environments to receive
- * notifications whenever any dynamic parameter fails to evaluate.
- * After the callback is invoked, the error is re-thrown so environments
- * can handle recovery at the sketch level.
- *
- * @param callback - The callback to invoke on errors, or null to disable
+ * Provides a centralized way for live coding environments to receive
+ * notifications whenever a dynamic parameter fails to evaluate.
  *
  * @example
  * ```typescript
  * import { setGlobalErrorCallback } from 'textmode.synth.js';
  *
- * // Set up global error handling in your live coding environment
  * setGlobalErrorCallback((error, uniformName) => {
- *   console.error(`[Synth] Dynamic parameter "${uniformName}" error:`, error);
- *   // Display in editor console, show visual indicator, etc.
+ *   console.error(`[Synth] Parameter "${uniformName}" error:`, error);
  * });
- *
- * // Later, to disable:
- * setGlobalErrorCallback(null);
  * ```
  */
 export function setGlobalErrorCallback(callback: DynamicErrorCallback | null): void {
@@ -65,15 +48,13 @@ export function setGlobalErrorCallback(callback: DynamicErrorCallback | null): v
 
 /**
  * Get the current global error callback.
- * Useful for temporarily replacing and then restoring the callback.
  */
 export function getGlobalErrorCallback(): DynamicErrorCallback | null {
     return globalErrorCallback;
 }
 
 /**
- * Helper to invoke the appropriate error callback.
- * Uses the provided callback, falling back to global callback.
+ * Invoke the appropriate error callback.
  */
 function invokeErrorCallback(
     error: unknown,
@@ -81,69 +62,49 @@ function invokeErrorCallback(
     localCallback?: DynamicErrorCallback
 ): void {
     const callback = localCallback ?? globalErrorCallback;
-
     if (callback) {
         try {
             callback(error, uniformName);
         } catch {
-            // Ignore errors in the error callback itself
+            // Ignore errors in the callback itself
         }
     }
 }
 
 /**
- * Evaluate a dynamic parameter function with error notification.
+ * Evaluate a dynamic parameter with graceful error handling.
  *
- * Validates the result and notifies subscribers of any errors via callback.
- * Errors are then re-thrown so live coding environments can detect them
- * and handle recovery at the sketch level.
- *
- * Throws on:
- * - Any exception from the function
- * - undefined result
- * - NaN result
- * - Infinite result
+ * When evaluation fails (exception or invalid value), the error is reported
+ * via callback and the fallback value is returned. This allows rendering to
+ * continue with safe defaults rather than aborting the frame.
  *
  * @param fn - The dynamic parameter function to evaluate
  * @param uniformName - Name of the uniform (for error reporting)
+ * @param fallback - Value to return if evaluation fails
  * @param options - Evaluation options including error callback
- * @returns The evaluated value
- * @throws Error if the function throws or returns an invalid value
- *
- * @example
- * ```typescript
- * const value = evaluateDynamic(
- *   () => updater(synthContext),
- *   'u_freq',
- *   { onError: console.error }
- * );
- * ```
+ * @returns The evaluated value, or fallback on error
  */
 export function evaluateDynamic(
     fn: () => number | number[],
     uniformName: string,
-    options: SafeEvalOptions = {}
+    fallback: number | number[],
+    options: EvalOptions = {}
 ): number | number[] {
     let result: number | number[];
 
     try {
         result = fn();
     } catch (error) {
-        // Notify subscribers
         invokeErrorCallback(error, uniformName, options.onError);
-        // Re-throw for environment to handle
-        throw error;
+        return fallback;
     }
 
-    // Validate the result
     if (!isValidValue(result)) {
         const invalidValueError = new Error(
             `[textmode.synth.js] Invalid dynamic parameter value for "${uniformName}": ${formatInvalidValue(result)}`
         );
-        // Notify subscribers
         invokeErrorCallback(invalidValueError, uniformName, options.onError);
-        // Throw for environment to handle
-        throw invalidValueError;
+        return fallback;
     }
 
     return result;
@@ -170,36 +131,29 @@ function formatInvalidValue(value: unknown): string {
 
 /**
  * Check if a value is valid for use as a uniform.
- * Rejects undefined, null, NaN, and Infinity values which would cause issues.
  */
 function isValidValue(value: unknown): value is number | number[] {
     if (value === undefined || value === null) {
         return false;
     }
-
     if (typeof value === 'number') {
         return Number.isFinite(value);
     }
-
     if (Array.isArray(value)) {
         return value.length > 0 && value.every((v) => typeof v === 'number' && Number.isFinite(v));
     }
-
     return false;
 }
 
 /**
- * Create a wrapped updater function that evaluates with error notification.
- *
- * @param updater - The original dynamic updater function
- * @param uniformName - Name of the uniform
- * @param onError - Optional error callback
- * @returns A wrapped function that notifies on errors and re-throws
+ * Create a wrapped updater function with graceful error handling.
  */
 export function createDynamicUpdater(
     updater: (ctx: SynthContext) => number | number[],
     uniformName: string,
+    fallback: number | number[],
     onError?: DynamicErrorCallback
 ): (ctx: SynthContext) => number | number[] {
-    return (ctx: SynthContext) => evaluateDynamic(() => updater(ctx), uniformName, { onError });
+    return (ctx: SynthContext) =>
+        evaluateDynamic(() => updater(ctx), uniformName, fallback, { onError });
 }

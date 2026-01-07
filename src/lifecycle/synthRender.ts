@@ -83,31 +83,25 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		bpm: state.bpm ?? getGlobalBpm(),
 	};
 
-	// ========================================================================
-	// VALIDATION PHASE: Evaluate all dynamic parameters before WebGL operations
-	// ========================================================================
-	// This ensures WebGL never sees incomplete uniform state if a parameter fails.
-	// Errors propagate to the environment for handling; previous frame stays visible.
-
+	// Evaluate dynamic parameters with graceful error handling.
+	// On error: report via callback, use fallback value, continue rendering.
 	const dynamicValues = new Map<string, number | number[]>();
 
 	for (const [name, updater] of state.compiled.dynamicUpdaters) {
-		const value = evaluateDynamic(() => updater(synthContext), name, {
+		const uniform = state.compiled.uniforms.get(name);
+		const fallback = uniform?.value ?? 0;
+
+		const value = evaluateDynamic(() => updater(synthContext), name, fallback, {
 			onError: state.onDynamicError,
 		});
 		dynamicValues.set(name, value);
 	}
 
-	// ========================================================================
-	// RENDER PHASE: All parameters validated, safe to perform WebGL operations
-	// ========================================================================
-
+	// Apply uniforms and render
 	const applyUniforms = (feedbackBuffer: TextmodeFramebuffer | null) => {
-		// Standard uniforms
 		textmodifier.setUniform('time', textmodifier.secs);
 		textmodifier.setUniform('resolution', [synthContext.cols, synthContext.rows]);
 
-		// Dynamic uniforms (pre-validated)
 		for (const [name, value] of dynamicValues) {
 			textmodifier.setUniform(name, value);
 		}
