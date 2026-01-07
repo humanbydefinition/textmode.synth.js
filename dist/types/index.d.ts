@@ -39,4 +39,6 @@ export { SynthSource } from './core/SynthSource';
 export type { SynthParameterValue, SynthContext } from './core/types';
 export { cellColor, char, charColor, gradient, noise, osc, paint, shape, solid, src, voronoi, } from './api';
 export type { ModulatedArray, EasingFunction } from './utils/ArrayUtils';
+export { setGlobalErrorCallback } from './utils/SafeEvaluator';
+export type { DynamicErrorCallback } from './utils/SafeEvaluator';
 //# sourceMappingURL=index.d.ts.map
