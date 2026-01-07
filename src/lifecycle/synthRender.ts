@@ -9,7 +9,7 @@ import type { TextmodeFont } from 'textmode.js/loadables';
 import type { TextmodeFramebuffer } from 'textmode.js';
 import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
-import { collectExternalLayerRefs } from '../utils/collectExternalLayerRefs';
+import { collectExternalLayerRefs, safeEvaluateDynamic } from '../utils';
 import { getGlobalBpm } from '../core/GlobalState';
 import type { SynthContext, LayerSynthState } from '../core/types';
 
@@ -92,9 +92,22 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		textmodifier.setUniform('time', textmodifier.secs);
 		textmodifier.setUniform('resolution', [synthContext.cols, synthContext.rows]);
 
-		// Dynamic uniforms (evaluated each frame)
+		// Dynamic uniforms (evaluated each frame with safe error handling)
 		for (const [name, updater] of state.compiled!.dynamicUpdaters) {
-			textmodifier.setUniform(name, updater(synthContext));
+			// Get the fallback value from the uniform definition
+			const uniform = state.compiled!.uniforms.get(name);
+			const fallback = uniform?.value ?? 0;
+
+			// Safely evaluate the dynamic parameter
+			const value = safeEvaluateDynamic(
+				() => updater(synthContext),
+				name,
+				{
+					fallback,
+					onError: state.onDynamicError,
+				}
+			);
+			textmodifier.setUniform(name, value);
 		}
 
 		// Static uniforms

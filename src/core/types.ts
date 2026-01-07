@@ -127,6 +127,14 @@ export interface LayerSynthState {
 	 * If set, this overrides the global BPM for this layer's array modulation.
 	 */
 	bpm?: number;
+	/**
+	 * Optional callback invoked when dynamic parameter evaluation fails.
+	 * Live coding environments can use this to display errors without crashing.
+	 *
+	 * @param error - The error that was caught
+	 * @param uniformName - Name of the uniform whose evaluation failed
+	 */
+	onDynamicError?: (error: unknown, uniformName: string) => void;
 }
 
 /**

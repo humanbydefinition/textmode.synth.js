@@ -60,3 +60,8 @@ export {
 } from './api';
 
 export type { ModulatedArray, EasingFunction } from './utils/ArrayUtils';
+
+// Error handling for live coding environments
+export { setGlobalErrorCallback } from './utils/SafeEvaluator';
+export type { DynamicErrorCallback } from './utils/SafeEvaluator';
+
