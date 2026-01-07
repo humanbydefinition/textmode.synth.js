@@ -1,9 +1,9 @@
 /**
- * SafeEvaluator - Safe evaluation of dynamic parameters for live coding environments.
+ * SafeEvaluator - Dynamic parameter evaluation with error notification for live coding environments.
  *
- * This module provides defensive error handling around user-provided dynamic
- * parameter functions, preventing runtime errors from crashing the render loop.
- * Essential for live coding scenarios where users may introduce broken code.
+ * This module provides error handling around user-provided dynamic parameter functions.
+ * Errors are caught, reported to subscribers via callback, and then re-thrown so that
+ * live coding environments can detect them and handle recovery at the sketch level.
  */
 import type { SynthContext } from '../core/types';
 /**
@@ -19,11 +19,9 @@ import type { SynthContext } from '../core/types';
  */
 export type DynamicErrorCallback = (error: unknown, uniformName: string) => void;
 /**
- * Options for safe dynamic parameter evaluation.
+ * Options for dynamic parameter evaluation.
  */
 export interface SafeEvalOptions {
-    /** Fallback value to return when evaluation fails or returns non-finite */
-    fallback: number | number[];
     /** Optional callback invoked when an error occurs (overrides global callback) */
     onError?: DynamicErrorCallback;
 }
@@ -32,6 +30,8 @@ export interface SafeEvalOptions {
  *
  * This provides a centralized way for live coding environments to receive
  * notifications whenever any dynamic parameter fails to evaluate.
+ * After the callback is invoked, the error is re-thrown so environments
+ * can handle recovery at the sketch level.
  *
  * @param callback - The callback to invoke on errors, or null to disable
  *
@@ -56,48 +56,41 @@ export declare function setGlobalErrorCallback(callback: DynamicErrorCallback | 
  */
 export declare function getGlobalErrorCallback(): DynamicErrorCallback | null;
 /**
- * Safely evaluate a dynamic parameter function.
+ * Evaluate a dynamic parameter function with error notification.
  *
- * Wraps the evaluation in a try-catch to prevent errors from propagating
- * and crashing the render loop. Returns a safe fallback value on:
- * - Any thrown exception
+ * Validates the result and notifies subscribers of any errors via callback.
+ * Errors are then re-thrown so live coding environments can detect them
+ * and handle recovery at the sketch level.
+ *
+ * Throws on:
+ * - Any exception from the function
  * - undefined result
  * - NaN result
  * - Infinite result
  *
- * Error callback is invoked for both exceptions AND invalid values.
- *
  * @param fn - The dynamic parameter function to evaluate
- * @param uniformName - Name of the uniform (for error reporting and caching)
- * @param options - Evaluation options including fallback and error callback
- * @returns The evaluated value, last good value, or fallback
+ * @param uniformName - Name of the uniform (for error reporting)
+ * @param options - Evaluation options including error callback
+ * @returns The evaluated value
+ * @throws Error if the function throws or returns an invalid value
  *
  * @example
  * ```typescript
- * const value = safeEvaluateDynamic(
+ * const value = evaluateDynamic(
  *   () => updater(synthContext),
  *   'u_freq',
- *   { fallback: 1.0, onError: console.error }
+ *   { onError: console.error }
  * );
  * ```
  */
-export declare function safeEvaluateDynamic(fn: () => number | number[], uniformName: string, options: SafeEvalOptions): number | number[];
+export declare function evaluateDynamic(fn: () => number | number[], uniformName: string, options?: SafeEvalOptions): number | number[];
 /**
- * Clear the last known good values cache.
- * Useful when switching synth sources or recompiling.
- */
-export declare function clearSafeEvalCache(): void;
-/**
- * Create a wrapped updater function that safely evaluates the original.
- *
- * This is useful for pre-wrapping updaters during compilation so that
- * the render loop doesn't need to handle try-catch directly.
+ * Create a wrapped updater function that evaluates with error notification.
  *
  * @param updater - The original dynamic updater function
  * @param uniformName - Name of the uniform
- * @param fallback - Fallback value on error
  * @param onError - Optional error callback
- * @returns A wrapped function that will never throw
+ * @returns A wrapped function that notifies on errors and re-throws
  */
-export declare function createSafeUpdater(updater: (ctx: SynthContext) => number | number[], uniformName: string, fallback: number | number[], onError?: DynamicErrorCallback): (ctx: SynthContext) => number | number[];
+export declare function createDynamicUpdater(updater: (ctx: SynthContext) => number | number[], uniformName: string, onError?: DynamicErrorCallback): (ctx: SynthContext) => number | number[];
 //# sourceMappingURL=SafeEvaluator.d.ts.map
