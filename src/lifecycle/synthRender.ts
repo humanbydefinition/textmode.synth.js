@@ -123,6 +123,15 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 			textmodifier.setUniform('u_charMapSize', indices.length);
 		}
 
+		// Char source count uniform (for char() function)
+		if (state.compiled!.usesCharSource) {
+			// Priority: charMap length > font character count
+			const charCount = state.compiled!.charMapping
+				? state.compiled!.charMapping.chars.length
+				: (layer.font as TextmodeFont).characters.length;
+			textmodifier.setUniform('u_charSourceCount', charCount);
+		}
+
 		// Feedback texture uniforms
 		if (feedbackBuffer) {
 			if (usesFeedback) {

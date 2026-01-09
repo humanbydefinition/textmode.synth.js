@@ -32,6 +32,8 @@ export interface ShaderGenerationOptions {
 	usesCharFeedback?: boolean;
 	/** Whether cell color feedback (src) is used */
 	usesCellColorFeedback?: boolean;
+	/** Whether char() function is used */
+	usesCharSource?: boolean;
 	/** External layer references used in this shader */
 	externalLayers?: Map<string, ExternalLayerInfo>;
 }
@@ -152,6 +154,7 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 		usesFeedback,
 		usesCharFeedback,
 		usesCellColorFeedback,
+		usesCharSource,
 		externalLayers,
 	} = options;
 
@@ -185,6 +188,9 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 		feedbackDecls.push('uniform sampler2D prevCellColorBuffer;');
 	}
 	const feedbackDecl = feedbackDecls.join('\n');
+
+	// Char source count uniform (for char() function)
+	const charSourceDecl = usesCharSource ? 'uniform float u_charSourceCount;' : '';
 
 	// External layer sampler declarations
 	const externalLayerDecls: string[] = [];
@@ -223,6 +229,7 @@ uniform vec2 resolution;
 ${feedbackDecl}
 ${externalLayerDecl}
 ${charMapDecl}
+${charSourceDecl}
 
 // Dynamic uniforms
 ${uniformDecls}
