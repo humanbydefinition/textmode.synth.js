@@ -45,6 +45,8 @@ export interface CompiledSynthShader {
     usesCharFeedback: boolean;
     /** Whether this shader uses cell color feedback (src) - reads from prevCellColorBuffer */
     usesCellColorFeedback: boolean;
+    /** Whether this shader uses char() function for character indices */
+    usesCharSource: boolean;
     /** External layer references used in this shader, keyed by layer ID */
     externalLayers: Map<string, ExternalLayerInfo>;
 }

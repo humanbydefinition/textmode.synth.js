@@ -30,6 +30,8 @@ export interface ShaderGenerationOptions {
     usesCharFeedback?: boolean;
     /** Whether cell color feedback (src) is used */
     usesCellColorFeedback?: boolean;
+    /** Whether char() function is used */
+    usesCharSource?: boolean;
     /** External layer references used in this shader */
     externalLayers?: Map<string, ExternalLayerInfo>;
 }
