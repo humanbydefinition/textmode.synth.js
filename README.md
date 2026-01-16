@@ -4,11 +4,6 @@
 
 Create procedural ASCII/text animations with a `hydra`-inspired, chainable visual synthesis system.
 
-> [!NOTE]
-> This project is work-in-progress and not yet ready for production use.
->
-> `textmode.synth.js` becomes usable once `textmode.js` v0.8.5 is released.
-
 ## Features
 
 - 🎨 **Procedural generation** - Oscillators, noise, voronoi, and more
