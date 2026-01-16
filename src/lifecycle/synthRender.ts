@@ -1,7 +1,8 @@
 /**
  * Synth render lifecycle callback.
  *
- * Renders synth sources before the user draw callback.
+ * Handles rendering of synth sources with atomic parameter validation
+ * to prevent WebGL errors from incomplete uniform state.
  */
 
 import type { TextmodeLayer } from 'textmode.js/layering';
@@ -9,12 +10,16 @@ import type { TextmodeFont } from 'textmode.js/loadables';
 import type { TextmodeFramebuffer } from 'textmode.js';
 import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
-import { collectExternalLayerRefs, safeEvaluateDynamic } from '../utils';
+import { collectExternalLayerRefs, evaluateDynamic } from '../utils';
 import { getGlobalBpm } from '../core/GlobalState';
 import type { SynthContext, LayerSynthState } from '../core/types';
 
 /**
- * Render synth before user draw callback.
+ * Render synth source to layer framebuffers.
+ *
+ * Uses an atomic render pattern: all dynamic parameters are validated
+ * BEFORE any WebGL operations. If any parameter fails, the entire frame
+ * is skipped and the error propagates for the environment to handle.
  */
 export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 	const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
@@ -52,25 +57,17 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 
 	if (!state.shader || !state.compiled) return;
 
-	// Check if feedback is used
+	// Determine feedback usage
 	const usesFeedback = state.compiled.usesCharColorFeedback;
 	const usesCharFeedback = state.compiled.usesCharFeedback;
 	const usesCellColorFeedback = state.compiled.usesCellColorFeedback;
 	const usesAnyFeedback = usesFeedback || usesCharFeedback || usesCellColorFeedback;
 
-	// Create ping-pong buffers if feedback is used
+	// Create ping-pong buffers for feedback
 	if (usesAnyFeedback && !state.pingPongBuffers) {
 		state.pingPongBuffers = [
-			textmodifier.createFramebuffer({
-				width: grid.cols,
-				height: grid.rows,
-				attachments: 3,
-			}),
-			textmodifier.createFramebuffer({
-				width: grid.cols,
-				height: grid.rows,
-				attachments: 3,
-			}),
+			textmodifier.createFramebuffer({ width: grid.cols, height: grid.rows, attachments: 3 }),
+			textmodifier.createFramebuffer({ width: grid.cols, height: grid.rows, attachments: 3 }),
 		] as [TextmodeFramebuffer, TextmodeFramebuffer];
 		state.pingPongIndex = 0;
 	}
@@ -86,27 +83,26 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		bpm: state.bpm ?? getGlobalBpm(),
 	};
 
-	// Helper to set all uniforms
-	const setUniforms = (feedbackBuffer: TextmodeFramebuffer | null) => {
-		// Standard uniforms
-		textmodifier.setUniform('time', textmodifier.secs);
+	// Evaluate dynamic parameters with graceful error handling.
+	// On error: report via callback, use fallback value, continue rendering.
+	const dynamicValues = new Map<string, number | number[]>();
+
+	for (const [name, updater] of state.compiled.dynamicUpdaters) {
+		const uniform = state.compiled.uniforms.get(name);
+		const fallback = uniform?.value ?? 0;
+
+		const value = evaluateDynamic(() => updater(synthContext), name, fallback, {
+			onError: state.onDynamicError,
+		});
+		dynamicValues.set(name, value);
+	}
+
+	// Apply uniforms and render
+	const applyUniforms = (feedbackBuffer: TextmodeFramebuffer | null) => {
+		textmodifier.setUniform('time', textmodifier.frameCount / textmodifier.targetFrameRate());
 		textmodifier.setUniform('resolution', [synthContext.cols, synthContext.rows]);
 
-		// Dynamic uniforms (evaluated each frame with safe error handling)
-		for (const [name, updater] of state.compiled!.dynamicUpdaters) {
-			// Get the fallback value from the uniform definition
-			const uniform = state.compiled!.uniforms.get(name);
-			const fallback = uniform?.value ?? 0;
-
-			// Safely evaluate the dynamic parameter
-			const value = safeEvaluateDynamic(
-				() => updater(synthContext),
-				name,
-				{
-					fallback,
-					onError: state.onDynamicError,
-				}
-			);
+		for (const [name, value] of dynamicValues) {
 			textmodifier.setUniform(name, value);
 		}
 
@@ -125,6 +121,15 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 			);
 			textmodifier.setUniform('u_charMap', indices);
 			textmodifier.setUniform('u_charMapSize', indices.length);
+		}
+
+		// Char source count uniform (for char() function)
+		if (state.compiled!.usesCharSource) {
+			// Priority: charMap length > font character count
+			const charCount = state.compiled!.charMapping
+				? state.compiled!.charMapping.chars.length
+				: (layer.font as TextmodeFont).characters.length;
+			textmodifier.setUniform('u_charSourceCount', charCount);
 		}
 
 		// Feedback texture uniforms
@@ -150,20 +155,13 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 					continue;
 				}
 
-				// Get the external layer's synth state to access its ping-pong buffers
 				const extState = extLayer.getPluginState<LayerSynthState>(PLUGIN_NAME);
-
-				// Determine which buffer to sample from the external layer
-				// If the external layer has ping-pong buffers (uses feedback), sample from the read buffer
-				// Otherwise, sample from the draw framebuffer
 				let extTextures: any[] | undefined;
 
 				if (extState?.pingPongBuffers) {
-					// External layer uses feedback - sample from its current read buffer
 					const extReadBuffer = extState.pingPongBuffers[extState.pingPongIndex];
 					extTextures = extReadBuffer.textures;
 				} else if (extLayer.drawFramebuffer) {
-					// External layer doesn't use feedback - sample from its draw framebuffer
 					extTextures = extLayer.drawFramebuffer.textures;
 				}
 
@@ -182,24 +180,24 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		}
 	};
 
-	// Render using textmode.js APIs
+	// Execute render
 	if (usesAnyFeedback && state.pingPongBuffers) {
 		const readBuffer = state.pingPongBuffers[state.pingPongIndex];
 		const writeBuffer = state.pingPongBuffers[1 - state.pingPongIndex];
 
-		// Render to ping-pong write buffer (for next frame's feedback)
+		// Render to ping-pong write buffer
 		writeBuffer.begin();
 		textmodifier.clear();
 		textmodifier.shader(state.shader);
-		setUniforms(readBuffer);
+		applyUniforms(readBuffer);
 		textmodifier.rect(grid.cols, grid.rows);
 		writeBuffer.end();
 
-		// Render to draw framebuffer (for layer processing)
+		// Render to draw framebuffer
 		drawFramebuffer.begin();
 		textmodifier.clear();
 		textmodifier.shader(state.shader);
-		setUniforms(readBuffer);
+		applyUniforms(readBuffer);
 		textmodifier.rect(grid.cols, grid.rows);
 		drawFramebuffer.end();
 
@@ -210,7 +208,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		drawFramebuffer.begin();
 		textmodifier.clear();
 		textmodifier.shader(state.shader);
-		setUniforms(null);
+		applyUniforms(null);
 		textmodifier.rect(grid.cols, grid.rows);
 		drawFramebuffer.end();
 	}

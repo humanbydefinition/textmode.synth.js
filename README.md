@@ -7,7 +7,7 @@ Create procedural ASCII/text animations with a `hydra`-inspired, chainable visua
 > [!NOTE]
 > This project is work-in-progress and not yet ready for production use.
 >
-> `textmode.synth.js` becomes usable once `textmode.js` v0.9.0 is released.
+> `textmode.synth.js` becomes usable once `textmode.js` v0.8.5 is released.
 
 ## Features
 
@@ -25,6 +25,9 @@ To go along with the release of this library, we've created a **live coding envi
 
 It features IntelliSense & auto-completion, documentation on hover, curated examples to explore, and a lot more. The whole `textmode.js` ecosystem is available at your fingertips.
 
+## Prerequisites
+
+- **textmode.js v0.8.5+** - This library depends on the core `textmode.js` package v0.8.5 or higher.
 
 ## Installation
 

@@ -12,7 +12,6 @@ interface SynthSourceCreateOptions {
     colorSource?: SynthSource;
     cellColorSource?: SynthSource;
     charSource?: SynthSource;
-    charCount?: number;
     nestedSources?: Map<number, SynthSource>;
     externalLayerRefs?: Map<number, ExternalLayerReference>;
 }
@@ -51,8 +50,6 @@ export declare class SynthSource {
     private _cellColorSource?;
     /** Reference to the character source chain (if any) - used by char() function */
     private _charSource?;
-    /** Number of unique characters when using char() function */
-    private _charCount?;
     /**
      * Create a new SynthSource.
      * @param options Optional initialization options
@@ -78,7 +75,7 @@ export declare class SynthSource {
     addExternalLayerRef(ref: ExternalLayerReference): this;
     charMap(chars: string): this;
     charColor(source: SynthSource): this;
-    char(source: SynthSource, charCount: number): this;
+    char(source: SynthSource): this;
     cellColor(source: SynthSource): this;
     paint(source: SynthSource): this;
     clone(): SynthSource;
@@ -107,11 +104,6 @@ export declare class SynthSource {
      * @ignore
      */
     get charSource(): SynthSource | undefined;
-    /**
-     * Get the character count if defined (from char() function).
-     * @ignore
-     */
-    get charCount(): number | undefined;
     /**
      * Get all nested sources for combine operations.
      * @ignore

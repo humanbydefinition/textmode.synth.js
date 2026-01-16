@@ -1,6 +1,6 @@
 {
   "name": "textmode.synth.js",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.5",
   "description": "Synth engine for textmode.js",
   "type": "module",
   "types": "./dist/types/index.d.ts",
@@ -22,20 +22,19 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\""
   },
+  "dependencies": {
+    "textmode.js": "^0.8.5"
+  },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
     "@types/node": "^24.5.2",
     "prettier": "^3.7.4",
     "terser": "^5.44.0",
-    "textmode.js": "^0.9.0-beta.2",
     "typedoc": "^0.28.13",
     "typedoc-plugin-markdown": "^4.7.0",
     "typedoc-vitepress-theme": "^1.1.2",
     "typescript": "~5.8.3",
     "vite": "^7.1.7"
-  },
-  "peerDependencies": {
-    "textmode.js": "^0.9.0-beta.2"
   },
   "repository": {
     "type": "git",

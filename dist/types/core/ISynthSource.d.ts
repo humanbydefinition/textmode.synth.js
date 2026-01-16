@@ -63,21 +63,22 @@ export interface ISynthSource {
     cellColor(source: ISynthSource): this;
     /**
      * Set the character indices using a character source chain.
+     * The number of characters is determined by `charMap()` if defined,
+     * otherwise falls back to the total characters in the layer's font.
      *
      * @param source A synth source producing character indices
-     * @param charCount Number of different characters to use from the character mapping
      * @returns The SynthSource for chaining
      *
      * @example
      * ```ts
-     * // Use noise to select characters
-     * char(noise(10), 16)
+     * // Use noise to select characters from charMap
+     * char(noise(10)).charMap('@#%*+=-:. ')
      *
-     * // Use oscillator to select characters
-     * char(osc(5), 32)
+     * // Use oscillator with default font characters
+     * char(osc(5))
      * ```
      */
-    char(source: ISynthSource, charCount: number): this;
+    char(source: ISynthSource): this;
     /**
      * Set both character foreground and cell background color using the same source chain.
      * This is a convenience method that combines `.charColor()` and `.cellColor()` in one call.
