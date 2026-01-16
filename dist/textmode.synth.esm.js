@@ -255,16 +255,16 @@ const P = new G(), q = { name: "osc", type: "src", inputs: [{ name: "frequency",
 	return (_c0 - _c1) * amount + _c0 * (1.0 - amount);
 `, description: "Subtract another source" }, Ie = { name: "mult", type: "combine", inputs: [{ name: "amount", type: "float", default: 1 }], glsl: `
 	return _c0 * (1.0 - amount) + (_c0 * _c1) * amount;
-`, description: "Multiply with another source" }, Ae = { name: "blend", type: "combine", inputs: [{ name: "amount", type: "float", default: 0.5 }], glsl: `
+`, description: "Multiply with another source" }, Re = { name: "blend", type: "combine", inputs: [{ name: "amount", type: "float", default: 0.5 }], glsl: `
 	return _c0 * (1.0 - amount) + _c1 * amount;
-`, description: "Blend with another source" }, Re = { name: "diff", type: "combine", inputs: [], glsl: `
+`, description: "Blend with another source" }, Ae = { name: "diff", type: "combine", inputs: [], glsl: `
 	return vec4(abs(_c0.rgb - _c1.rgb), max(_c0.a, _c1.a));
 `, description: "Difference with another source" }, ze = { name: "layer", type: "combine", inputs: [], glsl: `
 	return vec4(mix(_c0.rgb, _c1.rgb, _c1.a), clamp(_c0.a + _c1.a, 0.0, 1.0));
 `, description: "Layer another source on top" }, Oe = { name: "mask", type: "combine", inputs: [], glsl: `
 	float a = _luminance(_c1.rgb);
 	return vec4(_c0.rgb * a, a * _c0.a);
-`, description: "Mask with another source" }, Ue = [Le, Pe, Ie, Ae, Re, ze, Oe], Ve = { name: "modulate", type: "combineCoord", inputs: [{ name: "amount", type: "float", default: 0.1 }], glsl: `
+`, description: "Mask with another source" }, Ue = [Le, Pe, Ie, Re, Ae, ze, Oe], Ve = { name: "modulate", type: "combineCoord", inputs: [{ name: "amount", type: "float", default: 0.1 }], glsl: `
 	return _st + _c0.xy * amount;
 `, description: "Modulate coordinates with another source" }, Ee = { name: "modulateScale", type: "combineCoord", inputs: [{ name: "multiple", type: "float", default: 1 }, { name: "offset", type: "float", default: 1 }], glsl: `
 	vec2 xy = _st - vec2(0.5);
@@ -787,7 +787,7 @@ function lt(t, e, r) {
 	int charIdx = int(lum * 255.0);
 	vec4 charOutput = vec4(float(charIdx % 256) / 255.0, float(charIdx / 256) / 255.0, 0.0, 0.0);`;
 }
-function A(t) {
+function R(t) {
   return new it().compile(t);
 }
 class it {
@@ -833,9 +833,9 @@ class it {
       g.name === "src" && this._trackSrcUsage(C);
       const u = this._codeGenerator.getContextAwareGlslFunction(_, g.name, this._currentTarget, C, (L) => this._externalLayerManager.getPrefix(L));
       this._glslFunctions.add(u);
-      const Y = this._processArguments(g.userArgs, _.inputs, `${r}_${c}_${g.name}`), R = e.nestedSources.get(c);
+      const Y = this._processArguments(g.userArgs, _.inputs, `${r}_${c}_${g.name}`), A = e.nestedSources.get(c);
       let z;
-      R && (_.type === "combine" || _.type === "combineCoord") && (z = this._compileChain(R, `${r}_nested_${c}`, a, s, o).colorVar);
+      A && (_.type === "combine" || _.type === "combineCoord") && (z = this._compileChain(A, `${r}_nested_${c}`, a, s, o).colorVar);
       const M = this._codeGenerator.generateTransformCode(this._mainCode, _, this._varCounter++, s, y, i, m, h, Y, this._currentTarget, z, C, (L) => this._externalLayerManager.getPrefix(L));
       y = M.colorVar, M.charVar && (i = M.charVar), M.flagsVar && (m = M.flagsVar), M.rotationVar && (h = M.rotationVar);
     };
@@ -898,7 +898,7 @@ function ft(t) {
   t.extendLayer("synth", function(e) {
     const r = this.grid !== void 0 && this.drawFramebuffer !== void 0;
     let a = this.getPluginState(b);
-    a ? (a.source = e, a.needsCompile = !0, a.characterResolver.invalidate(), r && (a.compiled = A(e))) : a = V({ source: e, compiled: r ? A(e) : void 0, needsCompile: !0 }), this.setPluginState(b, a);
+    a ? (a.source = e, a.needsCompile = !0, a.characterResolver.invalidate(), r && (a.compiled = R(e))) : a = V({ source: e, compiled: r ? R(e) : void 0, needsCompile: !0 }), this.setPluginState(b, a);
   });
 }
 function pt(t) {
@@ -986,7 +986,7 @@ async function vt(t, e) {
   const r = t.getPluginState(b);
   if (!r) return;
   const a = t.grid, n = t.drawFramebuffer;
-  if (!a || !n || (r.compiled || (r.compiled = A(r.source), r.externalLayerMap = w(r.source), r.needsCompile = !0), r.needsCompile && r.compiled && (r.shader?.dispose && r.shader.dispose(), r.externalLayerMap = w(r.source), r.shader = await e.createFilterShader(r.compiled.fragmentSource), r.needsCompile = !1), !r.shader || !r.compiled)) return;
+  if (!a || !n || (r.compiled || (r.compiled = R(r.source), r.externalLayerMap = w(r.source), r.needsCompile = !0), r.needsCompile && r.compiled && (r.shader?.dispose && r.shader.dispose(), r.externalLayerMap = w(r.source), r.shader = await e.createFilterShader(r.compiled.fragmentSource), r.needsCompile = !1), !r.shader || !r.compiled)) return;
   const o = r.compiled.usesCharColorFeedback, l = r.compiled.usesCharFeedback, s = r.compiled.usesCellColorFeedback, i = o || l || s;
   i && !r.pingPongBuffers && (r.pingPongBuffers = [e.createFramebuffer({ width: a.cols, height: a.rows, attachments: 3 }), e.createFramebuffer({ width: a.cols, height: a.rows, attachments: 3 })], r.pingPongIndex = 0);
   const m = { time: e.secs, frameCount: e.frameCount, width: a.width, height: a.height, cols: a.cols, rows: a.rows, bpm: r.bpm ?? ht() }, h = /* @__PURE__ */ new Map();
@@ -995,7 +995,7 @@ async function vt(t, e) {
     h.set(d, f);
   }
   const y = (d) => {
-    e.setUniform("time", e.secs), e.setUniform("resolution", [m.cols, m.rows]);
+    e.setUniform("time", e.frameCount / e.targetFrameRate()), e.setUniform("resolution", [m.cols, m.rows]);
     for (const [p, f] of h) e.setUniform(p, f);
     for (const [p, f] of r.compiled.uniforms) f.isDynamic || typeof f.value == "function" || e.setUniform(p, f.value);
     if (r.compiled.charMapping) {
@@ -1072,7 +1072,7 @@ const It = (t) => {
   const r = new S(), a = t.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
   return r.addExternalLayerRef({ layerId: a, layer: t }), r;
 };
-function At(t, e, r) {
+function Rt(t, e, r) {
   return $.voronoi(t, e, r);
 }
 export {
@@ -1089,5 +1089,5 @@ export {
   Lt as shape,
   Pt as solid,
   It as src,
-  At as voronoi
+  Rt as voronoi
 };
