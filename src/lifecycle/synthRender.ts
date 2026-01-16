@@ -99,7 +99,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 
 	// Apply uniforms and render
 	const applyUniforms = (feedbackBuffer: TextmodeFramebuffer | null) => {
-		textmodifier.setUniform('time', textmodifier.secs);
+		textmodifier.setUniform('time', textmodifier.frameCount / textmodifier.targetFrameRate());
 		textmodifier.setUniform('resolution', [synthContext.cols, synthContext.rows]);
 
 		for (const [name, value] of dynamicValues) {
