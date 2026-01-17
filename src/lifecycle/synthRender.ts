@@ -33,10 +33,13 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		return;
 	}
 
+	let justCollected = false;
+
 	// Lazy compile on first render
 	if (!state.compiled) {
 		state.compiled = compileSynthSource(state.source);
 		state.externalLayerMap = collectExternalLayerRefs(state.source);
+		justCollected = true;
 		state.needsCompile = true;
 	}
 
@@ -48,7 +51,9 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		}
 
 		// Collect external layer references from source
-		state.externalLayerMap = collectExternalLayerRefs(state.source);
+		if (!justCollected) {
+			state.externalLayerMap = collectExternalLayerRefs(state.source);
+		}
 
 		// Use createFilterShader - leverages the instanced vertex shader
 		state.shader = await textmodifier.createFilterShader(state.compiled.fragmentSource);
