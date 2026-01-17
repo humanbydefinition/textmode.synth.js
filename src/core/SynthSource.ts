@@ -4,7 +4,7 @@ import type { ISynthSource } from './ISynthSource';
 
 // Declaration merging: TypeScript knows SynthSource has all ISynthSource methods
 // The actual method implementations are injected at runtime by TransformFactory
-export interface SynthSource extends ISynthSource { }
+export interface SynthSource extends ISynthSource {}
 
 /**
  * Options for creating a new SynthSource.
@@ -212,8 +212,6 @@ export class SynthSource {
 	public get charSource(): SynthSource | undefined {
 		return this._charSource;
 	}
-
-
 
 	/**
 	 * Get all nested sources for combine operations.
