@@ -18,8 +18,8 @@ export type DynamicErrorCallback = (error: unknown, uniformName: string) => void
  * Options for dynamic parameter evaluation.
  */
 export interface EvalOptions {
-    /** Callback invoked when an error occurs (overrides global callback) */
-    onError?: DynamicErrorCallback;
+	/** Callback invoked when an error occurs (overrides global callback) */
+	onError?: DynamicErrorCallback;
 }
 
 /**
@@ -43,32 +43,32 @@ let globalErrorCallback: DynamicErrorCallback | null = null;
  * ```
  */
 export function setGlobalErrorCallback(callback: DynamicErrorCallback | null): void {
-    globalErrorCallback = callback;
+	globalErrorCallback = callback;
 }
 
 /**
  * Get the current global error callback.
  */
 export function getGlobalErrorCallback(): DynamicErrorCallback | null {
-    return globalErrorCallback;
+	return globalErrorCallback;
 }
 
 /**
  * Invoke the appropriate error callback.
  */
 function invokeErrorCallback(
-    error: unknown,
-    uniformName: string,
-    localCallback?: DynamicErrorCallback
+	error: unknown,
+	uniformName: string,
+	localCallback?: DynamicErrorCallback
 ): void {
-    const callback = localCallback ?? globalErrorCallback;
-    if (callback) {
-        try {
-            callback(error, uniformName);
-        } catch {
-            // Ignore errors in the callback itself
-        }
-    }
+	const callback = localCallback ?? globalErrorCallback;
+	if (callback) {
+		try {
+			callback(error, uniformName);
+		} catch {
+			// Ignore errors in the callback itself
+		}
+	}
 }
 
 /**
@@ -85,75 +85,108 @@ function invokeErrorCallback(
  * @returns The evaluated value, or fallback on error
  */
 export function evaluateDynamic(
-    fn: () => number | number[],
-    uniformName: string,
-    fallback: number | number[],
-    options: EvalOptions = {}
+	fn: () => number | number[],
+	uniformName: string,
+	fallback: number | number[],
+	options: EvalOptions = {}
 ): number | number[] {
-    let result: number | number[];
+	let result: number | number[];
 
-    try {
-        result = fn();
-    } catch (error) {
-        invokeErrorCallback(error, uniformName, options.onError);
-        return fallback;
-    }
+	try {
+		result = fn();
+	} catch (error) {
+		invokeErrorCallback(error, uniformName, options.onError);
+		return fallback;
+	}
 
-    if (!isValidValue(result)) {
-        const invalidValueError = new Error(
-            `[textmode.synth.js] Invalid dynamic parameter value for "${uniformName}": ${formatInvalidValue(result)}`
-        );
-        invokeErrorCallback(invalidValueError, uniformName, options.onError);
-        return fallback;
-    }
+	if (!isValidValue(result)) {
+		const invalidValueError = new Error(
+			`[textmode.synth.js] Invalid dynamic parameter value for "${uniformName}": ${formatInvalidValue(result)}`
+		);
+		invokeErrorCallback(invalidValueError, uniformName, options.onError);
+		return fallback;
+	}
 
-    return result;
+	return result;
 }
 
 /**
  * Format an invalid value for error messaging.
  */
 function formatInvalidValue(value: unknown): string {
-    if (value === undefined) return 'undefined';
-    if (value === null) return 'null';
-    if (typeof value === 'number') {
-        if (Number.isNaN(value)) return 'NaN';
-        if (!Number.isFinite(value)) return value > 0 ? 'Infinity' : '-Infinity';
-    }
-    if (Array.isArray(value)) {
-        const invalidIndex = value.findIndex((v) => typeof v !== 'number' || !Number.isFinite(v));
-        if (invalidIndex >= 0) {
-            return `array with invalid element at index ${invalidIndex}: ${formatInvalidValue(value[invalidIndex])}`;
-        }
-    }
-    return String(value);
+	if (value === undefined) return 'undefined';
+	if (value === null) return 'null';
+	if (typeof value === 'number') {
+		if (Number.isNaN(value)) return 'NaN';
+		if (!Number.isFinite(value)) return value > 0 ? 'Infinity' : '-Infinity';
+	}
+	if (Array.isArray(value)) {
+		const invalidIndex = value.findIndex((v) => typeof v !== 'number' || !Number.isFinite(v));
+		if (invalidIndex >= 0) {
+			return `array with invalid element at index ${invalidIndex}: ${formatInvalidValue(value[invalidIndex])}`;
+		}
+	}
+	return String(value);
 }
 
 /**
  * Check if a value is valid for use as a uniform.
  */
 function isValidValue(value: unknown): value is number | number[] {
-    if (value === undefined || value === null) {
-        return false;
-    }
-    if (typeof value === 'number') {
-        return Number.isFinite(value);
-    }
-    if (Array.isArray(value)) {
-        return value.length > 0 && value.every((v) => typeof v === 'number' && Number.isFinite(v));
-    }
-    return false;
+	if (value === undefined || value === null) {
+		return false;
+	}
+	if (typeof value === 'number') {
+		return Number.isFinite(value);
+	}
+	if (Array.isArray(value)) {
+		return value.length > 0 && value.every((v) => typeof v === 'number' && Number.isFinite(v));
+	}
+	return false;
 }
 
 /**
  * Create a wrapped updater function with graceful error handling.
  */
 export function createDynamicUpdater(
-    updater: (ctx: SynthContext) => number | number[],
-    uniformName: string,
-    fallback: number | number[],
-    onError?: DynamicErrorCallback
+	updater: (ctx: SynthContext) => number | number[],
+	uniformName: string,
+	fallback: number | number[],
+	onError?: DynamicErrorCallback
 ): (ctx: SynthContext) => number | number[] {
-    return (ctx: SynthContext) =>
-        evaluateDynamic(() => updater(ctx), uniformName, fallback, { onError });
+	return (ctx: SynthContext) =>
+		evaluateDynamic(() => updater(ctx), uniformName, fallback, { onError });
+}
+
+/**
+ * Create an optimized wrapped updater function that avoids closure allocation per frame.
+ *
+ * This version should be used at compilation time to wrap updaters. It expects
+ * the error callback to be available on the SynthContext (or falls back to global).
+ */
+export function createOptimizedDynamicUpdater(
+	updater: (ctx: SynthContext) => number | number[],
+	uniformName: string,
+	fallback: number | number[]
+): (ctx: SynthContext) => number | number[] {
+	return (ctx: SynthContext) => {
+		let result: number | number[];
+		try {
+			result = updater(ctx);
+		} catch (error) {
+			invokeErrorCallback(error, uniformName, ctx.onError);
+			return fallback;
+		}
+
+		if (!isValidValue(result)) {
+			const invalidValueError = new Error(
+				`[textmode.synth.js] Invalid dynamic parameter value for "${uniformName}": ${formatInvalidValue(
+					result
+				)}`
+			);
+			invokeErrorCallback(invalidValueError, uniformName, ctx.onError);
+			return fallback;
+		}
+		return result;
+	};
 }
