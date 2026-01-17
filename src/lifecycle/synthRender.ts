@@ -10,7 +10,7 @@ import type { TextmodeFont } from 'textmode.js/loadables';
 import type { TextmodeFramebuffer } from 'textmode.js';
 import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
-import { collectExternalLayerRefs, evaluateDynamic } from '../utils';
+import { collectExternalLayerRefs } from '../utils';
 import { getGlobalBpm } from '../core/GlobalState';
 import type { SynthContext, LayerSynthState } from '../core/types';
 
@@ -81,6 +81,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		cols: grid.cols,
 		rows: grid.rows,
 		bpm: state.bpm ?? getGlobalBpm(),
+		onError: state.onDynamicError,
 	};
 
 	// Evaluate dynamic parameters with graceful error handling.
@@ -88,12 +89,8 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 	const dynamicValues = new Map<string, number | number[]>();
 
 	for (const [name, updater] of state.compiled.dynamicUpdaters) {
-		const uniform = state.compiled.uniforms.get(name);
-		const fallback = uniform?.value ?? 0;
-
-		const value = evaluateDynamic(() => updater(synthContext), name, fallback, {
-			onError: state.onDynamicError,
-		});
+		// Updater is already wrapped with error handling and validation
+		const value = updater(synthContext);
 		dynamicValues.set(name, value);
 	}
 

@@ -78,6 +78,8 @@ export interface SynthContext {
     rows: number;
     /** Current BPM (beats per minute) for array modulation timing */
     bpm: number;
+    /** Optional callback for handling dynamic parameter evaluation errors */
+    onError?: (error: unknown, uniformName: string) => void;
 }
 /**
  * Per-layer synth state stored via plugin state API.

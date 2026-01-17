@@ -56,4 +56,11 @@ export declare function evaluateDynamic(fn: () => number | number[], uniformName
  * Create a wrapped updater function with graceful error handling.
  */
 export declare function createDynamicUpdater(updater: (ctx: SynthContext) => number | number[], uniformName: string, fallback: number | number[], onError?: DynamicErrorCallback): (ctx: SynthContext) => number | number[];
+/**
+ * Create an optimized wrapped updater function that avoids closure allocation per frame.
+ *
+ * This version should be used at compilation time to wrap updaters. It expects
+ * the error callback to be available on the SynthContext (or falls back to global).
+ */
+export declare function createOptimizedDynamicUpdater(updater: (ctx: SynthContext) => number | number[], uniformName: string, fallback: number | number[]): (ctx: SynthContext) => number | number[];
 //# sourceMappingURL=SafeEvaluator.d.ts.map
