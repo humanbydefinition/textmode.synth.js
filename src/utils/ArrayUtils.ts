@@ -255,49 +255,70 @@ function map(num: number, inMin: number, inMax: number, outMin: number, outMax: 
 export function initArrayUtils(): void {
 	if ('fast' in Array.prototype) return; // Already initialized
 
-	(Array.prototype as any).fast = function (this: ModulatedArray, speed = 1) {
-		this._speed = speed;
-		return this;
-	};
+	// Define methods as non-enumerable to prevent pollution in for...in loops
+	Object.defineProperty(Array.prototype, 'fast', {
+		value: function (this: ModulatedArray, speed = 1) {
+			this._speed = speed;
+			return this;
+		},
+		writable: true,
+		configurable: true,
+		enumerable: false,
+	});
 
-	(Array.prototype as any).smooth = function (this: ModulatedArray, smooth = 1) {
-		this._smooth = smooth;
-		return this;
-	};
+	Object.defineProperty(Array.prototype, 'smooth', {
+		value: function (this: ModulatedArray, smooth = 1) {
+			this._smooth = smooth;
+			return this;
+		},
+		writable: true,
+		configurable: true,
+		enumerable: false,
+	});
 
-	(Array.prototype as any).ease = function (
-		this: ModulatedArray,
-		ease: EasingFunction = 'linear'
-	) {
-		if (typeof ease === 'function') {
-			this._smooth = 1;
-			this._ease = ease;
-		} else if (EASING_FUNCTIONS[ease]) {
-			this._smooth = 1;
-			this._ease = EASING_FUNCTIONS[ease];
-		}
-		return this;
-	};
+	Object.defineProperty(Array.prototype, 'ease', {
+		value: function (this: ModulatedArray, ease: EasingFunction = 'linear') {
+			if (typeof ease === 'function') {
+				this._smooth = 1;
+				this._ease = ease;
+			} else if (EASING_FUNCTIONS[ease]) {
+				this._smooth = 1;
+				this._ease = EASING_FUNCTIONS[ease];
+			}
+			return this;
+		},
+		writable: true,
+		configurable: true,
+		enumerable: false,
+	});
 
-	(Array.prototype as any).offset = function (this: ModulatedArray, offset = 0.5) {
-		this._offset = offset % 1.0;
-		return this;
-	};
+	Object.defineProperty(Array.prototype, 'offset', {
+		value: function (this: ModulatedArray, offset = 0.5) {
+			this._offset = offset % 1.0;
+			return this;
+		},
+		writable: true,
+		configurable: true,
+		enumerable: false,
+	});
 
-	(Array.prototype as any).fit = function (
-		this: ModulatedArray,
-		low = 0,
-		high = 1
-	): ModulatedArray {
-		const lowest = Math.min(...this);
-		const highest = Math.max(...this);
-		const newArr = this.map((num) => map(num, lowest, highest, low, high)) as ModulatedArray;
-		newArr._speed = this._speed;
-		newArr._smooth = this._smooth;
-		newArr._ease = this._ease;
-		newArr._offset = this._offset;
-		return newArr;
-	};
+	Object.defineProperty(Array.prototype, 'fit', {
+		value: function (this: ModulatedArray, low = 0, high = 1): ModulatedArray {
+			const lowest = Math.min(...this);
+			const highest = Math.max(...this);
+			const newArr = this.map((num) =>
+				map(num, lowest, highest, low, high)
+			) as ModulatedArray;
+			newArr._speed = this._speed;
+			newArr._smooth = this._smooth;
+			newArr._ease = this._ease;
+			newArr._offset = this._offset;
+			return newArr;
+		},
+		writable: true,
+		configurable: true,
+		enumerable: false,
+	});
 }
 
 /**
