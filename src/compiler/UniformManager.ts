@@ -143,6 +143,8 @@ export class UniformManager {
  * Format a number for GLSL (ensure decimal point for floats).
  */
 export function formatNumber(n: number): string {
-	const s = n.toString();
-	return s.includes('.') ? s : s + '.0';
+	if (Number.isInteger(n)) {
+		return n.toString() + '.0';
+	}
+	return n.toString();
 }
