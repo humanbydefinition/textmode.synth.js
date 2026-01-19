@@ -99,14 +99,10 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 			const fallback = uniform?.value ?? 0;
 
 			// Safely evaluate the dynamic parameter
-			const value = safeEvaluateDynamic(
-				() => updater(synthContext),
-				name,
-				{
-					fallback,
-					onError: state.onDynamicError,
-				}
-			);
+			const value = safeEvaluateDynamic(() => updater(synthContext), name, {
+				fallback,
+				onError: state.onDynamicError,
+			});
 			textmodifier.setUniform(name, value);
 		}
 

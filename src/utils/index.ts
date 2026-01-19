@@ -33,5 +33,3 @@ export {
 	type DynamicErrorCallback,
 	type SafeEvalOptions,
 } from './SafeEvaluator';
-
-

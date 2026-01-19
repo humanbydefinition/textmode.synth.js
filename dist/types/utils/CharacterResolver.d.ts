@@ -4,8 +4,9 @@ import type { TextmodeFont } from 'textmode.js/loadables';
  * Caches resolved indices to avoid repeated lookups.
  */
 export declare class CharacterResolver {
+    private static _fontIndexCache;
     private _resolvedIndices?;
-    private _lastFontCharacterCount;
+    private _lastFont?;
     private _lastChars;
     /**
      * Resolve character indices using the font's character map.

@@ -25,10 +25,10 @@ export type DynamicErrorCallback = (error: unknown, uniformName: string) => void
  * Options for safe dynamic parameter evaluation.
  */
 export interface SafeEvalOptions {
-    /** Fallback value to return when evaluation fails or returns non-finite */
-    fallback: number | number[];
-    /** Optional callback invoked when an error occurs (overrides global callback) */
-    onError?: DynamicErrorCallback;
+	/** Fallback value to return when evaluation fails or returns non-finite */
+	fallback: number | number[];
+	/** Optional callback invoked when an error occurs (overrides global callback) */
+	onError?: DynamicErrorCallback;
 }
 
 /**
@@ -60,7 +60,7 @@ let globalErrorCallback: DynamicErrorCallback | null = null;
  * ```
  */
 export function setGlobalErrorCallback(callback: DynamicErrorCallback | null): void {
-    globalErrorCallback = callback;
+	globalErrorCallback = callback;
 }
 
 /**
@@ -68,7 +68,7 @@ export function setGlobalErrorCallback(callback: DynamicErrorCallback | null): v
  * Useful for temporarily replacing and then restoring the callback.
  */
 export function getGlobalErrorCallback(): DynamicErrorCallback | null {
-    return globalErrorCallback;
+	return globalErrorCallback;
 }
 
 /**
@@ -91,33 +91,33 @@ const ERROR_THROTTLE_MS = 1000; // Only log same error once per second
  * and finally falling back to console.warn for beginner-friendliness.
  */
 function invokeErrorCallback(
-    error: unknown,
-    uniformName: string,
-    localCallback?: DynamicErrorCallback
+	error: unknown,
+	uniformName: string,
+	localCallback?: DynamicErrorCallback
 ): void {
-    const callback = localCallback ?? globalErrorCallback;
+	const callback = localCallback ?? globalErrorCallback;
 
-    if (callback) {
-        try {
-            callback(error, uniformName);
-        } catch {
-            // Ignore errors in the error callback itself
-        }
-    } else {
-        // Default behavior: log to console with throttling for beginner-friendliness
-        // This ensures users always get feedback about bad dynamic parameters
-        const now = Date.now();
-        const lastErrorTime = errorThrottle.get(uniformName) ?? 0;
+	if (callback) {
+		try {
+			callback(error, uniformName);
+		} catch {
+			// Ignore errors in the error callback itself
+		}
+	} else {
+		// Default behavior: log to console with throttling for beginner-friendliness
+		// This ensures users always get feedback about bad dynamic parameters
+		const now = Date.now();
+		const lastErrorTime = errorThrottle.get(uniformName) ?? 0;
 
-        if (now - lastErrorTime >= ERROR_THROTTLE_MS) {
-            errorThrottle.set(uniformName, now);
+		if (now - lastErrorTime >= ERROR_THROTTLE_MS) {
+			errorThrottle.set(uniformName, now);
 
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            console.warn(
-                `[textmode.synth.js] Dynamic parameter error in "${uniformName}": ${errorMessage}`
-            );
-        }
-    }
+			const errorMessage = error instanceof Error ? error.message : String(error);
+			console.warn(
+				`[textmode.synth.js] Dynamic parameter error in "${uniformName}": ${errorMessage}`
+			);
+		}
+	}
 }
 
 /**
@@ -147,63 +147,63 @@ function invokeErrorCallback(
  * ```
  */
 export function safeEvaluateDynamic(
-    fn: () => number | number[],
-    uniformName: string,
-    options: SafeEvalOptions
+	fn: () => number | number[],
+	uniformName: string,
+	options: SafeEvalOptions
 ): number | number[] {
-    try {
-        const result = fn();
+	try {
+		const result = fn();
 
-        // Validate the result
-        if (!isValidValue(result)) {
-            // Result is undefined, NaN, Infinity, or otherwise invalid
-            // Report this as an error so the user gets feedback
-            const invalidValueError = new Error(
-                `Invalid dynamic parameter value: ${formatInvalidValue(result)}`
-            );
-            invokeErrorCallback(invalidValueError, uniformName, options.onError);
+		// Validate the result
+		if (!isValidValue(result)) {
+			// Result is undefined, NaN, Infinity, or otherwise invalid
+			// Report this as an error so the user gets feedback
+			const invalidValueError = new Error(
+				`Invalid dynamic parameter value: ${formatInvalidValue(result)}`
+			);
+			invokeErrorCallback(invalidValueError, uniformName, options.onError);
 
-            // Try to return last good value, otherwise use fallback
-            const lastGood = lastGoodValues.get(uniformName);
-            if (lastGood !== undefined) {
-                return lastGood;
-            }
-            return options.fallback;
-        }
+			// Try to return last good value, otherwise use fallback
+			const lastGood = lastGoodValues.get(uniformName);
+			if (lastGood !== undefined) {
+				return lastGood;
+			}
+			return options.fallback;
+		}
 
-        // Cache this as the last known good value
-        lastGoodValues.set(uniformName, result);
-        return result;
-    } catch (error) {
-        // Invoke error callback for exception
-        invokeErrorCallback(error, uniformName, options.onError);
+		// Cache this as the last known good value
+		lastGoodValues.set(uniformName, result);
+		return result;
+	} catch (error) {
+		// Invoke error callback for exception
+		invokeErrorCallback(error, uniformName, options.onError);
 
-        // Try to return last good value, otherwise use fallback
-        const lastGood = lastGoodValues.get(uniformName);
-        if (lastGood !== undefined) {
-            return lastGood;
-        }
-        return options.fallback;
-    }
+		// Try to return last good value, otherwise use fallback
+		const lastGood = lastGoodValues.get(uniformName);
+		if (lastGood !== undefined) {
+			return lastGood;
+		}
+		return options.fallback;
+	}
 }
 
 /**
  * Format an invalid value for error messaging.
  */
 function formatInvalidValue(value: unknown): string {
-    if (value === undefined) return 'undefined';
-    if (value === null) return 'null';
-    if (typeof value === 'number') {
-        if (Number.isNaN(value)) return 'NaN';
-        if (!Number.isFinite(value)) return value > 0 ? 'Infinity' : '-Infinity';
-    }
-    if (Array.isArray(value)) {
-        const invalidIndex = value.findIndex((v) => typeof v !== 'number' || !Number.isFinite(v));
-        if (invalidIndex >= 0) {
-            return `array with invalid element at index ${invalidIndex}: ${formatInvalidValue(value[invalidIndex])}`;
-        }
-    }
-    return String(value);
+	if (value === undefined) return 'undefined';
+	if (value === null) return 'null';
+	if (typeof value === 'number') {
+		if (Number.isNaN(value)) return 'NaN';
+		if (!Number.isFinite(value)) return value > 0 ? 'Infinity' : '-Infinity';
+	}
+	if (Array.isArray(value)) {
+		const invalidIndex = value.findIndex((v) => typeof v !== 'number' || !Number.isFinite(v));
+		if (invalidIndex >= 0) {
+			return `array with invalid element at index ${invalidIndex}: ${formatInvalidValue(value[invalidIndex])}`;
+		}
+	}
+	return String(value);
 }
 
 /**
@@ -211,19 +211,19 @@ function formatInvalidValue(value: unknown): string {
  * Rejects undefined, null, NaN, and Infinity values which would cause issues.
  */
 function isValidValue(value: unknown): value is number | number[] {
-    if (value === undefined || value === null) {
-        return false;
-    }
+	if (value === undefined || value === null) {
+		return false;
+	}
 
-    if (typeof value === 'number') {
-        return Number.isFinite(value);
-    }
+	if (typeof value === 'number') {
+		return Number.isFinite(value);
+	}
 
-    if (Array.isArray(value)) {
-        return value.length > 0 && value.every((v) => typeof v === 'number' && Number.isFinite(v));
-    }
+	if (Array.isArray(value)) {
+		return value.length > 0 && value.every((v) => typeof v === 'number' && Number.isFinite(v));
+	}
 
-    return false;
+	return false;
 }
 
 /**
@@ -231,7 +231,7 @@ function isValidValue(value: unknown): value is number | number[] {
  * Useful when switching synth sources or recompiling.
  */
 export function clearSafeEvalCache(): void {
-    lastGoodValues.clear();
+	lastGoodValues.clear();
 }
 
 /**
@@ -247,11 +247,11 @@ export function clearSafeEvalCache(): void {
  * @returns A wrapped function that will never throw
  */
 export function createSafeUpdater(
-    updater: (ctx: SynthContext) => number | number[],
-    uniformName: string,
-    fallback: number | number[],
-    onError?: DynamicErrorCallback
+	updater: (ctx: SynthContext) => number | number[],
+	uniformName: string,
+	fallback: number | number[],
+	onError?: DynamicErrorCallback
 ): (ctx: SynthContext) => number | number[] {
-    return (ctx: SynthContext) =>
-        safeEvaluateDynamic(() => updater(ctx), uniformName, { fallback, onError });
+	return (ctx: SynthContext) =>
+		safeEvaluateDynamic(() => updater(ctx), uniformName, { fallback, onError });
 }
