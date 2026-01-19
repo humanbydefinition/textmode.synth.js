@@ -22,6 +22,7 @@ transformFactory.setSynthSourceClass(
 	SynthSource as unknown as new () => {
 		addTransform(name: string, userArgs: unknown[]): unknown;
 		addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
+		addExternalLayerRef(ref: { layerId: string; layer: unknown }): unknown;
 	}
 );
 
@@ -30,6 +31,7 @@ transformFactory.injectMethods(
 	SynthSource.prototype as unknown as {
 		addTransform(name: string, userArgs: unknown[]): unknown;
 		addCombineTransform(name: string, source: unknown, userArgs: unknown[]): unknown;
+		addExternalLayerRef(ref: { layerId: string; layer: unknown }): unknown;
 	}
 );
 

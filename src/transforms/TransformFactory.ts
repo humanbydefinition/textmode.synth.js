@@ -9,6 +9,7 @@ import type { SynthParameterValue } from '../core/types';
 export interface SynthSourcePrototype {
 	addTransform(name: string, userArgs: SynthParameterValue[]): unknown;
 	addCombineTransform(name: string, source: unknown, userArgs: SynthParameterValue[]): unknown;
+	addExternalLayerRef(ref: { layerId: string; layer: unknown }): unknown;
 }
 
 /**
@@ -83,6 +84,41 @@ class TransformFactory {
 	}
 
 	/**
+	 * Create a standalone function for a source transform.
+	 */
+	private _createStandaloneFunction(
+		name: string,
+		inputs: TransformDefinition['inputs']
+	): (...args: SynthParameterValue[]) => unknown {
+		if (!this._synthSourceClass) {
+			throw new Error('[TransformFactory] SynthSource class not set.');
+		}
+
+		const SynthSource = this._synthSourceClass;
+
+		return (...args: SynthParameterValue[]) => {
+			const source = new SynthSource();
+
+			// Special handling for src(layer)
+			if (
+				name === 'src' &&
+				args.length > 0 &&
+				args[0] &&
+				typeof args[0] === 'object' &&
+				'id' in args[0]
+			) {
+				return source.addExternalLayerRef({
+					layerId: (args[0] as any).id,
+					layer: args[0],
+				});
+			}
+
+			const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);
+			return source.addTransform(name, resolvedArgs);
+		};
+	}
+
+	/**
 	 * Generate standalone functions for source-type transforms.
 	 * These allow starting a chain without explicitly creating a SynthSource.
 	 */
@@ -95,17 +131,13 @@ class TransformFactory {
 
 		const functions: GeneratedFunctions = {};
 		const transforms = transformRegistry.getAll();
-		const SynthSource = this._synthSourceClass;
 
 		for (const transform of transforms) {
 			if (SOURCE_TYPE_TRANSFORMS.has(transform.type)) {
-				const { name, inputs } = transform;
-
-				functions[name] = (...args: SynthParameterValue[]) => {
-					const source = new SynthSource();
-					const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);
-					return source.addTransform(name, resolvedArgs);
-				};
+				functions[transform.name] = this._createStandaloneFunction(
+					transform.name,
+					transform.inputs
+				);
 			}
 		}
 
@@ -135,14 +167,10 @@ class TransformFactory {
 
 		// Generate standalone function if it's a source type
 		if (SOURCE_TYPE_TRANSFORMS.has(transform.type) && this._synthSourceClass) {
-			const SynthSource = this._synthSourceClass;
-			const { name, inputs } = transform;
-
-			this._generatedFunctions[name] = (...args: SynthParameterValue[]) => {
-				const source = new SynthSource();
-				const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);
-				return source.addTransform(name, resolvedArgs);
-			};
+			this._generatedFunctions[transform.name] = this._createStandaloneFunction(
+				transform.name,
+				transform.inputs
+			);
 		}
 	}
 }

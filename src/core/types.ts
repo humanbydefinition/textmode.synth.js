@@ -58,6 +58,7 @@ export type SynthParameterValue =
 	| ((ctx: SynthContext) => number)
 	| ((ctx: SynthContext) => number[])
 	| SynthSource
+	| TextmodeLayer
 	| null;
 
 /**
