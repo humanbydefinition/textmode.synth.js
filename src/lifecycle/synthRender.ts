@@ -89,7 +89,6 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 	const dynamicValues = new Map<string, number | number[]>();
 
 	for (const [name, updater] of state.compiled.dynamicUpdaters) {
-		// Updater is already wrapped with error handling and validation
 		const value = updater(synthContext);
 		dynamicValues.set(name, value);
 	}

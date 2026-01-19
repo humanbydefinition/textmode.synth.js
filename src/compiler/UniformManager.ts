@@ -1,7 +1,7 @@
 import type { SynthParameterValue, SynthContext, SynthUniform, GLSLType } from '../core/types';
 import type { TransformInput } from '../transforms/TransformDefinition';
 import { getArrayValue, isModulatedArray, type ModulatedArray } from '../utils/ArrayUtils';
-import { createOptimizedDynamicUpdater } from '../utils/SafeEvaluator';
+import { createDynamicUpdater } from '../utils/SafeEvaluator';
 
 /**
  * Result of processing a single argument.
@@ -43,20 +43,19 @@ export class UniformManager {
 				isDynamic: true,
 			};
 
-			const updater = (ctx: SynthContext) => getArrayValue(value as ModulatedArray, ctx);
-			const wrappedUpdater = createOptimizedDynamicUpdater(
-				updater,
+			const updater = createDynamicUpdater(
+				(ctx: SynthContext) => getArrayValue(value as ModulatedArray, ctx),
 				uniformName,
 				uniform.value as number | number[]
 			);
 
 			this._uniforms.set(uniformName, uniform);
-			this._dynamicUpdaters.set(uniformName, wrappedUpdater);
+			this._dynamicUpdaters.set(uniformName, updater);
 
 			return {
 				glslValue: uniformName,
 				uniform,
-				updater: wrappedUpdater,
+				updater,
 			};
 		}
 
@@ -70,20 +69,19 @@ export class UniformManager {
 				isDynamic: true,
 			};
 
-			const updater = value as (ctx: SynthContext) => number;
-			const wrappedUpdater = createOptimizedDynamicUpdater(
-				updater,
+			const updater = createDynamicUpdater(
+				value as (ctx: SynthContext) => number,
 				uniformName,
 				uniform.value as number | number[]
 			);
 
 			this._uniforms.set(uniformName, uniform);
-			this._dynamicUpdaters.set(uniformName, wrappedUpdater);
+			this._dynamicUpdaters.set(uniformName, updater);
 
 			return {
 				glslValue: uniformName,
 				uniform,
-				updater: wrappedUpdater,
+				updater,
 			};
 		}
 
