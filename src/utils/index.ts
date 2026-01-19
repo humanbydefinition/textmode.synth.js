@@ -1,10 +1,5 @@
 /**
  * Utilities module exports.
- *
- * This module provides utility classes and functions used throughout
- * the synth engine.
- *
- * @module
  */
 
 // Array modulation utilities (Hydra-style)
@@ -23,13 +18,10 @@ export { CharacterResolver } from './CharacterResolver';
 // External layer reference collection
 export { collectExternalLayerRefs } from './collectExternalLayerRefs';
 
-// Safe dynamic parameter evaluation
+// Dynamic parameter evaluation
 export {
-	safeEvaluateDynamic,
-	createSafeUpdater,
-	clearSafeEvalCache,
 	setGlobalErrorCallback,
 	getGlobalErrorCallback,
 	type DynamicErrorCallback,
-	type SafeEvalOptions,
+	type EvalOptions,
 } from './SafeEvaluator';

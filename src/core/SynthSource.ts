@@ -15,7 +15,6 @@ interface SynthSourceCreateOptions {
 	colorSource?: SynthSource;
 	cellColorSource?: SynthSource;
 	charSource?: SynthSource;
-	charCount?: number;
 	nestedSources?: Map<number, SynthSource>;
 	externalLayerRefs?: Map<number, ExternalLayerReference>;
 }
@@ -62,9 +61,6 @@ export class SynthSource {
 	/** Reference to the character source chain (if any) - used by char() function */
 	private _charSource?: SynthSource;
 
-	/** Number of unique characters when using char() function */
-	private _charCount?: number;
-
 	/**
 	 * Create a new SynthSource.
 	 * @param options Optional initialization options
@@ -76,7 +72,6 @@ export class SynthSource {
 		this._colorSource = options?.colorSource;
 		this._cellColorSource = options?.cellColorSource;
 		this._charSource = options?.charSource;
-		this._charCount = options?.charCount;
 		this._nestedSources = options?.nestedSources ?? new Map();
 		this._externalLayerRefs = options?.externalLayerRefs ?? new Map();
 	}
@@ -138,9 +133,8 @@ export class SynthSource {
 		return this;
 	}
 
-	public char(source: SynthSource, charCount: number): this {
+	public char(source: SynthSource): this {
 		this._charSource = source;
-		this._charCount = charCount;
 		return this;
 	}
 
@@ -174,7 +168,6 @@ export class SynthSource {
 			colorSource: this._colorSource?.clone(),
 			cellColorSource: this._cellColorSource?.clone(),
 			charSource: this._charSource?.clone(),
-			charCount: this._charCount,
 			nestedSources: clonedNestedSources,
 			externalLayerRefs: clonedExternalLayerRefs,
 		});
@@ -218,14 +211,6 @@ export class SynthSource {
 	 */
 	public get charSource(): SynthSource | undefined {
 		return this._charSource;
-	}
-
-	/**
-	 * Get the character count if defined (from char() function).
-	 * @ignore
-	 */
-	public get charCount(): number | undefined {
-		return this._charCount;
 	}
 
 	/**

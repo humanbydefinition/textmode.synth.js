@@ -64,6 +64,7 @@ class SynthCompiler {
 	private readonly _mainCode: string[] = [];
 	private _varCounter = 0;
 	private _currentTarget: CompilationTarget = 'main';
+	private _usesCharSource = false;
 
 	/**
 	 * Compile a SynthSource into a shader.
@@ -134,6 +135,7 @@ class SynthCompiler {
 			usesFeedback: feedbackUsage.usesCharColorFeedback,
 			usesCharFeedback: feedbackUsage.usesCharFeedback,
 			usesCellColorFeedback: feedbackUsage.usesCellColorFeedback,
+			usesCharSource: this._usesCharSource,
 			externalLayers: this._externalLayerManager.getExternalLayers(),
 		});
 
@@ -145,6 +147,7 @@ class SynthCompiler {
 			usesCharColorFeedback: feedbackUsage.usesCharColorFeedback,
 			usesCharFeedback: feedbackUsage.usesCharFeedback,
 			usesCellColorFeedback: feedbackUsage.usesCellColorFeedback,
+			usesCharSource: this._usesCharSource,
 			externalLayers: this._externalLayerManager.getExternalLayers(),
 		};
 	}
@@ -160,12 +163,15 @@ class SynthCompiler {
 		this._glslFunctions.clear();
 		this._mainCode.length = 0;
 		this._currentTarget = 'main';
+		this._usesCharSource = false;
 	}
 
 	/**
 	 * Compile the char source and return the character variable name.
 	 */
 	private _compileCharSource(source: SynthSource): string {
+		this._usesCharSource = true;
+
 		const charChain = this._compileChain(
 			source.charSource!,
 			'charSrc',
@@ -175,13 +181,12 @@ class SynthCompiler {
 		);
 
 		const charVar = `charFromSource_${this._varCounter++}`;
-		const charCount = source.charCount ?? 256;
 
-		// Generate code to convert color luminance to character index
+		// Use uniform for char count - set at render time based on charMap or font
 		this._mainCode.push(`\t// Convert charSource color to character index`);
 		this._mainCode.push(`\tfloat charLum_${charVar} = _luminance(${charChain.colorVar}.rgb);`);
 		this._mainCode.push(
-			`\tint charIdx_${charVar} = int(charLum_${charVar} * ${charCount.toFixed(1)});`
+			`\tint charIdx_${charVar} = int(charLum_${charVar} * u_charSourceCount);`
 		);
 		this._mainCode.push(
 			`\tvec4 ${charVar} = vec4(float(charIdx_${charVar} % 256) / 255.0, float(charIdx_${charVar} / 256) / 255.0, 0.0, 0.0);`
