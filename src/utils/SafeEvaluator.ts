@@ -72,45 +72,6 @@ function invokeErrorCallback(
 }
 
 /**
- * Evaluate a dynamic parameter with graceful error handling.
- *
- * When evaluation fails (exception or invalid value), the error is reported
- * via callback and the fallback value is returned. This allows rendering to
- * continue with safe defaults rather than aborting the frame.
- *
- * @param fn - The dynamic parameter function to evaluate
- * @param uniformName - Name of the uniform (for error reporting)
- * @param fallback - Value to return if evaluation fails
- * @param options - Evaluation options including error callback
- * @returns The evaluated value, or fallback on error
- */
-export function evaluateDynamic(
-	fn: () => number | number[],
-	uniformName: string,
-	fallback: number | number[],
-	options: EvalOptions = {}
-): number | number[] {
-	let result: number | number[];
-
-	try {
-		result = fn();
-	} catch (error) {
-		invokeErrorCallback(error, uniformName, options.onError);
-		return fallback;
-	}
-
-	if (!isValidValue(result)) {
-		const invalidValueError = new Error(
-			`[textmode.synth.js] Invalid dynamic parameter value for "${uniformName}": ${formatInvalidValue(result)}`
-		);
-		invokeErrorCallback(invalidValueError, uniformName, options.onError);
-		return fallback;
-	}
-
-	return result;
-}
-
-/**
  * Format an invalid value for error messaging.
  */
 function formatInvalidValue(value: unknown): string {
@@ -151,9 +112,26 @@ function isValidValue(value: unknown): value is number | number[] {
 export function createDynamicUpdater(
 	updater: (ctx: SynthContext) => number | number[],
 	uniformName: string,
-	fallback: number | number[],
-	onError?: DynamicErrorCallback
+	fallback: number | number[]
 ): (ctx: SynthContext) => number | number[] {
-	return (ctx: SynthContext) =>
-		evaluateDynamic(() => updater(ctx), uniformName, fallback, { onError });
+	return (ctx: SynthContext) => {
+		let result: number | number[];
+		try {
+			result = updater(ctx);
+		} catch (error) {
+			invokeErrorCallback(error, uniformName, ctx.onError);
+			return fallback;
+		}
+
+		if (!isValidValue(result)) {
+			const invalidValueError = new Error(
+				`[textmode.synth.js] Invalid dynamic parameter value for "${uniformName}": ${formatInvalidValue(
+					result
+				)}`
+			);
+			invokeErrorCallback(invalidValueError, uniformName, ctx.onError);
+			return fallback;
+		}
+		return result;
+	};
 }

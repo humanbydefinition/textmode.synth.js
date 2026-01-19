@@ -1,6 +1,7 @@
 import type { SynthParameterValue, SynthContext, SynthUniform, GLSLType } from '../core/types';
 import type { TransformInput } from '../transforms/TransformDefinition';
 import { getArrayValue, isModulatedArray, type ModulatedArray } from '../utils/ArrayUtils';
+import { createDynamicUpdater } from '../utils/SafeEvaluator';
 
 /**
  * Result of processing a single argument.
@@ -42,7 +43,12 @@ export class UniformManager {
 				isDynamic: true,
 			};
 
-			const updater = (ctx: SynthContext) => getArrayValue(value as ModulatedArray, ctx);
+			const updater = createDynamicUpdater(
+				(ctx: SynthContext) => getArrayValue(value as ModulatedArray, ctx),
+				uniformName,
+				uniform.value as number | number[]
+			);
+
 			this._uniforms.set(uniformName, uniform);
 			this._dynamicUpdaters.set(uniformName, updater);
 
@@ -63,13 +69,19 @@ export class UniformManager {
 				isDynamic: true,
 			};
 
+			const updater = createDynamicUpdater(
+				value as (ctx: SynthContext) => number,
+				uniformName,
+				uniform.value as number | number[]
+			);
+
 			this._uniforms.set(uniformName, uniform);
-			this._dynamicUpdaters.set(uniformName, value as (ctx: SynthContext) => number);
+			this._dynamicUpdaters.set(uniformName, updater);
 
 			return {
 				glslValue: uniformName,
 				uniform,
-				updater: value as (ctx: SynthContext) => number,
+				updater,
 			};
 		}
 

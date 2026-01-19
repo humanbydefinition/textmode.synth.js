@@ -20,8 +20,6 @@ export { collectExternalLayerRefs } from './collectExternalLayerRefs';
 
 // Dynamic parameter evaluation
 export {
-	evaluateDynamic,
-	createDynamicUpdater,
 	setGlobalErrorCallback,
 	getGlobalErrorCallback,
 	type DynamicErrorCallback,
