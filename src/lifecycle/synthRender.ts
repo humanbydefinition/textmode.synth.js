@@ -186,19 +186,19 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		const readBuffer = state.pingPongBuffers[state.pingPongIndex];
 		const writeBuffer = state.pingPongBuffers[1 - state.pingPongIndex];
 
+		// Apply uniforms once
+		textmodifier.shader(state.shader);
+		applyUniforms(readBuffer);
+
 		// Render to ping-pong write buffer
 		writeBuffer.begin();
 		textmodifier.clear();
-		textmodifier.shader(state.shader);
-		applyUniforms(readBuffer);
 		textmodifier.rect(grid.cols, grid.rows);
 		writeBuffer.end();
 
 		// Render to draw framebuffer
 		drawFramebuffer.begin();
 		textmodifier.clear();
-		textmodifier.shader(state.shader);
-		applyUniforms(readBuffer);
 		textmodifier.rect(grid.cols, grid.rows);
 		drawFramebuffer.end();
 
