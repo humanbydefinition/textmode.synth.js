@@ -1,12 +1,15 @@
-import type { TextmodeFont } from 'textmode.js/loadables';
+import type { TextmodeFont, TextmodeCharacter } from 'textmode.js/loadables';
 
 /**
  * Resolver for character indices using font data.
  * Caches resolved indices to avoid repeated lookups.
  */
 export class CharacterResolver {
+	// Cache for character -> index mapping per font
+	private static _fontIndexCache = new WeakMap<TextmodeFont, Map<TextmodeCharacter, number>>();
+
 	private _resolvedIndices?: Int32Array;
-	private _lastFontCharacterCount = 0;
+	private _lastFont?: TextmodeFont;
 	private _lastChars = '';
 
 	/**
@@ -16,33 +19,43 @@ export class CharacterResolver {
 	 * @returns Array of resolved font indices
 	 */
 	public resolve(chars: string, font: TextmodeFont): Int32Array {
-		const fontCharCount = font.characters.length;
-		if (
-			this._resolvedIndices &&
-			this._lastFontCharacterCount === fontCharCount &&
-			this._lastChars === chars
-		) {
+		if (this._resolvedIndices && this._lastFont === font && this._lastChars === chars) {
 			return this._resolvedIndices;
+		}
+
+		// Get or build the index map for this font
+		let indexMap = CharacterResolver._fontIndexCache.get(font);
+		if (!indexMap) {
+			indexMap = new Map<TextmodeCharacter, number>();
+			const characters = font.characters;
+			for (let i = 0; i < characters.length; i++) {
+				indexMap.set(characters[i], i);
+			}
+			CharacterResolver._fontIndexCache.set(font, indexMap);
 		}
 
 		const charArray = Array.from(chars);
 		const indices = new Int32Array(charArray.length);
 		const characterMap = font.characterMap;
-		const characters = font.characters;
+
+		// Pre-calculate fallback index (usually space)
+		const spaceChar = characterMap.get(' ');
+		const fallbackIndex = spaceChar && indexMap.has(spaceChar) ? indexMap.get(spaceChar)! : 0;
 
 		for (let i = 0; i < charArray.length; i++) {
 			const char = charArray[i];
 			const charData = characterMap.get(char);
-			if (charData !== undefined) {
-				indices[i] = characters.indexOf(charData);
+
+			if (charData) {
+				const idx = indexMap.get(charData);
+				indices[i] = idx !== undefined ? idx : fallbackIndex;
 			} else {
-				const fallback = characterMap.get(' ');
-				indices[i] = fallback !== undefined ? characters.indexOf(fallback) : 0;
+				indices[i] = fallbackIndex;
 			}
 		}
 
 		this._resolvedIndices = indices;
-		this._lastFontCharacterCount = fontCharCount;
+		this._lastFont = font;
 		this._lastChars = chars;
 
 		return indices;
@@ -50,7 +63,7 @@ export class CharacterResolver {
 
 	public invalidate(): void {
 		this._resolvedIndices = undefined;
-		this._lastFontCharacterCount = 0;
+		this._lastFont = undefined;
 		this._lastChars = '';
 	}
 }
