@@ -46,7 +46,7 @@ import { TextmodeLayer } from 'textmode.js';
  */
 export const cellColor = (source: SynthSource): SynthSource => {
     const result = new SynthSource();
-    (result as any)._colorSource = source;
+    (result as any)._cellColorSource = source;
     return result;
 };
 
