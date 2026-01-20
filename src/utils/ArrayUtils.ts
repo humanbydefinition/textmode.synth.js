@@ -245,6 +245,7 @@ function modulo(n: number, d: number): number {
  * Map a value from one range to another.
  */
 function map(num: number, inMin: number, inMax: number, outMin: number, outMax: number): number {
+	if (inMin === inMax) return (outMin + outMax) / 2;
 	return ((num - inMin) * (outMax - outMin)) / (inMax - inMin) + outMin;
 }
 
