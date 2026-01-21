@@ -180,13 +180,13 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 	// Feedback buffer declarations (self-feedback)
 	const feedbackDecls: string[] = [];
 	if (usesFeedback) {
-		feedbackDecls.push(`uniform sampler2D ${CHANNEL_SAMPLERS.primary};`);
+		feedbackDecls.push(`uniform sampler2D ${CHANNEL_SAMPLERS.charColor};`);
 	}
 	if (usesCharFeedback) {
 		feedbackDecls.push(`uniform sampler2D ${CHANNEL_SAMPLERS.char};`);
 	}
 	if (usesCellColorFeedback) {
-		feedbackDecls.push(`uniform sampler2D ${CHANNEL_SAMPLERS.cell};`);
+		feedbackDecls.push(`uniform sampler2D ${CHANNEL_SAMPLERS.cellColor};`);
 	}
 	const feedbackDecl = feedbackDecls.join('\n');
 
@@ -201,10 +201,10 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.char};`);
 			}
 			if (info.usesCharColor) {
-				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.primary};`);
+				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.charColor};`);
 			}
 			if (info.usesCellColor) {
-				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.cell};`);
+				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.cellColor};`);
 			}
 		}
 	}

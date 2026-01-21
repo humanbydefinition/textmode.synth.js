@@ -2,28 +2,28 @@ import type { CompilationTarget } from './types';
 
 /**
  * Texture channels used in the synthesis pipeline.
- * - `primary`: The main color output (corresponds to charColor/main context)
+ * - `charColor`: The character color output
  * - `char`: The character data output
- * - `cell`: The cell background color output
+ * - `cellColor`: The cell background color output
  */
-export type TextureChannel = 'primary' | 'char' | 'cell';
+export type TextureChannel = 'charColor' | 'char' | 'cellColor';
 
 /**
  * Mapping from texture channel to self-feedback sampler uniform name.
  */
 export const CHANNEL_SAMPLERS: Record<TextureChannel, string> = {
-	primary: 'prevCharColorBuffer',
+	charColor: 'prevCharColorBuffer',
 	char: 'prevCharBuffer',
-	cell: 'prevCellColorBuffer',
+	cellColor: 'prevCellColorBuffer',
 };
 
 /**
  * Mapping from texture channel to external layer uniform suffix.
  */
 export const CHANNEL_SUFFIXES: Record<TextureChannel, string> = {
-	primary: '_primary',
+	charColor: '_charColor',
 	char: '_char',
-	cell: '_cell',
+	cellColor: '_cellColor',
 };
 
 /**
@@ -40,10 +40,10 @@ export function getTextureChannel(target: CompilationTarget): TextureChannel {
 		case 'char':
 			return 'char';
 		case 'cellColor':
-			return 'cell';
+			return 'cellColor';
 		case 'charColor':
 		case 'main':
 		default:
-			return 'primary';
+			return 'charColor';
 	}
 }

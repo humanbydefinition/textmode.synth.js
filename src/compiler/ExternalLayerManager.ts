@@ -60,7 +60,7 @@ export class ExternalLayerManager {
 		const channel = getTextureChannel(target);
 		if (channel === 'char') {
 			info.usesChar = true;
-		} else if (channel === 'cell') {
+		} else if (channel === 'cellColor') {
 			info.usesCellColor = true;
 		} else {
 			info.usesCharColor = true;
