@@ -43,8 +43,7 @@ export const saturate = defineTransform({
 	type: 'color',
 	inputs: [{ name: 'amount', type: 'float', default: 2.0 }],
 	glsl: `
-	const vec3 W = vec3(0.2125, 0.7154, 0.0721);
-	vec3 intensity = vec3(dot(_c0.rgb, W));
+	vec3 intensity = vec3(_luminance(_c0.rgb));
 	return vec4(mix(intensity, _c0.rgb, amount), _c0.a);
 `,
 	description: 'Adjust saturation',
@@ -102,7 +101,7 @@ export const luma = defineTransform({
 		{ name: 'tolerance', type: 'float', default: 0.1 },
 	],
 	glsl: `
-	float a = smoothstep(threshold - (tolerance + 0.0000001), threshold + (tolerance + 0.0000001), _luminance(_c0.rgb));
+	float a = _smoothThreshold(_luminance(_c0.rgb), threshold, tolerance);
 	return vec4(_c0.rgb * a, a);
 `,
 	description: 'Luma key',
@@ -116,7 +115,7 @@ export const thresh = defineTransform({
 		{ name: 'tolerance', type: 'float', default: 0.04 },
 	],
 	glsl: `
-	return vec4(vec3(smoothstep(threshold - (tolerance + 0.0000001), threshold + (tolerance + 0.0000001), _luminance(_c0.rgb))), _c0.a);
+	return vec4(vec3(_smoothThreshold(_luminance(_c0.rgb), threshold, tolerance)), _c0.a);
 `,
 	description: 'Threshold',
 });
