@@ -91,11 +91,10 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 
 	// Evaluate dynamic parameters with graceful error handling.
 	// On error: report via callback, use fallback value, continue rendering.
-	const dynamicValues = new Map<string, number | number[]>();
-
+	state.dynamicValues.clear();
 	for (const [name, updater] of state.compiled.dynamicUpdaters) {
 		const value = updater(synthContext);
-		dynamicValues.set(name, value);
+		state.dynamicValues.set(name, value);
 	}
 
 	// Apply uniforms and render
@@ -103,7 +102,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		textmodifier.setUniform('time', textmodifier.frameCount / textmodifier.targetFrameRate());
 		textmodifier.setUniform('resolution', [synthContext.cols, synthContext.rows]);
 
-		for (const [name, value] of dynamicValues) {
+		for (const [name, value] of state.dynamicValues) {
 			textmodifier.setUniform(name, value);
 		}
 
