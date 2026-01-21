@@ -45,9 +45,7 @@ import { TextmodeLayer } from 'textmode.js';
  * ```
  */
 export const cellColor = (source: SynthSource): SynthSource => {
-    const result = new SynthSource();
-    (result as any)._cellColorSource = source;
-    return result;
+    return new SynthSource({ cellColorSource: source });
 };
 
 /**
@@ -76,12 +74,7 @@ export const cellColor = (source: SynthSource): SynthSource => {
  * ```
  */
 export const char = (source: SynthSource): SynthSource => {
-    const result = new SynthSource();
-
-    // Access private properties via any cast (internal API)
-    (result as any)._charSource = source;
-
-    return result;
+    return new SynthSource({ charSource: source });
 };
 
 /**
@@ -119,9 +112,7 @@ export const char = (source: SynthSource): SynthSource => {
  * ```
  */
 export const charColor = (source: SynthSource): SynthSource => {
-    const result = new SynthSource();
-    (result as any)._colorSource = source;
-    return result;
+    return new SynthSource({ colorSource: source });
 };
 
 /**
@@ -239,10 +230,10 @@ export function osc(
  * ```
  */
 export const paint = (source: SynthSource): SynthSource => {
-    const result = new SynthSource();
-    (result as any)._colorSource = source;
-    (result as any)._cellColorSource = source;
-    return result;
+    return new SynthSource({
+        colorSource: source,
+        cellColorSource: source,
+    });
 };
 
 /**

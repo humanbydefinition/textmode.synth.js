@@ -9,7 +9,7 @@ export interface SynthSource extends ISynthSource {}
 /**
  * Options for creating a new SynthSource.
  */
-interface SynthSourceCreateOptions {
+export interface SynthSourceCreateOptions {
 	chain?: SynthChain;
 	charMapping?: CharacterMapping;
 	colorSource?: SynthSource;
