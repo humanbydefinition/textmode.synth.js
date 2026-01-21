@@ -12,3 +12,8 @@
 **Finding:** The `SynthSource` class type and prototype injection in `src/bootstrap.ts` used inline type definitions that duplicated `SynthSourcePrototype`.
 **Implication:** Changes to the core `SynthSourcePrototype` interface would not be automatically reflected in the bootstrap logic, leading to potential desynchronization.
 **Guidance:** Import and use the canonical `SynthSourcePrototype` interface for type assertions in dynamic injection logic.
+
+## 2025-05-25 - Encapsulation Bypass in API Methods
+**Finding:** Factory functions in `src/api/sources.ts` (like `cellColor`, `char`) frequently cast `SynthSource` instances to `any` to write to private fields.
+**Implication:** This bypasses type safety and encapsulation, making refactoring risky and bugs like the `cellColor` assignment error (assigning to `_colorSource` instead of `_cellColorSource`) undetectable by the compiler.
+**Guidance:** Prefer exposing limited internal interfaces (e.g. `package`-level visibility patterns) or using constructor configuration objects instead of direct private field manipulation via `any` casting.
