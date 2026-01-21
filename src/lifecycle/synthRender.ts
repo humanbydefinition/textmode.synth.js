@@ -126,12 +126,10 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 
 		// Char source count uniform (for char() function)
 		if (state.compiled!.usesCharSource) {
-			// Priority: source.charCount > charMap length > font character count
-			const charCount =
-				state.source.charCount ??
-				(state.compiled!.charMapping
-					? state.compiled!.charMapping.chars.length
-					: (layer.font as TextmodeFont).characters.length);
+			// Priority: charMap length > font character count
+			const charCount = state.compiled!.charMapping
+				? state.compiled!.charMapping.chars.length
+				: (layer.font as TextmodeFont).characters.length;
 			textmodifier.setUniform('u_charSourceCount', charCount);
 		}
 
