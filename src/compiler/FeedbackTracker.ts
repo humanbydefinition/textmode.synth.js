@@ -1,4 +1,5 @@
 import type { CompilationTarget } from './types';
+import { getTextureChannel } from './channels';
 
 /**
  * Feedback usage state returned by the tracker.
@@ -33,18 +34,13 @@ export class FeedbackTracker {
 	 * @param target - The current compilation target context
 	 */
 	public trackUsage(target: CompilationTarget): void {
-		switch (target) {
-			case 'char':
-				this._usesCharFeedback = true;
-				break;
-			case 'cellColor':
-				this._usesCellColorFeedback = true;
-				break;
-			case 'charColor':
-			case 'main':
-			default:
-				this._usesFeedback = true;
-				break;
+		const channel = getTextureChannel(target);
+		if (channel === 'char') {
+			this._usesCharFeedback = true;
+		} else if (channel === 'cell') {
+			this._usesCellColorFeedback = true;
+		} else {
+			this._usesFeedback = true;
 		}
 	}
 

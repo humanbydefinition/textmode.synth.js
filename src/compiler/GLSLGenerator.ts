@@ -7,6 +7,7 @@
 
 import type { SynthUniform, CharacterMapping } from '../core/types';
 import type { ExternalLayerInfo } from './types';
+import { CHANNEL_SAMPLERS, CHANNEL_SUFFIXES } from './channels';
 
 /**
  * Options for shader generation.
@@ -179,13 +180,13 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 	// Feedback buffer declarations (self-feedback)
 	const feedbackDecls: string[] = [];
 	if (usesFeedback) {
-		feedbackDecls.push('uniform sampler2D prevCharColorBuffer;');
+		feedbackDecls.push(`uniform sampler2D ${CHANNEL_SAMPLERS.primary};`);
 	}
 	if (usesCharFeedback) {
-		feedbackDecls.push('uniform sampler2D prevCharBuffer;');
+		feedbackDecls.push(`uniform sampler2D ${CHANNEL_SAMPLERS.char};`);
 	}
 	if (usesCellColorFeedback) {
-		feedbackDecls.push('uniform sampler2D prevCellColorBuffer;');
+		feedbackDecls.push(`uniform sampler2D ${CHANNEL_SAMPLERS.cell};`);
 	}
 	const feedbackDecl = feedbackDecls.join('\n');
 
@@ -197,13 +198,13 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 	if (externalLayers) {
 		for (const [, info] of externalLayers) {
 			if (info.usesChar) {
-				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}_char;`);
+				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.char};`);
 			}
 			if (info.usesCharColor) {
-				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}_primary;`);
+				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.primary};`);
 			}
 			if (info.usesCellColor) {
-				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}_cell;`);
+				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.cell};`);
 			}
 		}
 	}
