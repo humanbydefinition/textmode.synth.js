@@ -1,4 +1,4 @@
-import type { TransformDefinition } from './TransformDefinition';
+import type { TransformDefinition, TransformInput } from './TransformDefinition';
 import { transformRegistry } from './TransformRegistry';
 import type { SynthParameterValue } from '../core/types';
 
@@ -67,7 +67,7 @@ class TransformFactory {
 				source: unknown,
 				...args: SynthParameterValue[]
 			) {
-				const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);
+				const resolvedArgs = resolveArgs(inputs, args);
 				return this.addCombineTransform(name, source, resolvedArgs);
 			};
 		} else {
@@ -76,7 +76,7 @@ class TransformFactory {
 				this: SynthSourcePrototype,
 				...args: SynthParameterValue[]
 			) {
-				const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);
+				const resolvedArgs = resolveArgs(inputs, args);
 				return this.addTransform(name, resolvedArgs);
 			};
 		}
@@ -103,7 +103,7 @@ class TransformFactory {
 
 				functions[name] = (...args: SynthParameterValue[]) => {
 					const source = new SynthSource();
-					const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);
+					const resolvedArgs = resolveArgs(inputs, args);
 					return source.addTransform(name, resolvedArgs);
 				};
 			}
@@ -140,11 +140,18 @@ class TransformFactory {
 
 			this._generatedFunctions[name] = (...args: SynthParameterValue[]) => {
 				const source = new SynthSource();
-				const resolvedArgs = inputs.map((input, i) => args[i] ?? input.default);
+				const resolvedArgs = resolveArgs(inputs, args);
 				return source.addTransform(name, resolvedArgs);
 			};
 		}
 	}
+}
+
+/**
+ * Resolve arguments against transform input definitions.
+ */
+function resolveArgs(inputs: TransformInput[], args: SynthParameterValue[]): SynthParameterValue[] {
+	return inputs.map((input, i) => args[i] ?? input.default);
 }
 
 /**
