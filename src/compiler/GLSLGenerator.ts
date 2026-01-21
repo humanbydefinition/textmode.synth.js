@@ -49,6 +49,10 @@ float _luminance(vec3 rgb) {
 	return dot(rgb, W);
 }
 
+float _smoothThreshold(float value, float threshold, float tolerance) {
+	return smoothstep(threshold - (tolerance + 0.0000001), threshold + (tolerance + 0.0000001), value);
+}
+
 vec3 _rgbToHsv(vec3 c) {
 	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
 	vec4 p = mix(vec4(c.bg, K.wz), vec4(c.gb, K.xy), step(c.b, c.g));
@@ -198,13 +202,19 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 	if (externalLayers) {
 		for (const [, info] of externalLayers) {
 			if (info.usesChar) {
-				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.char};`);
+				externalLayerDecls.push(
+					`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.char};`
+				);
 			}
 			if (info.usesCharColor) {
-				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.charColor};`);
+				externalLayerDecls.push(
+					`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.charColor};`
+				);
 			}
 			if (info.usesCellColor) {
-				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.cellColor};`);
+				externalLayerDecls.push(
+					`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.cellColor};`
+				);
 			}
 		}
 	}
