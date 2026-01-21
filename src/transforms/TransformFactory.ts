@@ -67,8 +67,7 @@ class TransformFactory {
 				source: unknown,
 				...args: SynthParameterValue[]
 			) {
-				const resolvedArgs = resolveArgs(inputs, args);
-				return this.addCombineTransform(name, source, resolvedArgs);
+				return this.addCombineTransform(name, source, resolveArgs(inputs, args));
 			};
 		} else {
 			// Standard transform - just takes parameter values
@@ -76,8 +75,7 @@ class TransformFactory {
 				this: SynthSourcePrototype,
 				...args: SynthParameterValue[]
 			) {
-				const resolvedArgs = resolveArgs(inputs, args);
-				return this.addTransform(name, resolvedArgs);
+				return this.addTransform(name, resolveArgs(inputs, args));
 			};
 		}
 	}
@@ -103,8 +101,7 @@ class TransformFactory {
 
 				functions[name] = (...args: SynthParameterValue[]) => {
 					const source = new SynthSource();
-					const resolvedArgs = resolveArgs(inputs, args);
-					return source.addTransform(name, resolvedArgs);
+					return source.addTransform(name, resolveArgs(inputs, args));
 				};
 			}
 		}
@@ -140,8 +137,7 @@ class TransformFactory {
 
 			this._generatedFunctions[name] = (...args: SynthParameterValue[]) => {
 				const source = new SynthSource();
-				const resolvedArgs = resolveArgs(inputs, args);
-				return source.addTransform(name, resolvedArgs);
+				return source.addTransform(name, resolveArgs(inputs, args));
 			};
 		}
 	}
