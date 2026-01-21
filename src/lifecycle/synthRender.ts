@@ -77,17 +77,28 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		state.pingPongIndex = 0;
 	}
 
-	// Build synth context
-	const synthContext: SynthContext = {
-		time: textmodifier.secs,
-		frameCount: textmodifier.frameCount,
-		width: grid.width,
-		height: grid.height,
-		cols: grid.cols,
-		rows: grid.rows,
-		bpm: state.bpm ?? getGlobalBpm(),
-		onError: state.onDynamicError,
-	};
+	// Build or update synth context
+	if (!state.synthContext) {
+		state.synthContext = {
+			time: 0,
+			frameCount: 0,
+			width: 0,
+			height: 0,
+			cols: 0,
+			rows: 0,
+			bpm: 0,
+		};
+	}
+
+	const synthContext = state.synthContext;
+	synthContext.time = textmodifier.secs;
+	synthContext.frameCount = textmodifier.frameCount;
+	synthContext.width = grid.width;
+	synthContext.height = grid.height;
+	synthContext.cols = grid.cols;
+	synthContext.rows = grid.rows;
+	synthContext.bpm = state.bpm ?? getGlobalBpm();
+	synthContext.onError = state.onDynamicError;
 
 	// Evaluate dynamic parameters with graceful error handling.
 	// On error: report via callback, use fallback value, continue rendering.
@@ -96,89 +107,6 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		const value = updater(synthContext);
 		state.dynamicValues.set(name, value);
 	}
-
-	// Apply uniforms and render
-	const applyUniforms = (feedbackBuffer: TextmodeFramebuffer | null) => {
-		textmodifier.setUniform('time', textmodifier.frameCount / textmodifier.targetFrameRate());
-		textmodifier.setUniform('resolution', [synthContext.cols, synthContext.rows]);
-
-		for (const [name, value] of state.dynamicValues) {
-			textmodifier.setUniform(name, value);
-		}
-
-		// Static uniforms
-		for (const [name, uniform] of state.compiled!.uniforms) {
-			if (!uniform.isDynamic && typeof uniform.value !== 'function') {
-				textmodifier.setUniform(name, uniform.value);
-			}
-		}
-
-		// Character mapping uniforms
-		if (state.compiled!.charMapping) {
-			const indices = state.characterResolver.resolve(
-				state.compiled!.charMapping.chars,
-				layer.font as TextmodeFont
-			);
-			textmodifier.setUniform('u_charMap', indices);
-			textmodifier.setUniform('u_charMapSize', indices.length);
-		}
-
-		// Char source count uniform (for char() function)
-		if (state.compiled!.usesCharSource) {
-			// Priority: charMap length > font character count
-			const charCount = state.compiled!.charMapping
-				? state.compiled!.charMapping.chars.length
-				: (layer.font as TextmodeFont).characters.length;
-			textmodifier.setUniform('u_charSourceCount', charCount);
-		}
-
-		// Feedback texture uniforms
-		if (feedbackBuffer) {
-			if (usesFeedback) {
-				textmodifier.setUniform('prevCharColorBuffer', feedbackBuffer.textures[1]);
-			}
-			if (usesCharFeedback) {
-				textmodifier.setUniform('prevCharBuffer', feedbackBuffer.textures[0]);
-			}
-			if (usesCellColorFeedback) {
-				textmodifier.setUniform('prevCellColorBuffer', feedbackBuffer.textures[2]);
-			}
-		}
-
-		// External layer texture uniforms
-		const externalLayers = state.compiled!.externalLayers;
-		if (externalLayers && externalLayers.size > 0 && state.externalLayerMap) {
-			for (const [layerId, info] of externalLayers) {
-				const extLayer = state.externalLayerMap.get(layerId);
-				if (!extLayer) {
-					console.warn(`[textmode.synth.js] External layer not found: ${layerId}`);
-					continue;
-				}
-
-				const extState = extLayer.getPluginState<LayerSynthState>(PLUGIN_NAME);
-				let extTextures: any[] | undefined;
-
-				if (extState?.pingPongBuffers) {
-					const extReadBuffer = extState.pingPongBuffers[extState.pingPongIndex];
-					extTextures = extReadBuffer.textures;
-				} else if (extLayer.drawFramebuffer) {
-					extTextures = extLayer.drawFramebuffer.textures;
-				}
-
-				if (extTextures) {
-					if (info.usesChar) {
-						textmodifier.setUniform(`${info.uniformPrefix}_char`, extTextures[0]);
-					}
-					if (info.usesCharColor) {
-						textmodifier.setUniform(`${info.uniformPrefix}_primary`, extTextures[1]);
-					}
-					if (info.usesCellColor) {
-						textmodifier.setUniform(`${info.uniformPrefix}_cell`, extTextures[2]);
-					}
-				}
-			}
-		}
-	};
 
 	// Execute render
 	if (usesAnyFeedback && state.pingPongBuffers) {
@@ -189,7 +117,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		writeBuffer.begin();
 		textmodifier.clear();
 		textmodifier.shader(state.shader);
-		applyUniforms(readBuffer);
+		applySynthUniforms(layer, textmodifier, state, synthContext, readBuffer);
 		textmodifier.rect(grid.cols, grid.rows);
 		writeBuffer.end();
 
@@ -197,7 +125,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		drawFramebuffer.begin();
 		textmodifier.clear();
 		textmodifier.shader(state.shader);
-		applyUniforms(readBuffer);
+		applySynthUniforms(layer, textmodifier, state, synthContext, readBuffer);
 		textmodifier.rect(grid.cols, grid.rows);
 		drawFramebuffer.end();
 
@@ -208,8 +136,102 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		drawFramebuffer.begin();
 		textmodifier.clear();
 		textmodifier.shader(state.shader);
-		applyUniforms(null);
+		applySynthUniforms(layer, textmodifier, state, synthContext, null);
 		textmodifier.rect(grid.cols, grid.rows);
 		drawFramebuffer.end();
+	}
+}
+
+/**
+ * Apply uniforms to the shader.
+ * Extracted to avoid per-frame closure allocation.
+ */
+function applySynthUniforms(
+	layer: TextmodeLayer,
+	textmodifier: any,
+	state: LayerSynthState,
+	ctx: SynthContext,
+	feedbackBuffer: TextmodeFramebuffer | null
+) {
+	textmodifier.setUniform('time', textmodifier.frameCount / textmodifier.targetFrameRate());
+	textmodifier.setUniform('resolution', [ctx.cols, ctx.rows]);
+
+	for (const [name, value] of state.dynamicValues) {
+		textmodifier.setUniform(name, value);
+	}
+
+	const compiled = state.compiled!;
+
+	// Static uniforms
+	for (const [name, uniform] of compiled.uniforms) {
+		if (!uniform.isDynamic && typeof uniform.value !== 'function') {
+			textmodifier.setUniform(name, uniform.value);
+		}
+	}
+
+	// Character mapping uniforms
+	if (compiled.charMapping) {
+		const indices = state.characterResolver.resolve(
+			compiled.charMapping.chars,
+			layer.font as TextmodeFont
+		);
+		textmodifier.setUniform('u_charMap', indices);
+		textmodifier.setUniform('u_charMapSize', indices.length);
+	}
+
+	// Char source count uniform (for char() function)
+	if (compiled.usesCharSource) {
+		// Priority: charMap length > font character count
+		const charCount = compiled.charMapping
+			? compiled.charMapping.chars.length
+			: (layer.font as TextmodeFont).characters.length;
+		textmodifier.setUniform('u_charSourceCount', charCount);
+	}
+
+	// Feedback texture uniforms
+	if (feedbackBuffer) {
+		if (compiled.usesCharColorFeedback) {
+			textmodifier.setUniform('prevCharColorBuffer', feedbackBuffer.textures[1]);
+		}
+		if (compiled.usesCharFeedback) {
+			textmodifier.setUniform('prevCharBuffer', feedbackBuffer.textures[0]);
+		}
+		if (compiled.usesCellColorFeedback) {
+			textmodifier.setUniform('prevCellColorBuffer', feedbackBuffer.textures[2]);
+		}
+	}
+
+	// External layer texture uniforms
+	const externalLayers = compiled.externalLayers;
+	if (externalLayers && externalLayers.size > 0 && state.externalLayerMap) {
+		for (const [layerId, info] of externalLayers) {
+			const extLayer = state.externalLayerMap.get(layerId);
+			if (!extLayer) {
+				console.warn(`[textmode.synth.js] External layer not found: ${layerId}`);
+				continue;
+			}
+
+			const extState = extLayer.getPluginState<LayerSynthState>(PLUGIN_NAME);
+			let extTextures: any[] | undefined;
+
+			if (extState?.pingPongBuffers) {
+				const extReadBuffer = extState.pingPongBuffers[extState.pingPongIndex];
+				extTextures = extReadBuffer.textures;
+			} else if (extLayer.drawFramebuffer) {
+				extTextures = extLayer.drawFramebuffer.textures;
+			}
+
+			if (extTextures) {
+				if (info.usesChar) {
+					textmodifier.setUniform(`${info.uniformPrefix}_char`, extTextures[0]);
+				}
+				if (info.usesCharColor) {
+					textmodifier.setUniform(`${info.uniformPrefix}_primary`, extTextures[1]);
+				}
+				if (info.usesCellColor) {
+					textmodifier.setUniform(`${info.uniformPrefix}_cell`, extTextures[2]);
+				}
+			}
+		}
 	}
 }
