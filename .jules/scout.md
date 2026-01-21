@@ -17,3 +17,8 @@
 **Finding:** Factory functions in `src/api/sources.ts` (like `cellColor`, `char`) frequently cast `SynthSource` instances to `any` to write to private fields.
 **Implication:** This bypasses type safety and encapsulation, making refactoring risky and bugs like the `cellColor` assignment error (assigning to `_colorSource` instead of `_cellColorSource`) undetectable by the compiler.
 **Guidance:** Prefer exposing limited internal interfaces (e.g. `package`-level visibility patterns) or using constructor configuration objects instead of direct private field manipulation via `any` casting.
+
+## 2025-05-25 - Time Source Inconsistency
+**Finding:** The `synthRender` logic used two different time sources: `textmodifier.secs` for JS dynamic parameters and `frameCount / targetFrameRate()` for the GLSL `time` uniform.
+**Implication:** This caused potential desynchronization between CPU-side logic (e.g., parameter modulation) and GPU-side logic (e.g., oscillators) when the frame rate fluctuated.
+**Guidance:** Use a single source of truth for time (typically passed via context) for both CPU and GPU operations within a rendering frame to ensure tight synchronization.
