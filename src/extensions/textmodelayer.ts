@@ -36,6 +36,7 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
 		pingPongIndex: partial.pingPongIndex ?? 0,
 		externalLayerMap: partial.externalLayerMap,
 		bpm: partial.bpm,
+		dynamicValues: partial.dynamicValues ?? new Map(),
 	};
 }
 
