@@ -15,20 +15,26 @@ import type { SynthUniform, SynthContext, CharacterMapping } from '../core/types
 export type CompilationTarget = 'char' | 'charColor' | 'cellColor' | 'main';
 
 /**
- * Information about an external layer reference used in the shader.
- * Tracks which textures from the external layer are sampled.
+ * Shared interface for tracking which texture channels are used.
  */
-export interface ExternalLayerInfo {
-	/** Unique identifier for this external layer in the shader */
-	layerId: string;
-	/** Uniform prefix for this layer's samplers (e.g., 'extLayer0') */
-	uniformPrefix: string;
+export interface ChannelUsage {
 	/** Whether the character texture is sampled */
 	usesChar: boolean;
 	/** Whether the primary color texture is sampled */
 	usesCharColor: boolean;
 	/** Whether the cell color texture is sampled */
 	usesCellColor: boolean;
+}
+
+/**
+ * Information about an external layer reference used in the shader.
+ * Tracks which textures from the external layer are sampled.
+ */
+export interface ExternalLayerInfo extends ChannelUsage {
+	/** Unique identifier for this external layer in the shader */
+	layerId: string;
+	/** Uniform prefix for this layer's samplers (e.g., 'extLayer0') */
+	uniformPrefix: string;
 }
 
 /**

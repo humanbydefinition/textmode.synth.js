@@ -1,4 +1,4 @@
-import type { CompilationTarget } from './types';
+import type { CompilationTarget, ChannelUsage } from './types';
 
 /**
  * Texture channels used in the synthesis pipeline.
@@ -45,5 +45,22 @@ export function getTextureChannel(target: CompilationTarget): TextureChannel {
 		case 'main':
 		default:
 			return 'charColor';
+	}
+}
+
+/**
+ * Updates the channel usage flags based on the compilation target.
+ *
+ * @param usage - The channel usage flags to update
+ * @param target - The current compilation target
+ */
+export function updateChannelUsage(usage: ChannelUsage, target: CompilationTarget): void {
+	const channel = getTextureChannel(target);
+	if (channel === 'char') {
+		usage.usesChar = true;
+	} else if (channel === 'cellColor') {
+		usage.usesCellColor = true;
+	} else {
+		usage.usesCharColor = true;
 	}
 }
