@@ -153,7 +153,8 @@ function applySynthUniforms(
 	ctx: SynthContext,
 	feedbackBuffer: TextmodeFramebuffer | null
 ) {
-	textmodifier.setUniform('time', textmodifier.frameCount / textmodifier.targetFrameRate());
+	// Use ctx.time for uniform to ensure synchronization with JS-side evaluation
+	textmodifier.setUniform('time', ctx.time);
 	textmodifier.setUniform('resolution', [ctx.cols, ctx.rows]);
 
 	for (const [name, value] of state.dynamicValues) {
