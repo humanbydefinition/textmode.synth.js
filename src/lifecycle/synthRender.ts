@@ -10,6 +10,7 @@ import type { TextmodeFont } from 'textmode.js/loadables';
 import type { TextmodeFramebuffer } from 'textmode.js';
 import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
+import { CHANNEL_SUFFIXES } from '../compiler/channels';
 import { collectExternalLayerRefs } from '../utils';
 import { getGlobalBpm } from '../core/GlobalState';
 import type { SynthContext, LayerSynthState } from '../core/types';
@@ -223,13 +224,13 @@ function applySynthUniforms(
 
 			if (extTextures) {
 				if (info.usesChar) {
-					textmodifier.setUniform(`${info.uniformPrefix}_char`, extTextures[0]);
+					textmodifier.setUniform(`${info.uniformPrefix}${CHANNEL_SUFFIXES.char}`, extTextures[0]);
 				}
 				if (info.usesCharColor) {
-					textmodifier.setUniform(`${info.uniformPrefix}_primary`, extTextures[1]);
+					textmodifier.setUniform(`${info.uniformPrefix}${CHANNEL_SUFFIXES.charColor}`, extTextures[1]);
 				}
 				if (info.usesCellColor) {
-					textmodifier.setUniform(`${info.uniformPrefix}_cell`, extTextures[2]);
+					textmodifier.setUniform(`${info.uniformPrefix}${CHANNEL_SUFFIXES.cellColor}`, extTextures[2]);
 				}
 			}
 		}
