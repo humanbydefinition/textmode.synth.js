@@ -1,6 +1,6 @@
 import type { ExternalLayerInfo, CompilationTarget } from './types';
 import type { ExternalLayerReference } from '../core/types';
-import { getTextureChannel } from './channels';
+import { updateChannelUsage } from './channels';
 
 /**
  * Manages external layer references and uniform prefix generation.
@@ -57,14 +57,7 @@ export class ExternalLayerManager {
 		}
 
 		// Mark which texture is used based on compilation context
-		const channel = getTextureChannel(target);
-		if (channel === 'char') {
-			info.usesChar = true;
-		} else if (channel === 'cellColor') {
-			info.usesCellColor = true;
-		} else {
-			info.usesCharColor = true;
-		}
+		updateChannelUsage(info, target);
 	}
 
 	/**
