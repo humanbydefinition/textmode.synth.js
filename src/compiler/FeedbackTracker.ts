@@ -1,4 +1,5 @@
-import type { CompilationTarget } from './types';
+import type { CompilationTarget, ChannelUsage } from './types';
+import { updateChannelUsage } from './channels';
 
 /**
  * Feedback usage state returned by the tracker.
@@ -24,28 +25,18 @@ export interface FeedbackUsage {
  * where it appears in the synth chain.
  */
 export class FeedbackTracker {
-	private _usesFeedback = false;
-	private _usesCharFeedback = false;
-	private _usesCellColorFeedback = false;
+	private _usage: ChannelUsage = {
+		usesChar: false,
+		usesCharColor: false,
+		usesCellColor: false,
+	};
 
 	/**
 	 * Track feedback usage for a given compilation target.
 	 * @param target - The current compilation target context
 	 */
 	public trackUsage(target: CompilationTarget): void {
-		switch (target) {
-			case 'char':
-				this._usesCharFeedback = true;
-				break;
-			case 'cellColor':
-				this._usesCellColorFeedback = true;
-				break;
-			case 'charColor':
-			case 'main':
-			default:
-				this._usesFeedback = true;
-				break;
-		}
+		updateChannelUsage(this._usage, target);
 	}
 
 	/**
@@ -53,9 +44,9 @@ export class FeedbackTracker {
 	 * Should be called at the start of each compilation.
 	 */
 	public reset(): void {
-		this._usesFeedback = false;
-		this._usesCharFeedback = false;
-		this._usesCellColorFeedback = false;
+		this._usage.usesChar = false;
+		this._usage.usesCharColor = false;
+		this._usage.usesCellColor = false;
 	}
 
 	/**
@@ -63,9 +54,9 @@ export class FeedbackTracker {
 	 */
 	public getUsage(): FeedbackUsage {
 		return {
-			usesCharColorFeedback: this._usesFeedback,
-			usesCharFeedback: this._usesCharFeedback,
-			usesCellColorFeedback: this._usesCellColorFeedback,
+			usesCharColorFeedback: this._usage.usesCharColor,
+			usesCharFeedback: this._usage.usesChar,
+			usesCellColorFeedback: this._usage.usesCellColor,
 		};
 	}
 
@@ -73,21 +64,21 @@ export class FeedbackTracker {
 	 * Check if any feedback is used.
 	 */
 	public get usesAnyFeedback(): boolean {
-		return this._usesFeedback || this._usesCharFeedback || this._usesCellColorFeedback;
+		return this._usage.usesCharColor || this._usage.usesChar || this._usage.usesCellColor;
 	}
 
 	/** Whether character color feedback is used */
 	public get usesCharColorFeedback(): boolean {
-		return this._usesFeedback;
+		return this._usage.usesCharColor;
 	}
 
 	/** Whether character feedback is used */
 	public get usesCharFeedback(): boolean {
-		return this._usesCharFeedback;
+		return this._usage.usesChar;
 	}
 
 	/** Whether cell color feedback is used */
 	public get usesCellColorFeedback(): boolean {
-		return this._usesCellColorFeedback;
+		return this._usage.usesCellColor;
 	}
 }

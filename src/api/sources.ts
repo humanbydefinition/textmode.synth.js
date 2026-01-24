@@ -45,9 +45,7 @@ import { TextmodeLayer } from 'textmode.js';
  * ```
  */
 export const cellColor = (source: SynthSource): SynthSource => {
-    const result = new SynthSource();
-    (result as any)._colorSource = source;
-    return result;
+    return new SynthSource({ cellColorSource: source });
 };
 
 /**
@@ -57,7 +55,6 @@ export const cellColor = (source: SynthSource): SynthSource => {
  * character indices. The pattern's luminance or color values are mapped to character indices.
  *
  * @param source - A SynthSource producing color values that will be mapped to characters
- * @param charCount - Number of different characters to use (default: 256)
  * @returns A new SynthSource configured for character generation
  *
  * @example
@@ -76,14 +73,8 @@ export const cellColor = (source: SynthSource): SynthSource => {
  * );
  * ```
  */
-export const char = (source: SynthSource, charCount?: number): SynthSource => {
-    const result = new SynthSource();
-
-    // Access private properties via any cast (internal API)
-    (result as any)._charSource = source;
-    (result as any)._charCount = charCount;
-
-    return result;
+export const char = (source: SynthSource): SynthSource => {
+    return new SynthSource({ charSource: source });
 };
 
 /**
@@ -121,9 +112,7 @@ export const char = (source: SynthSource, charCount?: number): SynthSource => {
  * ```
  */
 export const charColor = (source: SynthSource): SynthSource => {
-    const result = new SynthSource();
-    (result as any)._colorSource = source;
-    return result;
+    return new SynthSource({ colorSource: source });
 };
 
 /**
@@ -241,10 +230,10 @@ export function osc(
  * ```
  */
 export const paint = (source: SynthSource): SynthSource => {
-    const result = new SynthSource();
-    (result as any)._colorSource = source;
-    (result as any)._cellColorSource = source;
-    return result;
+    return new SynthSource({
+        colorSource: source,
+        cellColorSource: source,
+    });
 };
 
 /**

@@ -1,6 +1,7 @@
 import type { ProcessedTransform } from '../transforms/TransformDefinition';
 import type { CompilationTarget } from './types';
 import type { ExternalLayerReference } from '../core/types';
+import { getTextureChannel, CHANNEL_SAMPLERS, CHANNEL_SUFFIXES } from './channels';
 
 /**
  * Result of generating code for a transform.
@@ -15,16 +16,6 @@ export interface TransformCodeResult {
 	/** The rotation variable name (if modified) */
 	rotationVar?: string;
 }
-
-/**
- * Sampler name mapping for different compilation targets.
- */
-const SELF_FEEDBACK_SAMPLERS: Record<CompilationTarget, string> = {
-	char: 'prevCharBuffer',
-	charColor: 'prevCharColorBuffer',
-	cellColor: 'prevCellColorBuffer',
-	main: 'prevCharColorBuffer',
-};
 
 /**
  * Generates GLSL code for individual transforms.
@@ -196,14 +187,10 @@ export class TransformCodeGenerator {
 		getExternalPrefix: (layerId: string) => string
 	): string {
 		const prefix = getExternalPrefix(ref.layerId);
-		const samplerMap: Record<CompilationTarget, string> = {
-			char: `${prefix}_char`,
-			charColor: `${prefix}_primary`,
-			cellColor: `${prefix}_cell`,
-			main: `${prefix}_primary`,
-		};
+		const channel = getTextureChannel(target);
+		const suffix = CHANNEL_SUFFIXES[channel];
+		const sampler = `${prefix}${suffix}`;
 
-		const sampler = samplerMap[target];
 		const funcName = `src_ext_${prefix}_${target}`;
 
 		return `
@@ -217,7 +204,8 @@ vec4 ${funcName}(vec2 _st) {
 	 * Generate GLSL function for self-feedback src().
 	 */
 	private _generateSelfFeedbackSrcFunction(target: CompilationTarget): string {
-		const sampler = SELF_FEEDBACK_SAMPLERS[target];
+		const channel = getTextureChannel(target);
+		const sampler = CHANNEL_SAMPLERS[channel];
 		const funcName = `src_${target}`;
 
 		return `

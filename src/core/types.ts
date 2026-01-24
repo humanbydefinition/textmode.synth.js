@@ -137,6 +137,18 @@ export interface LayerSynthState {
 	 * @param uniformName - Name of the uniform whose evaluation failed
 	 */
 	onDynamicError?: (error: unknown, uniformName: string) => void;
+
+	/**
+	 * Pre-allocated map for dynamic uniform values.
+	 *
+	 * Re-used each frame to avoid GC pressure from re-allocating `new Map()`.
+	 */
+	dynamicValues: Map<string, number | number[]>;
+
+	/**
+	 * Reusable synth context object to avoid per-frame allocation.
+	 */
+	synthContext?: SynthContext;
 }
 
 /**

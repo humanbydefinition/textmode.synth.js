@@ -7,6 +7,7 @@
 
 import type { SynthUniform, CharacterMapping } from '../core/types';
 import type { ExternalLayerInfo } from './types';
+import { CHANNEL_SAMPLERS, CHANNEL_SUFFIXES } from './channels';
 
 /**
  * Options for shader generation.
@@ -46,6 +47,10 @@ const UTILITY_FUNCTIONS = `
 float _luminance(vec3 rgb) {
 	const vec3 W = vec3(0.2125, 0.7154, 0.0721);
 	return dot(rgb, W);
+}
+
+float _smoothThreshold(float value, float threshold, float tolerance) {
+	return smoothstep(threshold - (tolerance + 0.0000001), threshold + (tolerance + 0.0000001), value);
 }
 
 vec3 _rgbToHsv(vec3 c) {
@@ -179,13 +184,13 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 	// Feedback buffer declarations (self-feedback)
 	const feedbackDecls: string[] = [];
 	if (usesFeedback) {
-		feedbackDecls.push('uniform sampler2D prevCharColorBuffer;');
+		feedbackDecls.push(`uniform sampler2D ${CHANNEL_SAMPLERS.charColor};`);
 	}
 	if (usesCharFeedback) {
-		feedbackDecls.push('uniform sampler2D prevCharBuffer;');
+		feedbackDecls.push(`uniform sampler2D ${CHANNEL_SAMPLERS.char};`);
 	}
 	if (usesCellColorFeedback) {
-		feedbackDecls.push('uniform sampler2D prevCellColorBuffer;');
+		feedbackDecls.push(`uniform sampler2D ${CHANNEL_SAMPLERS.cellColor};`);
 	}
 	const feedbackDecl = feedbackDecls.join('\n');
 
@@ -197,13 +202,19 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 	if (externalLayers) {
 		for (const [, info] of externalLayers) {
 			if (info.usesChar) {
-				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}_char;`);
+				externalLayerDecls.push(
+					`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.char};`
+				);
 			}
 			if (info.usesCharColor) {
-				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}_primary;`);
+				externalLayerDecls.push(
+					`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.charColor};`
+				);
 			}
 			if (info.usesCellColor) {
-				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}_cell;`);
+				externalLayerDecls.push(
+					`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.cellColor};`
+				);
 			}
 		}
 	}
