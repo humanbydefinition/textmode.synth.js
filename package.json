@@ -23,7 +23,7 @@
     "format:check": "prettier --check \"src/**/*.ts\""
   },
   "dependencies": {
-    "textmode.js": "^0.8.5"
+    "textmode.js": ">=0.8.5"
   },
   "devDependencies": {
     "@rollup/plugin-terser": "^0.4.4",
