@@ -1493,6 +1493,13 @@ Modulate scale using another source.
 
 `this`
 
+#### Example
+
+```typescript
+// Modulate scale of shape with oscillator
+shape(3).modulateScale(osc(10), 10, 0)
+```
+
 #### Inherited from
 
 ```ts
@@ -1523,6 +1530,13 @@ Modulate rotation using another source.
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+// Modulate rotation of shape with noise
+shape(3).modulateRotate(noise(2), 2, 0)
+```
 
 #### Inherited from
 
@@ -1626,6 +1640,12 @@ Modulate X scroll using another source.
 
 `this`
 
+#### Example
+
+```typescript
+osc(10).modulateScrollX(osc(10), 0.5, 0)
+```
+
 #### Inherited from
 
 ```ts
@@ -1656,6 +1676,12 @@ Modulate Y scroll using another source.
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+osc(10).modulateScrollY(osc(10), 0.5, 0)
+```
 
 #### Inherited from
 

@@ -3,3 +3,9 @@
 **Pattern:** Broken Examples / API Drift
 **Action:** Removed non-existent parameters from `README.md` table, `src/api/sources.ts` examples, and `src/core/ISynthSource.ts` examples. Updated generated documentation.
 **Learning:** Verify function signatures in implementation vs examples. Copy-paste errors or outdated API references can persist in examples even if code compiles (when using `any` or loose typing, though here TypeScript would catch it if compiled).
+
+## Entry #2 — Missing Examples for Modulate Transforms
+**Finding:** Several modulate transform methods (`modulateScale`, `modulateRotate`, etc.) in `ISynthSource` lacked usage examples, making them harder to understand compared to other documented methods.
+**Pattern:** Missing example blocks
+**Action:** Added `@example` blocks to `modulateScale`, `modulateRotate`, `modulateScrollX`, and `modulateScrollY` in `src/core/ISynthSource.ts`.
+**Learning:** README often lists categories of functions (e.g., "Modulate"), but the individual interface methods might miss examples. Cross-reference README lists with interface docs.
