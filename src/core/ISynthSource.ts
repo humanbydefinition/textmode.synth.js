@@ -76,10 +76,10 @@ export interface ISynthSource {
 	 * @example
 	 * ```ts
 	 * // Use noise to select characters from charMap
-	 * char(noise(10)).charMap('@#%*+=-:. ')
+	 * osc(10).char(noise(10)).charMap('@#%*+=-:. ')
 	 *
 	 * // Use oscillator with default font characters
-	 * char(osc(5))
+	 * solid(1, 0, 0).char(osc(5))
 	 * ```
 	 */
 	char(source: ISynthSource): this;
@@ -201,9 +201,9 @@ export interface ISynthSource {
 	): this;
 
 	/**
-	 * Sample the previous frame for feedback effects, or sample from another layer.
+	 * Sample the previous frame for feedback effects.
 	 *
-	 * **Self-feedback (no argument):** `src()` samples the current layer's previous frame.
+	 * `src()` samples the current layer's previous frame (self-feedback).
 	 * The sampled texture is context-aware based on where it's used in the synth chain:
 	 *
 	 * - Inside `char(...)` → samples previous frame's character data
@@ -211,19 +211,17 @@ export interface ISynthSource {
 	 * - Inside `cellColor(...)` → samples previous frame's cell color (character background)
 	 * - Outside all three → samples previous frame's primary color
 	 *
-	 * **Cross-layer sampling (with layer argument):** `src(layer)` samples from another
-	 * layer's output, enabling hydra-style multi-output compositions. The sampled texture
-	 * is still context-aware based on the current compilation target.
+	 * **Note:** To sample from *another* layer (cross-layer sampling), you must use the
+	 * standalone `src(layer)` function, not this method.
 	 *
 	 * This is the core of feedback loops and multi-layer compositions - enabling effects
 	 * like trails, motion blur, recursive patterns, and complex layered visuals.
 	 * Equivalent to hydra's `src(o0)`.
 	 *
-	 * @param layer - Optional TextmodeLayer to sample from. If omitted, samples from self (feedback).
-	 *
 	 * @example
 	 * ```typescript
 	 * // Classic hydra-style feedback loop with noise modulation
+	 * // Using standalone src() to start the chain
 	 * src().modulate(noise(3), 0.005).blend(shape(4), 0.01)
 	 *
 	 * // Feedback with color shift
@@ -235,7 +233,7 @@ export interface ISynthSource {
 	 *   .cellColor(voronoi().diff(src()))    // src() → cell color feedback
 	 * ```
 	 */
-	src(layer?: unknown): this;
+	src(): this;
 
 	/**
 	 * Rotate coordinates.
