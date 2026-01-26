@@ -142,6 +142,14 @@ float _noise(vec3 v) {
 	m = m * m;
 	return 42.0 * dot(m * m, vec4(dot(p0, x0), dot(p1, x1), dot(p2, x2), dot(p3, x3)));
 }
+
+vec4 _packChar(int charIdx) {
+	return vec4(float(charIdx % 256) / 255.0, float(charIdx / 256) / 255.0, 0.0, 0.0);
+}
+
+int _unpackChar(vec4 c) {
+	return int(c.r * 255.0 + c.g * 255.0 * 256.0);
+}
 `;
 
 /**
@@ -175,10 +183,9 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 		charMapDecl = `uniform int u_charMap[${charMapping.indices.length}];\nuniform int u_charMapSize;`;
 		charMapCode = `
 	// Apply character mapping
-	int rawCharIdx = int(charOutput.r * 255.0 + charOutput.g * 255.0 * 256.0);
+	int rawCharIdx = _unpackChar(charOutput);
 	int mappedCharIdx = u_charMap[int(mod(float(rawCharIdx), float(u_charMapSize)))];
-	charOutput.r = float(mappedCharIdx % 256) / 255.0;
-	charOutput.g = float(mappedCharIdx / 256) / 255.0;`;
+	charOutput = _packChar(mappedCharIdx);`;
 	}
 
 	// Feedback buffer declarations (self-feedback)
@@ -284,5 +291,5 @@ export function generateCharacterOutputCode(
 	// Derive character from color luminance
 	float lum = _luminance(${colorVar}.rgb);
 	int charIdx = int(lum * 255.0);
-	vec4 charOutput = vec4(float(charIdx % 256) / 255.0, float(charIdx / 256) / 255.0, 0.0, 0.0);`;
+	vec4 charOutput = _packChar(charIdx);`;
 }

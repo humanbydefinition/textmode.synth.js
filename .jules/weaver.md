@@ -34,3 +34,9 @@ ENTRY FORMAT:
 **Risk:** Low risk. Logic is equivalent.
 **Action:** Replaced `switch` with `if` statement in `src/compiler/channels.ts`.
 **Learning:** For simple enumerations where most cases map to a default, a conditional check is significantly smaller than a switch statement in the final bundle.
+
+## Entry #4 — Centralized GLSL Character Packing
+**Pattern:** The bitwise packing logic for storing 16-bit character indices in RG channels was repeated in 3 places within compiler string templates.
+**Risk:** Low. Pure logic refactor.
+**Action:** Moved logic to `_packChar` and `_unpackChar` in `UTILITY_FUNCTIONS` (GLSLGenerator).
+**Learning:** Centralizing repetitive GLSL logic into helper functions reduced uncompressed JS bundle size by ~20 bytes, improving maintainability of the binary data protocol.
