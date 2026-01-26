@@ -6,6 +6,7 @@
  */
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
+import { CHANNEL_SAMPLERS } from '../../core/constants';
 
 export const osc = defineTransform({
 	name: 'osc',
@@ -122,7 +123,7 @@ export const src = defineTransform({
 	type: 'src',
 	inputs: [],
 	glsl: `
-	return texture(prevCharColorBuffer, fract(_st));
+	return texture(${CHANNEL_SAMPLERS.charColor}, fract(_st));
 `,
 	description:
 		'Sample the previous frame for feedback effects. Context-aware: automatically samples the appropriate texture based on where it is used (char, charColor, or cellColor context).',

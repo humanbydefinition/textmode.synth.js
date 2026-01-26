@@ -223,3 +223,11 @@ export const TRANSFORM_TYPE_INFO: Record<
 		],
 	},
 };
+
+/**
+ * Texture channels used in the synthesis pipeline.
+ * - `charColor`: The character color output
+ * - `char`: The character data output
+ * - `cellColor`: The cell background color output
+ */
+export type TextureChannel = 'charColor' | 'char' | 'cellColor';
