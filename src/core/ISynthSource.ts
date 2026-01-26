@@ -817,6 +817,53 @@ export interface ISynthSource {
 		speed?: SynthParameterValue
 	): this;
 
+	/**
+	 * Modulate repeat pattern with another source.
+	 * @param source - Modulation source
+	 * @param repeatX - X repetitions (default: 3.0)
+	 * @param repeatY - Y repetitions (default: 3.0)
+	 * @param offsetX - X offset (default: 0.5)
+	 * @param offsetY - Y offset (default: 0.5)
+	 */
+	modulateRepeat(
+		source: ISynthSource,
+		repeatX?: SynthParameterValue,
+		repeatY?: SynthParameterValue,
+		offsetX?: SynthParameterValue,
+		offsetY?: SynthParameterValue
+	): this;
+
+	/**
+	 * Modulate X repeat with another source.
+	 * @param source - Modulation source
+	 * @param reps - Number of repetitions (default: 3.0)
+	 * @param offset - Offset amount (default: 0.5)
+	 */
+	modulateRepeatX(
+		source: ISynthSource,
+		reps?: SynthParameterValue,
+		offset?: SynthParameterValue
+	): this;
+
+	/**
+	 * Modulate Y repeat with another source.
+	 * @param source - Modulation source
+	 * @param reps - Number of repetitions (default: 3.0)
+	 * @param offset - Offset amount (default: 0.5)
+	 */
+	modulateRepeatY(
+		source: ISynthSource,
+		reps?: SynthParameterValue,
+		offset?: SynthParameterValue
+	): this;
+
+	/**
+	 * Modulate coordinates based on hue differences.
+	 * @param source - Modulation source
+	 * @param amount - Modulation amount (default: 1.0)
+	 */
+	modulateHue(source: ISynthSource, amount?: SynthParameterValue): this;
+
 	// ─────────────────────────────────────────────────────────────────────────
 	// Internal methods (used by TransformFactory and declaration merging)
 	// ─────────────────────────────────────────────────────────────────────────

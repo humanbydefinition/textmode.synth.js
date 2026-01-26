@@ -42,6 +42,10 @@ export {
 	modulateKaleid,
 	modulateScrollX,
 	modulateScrollY,
+	modulateRepeat,
+	modulateRepeatX,
+	modulateRepeatY,
+	modulateHue,
 } from './combineCoord';
 
 import { SOURCE_TRANSFORMS } from './sources';
