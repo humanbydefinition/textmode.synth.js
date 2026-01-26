@@ -1,3 +1,4 @@
+import type { Textmodifier } from 'textmode.js';
 import type { TextmodePlugin, TextmodePluginAPI } from 'textmode.js/plugins';
 
 import { PLUGIN_NAME } from './constants';
@@ -62,7 +63,7 @@ export const SynthPlugin: TextmodePlugin = {
 		}
 
 		// Remove textmodifier extensions
-		delete (_textmodifier as any).bpm;
+		delete (_textmodifier as Partial<Textmodifier>).bpm;
 
 		// Remove layer extensions
 		api.removeLayerExtension('synth');
