@@ -69,12 +69,41 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 	const usesCellColorFeedback = state.compiled.usesCellColorFeedback;
 	const usesAnyFeedback = usesFeedback || usesCharFeedback || usesCellColorFeedback;
 
+	// Manage ping-pong buffer lifecycle
+	if (state.pingPongBuffers) {
+		let shouldDispose = false;
+
+		if (!usesAnyFeedback) {
+			// Feedback no longer used - dispose buffers
+			shouldDispose = true;
+		} else if (state.pingPongDimensions) {
+			// Check if grid dimensions changed
+			if (
+				state.pingPongDimensions[0] !== grid.cols ||
+				state.pingPongDimensions[1] !== grid.rows
+			) {
+				shouldDispose = true;
+			}
+		} else {
+			// Missing dimensions (state migration or error) - dispose to be safe
+			shouldDispose = true;
+		}
+
+		if (shouldDispose) {
+			state.pingPongBuffers[0].dispose?.();
+			state.pingPongBuffers[1].dispose?.();
+			state.pingPongBuffers = undefined;
+			state.pingPongDimensions = undefined;
+		}
+	}
+
 	// Create ping-pong buffers for feedback
 	if (usesAnyFeedback && !state.pingPongBuffers) {
 		state.pingPongBuffers = [
 			textmodifier.createFramebuffer({ width: grid.cols, height: grid.rows, attachments: 3 }),
 			textmodifier.createFramebuffer({ width: grid.cols, height: grid.rows, attachments: 3 }),
 		] as [TextmodeFramebuffer, TextmodeFramebuffer];
+		state.pingPongDimensions = [grid.cols, grid.rows];
 		state.pingPongIndex = 0;
 	}
 
