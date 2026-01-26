@@ -11,16 +11,10 @@ import type { TextureChannel } from '../core/types';
  * @returns The corresponding texture channel
  */
 export function getTextureChannel(target: CompilationTarget): TextureChannel {
-	switch (target) {
-		case 'char':
-			return 'char';
-		case 'cellColor':
-			return 'cellColor';
-		case 'charColor':
-		case 'main':
-		default:
-			return 'charColor';
+	if (target === 'char' || target === 'cellColor') {
+		return target;
 	}
+	return 'charColor';
 }
 
 /**
