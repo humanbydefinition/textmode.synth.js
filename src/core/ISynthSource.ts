@@ -722,6 +722,12 @@ export interface ISynthSource {
 	 * @param source - Modulation source
 	 * @param multiple - Scale multiplier (default: 1.0)
 	 * @param offset - Offset amount (default: 1.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Modulate scale of shape with oscillator
+	 * shape(3).modulateScale(osc(10), 10, 0)
+	 * ```
 	 */
 	modulateScale(
 		source: ISynthSource,
@@ -734,6 +740,12 @@ export interface ISynthSource {
 	 * @param source - Modulation source
 	 * @param multiple - Rotation multiplier (default: 1.0)
 	 * @param offset - Offset amount (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Modulate rotation of shape with noise
+	 * shape(3).modulateRotate(noise(2), 2, 0)
+	 * ```
 	 */
 	modulateRotate(
 		source: ISynthSource,
@@ -776,6 +788,11 @@ export interface ISynthSource {
 	 * @param source - Modulation source
 	 * @param scrollX - X scroll amount (default: 0.5)
 	 * @param speed - Scroll speed (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * osc(10).modulateScrollX(osc(10), 0.5, 0)
+	 * ```
 	 */
 	modulateScrollX(
 		source: ISynthSource,
@@ -788,6 +805,11 @@ export interface ISynthSource {
 	 * @param source - Modulation source
 	 * @param scrollY - Y scroll amount (default: 0.5)
 	 * @param speed - Scroll speed (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * osc(10).modulateScrollY(osc(10), 0.5, 0)
+	 * ```
 	 */
 	modulateScrollY(
 		source: ISynthSource,
