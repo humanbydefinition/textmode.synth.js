@@ -27,6 +27,7 @@
     "format:check": "prettier --check \"src/**/*.ts\"",
     "lint:md": "markdownlint-cli2",
     "lint:md:fix": "markdownlint-cli2 --fix",
+    "lint:jsdoc": "eslint src --config eslint.config.js",
     "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },
@@ -46,6 +47,9 @@
     "typedoc-vitepress-theme": "^1.1.2",
     "typescript": "~5.8.3",
     "markdownlint-cli2": "^0.20.0",
+    "eslint": "^9.39.2",
+    "eslint-plugin-jsdoc": "^62.4.1",
+    "typescript-eslint": "^8.53.1",
     "vite": "^7.1.7",
     "@vitest/ui": "^3.1.2",
     "vitest": "^3.1.2"
