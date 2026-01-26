@@ -28,6 +28,8 @@
     "lint:md": "markdownlint-cli2",
     "lint:md:fix": "markdownlint-cli2 --fix",
     "lint:jsdoc": "eslint src --config eslint.config.js",
+    "lint": "npm run format:check && npm run lint:md",
+    "verify": "npm run format:check && npm run lint:md && npm run build && npm run test:run",
     "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },
