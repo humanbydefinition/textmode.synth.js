@@ -31,6 +31,7 @@
     "lint": "npm run format:check && npm run lint:md",
     "verify": "npm run format:check && npm run lint:md && npm run build && npm run test:run",
     "typecheck": "tsc --noEmit",
+    "size": "size-limit",
     "prepare": "husky"
   },
   "dependencies": {
@@ -41,6 +42,8 @@
     "@commitlint/config-conventional": "^20.3.1",
     "@rollup/plugin-terser": "^0.4.4",
     "@types/node": "^24.5.2",
+    "@size-limit/file": "^12.0.0",
+    "size-limit": "^12.0.0",
     "husky": "^9.1.7",
     "prettier": "^3.7.4",
     "terser": "^5.44.0",
@@ -56,6 +59,32 @@
     "@vitest/ui": "^3.1.2",
     "vitest": "^3.1.2"
   },
+  "size-limit": [
+    {
+      "name": "ESM (gzip)",
+      "path": "dist/textmode.synth.esm.js",
+      "gzip": true,
+      "limit": "15 kB"
+    },
+    {
+      "name": "ESM (uncompressed)",
+      "path": "dist/textmode.synth.esm.js",
+      "brotli": false,
+      "limit": "55 kB"
+    },
+    {
+      "name": "UMD (gzip)",
+      "path": "dist/textmode.synth.umd.js",
+      "gzip": true,
+      "limit": "15 kB"
+    },
+    {
+      "name": "UMD (uncompressed)",
+      "path": "dist/textmode.synth.umd.js",
+      "brotli": false,
+      "limit": "45 kB"
+    }
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/humanbydefinition/textmode.synth.js.git"
