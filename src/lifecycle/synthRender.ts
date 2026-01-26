@@ -69,12 +69,25 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 	const usesCellColorFeedback = state.compiled.usesCellColorFeedback;
 	const usesAnyFeedback = usesFeedback || usesCharFeedback || usesCellColorFeedback;
 
+	// Check if grid dimensions changed relative to existing buffers
+	const dims = state.pingPongDimensions;
+	const sizeChanged = dims && (dims[0] !== grid.cols || dims[1] !== grid.rows);
+
+	// Dispose buffers if not needed OR if size changed
+	if (state.pingPongBuffers && (!usesAnyFeedback || sizeChanged)) {
+		state.pingPongBuffers[0].dispose?.();
+		state.pingPongBuffers[1].dispose?.();
+		state.pingPongBuffers = undefined;
+		state.pingPongDimensions = undefined;
+	}
+
 	// Create ping-pong buffers for feedback
 	if (usesAnyFeedback && !state.pingPongBuffers) {
 		state.pingPongBuffers = [
 			textmodifier.createFramebuffer({ width: grid.cols, height: grid.rows, attachments: 3 }),
 			textmodifier.createFramebuffer({ width: grid.cols, height: grid.rows, attachments: 3 }),
 		] as [TextmodeFramebuffer, TextmodeFramebuffer];
+		state.pingPongDimensions = [grid.cols, grid.rows];
 		state.pingPongIndex = 0;
 	}
 
