@@ -11,3 +11,9 @@
 **Pattern:** missing coverage
 **Action:** Created `tests/utils/ArrayUtils.test.ts` covering prototype extension, modulation methods, and value interpolation logic.
 **Learning:** `ArrayUtils.smooth(1)` centers the transition around integer indices, meaning the midpoint of transition happens at `index=integer`, not `index=integer+0.5`.
+
+## Entry #3 — collectExternalLayerRefs Coverage
+**Finding:** `collectExternalLayerRefs` in `src/utils` lacked tests despite being a critical recursive utility.
+**Pattern:** missing coverage
+**Action:** Created `tests/utils/collectExternalLayerRefs.test.ts` covering direct references, nested sources, and property sources.
+**Learning:** `SynthSource` can be instantiated directly in tests without `bootstrap.ts` if only data properties are being tested, avoiding complex dependency injection setup.
