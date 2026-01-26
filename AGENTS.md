@@ -253,6 +253,34 @@ Task received
 
 ---
 
+## Example Sketches & Documentation
+
+When adding or updating code examples in docstrings or documentation files:
+
+### 1. Standard Sketch Pattern
+Follow the initialization pattern found in `src/api/sources.ts`. Explicitly create the instance with the plugin:
+
+```typescript
+const t = textmode.create({
+  width: 800,
+  height: 600,
+  plugins: [SynthPlugin]
+});
+
+// Usage
+t.layers.base.synth(osc(10));
+```
+
+- **Instantiation**: Always show `textmode.create()` with `SynthPlugin` in the plugins array.
+- **Globals**: Assume `textmode` and `SynthPlugin` are available (UMD style). Do not add explicit ESM imports (like `import { textmode } ...`) unless the context requires it.
+- **Do Not Refactor**: Do not "modernize" working examples by converting them to strict ESM imports if they follow the pattern above.
+
+### 2. Prioritization
+- **Focus on Coverage**: Prioritize creating **missing** example sketches for undocumented functions or classes.
+- **Ignore Style "Fixes"**: Do not waste cycles converting valid simple sketches to complex modular code.
+
+---
+
 ## Boundaries
 
 ### Always Do
