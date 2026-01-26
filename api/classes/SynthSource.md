@@ -1691,6 +1691,154 @@ ISynthSource.modulateScrollY
 
 ***
 
+### modulateRepeat()
+
+```ts
+modulateRepeat(
+   source,
+   repeatX?,
+   repeatY?,
+   offsetX?,
+   offsetY?): this;
+```
+
+Modulate repeat pattern with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | `ISynthSource` | Modulation source |
+| `repeatX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | X repetitions (default: 3.0) |
+| `repeatY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Y repetitions (default: 3.0) |
+| `offsetX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | X offset (default: 0.5) |
+| `offsetY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Y offset (default: 0.5) |
+
+#### Returns
+
+`this`
+
+#### Example
+
+```typescript
+shape(4).modulateRepeat(noise(3), 3, 3, 0.5, 0.5)
+```
+
+#### Inherited from
+
+```ts
+ISynthSource.modulateRepeat
+```
+
+***
+
+### modulateRepeatX()
+
+```ts
+modulateRepeatX(
+   source,
+   reps?,
+   offset?): this;
+```
+
+Modulate X repeat with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | `ISynthSource` | Modulation source |
+| `reps?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Number of repetitions (default: 3.0) |
+| `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 0.5) |
+
+#### Returns
+
+`this`
+
+#### Example
+
+```typescript
+shape(4).modulateRepeatX(noise(3), 3, 0.5)
+```
+
+#### Inherited from
+
+```ts
+ISynthSource.modulateRepeatX
+```
+
+***
+
+### modulateRepeatY()
+
+```ts
+modulateRepeatY(
+   source,
+   reps?,
+   offset?): this;
+```
+
+Modulate Y repeat with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | `ISynthSource` | Modulation source |
+| `reps?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Number of repetitions (default: 3.0) |
+| `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 0.5) |
+
+#### Returns
+
+`this`
+
+#### Example
+
+```typescript
+shape(4).modulateRepeatY(noise(3), 3, 0.5)
+```
+
+#### Inherited from
+
+```ts
+ISynthSource.modulateRepeatY
+```
+
+***
+
+### modulateHue()
+
+```ts
+modulateHue(source, amount?): this;
+```
+
+Modulate coordinates based on hue differences.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | `ISynthSource` | Modulation source |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Modulation amount (default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Example
+
+```typescript
+src().modulateHue(src().scale(1.01), 1.0)
+```
+
+#### Inherited from
+
+```ts
+ISynthSource.modulateHue
+```
+
+***
+
 ### charMap()
 
 ```ts
