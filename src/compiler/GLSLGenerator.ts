@@ -7,7 +7,7 @@
 
 import type { SynthUniform, CharacterMapping } from '../core/types';
 import type { ExternalLayerInfo } from './types';
-import { CHANNEL_SAMPLERS, CHANNEL_SUFFIXES } from './channels';
+import { CHANNEL_SAMPLERS, CHANNEL_SUFFIXES } from '../core/constants';
 
 /**
  * Options for shader generation.

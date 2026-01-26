@@ -10,7 +10,7 @@ import type { TextmodeFont } from 'textmode.js/loadables';
 import type { TextmodeFramebuffer } from 'textmode.js';
 import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
-import { CHANNEL_SUFFIXES } from '../compiler/channels';
+import { CHANNEL_SUFFIXES, CHANNEL_SAMPLERS } from '../core/constants';
 import { collectExternalLayerRefs } from '../utils';
 import { getGlobalBpm } from '../core/GlobalState';
 import type { SynthContext, LayerSynthState } from '../core/types';
@@ -192,13 +192,13 @@ function applySynthUniforms(
 	// Feedback texture uniforms
 	if (feedbackBuffer) {
 		if (compiled.usesCharColorFeedback) {
-			textmodifier.setUniform('prevCharColorBuffer', feedbackBuffer.textures[1]);
+			textmodifier.setUniform(CHANNEL_SAMPLERS.charColor, feedbackBuffer.textures[1]);
 		}
 		if (compiled.usesCharFeedback) {
-			textmodifier.setUniform('prevCharBuffer', feedbackBuffer.textures[0]);
+			textmodifier.setUniform(CHANNEL_SAMPLERS.char, feedbackBuffer.textures[0]);
 		}
 		if (compiled.usesCellColorFeedback) {
-			textmodifier.setUniform('prevCellColorBuffer', feedbackBuffer.textures[2]);
+			textmodifier.setUniform(CHANNEL_SAMPLERS.cellColor, feedbackBuffer.textures[2]);
 		}
 	}
 
