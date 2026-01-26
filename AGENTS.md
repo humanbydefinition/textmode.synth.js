@@ -258,6 +258,7 @@ Task received
 When adding or updating code examples in docstrings or documentation files:
 
 ### 1. Standard Sketch Pattern
+
 Follow the initialization pattern found in `src/api/sources.ts`. Explicitly create the instance with the plugin:
 
 ```typescript
@@ -276,6 +277,7 @@ t.layers.base.synth(osc(10));
 - **Do Not Refactor**: Do not "modernize" working examples by converting them to strict ESM imports if they follow the pattern above.
 
 ### 2. Prioritization
+
 - **Focus on Coverage**: Prioritize creating **missing** example sketches for undocumented functions or classes.
 - **Ignore Style "Fixes"**: Do not waste cycles converting valid simple sketches to complex modular code.
 

@@ -128,8 +128,21 @@ export class SynthSource {
 		return this;
 	}
 
-	public charColor(source: SynthSource): this {
-		this._colorSource = source;
+	public charColor(
+		rOrSource: SynthParameterValue | ISynthSource,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this {
+		if (rOrSource instanceof SynthSource) {
+			this._colorSource = rOrSource;
+		} else {
+			const source = new SynthSource();
+			// Map undefined to null to satisfy SynthParameterValue type
+			const args = [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
+			source.addTransform('solid', args as SynthParameterValue[]);
+			this._colorSource = source;
+		}
 		return this;
 	}
 
@@ -138,12 +151,38 @@ export class SynthSource {
 		return this;
 	}
 
-	public cellColor(source: SynthSource): this {
-		this._cellColorSource = source;
+	public cellColor(
+		rOrSource: SynthParameterValue | ISynthSource,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this {
+		if (rOrSource instanceof SynthSource) {
+			this._cellColorSource = rOrSource;
+		} else {
+			const source = new SynthSource();
+			const args = [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
+			source.addTransform('solid', args as SynthParameterValue[]);
+			this._cellColorSource = source;
+		}
 		return this;
 	}
 
-	public paint(source: SynthSource): this {
+	public paint(
+		rOrSource: SynthParameterValue | ISynthSource,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this {
+		let source: SynthSource;
+		if (rOrSource instanceof SynthSource) {
+			source = rOrSource;
+		} else {
+			source = new SynthSource();
+			const args = [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
+			source.addTransform('solid', args as SynthParameterValue[]);
+		}
+
 		this._colorSource = source;
 		this._cellColorSource = source;
 		return this;
