@@ -32,7 +32,7 @@ This runs: `format:check` → `lint:md` → `build` → `test:run`
 
 ## Architecture Overview
 
-```
+```text
 src/
 ├── index.ts                 # Public exports
 ├── bootstrap.ts             # Side-effect initialization (runs on import)
@@ -91,7 +91,7 @@ Transforms are categorized by their input/output signatures:
 
 ### 2. Compilation Pipeline
 
-```
+```text
 SynthSource chain
     ↓
 SynthCompiler.compile()
@@ -109,6 +109,7 @@ MRT Fragment Shader (3 outputs: char, charColor, cellColor)
 ### 3. Three-Texture System
 
 textmode.js renders to three framebuffer attachments:
+
 - **Target 0**: Character data (index (RG), flags, rotation)
 - **Target 1**: Foreground/character color (RGBA)
 - **Target 2**: Cell background color (RGBA)
@@ -198,6 +199,7 @@ export const myTransform = defineTransform({
 ### Modifying the Compiler
 
 The compiler is modular. Key files:
+
 - `SynthCompiler.ts` — Orchestration, chain traversal
 - `GLSLGenerator.ts` — Final shader assembly
 - `TransformCodeGenerator.ts` — Per-transform GLSL generation
@@ -230,7 +232,7 @@ Run `npm run size` to check. If legitimate changes exceed limits, update `packag
 
 ## Agent Decision Tree
 
-```
+```text
 Task received
     │
     ├─ Is it about transforms/GLSL?
@@ -254,17 +256,20 @@ Task received
 ## Boundaries
 
 ### Always Do
+
 - Run `npm run verify` before any PR
 - Keep changes minimal and focused
 - Follow existing patterns in the codebase
 - Document public API with JSDoc
 
 ### Ask First
+
 - Adding new peer dependencies
 - Changing the compilation pipeline significantly
 - Modifying the plugin lifecycle hooks
 
 ### Never Do
+
 - Skip verification
 - Break existing transform definitions
 - Add runtime dependencies (this is a zero-runtime-dep library)
@@ -276,7 +281,7 @@ Task received
 
 Uses [Conventional Commits](https://www.conventionalcommits.org/) with commitlint:
 
-```
+```text
 feat(compiler): add new blend mode support
 fix(transforms): correct kaleid center offset
 docs: update API examples
@@ -290,6 +295,7 @@ Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`
 ## Relationship to textmode.js
 
 This is an **add-on library**, not a fork:
+
 - Depends on textmode.js as a peer dependency
 - Extends via the plugin system (`SynthPlugin`)
 - Uses type augmentations in `src/augmentations/` to add methods to textmode.js interfaces
@@ -312,6 +318,7 @@ When starting work on this codebase:
 ## Abort Conditions
 
 Stop and do not create a PR if:
+
 - `npm run verify` fails after attempted fixes
 - Changes would break existing public API
 - You're unsure about the impact on shader compilation
