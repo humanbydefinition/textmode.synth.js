@@ -1,0 +1,111 @@
+name: Jules Session Cleanup
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  delete-session:
+    name: Delete Jules Session
+    runs-on: ubuntu-latest
+    # Only run for branches starting with 'jules/'
+    if: startsWith(github.event.pull_request.head.ref, 'jules/')
+    steps:
+      - name: Find and Delete Session
+        env:
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+        run: |
+          echo "Looking for Jules session associated with PR: $PR_URL"
+
+          PAGE_TOKEN=""
+          FOUND=false
+          MAX_PAGES=5
+
+          for i in $(seq 1 $MAX_PAGES); do
+            URL="https://jules.googleapis.com/v1alpha/sessions?pageSize=50"
+            if [ -n "$PAGE_TOKEN" ]; then
+              URL="${URL}&pageToken=${PAGE_TOKEN}"
+            fi
+
+            echo "Fetching sessions list (Page $i)..."
+            LIST_RESPONSE=$(curl -s -H "x-goog-api-key: $JULES_API_KEY" "$URL")
+
+            # Validate JSON
+            if ! echo "$LIST_RESPONSE" | jq -e '.' > /dev/null 2>&1; then
+              echo "Error: API response for list sessions is not valid JSON."
+              echo "Response: $LIST_RESPONSE"
+              exit 1
+            fi
+
+            # Check error
+            if echo "$LIST_RESPONSE" | jq -e '.error' > /dev/null 2>&1; then
+              echo "Error listing sessions: $(echo "$LIST_RESPONSE" | jq '.error')"
+              exit 1
+            fi
+
+            # Extract session names
+            # Using -r to get raw strings (e.g. "sessions/123")
+            SESSION_NAMES=$(echo "$LIST_RESPONSE" | jq -r '.sessions[]? | .name')
+
+            # If no sessions, break
+            if [ -z "$SESSION_NAMES" ]; then
+              echo "No more sessions found."
+              break
+            fi
+
+            # Iterate over session names
+            for SESSION_NAME in $SESSION_NAMES; do
+              # Fetch full session details to check outputs
+              DETAIL_URL="https://jules.googleapis.com/v1alpha/$SESSION_NAME"
+
+              DETAIL_RESPONSE=$(curl -s -H "x-goog-api-key: $JULES_API_KEY" "$DETAIL_URL")
+
+              # Validate JSON
+              if ! echo "$DETAIL_RESPONSE" | jq -e '.' > /dev/null 2>&1; then
+                echo "Error: API response for session details is not valid JSON."
+                echo "Response: $DETAIL_RESPONSE"
+                exit 1
+              fi
+
+              # Check error
+              if echo "$DETAIL_RESPONSE" | jq -e '.error' > /dev/null 2>&1; then
+                echo "Error getting session detail: $(echo "$DETAIL_RESPONSE" | jq '.error')"
+                exit 1
+              fi
+
+              # Check match
+              MATCH=$(echo "$DETAIL_RESPONSE" | jq -r --arg PR_URL "$PR_URL" '
+                if (.outputs // []) | map(.pullRequest?.url) | index($PR_URL) then
+                  "true"
+                else
+                  "false"
+                end
+              ')
+
+              if [ "$MATCH" = "true" ]; then
+                echo "Found matching session: $SESSION_NAME"
+                echo "Deleting session..."
+                DELETE_RESPONSE=$(curl -s -X DELETE -H "x-goog-api-key: $JULES_API_KEY" "$DETAIL_URL")
+
+                if echo "$DELETE_RESPONSE" | jq -e '.error' > /dev/null 2>&1; then
+                  echo "Error deleting session: $(echo "$DELETE_RESPONSE" | jq '.error')"
+                  exit 1
+                fi
+
+                echo "Session deleted successfully."
+                FOUND=true
+                break 2
+              fi
+            done
+
+            # Get next page token
+            PAGE_TOKEN=$(echo "$LIST_RESPONSE" | jq -r '.nextPageToken // empty')
+            if [ -z "$PAGE_TOKEN" ]; then
+              break
+            fi
+          done
+
+          if [ "$FOUND" = "false" ]; then
+            echo "No session found associated with this PR (checked first $MAX_PAGES pages)."
+          fi

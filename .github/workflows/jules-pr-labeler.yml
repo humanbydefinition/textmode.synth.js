@@ -1,0 +1,84 @@
+# Jules PR Auto-Labeler
+#
+# Automatically adds jules:<agent-id> labels to PRs created by Jules
+# based on the branch naming convention: jules/<agent-id>/<description>
+#
+# This runs on PR open and labels accordingly.
+
+name: Jules PR Labeler
+
+on:
+    pull_request:
+        types: [opened]
+
+jobs:
+    label-jules-pr:
+        runs-on: ubuntu-latest
+        permissions:
+            pull-requests: write
+
+        steps:
+            - name: Detect and label Jules agent PR
+              uses: actions/github-script@v7
+              with:
+                  script: |
+                      const branchName = context.payload.pull_request.head.ref;
+                      const prNumber = context.payload.pull_request.number;
+
+                      console.log(`Processing PR #${prNumber} from branch: ${branchName}`);
+
+                      // Check if branch matches jules/<agent-id>/* pattern
+                      const julesMatch = branchName.match(/^jules\/([a-z]+)\//);
+
+                      if (!julesMatch) {
+                        console.log('Not a Jules agent branch, skipping');
+                        return;
+                      }
+
+                      const agentId = julesMatch[1];
+
+                      // Validate against known agents
+                      const knownAgents = [
+                        'warden', 'scribe', 'sentinel', 'weaver',
+                        'forge', 'keeper', 'hunter', 'artisan', 'architect'
+                      ];
+
+                      if (!knownAgents.includes(agentId)) {
+                        console.log(`Unknown agent ID: ${agentId}, skipping`);
+                        return;
+                      }
+
+                      const labelName = `jules:${agentId}`;
+                      console.log(`Detected agent: ${agentId}, adding label: ${labelName}`);
+
+                      // Check if label exists, create if not
+                      try {
+                        await github.rest.issues.getLabel({
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          name: labelName,
+                        });
+                      } catch (e) {
+                        if (e.status === 404) {
+                          console.log(`Creating label: ${labelName}`);
+                          await github.rest.issues.createLabel({
+                            owner: context.repo.owner,
+                            repo: context.repo.repo,
+                            name: labelName,
+                            color: '6366f1',
+                            description: `PRs from Jules ${agentId} agent`,
+                          });
+                        } else {
+                          throw e;
+                        }
+                      }
+
+                      // Add label to PR
+                      await github.rest.issues.addLabels({
+                        owner: context.repo.owner,
+                        repo: context.repo.repo,
+                        issue_number: prNumber,
+                        labels: [labelName],
+                      });
+
+                      console.log(`✅ Added label ${labelName} to PR #${prNumber}`);
