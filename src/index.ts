@@ -7,6 +7,9 @@
  *
  * @example
  * ```ts
+ * import { textmode } from 'textmode.js';
+ * import { SynthPlugin, noise, osc } from 'textmode.synth.js';
+ *
  * // Create textmode instance with SynthPlugin
  * const t = textmode.create({
  *   width: 800,
