@@ -9,3 +9,9 @@
 **Pattern:** Missing example blocks
 **Action:** Added `@example` blocks to `modulateScale`, `modulateRotate`, `modulateScrollX`, and `modulateScrollY` in `src/core/ISynthSource.ts`.
 **Learning:** README often lists categories of functions (e.g., "Modulate"), but the individual interface methods might miss examples. Cross-reference README lists with interface docs.
+
+## Entry #3 — Incomplete Imports in Examples
+**API:** `voronoi`
+**Issue:** Example code used `textmode.create` and `SynthPlugin` without importing them, preventing the code from running if copy-pasted.
+**Fix:** Added explicit imports for `textmode`, `SynthPlugin`, and `voronoi` to the example.
+**Pattern:** Always include imports in examples using `textmode.create` or plugin registration.

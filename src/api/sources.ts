@@ -381,6 +381,9 @@ export const src = (layer?: TextmodeLayer): SynthSource => {
  *
  * @example
  * ```typescript
+ * import { textmode } from 'textmode.js';
+ * import { SynthPlugin, voronoi } from 'textmode.synth.js';
+ *
  * const t = textmode.create({
  *   width: 800,
  *   height: 600,
