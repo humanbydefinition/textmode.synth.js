@@ -68,7 +68,7 @@ export const cellColor = (source: SynthSource): SynthSource => {
  *
  * // With limited character count
  * t.layers.base.synth(
- *   char(noise(10), 16)
+ *   char(noise(10))
  *     .charMap('@#%*+=-:. ')
  * );
  * ```

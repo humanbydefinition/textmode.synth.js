@@ -245,7 +245,7 @@ export interface ISynthSource {
 	 * @example
 	 * ```typescript
 	 * // Rotate shape continuously
-	 * osc(50, 0, 0, 16)
+	 * osc(50, 0, 0)
 	 *   .rotate((ctx) => ctx.time % 360)
 	 *   .charColor(osc(50).rotate((ctx) => ctx.time % 360));
 	 * ```
@@ -366,7 +366,7 @@ export interface ISynthSource {
 	 * @example
 	 * ```typescript
 	 * // Create a 50-sided kaleidoscope pattern
-	 * osc(25, -0.1, 0.5, 32)
+	 * osc(25, -0.1, 0.5)
 	 *   .kaleid(50)
 	 *   .charColor(osc(25, -0.1, 0.5).kaleid(50));
 	 * ```
@@ -421,7 +421,7 @@ export interface ISynthSource {
 	 * @example
 	 * ```typescript
 	 * // Animate saturation
-	 * osc(10, 0, 1, 16)
+	 * osc(10, 0, 1)
 	 *   .charColor(
 	 *     osc(10, 0, 1).saturate((ctx) => Math.sin(ctx.time) * 10)
 	 *   );
@@ -530,7 +530,7 @@ export interface ISynthSource {
 	 * voronoi(5).hue(0.4).r()
 	 *
 	 * // Convert red intensity to character indices
-	 * char(osc(10).hue(0.5).r(), 16)
+	 * char(osc(10).hue(0.5).r())
 	 * ```
 	 */
 	r(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
