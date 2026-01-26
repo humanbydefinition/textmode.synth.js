@@ -3,7 +3,7 @@ import '../../src/bootstrap';
 import { SynthSource } from '../../src/core/SynthSource';
 import { solid, charColor, cellColor, paint } from '../../src/api/sources';
 
-describe('SynthSource API Consistency', () => {
+describe('SynthSource', () => {
     it('should support solid() in charColor (baseline)', () => {
         const source = new SynthSource();
         const color = solid(1, 0, 0, 1);
