@@ -7,6 +7,9 @@
  *
  * @example
  * ```ts
+ * import { textmode } from 'textmode.js';
+ * import { SynthPlugin, noise, osc } from 'textmode.synth.js';
+ *
  * // Create textmode instance with SynthPlugin
  * const t = textmode.create({
  *   width: 800,
@@ -24,7 +27,6 @@
  *   .cellColor(osc(5).kaleid(4).invert())
  *
  *   .charMap('@#%*+=-:. ');
- *
  *
  * // Apply synth to the base layer
  * t.layers.base.synth(synth);
