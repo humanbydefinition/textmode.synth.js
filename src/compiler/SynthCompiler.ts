@@ -188,9 +188,7 @@ class SynthCompiler {
 		this._mainCode.push(
 			`\tint charIdx_${charVar} = int(charLum_${charVar} * u_charSourceCount);`
 		);
-		this._mainCode.push(
-			`\tvec4 ${charVar} = vec4(float(charIdx_${charVar} % 256) / 255.0, float(charIdx_${charVar} / 256) / 255.0, 0.0, 0.0);`
-		);
+		this._mainCode.push(`\tvec4 ${charVar} = _packChar(charIdx_${charVar});`);
 
 		return charVar;
 	}
