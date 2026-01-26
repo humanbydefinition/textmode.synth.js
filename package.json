@@ -21,6 +21,8 @@
     "dev:docs": "typedoc --watch",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
+    "lint:md": "markdownlint-cli2",
+    "lint:md:fix": "markdownlint-cli2 --fix",
     "prepare": "husky",
     "typecheck": "tsc --noEmit"
   },
@@ -39,6 +41,7 @@
     "typedoc-plugin-markdown": "^4.7.0",
     "typedoc-vitepress-theme": "^1.1.2",
     "typescript": "~5.8.3",
+    "markdownlint-cli2": "^0.20.0",
     "vite": "^7.1.7"
   },
   "repository": {
