@@ -115,6 +115,11 @@ export interface LayerSynthState {
 	 */
 	pingPongBuffers?: [TextmodeFramebuffer, TextmodeFramebuffer];
 	/**
+	 * Dimensions of the current ping-pong buffers [cols, rows].
+	 * Used to detect when buffers need to be resized.
+	 */
+	pingPongDimensions?: [number, number];
+	/**
 	 * Current ping-pong index.
 	 * READ from pingPongBuffers[pingPongIndex], WRITE to pingPongBuffers[1 - pingPongIndex].
 	 */
