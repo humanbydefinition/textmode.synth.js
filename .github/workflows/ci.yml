@@ -30,5 +30,8 @@ jobs:
       - name: Lint Markdown
         run: npm run lint:md
 
+      - name: Run tests
+        run: npm run test:run
+
       - name: Build
         run: npm run build
