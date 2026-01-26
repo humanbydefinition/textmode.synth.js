@@ -28,3 +28,9 @@ ENTRY FORMAT:
 **Risk:** Zero risk (compile-time only).
 **Action:** Refactored `CompilationTarget` to use `TextureChannel | 'main'`, enforcing consistency.
 **Learning:** Type aliases that extend other types (e.g., `Type A = Type B | 'extra'`) are safe candidates for deduplication that improves maintainability without affecting bundle size.
+
+## Entry #3 — Simplified Texture Channel Mapping
+**Pattern:** Verbose `switch` statement for simple mapping logic.
+**Risk:** Low risk. Logic is equivalent.
+**Action:** Replaced `switch` with `if` statement in `src/compiler/channels.ts`.
+**Learning:** For simple enumerations where most cases map to a default, a conditional check is significantly smaller than a switch statement in the final bundle.
