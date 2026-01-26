@@ -149,6 +149,11 @@ export interface LayerSynthState {
 	 * Reusable synth context object to avoid per-frame allocation.
 	 */
 	synthContext?: SynthContext;
+
+	/**
+	 * Cache for resolution uniform to avoid per-frame allocation.
+	 */
+	resolutionCache?: [number, number];
 }
 
 /**

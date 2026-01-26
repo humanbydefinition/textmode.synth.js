@@ -89,6 +89,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 			rows: 0,
 			bpm: 0,
 		};
+		state.resolutionCache = [0, 0];
 	}
 
 	const synthContext = state.synthContext;
@@ -100,6 +101,12 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 	synthContext.rows = grid.rows;
 	synthContext.bpm = state.bpm ?? getGlobalBpm();
 	synthContext.onError = state.onDynamicError;
+
+	// Update resolution cache
+	if (state.resolutionCache) {
+		state.resolutionCache[0] = grid.cols;
+		state.resolutionCache[1] = grid.rows;
+	}
 
 	// Evaluate dynamic parameters with graceful error handling.
 	// On error: report via callback, use fallback value, continue rendering.
@@ -155,7 +162,7 @@ function applySynthUniforms(
 	feedbackBuffer: TextmodeFramebuffer | null
 ) {
 	textmodifier.setUniform('time', ctx.time);
-	textmodifier.setUniform('resolution', [ctx.cols, ctx.rows]);
+	textmodifier.setUniform('resolution', state.resolutionCache || [ctx.cols, ctx.rows]);
 
 	for (const [name, value] of state.dynamicValues) {
 		textmodifier.setUniform(name, value);
