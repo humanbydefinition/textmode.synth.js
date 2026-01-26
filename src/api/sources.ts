@@ -136,7 +136,7 @@ export const charColor = (source: SynthSource): SynthSource => {
 export function gradient(
     speed?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return (generatedFunctions['gradient'] as Function)(speed);
+    return generatedFunctions['gradient'](speed ?? null);
 }
 
 /**
@@ -162,7 +162,7 @@ export function noise(
     scale?: number | number[] | ((ctx: SynthContext) => number),
     offset?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return (generatedFunctions['noise'] as Function)(scale, offset);
+    return generatedFunctions['noise'](scale ?? null, offset ?? null);
 }
 
 /**
@@ -196,7 +196,7 @@ export function osc(
     sync?: number | number[] | ((ctx: SynthContext) => number),
     offset?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return (generatedFunctions['osc'] as Function)(frequency, sync, offset);
+    return generatedFunctions['osc'](frequency ?? null, sync ?? null, offset ?? null);
 }
 
 /**
@@ -266,7 +266,7 @@ export function shape(
     radius?: number | number[] | ((ctx: SynthContext) => number),
     smoothing?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return (generatedFunctions['shape'] as Function)(sides, radius, smoothing);
+    return generatedFunctions['shape'](sides ?? null, radius ?? null, smoothing ?? null);
 }
 
 /**
@@ -298,7 +298,7 @@ export function solid(
     b?: number | number[] | ((ctx: SynthContext) => number),
     a?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return (generatedFunctions['solid'] as Function)(r, g, b, a);
+    return generatedFunctions['solid'](r ?? null, g ?? null, b ?? null, a ?? null);
 }
 
 /**
@@ -354,7 +354,7 @@ export function solid(
  */
 export const src = (layer?: TextmodeLayer): SynthSource => {
     // Get the base src function for self-feedback
-    const baseSrc = generatedFunctions['src'] as () => SynthSource;
+    const baseSrc = generatedFunctions['src'];
 
     if (!layer) {
         // No layer provided - use self-feedback (context-aware)
@@ -398,5 +398,5 @@ export function voronoi(
     speed?: number | number[] | ((ctx: SynthContext) => number),
     blending?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return (generatedFunctions['voronoi'] as Function)(scale, speed, blending);
+    return generatedFunctions['voronoi'](scale ?? null, speed ?? null, blending ?? null);
 }
