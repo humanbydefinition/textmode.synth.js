@@ -22,7 +22,7 @@
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
     "prepare": "husky",
-    "test": "echo \"No tests specified\" && exit 0"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "textmode.js": ">=0.8.5"
