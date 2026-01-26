@@ -229,11 +229,11 @@ The sampled texture is context-aware based on where it's used in the synth chain
 - Inside `cellColor(...)` → samples previous frame's cell color (character background)
 - Outside all three → samples previous frame's primary color
 
-**Cross-layer sampling (with layer argument):** `src(layer)` samples from another 
+**Cross-layer sampling (with layer argument):** `src(layer)` samples from another
 layer's output, enabling hydra-style multi-output compositions. The sampled texture
 is still context-aware based on the current compilation target.
 
-This is the core of feedback loops and multi-layer compositions - enabling effects 
+This is the core of feedback loops and multi-layer compositions - enabling effects
 like trails, motion blur, recursive patterns, and complex layered visuals.
 Equivalent to hydra's `src(o0)`.
 
@@ -293,7 +293,7 @@ Rotate coordinates.
 
 ```typescript
 // Rotate shape continuously
-osc(50, 0, 0, 16)
+osc(50, 0, 0)
   .rotate((ctx) => ctx.time % 360)
   .charColor(osc(50).rotate((ctx) => ctx.time % 360));
 ```
@@ -596,7 +596,7 @@ Apply kaleidoscope effect.
 
 ```typescript
 // Create a 50-sided kaleidoscope pattern
-osc(25, -0.1, 0.5, 32)
+osc(25, -0.1, 0.5)
   .kaleid(50)
   .charColor(osc(25, -0.1, 0.5).kaleid(50));
 ```
@@ -735,7 +735,7 @@ Adjust color saturation.
 
 ```typescript
 // Animate saturation
-osc(10, 0, 1, 16)
+osc(10, 0, 1)
   .charColor(
     osc(10, 0, 1).saturate((ctx) => Math.sin(ctx.time) * 10)
   );
@@ -988,7 +988,7 @@ Extract the red channel as a grayscale value.
 voronoi(5).hue(0.4).r()
 
 // Convert red intensity to character indices
-char(osc(10).hue(0.5).r(), 16)
+char(osc(10).hue(0.5).r())
 ```
 
 #### Inherited from
@@ -1716,7 +1716,7 @@ ISynthSource.charColor
 ### char()
 
 ```ts
-char(source, charCount): this;
+char(source): this;
 ```
 
 #### Parameters
@@ -1724,7 +1724,6 @@ char(source, charCount): this;
 | Parameter | Type |
 | ------ | ------ |
 | `source` | `SynthSource` |
-| `charCount` | `number` |
 
 #### Returns
 
