@@ -7,7 +7,7 @@
 
 import type { TextmodeLayer } from 'textmode.js/layering';
 import type { TextmodeFont } from 'textmode.js/loadables';
-import type { TextmodeFramebuffer } from 'textmode.js';
+import type { TextmodeFramebuffer, Textmodifier } from 'textmode.js';
 import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
 import { CHANNEL_SUFFIXES, CHANNEL_SAMPLERS } from '../core/constants';
@@ -22,7 +22,7 @@ import type { SynthContext, LayerSynthState } from '../core/types';
  * BEFORE any WebGL operations. If any parameter fails, the entire frame
  * is skipped and the error propagates for the environment to handle.
  */
-export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
+export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifier) {
 	const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
 	if (!state) return;
 
@@ -149,7 +149,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
  */
 function applySynthUniforms(
 	layer: TextmodeLayer,
-	textmodifier: any,
+	textmodifier: Textmodifier,
 	state: LayerSynthState,
 	ctx: SynthContext,
 	feedbackBuffer: TextmodeFramebuffer | null
@@ -213,7 +213,7 @@ function applySynthUniforms(
 			}
 
 			const extState = extLayer.getPluginState<LayerSynthState>(PLUGIN_NAME);
-			let extTextures: any[] | undefined;
+			let extTextures: WebGLTexture[] | undefined;
 
 			if (extState?.pingPongBuffers) {
 				const extReadBuffer = extState.pingPongBuffers[extState.pingPongIndex];
