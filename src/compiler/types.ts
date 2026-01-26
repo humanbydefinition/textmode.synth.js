@@ -2,7 +2,7 @@
  * Compiler types and interfaces.
  */
 
-import type { SynthUniform, SynthContext, CharacterMapping } from '../core/types';
+import type { SynthUniform, SynthContext, CharacterMapping, TextureChannel } from '../core/types';
 
 /**
  * Compilation target context determining which texture `src()` samples from.
@@ -12,7 +12,7 @@ import type { SynthUniform, SynthContext, CharacterMapping } from '../core/types
  * - `cellColor`: Compiling a cell color chain → src() samples prevCellColorBuffer
  * - `main`: Compiling the main chain → src() samples prevCharColorBuffer
  */
-export type CompilationTarget = 'char' | 'charColor' | 'cellColor' | 'main';
+export type CompilationTarget = TextureChannel | 'main';
 
 /**
  * Shared interface for tracking which texture channels are used.
