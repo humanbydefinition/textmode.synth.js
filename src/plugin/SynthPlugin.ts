@@ -52,6 +52,9 @@ export const SynthPlugin: TextmodePlugin = {
 		for (const layer of allLayers) {
 			const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
 			if (state) {
+				// Mark as disposed to prevent pending async operations from continuing
+				state.isDisposed = true;
+
 				if (state.shader?.dispose) {
 					state.shader.dispose();
 				}
@@ -59,6 +62,9 @@ export const SynthPlugin: TextmodePlugin = {
 					state.pingPongBuffers[0].dispose?.();
 					state.pingPongBuffers[1].dispose?.();
 				}
+
+				// Remove state from layer
+				layer.setPluginState(PLUGIN_NAME, undefined);
 			}
 		}
 
