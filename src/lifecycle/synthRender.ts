@@ -129,6 +129,11 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 	synthContext.bpm = state.bpm ?? getGlobalBpm();
 	synthContext.onError = state.onDynamicError;
 
+	// Initialize resolution array if needed
+	if (!state.resolutionArray) {
+		state.resolutionArray = [0, 0];
+	}
+
 	// Evaluate dynamic parameters with graceful error handling.
 	// On error: report via callback, use fallback value, continue rendering.
 	state.dynamicValues.clear();
@@ -183,19 +188,31 @@ function applySynthUniforms(
 	feedbackBuffer: TextmodeFramebuffer | null
 ) {
 	textmodifier.setUniform('time', ctx.time);
-	textmodifier.setUniform('resolution', [ctx.cols, ctx.rows]);
+
+	if (state.resolutionArray) {
+		state.resolutionArray[0] = ctx.cols;
+		state.resolutionArray[1] = ctx.rows;
+		textmodifier.setUniform('resolution', state.resolutionArray);
+	} else {
+		textmodifier.setUniform('resolution', [ctx.cols, ctx.rows]);
+	}
 
 	for (const [name, value] of state.dynamicValues) {
 		textmodifier.setUniform(name, value);
 	}
 
 	const compiled = state.compiled!;
+	// Only update static uniforms if the shader instance has changed
+	const forceUpdate = state.staticUniformsAppliedTo !== state.shader;
 
 	// Static uniforms
-	for (const [name, uniform] of compiled.uniforms) {
-		if (!uniform.isDynamic && typeof uniform.value !== 'function') {
-			textmodifier.setUniform(name, uniform.value);
+	if (forceUpdate) {
+		for (const [name, uniform] of compiled.uniforms) {
+			if (!uniform.isDynamic && typeof uniform.value !== 'function') {
+				textmodifier.setUniform(name, uniform.value);
+			}
 		}
+		state.staticUniformsAppliedTo = state.shader;
 	}
 
 	// Character mapping uniforms
@@ -204,8 +221,12 @@ function applySynthUniforms(
 			compiled.charMapping.chars,
 			layer.font as TextmodeFont
 		);
-		textmodifier.setUniform('u_charMap', indices);
-		textmodifier.setUniform('u_charMapSize', indices.length);
+		// Only update if mapping changed or shader changed
+		if (forceUpdate || indices !== state.lastCharMapIndices) {
+			textmodifier.setUniform('u_charMap', indices);
+			textmodifier.setUniform('u_charMapSize', indices.length);
+			state.lastCharMapIndices = indices;
+		}
 	}
 
 	// Char source count uniform (for char() function)
