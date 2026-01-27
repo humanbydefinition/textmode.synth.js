@@ -110,7 +110,7 @@ export interface LayerSynthState {
 	/** Whether the shader needs to be recompiled */
 	needsCompile: boolean;
 	/** Whether the shader is currently compiling (async) */
-	isCompiling?: boolean;
+	isCompiling: boolean;
 	/**
 	 * Ping-pong framebuffers for feedback loops.
 	 * pingPongBuffers[0] = buffer A, pingPongBuffers[1] = buffer B
