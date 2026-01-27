@@ -69,7 +69,7 @@ t.layers.base.synth(synth);
 | [osc](functions/osc.md) | Generate oscillating patterns using sine waves. |
 | [paint](functions/paint.md) | Create a synth source with both character and cell colors defined. |
 | [shape](functions/shape.md) | Generate geometric shapes (polygons). |
-| [solid](functions/solid.md) | Generate a solid color. |
+| [solid](functions/solid.md) | Generate a solid grayscale color. |
 | [src](functions/src.md) | Sample the previous frame's output for feedback effects. |
 | [voronoi](functions/voronoi.md) | Generate voronoi patterns. |
 | [setGlobalErrorCallback](functions/setGlobalErrorCallback.md) | Set a global error callback for dynamic parameter evaluation errors. |

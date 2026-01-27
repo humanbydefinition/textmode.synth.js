@@ -76,11 +76,6 @@ export class SynthSource {
 		this._externalLayerRefs = options?.externalLayerRefs ?? new Map();
 	}
 
-	/**
-	 * Add a transform to the chain.
-	 * This method is called by dynamically injected transform methods.
-	 * @ignore
-	 */
 	public addTransform(name: string, userArgs: SynthParameterValue[]): this {
 		const record: TransformRecord = { name, userArgs };
 
@@ -90,10 +85,6 @@ export class SynthSource {
 		return this;
 	}
 
-	/**
-	 * Add a combine transform that references another source.
-	 * @ignore
-	 */
 	public addCombineTransform(
 		name: string,
 		source: SynthSource,
@@ -104,11 +95,6 @@ export class SynthSource {
 		return this.addTransform(name, userArgs);
 	}
 
-	/**
-	 * Add an external layer reference at the current transform index.
-	 * Used by src(layer) to track cross-layer sampling.
-	 * @ignore
-	 */
 	public addExternalLayerRef(ref: ExternalLayerReference): this {
 		const index = this._chain.length;
 		this._externalLayerRefs.set(index, ref);

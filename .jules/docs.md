@@ -41,3 +41,9 @@ t.windowResized(() => {
 **Pattern:** Missing example blocks
 **Action:** Added `@example` blocks to `scrollX`, `scrollY`, `repeatX`, and `repeatY` in `src/core/ISynthSource.ts`. Used concise snippets to match existing documentation style in the file.
 **Learning:** When checking for missing examples, ensure related methods (like X/Y variants of a transform) are also covered.
+
+## Entry #5 — Redundant Implementation Docstrings
+**Finding:** `SynthSource` implementation methods (`addTransform`, `addCombineTransform`, `addExternalLayerRef`) had docstrings duplicating the interface documentation in `ISynthSource`.
+**Pattern:** Redundant Implementation Docstrings
+**Action:** Removed docstrings from `src/core/SynthSource.ts` to rely on the authoritative `ISynthSource` documentation.
+**Learning:** When using declaration merging (`interface` + `class`), avoid duplicating docstrings on the class implementation if the interface is the intended source of truth.

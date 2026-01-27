@@ -1962,6 +1962,84 @@ ISynthSource.modulateHue
 
 ***
 
+### addTransform()
+
+```ts
+addTransform(name, userArgs): this;
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `name` | `string` |
+| `userArgs` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md)[] |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.addTransform
+```
+
+***
+
+### addCombineTransform()
+
+```ts
+addCombineTransform(
+   name,
+   source,
+   userArgs): this;
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `name` | `string` |
+| `source` | `SynthSource` |
+| `userArgs` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md)[] |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.addCombineTransform
+```
+
+***
+
+### addExternalLayerRef()
+
+```ts
+addExternalLayerRef(ref): this;
+```
+
+#### Parameters
+
+| Parameter | Type |
+| ------ | ------ |
+| `ref` | `ExternalLayerReference` |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.addExternalLayerRef
+```
+
+***
+
 ### charMap()
 
 ```ts
