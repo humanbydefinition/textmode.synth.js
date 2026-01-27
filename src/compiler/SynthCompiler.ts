@@ -24,6 +24,7 @@ import { UniformManager } from './UniformManager';
 import { generateFragmentShader, generateCharacterOutputCode } from './GLSLGenerator';
 import { transformRegistry } from '../transforms/TransformRegistry';
 import type { ProcessedTransform } from '../transforms/TransformDefinition';
+import type { ExternalLayerReference } from '../core';
 
 /**
  * Compile a SynthSource chain into a complete MRT GLSL shader.
@@ -333,7 +334,7 @@ class SynthCompiler {
 	/**
 	 * Track src() usage for feedback or external layer.
 	 */
-	private _trackSrcUsage(externalRef?: { layerId: string; layer: unknown }): void {
+	private _trackSrcUsage(externalRef?: ExternalLayerReference): void {
 		if (externalRef) {
 			// External layer reference
 			this._externalLayerManager.trackUsage(externalRef, this._currentTarget);
