@@ -46,3 +46,9 @@ ENTRY FORMAT:
 **Risk:** Low. Runtime behavior is identical.
 **Action:** Created `createChannelTransform` helper in `src/transforms/categories/colors.ts` to generate these definitions dynamically.
 **Learning:** For repetitive transforms that only differ by a single property (like a vector component), a factory function significantly reduces source code lines and bundle size (reduced by ~300 bytes).
+
+## Entry #6 — Centralized Dynamic Uniform Creation
+**Pattern:** Duplicate logic for creating dynamic uniforms (GLSL value generation, uniform object creation, updater registration) in `UniformManager.ts` for both modulated arrays and function values.
+**Risk:** Low. The logic was identical, just differing in how the updater function was created.
+**Action:** Extracted `_createDynamicUniform` method in `UniformManager` to encapsulate the shared logic.
+**Learning:** Even within a single class, complex object creation logic often gets copy-pasted. Extracting it simplifies the main logic flow and reduces bundle size slightly (~150 bytes source).
