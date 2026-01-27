@@ -174,7 +174,7 @@ export interface ExternalLayerReference {
 	/** Unique identifier for the layer (typically layer.id or generated) */
 	layerId: string;
 	/** The layer object reference (opaque to the compiler, used by plugin) */
-	layer: unknown;
+	layer: TextmodeLayer;
 }
 
 /**

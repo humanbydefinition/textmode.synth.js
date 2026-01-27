@@ -16,6 +16,7 @@
  */
 
 import type { SynthSource } from '../core/SynthSource';
+import type { ExternalLayerReference } from '../core/types';
 import type { CompiledSynthShader, ChainCompilationResult, CompilationTarget } from './types';
 import { FeedbackTracker } from './FeedbackTracker';
 import { ExternalLayerManager } from './ExternalLayerManager';
@@ -333,7 +334,7 @@ class SynthCompiler {
 	/**
 	 * Track src() usage for feedback or external layer.
 	 */
-	private _trackSrcUsage(externalRef?: { layerId: string; layer: unknown }): void {
+	private _trackSrcUsage(externalRef?: ExternalLayerReference): void {
 		if (externalRef) {
 			// External layer reference
 			this._externalLayerManager.trackUsage(externalRef, this._currentTarget);

@@ -1,4 +1,5 @@
-import type { SynthParameterValue } from './types';
+import type { TextmodeLayer } from 'textmode.js/layering';
+import type { ExternalLayerReference, SynthParameterValue } from './types';
 
 /**
  * Interface defining all chainable methods available on SynthSource.
@@ -298,7 +299,7 @@ export interface ISynthSource {
 	 *   .cellColor(voronoi().diff(src()))    // src() → cell color feedback
 	 * ```
 	 */
-	src(layer?: unknown): this;
+	src(layer?: TextmodeLayer): this;
 
 	/**
 	 * Rotate coordinates.
@@ -1008,5 +1009,5 @@ export interface ISynthSource {
 	 * Add an external layer reference at the current transform index.
 	 * @ignore
 	 */
-	addExternalLayerRef(ref: unknown): this;
+	addExternalLayerRef(ref: ExternalLayerReference): this;
 }
