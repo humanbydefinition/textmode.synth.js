@@ -137,28 +137,12 @@ export class SynthSource {
 		if (rOrSource instanceof SynthSource) {
 			return rOrSource;
 		}
-
 		const source = new SynthSource();
-		let args: (SynthParameterValue | null)[];
-
-		// Handle scalar expansion: if only r is provided and it's a number,
-		// replicate it to g and b to create a grayscale color.
-		if (
-			typeof rOrSource === 'number' &&
-			g === undefined &&
-			b === undefined &&
-			a === undefined
-		) {
-			args = [rOrSource, rOrSource, rOrSource, 1.0];
-		} else {
-			// Map undefined to null to satisfy SynthParameterValue type
-			// We cast rOrSource to SynthParameterValue because if it were an ISynthSource
-			// but not a SynthSource instance (checked above), it wouldn't be valid for solid() anyway.
-			args = [rOrSource as SynthParameterValue, g, b, a].map((v) =>
-				v === undefined ? null : v
-			);
-		}
-
+		// If only a single number is provided, replicate it to RGB for grayscale consistency
+		const args =
+			typeof rOrSource === 'number' && g === undefined && b === undefined && a === undefined
+				? [rOrSource, rOrSource, rOrSource, null]
+				: [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
 		source.addTransform('solid', args as SynthParameterValue[]);
 		return source;
 	}
