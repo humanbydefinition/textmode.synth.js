@@ -337,7 +337,7 @@ export function getArrayValue(arr: ModulatedArray, ctx: SynthContext): number {
 		const indexFloor = Math.floor(_index);
 
 		// Get current and next values with proper wrapping using modulo (not remainder)
-		const currIndex = Math.floor(modulo(indexFloor, arr.length));
+		const currIndex = modulo(indexFloor, arr.length);
 		// Since currIndex is guaranteed to be positive 0..len-1, we can use simple %
 		const nextIndex = (currIndex + 1) % arr.length;
 
