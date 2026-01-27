@@ -58,6 +58,7 @@ class TransformFactory {
 	 * Inject a single method for a transform.
 	 */
 	private _injectMethod(prototype: SynthSourcePrototype, transform: TransformDefinition): void {
+		const SynthSourceCtor = this._synthSourceClass;
 		const { name, inputs, type } = transform;
 
 		// Handle combine and combineCoord types specially (they take a source as first arg)
@@ -67,7 +68,20 @@ class TransformFactory {
 				source: unknown,
 				...args: SynthParameterValue[]
 			) {
-				return this.addCombineTransform(name, source, resolveArgs(inputs, args));
+				let actualSource = source;
+
+				// If source is a primitive (not a SynthSource), wrap it in a solid() source
+				if (SynthSourceCtor && !(source instanceof SynthSourceCtor)) {
+					const wrapper = new SynthSourceCtor();
+					// solid() expects 4 arguments (r, g, b, a). Map undefined to null.
+					// We pass the source as the first argument (red/value), and null for others.
+					// This relies on solid() handling single-value inputs appropriately.
+					const solidArgs = [source as SynthParameterValue, null, null, null];
+					wrapper.addTransform('solid', solidArgs);
+					actualSource = wrapper;
+				}
+
+				return this.addCombineTransform(name, actualSource, resolveArgs(inputs, args));
 			};
 		} else {
 			// Standard transform - just takes parameter values

@@ -700,21 +700,21 @@ export interface ISynthSource {
 	 *   .add(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
 	 * ```
 	 */
-	add(source: ISynthSource, amount?: SynthParameterValue): this;
+	add(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
 	/**
 	 * Subtract another source.
 	 * @param source - Source to subtract
 	 * @param amount - Blend amount (default: 0.5)
 	 */
-	sub(source: ISynthSource, amount?: SynthParameterValue): this;
+	sub(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
 	/**
 	 * Multiply with another source.
 	 * @param source - Source to multiply
 	 * @param amount - Blend amount (default: 0.5)
 	 */
-	mult(source: ISynthSource, amount?: SynthParameterValue): this;
+	mult(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
 	/**
 	 * Blend with another source.
@@ -729,7 +729,7 @@ export interface ISynthSource {
 	 *   .blend(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
 	 * ```
 	 */
-	blend(source: ISynthSource, amount?: SynthParameterValue): this;
+	blend(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
 	/**
 	 * Difference with another source.
@@ -740,7 +740,7 @@ export interface ISynthSource {
 	 * osc(1, 0.1, 2).diff(osc(1, 0.5, 5))
 	 * ```
 	 */
-	diff(source: ISynthSource): this;
+	diff(source: ISynthSource | SynthParameterValue): this;
 
 	/**
 	 * Layer another source on top.
@@ -753,7 +753,7 @@ export interface ISynthSource {
 	 *   .cellColor(osc(30).layer(osc(15).rotate(1).luma()).invert())
 	 * ```
 	 */
-	layer(source: ISynthSource): this;
+	layer(source: ISynthSource | SynthParameterValue): this;
 
 	/**
 	 * Mask using another source.
@@ -765,7 +765,7 @@ export interface ISynthSource {
 	 * gradient(5).mask(voronoi()).invert([0, 1])
 	 * ```
 	 */
-	mask(source: ISynthSource): this;
+	mask(source: ISynthSource | SynthParameterValue): this;
 
 	/**
 	 * Modulate coordinates using another source.
@@ -778,7 +778,7 @@ export interface ISynthSource {
 	 *     .modulate(noise().add(gradient(), -1), 1)
 	 * ```
 	 */
-	modulate(source: ISynthSource, amount?: SynthParameterValue): this;
+	modulate(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
 	/**
 	 * Modulate scale using another source.
@@ -793,7 +793,7 @@ export interface ISynthSource {
 	 * ```
 	 */
 	modulateScale(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		multiple?: SynthParameterValue,
 		offset?: SynthParameterValue
 	): this;
@@ -811,7 +811,7 @@ export interface ISynthSource {
 	 * ```
 	 */
 	modulateRotate(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		multiple?: SynthParameterValue,
 		offset?: SynthParameterValue
 	): this;
@@ -828,7 +828,7 @@ export interface ISynthSource {
 	 * ```
 	 */
 	modulatePixelate(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		multiple?: SynthParameterValue,
 		offset?: SynthParameterValue
 	): this;
@@ -844,7 +844,7 @@ export interface ISynthSource {
 	 *     .modulateKaleid(osc(16).kaleid(999), 1)
 	 * ```
 	 */
-	modulateKaleid(source: ISynthSource, nSides?: SynthParameterValue): this;
+	modulateKaleid(source: ISynthSource | SynthParameterValue, nSides?: SynthParameterValue): this;
 
 	/**
 	 * Modulate X scroll using another source.
@@ -858,7 +858,7 @@ export interface ISynthSource {
 	 * ```
 	 */
 	modulateScrollX(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		scrollX?: SynthParameterValue,
 		speed?: SynthParameterValue
 	): this;
@@ -875,7 +875,7 @@ export interface ISynthSource {
 	 * ```
 	 */
 	modulateScrollY(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		scrollY?: SynthParameterValue,
 		speed?: SynthParameterValue
 	): this;
@@ -894,7 +894,7 @@ export interface ISynthSource {
 	 * ```
 	 */
 	modulateRepeat(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		repeatX?: SynthParameterValue,
 		repeatY?: SynthParameterValue,
 		offsetX?: SynthParameterValue,
@@ -913,7 +913,7 @@ export interface ISynthSource {
 	 * ```
 	 */
 	modulateRepeatX(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		reps?: SynthParameterValue,
 		offset?: SynthParameterValue
 	): this;
@@ -930,7 +930,7 @@ export interface ISynthSource {
 	 * ```
 	 */
 	modulateRepeatY(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		reps?: SynthParameterValue,
 		offset?: SynthParameterValue
 	): this;
@@ -945,7 +945,7 @@ export interface ISynthSource {
 	 * src().modulateHue(src().scale(1.01), 1.0)
 	 * ```
 	 */
-	modulateHue(source: ISynthSource, amount?: SynthParameterValue): this;
+	modulateHue(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
 	// ─────────────────────────────────────────────────────────────────────────
 	// Internal methods (used by TransformFactory and declaration merging)

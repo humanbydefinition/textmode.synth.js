@@ -3,21 +3,28 @@
 # Function: paint()
 
 ```ts
-function paint(source): SynthSource;
+function paint(
+   rOrSource,
+   g?,
+   b?,
+   a?): SynthSource;
 ```
 
 Create a synth source with both character and cell colors defined.
 
 This function creates a SynthSource where both the character foreground color
 and the cell background color are driven by the same source pattern.
-This is a convenience function equivalent to calling both `charColor()` and
-`cellColor()` with the same source, allowing for easy pixel art without visible characters.
+
+Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
 
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | [`SynthSource`](../classes/SynthSource.md) | A SynthSource producing color values for both character and cell colors |
+| `rOrSource` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | A SynthSource producing color values, or Red channel (0-1) |
+| `g?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Green channel (0-1) |
+| `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blue channel (0-1) |
+| `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Alpha channel (0-1) |
 
 ## Returns
 
@@ -34,13 +41,13 @@ const t = textmode.create({
   plugins: [SynthPlugin]
 });
 
-// Use same pattern for both foreground and background colors
+// Use solid color for everything (RGBA overload)
 t.layers.base.synth(
-  paint(osc(10, 0.1).mult(voronoi(5)))
+  paint(1, 1, 1)
 );
 
-// Paint with gradient
+// Use same pattern for both foreground and background
 t.layers.base.synth(
-  paint(gradient(0.5))
+  paint(osc(10, 0.1))
 );
 ```
