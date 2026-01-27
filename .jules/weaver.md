@@ -52,3 +52,9 @@ ENTRY FORMAT:
 **Risk:** Low. The logic was identical, just differing in how the updater function was created.
 **Action:** Extracted `_createDynamicUniform` method in `UniformManager` to encapsulate the shared logic.
 **Learning:** Even within a single class, complex object creation logic often gets copy-pasted. Extracting it simplifies the main logic flow and reduces bundle size slightly (~150 bytes source).
+
+## Entry #7 — Removed Unreachable Vector Handling Logic
+**Pattern:** Dead code in `UniformManager.ts` attempted to handle static vector arrays (`number[]`) after a greedy check for modulated arrays (`isModulatedArray`) had already captured them.
+**Risk:** Zero risk. The code was unreachable.
+**Action:** Removed the unreachable block.
+**Learning:** Overly broad type guards (like `isModulatedArray` matching any `number[]`) can unintentionally shadow subsequent logic. Removing the shadowed dead code reduced bundle size by ~0.4kB uncompressed.

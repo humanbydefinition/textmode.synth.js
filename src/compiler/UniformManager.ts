@@ -54,22 +54,6 @@ export class UniformManager {
 			return { glslValue: formatNumber(value) };
 		}
 
-		// Array value (vectors)
-		if (Array.isArray(value) && typeof value[0] === 'number') {
-			const nums = value as number[];
-			if (nums.length === 2) {
-				return { glslValue: `vec2(${formatNumber(nums[0])}, ${formatNumber(nums[1])})` };
-			} else if (nums.length === 3) {
-				return {
-					glslValue: `vec3(${formatNumber(nums[0])}, ${formatNumber(nums[1])}, ${formatNumber(nums[2])})`,
-				};
-			} else if (nums.length === 4) {
-				return {
-					glslValue: `vec4(${formatNumber(nums[0])}, ${formatNumber(nums[1])}, ${formatNumber(nums[2])}, ${formatNumber(nums[3])})`,
-				};
-			}
-		}
-
 		// Null or undefined - use default
 		if (value === null || value === undefined) {
 			return this.processDefault(input);
