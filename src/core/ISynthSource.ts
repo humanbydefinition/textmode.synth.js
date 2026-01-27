@@ -251,6 +251,11 @@ export interface ISynthSource {
 	): this;
 
 	/**
+	 * Generate a solid grayscale color.
+	 * @param gray - Grayscale value (0-1)
+	 */
+	solid(gray: SynthParameterValue): this;
+	/**
 	 * Generate a solid color.
 	 * @param r - Red channel (0-1, default: 0.0)
 	 * @param g - Green channel (0-1, default: 0.0)
@@ -556,6 +561,11 @@ export interface ISynthSource {
 	 */
 	thresh(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
 
+	/**
+	 * Multiply all channels by a scalar value (grayscale).
+	 * @param gray - Scalar multiplier
+	 */
+	color(gray: SynthParameterValue): this;
 	/**
 	 * Colorize a grayscale source or multiply an existing color source.
 	 *

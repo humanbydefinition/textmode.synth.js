@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import '../../src/bootstrap';
-import { osc, noise } from '../../src/api';
-import { SynthSource } from '../../src/core/SynthSource';
+import { osc, noise, solid } from '../../src/api';
 
 describe('API Overloads', () => {
     it('should support primitive values in combine transforms (add)', () => {
@@ -14,7 +13,8 @@ describe('API Overloads', () => {
         const nested = nestedSources.get(1); // 0 is osc, 1 is add which has a nested source
         expect(nested).toBeDefined();
         expect(nested?.transforms[0].name).toBe('solid');
-        expect(nested?.transforms[0].userArgs).toEqual([0.5, null, null, null]);
+        // Expect duplicated args for scalar behavior
+        expect(nested?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, null]);
     });
 
     it('should support primitive values in combineCoord transforms (modulate)', () => {
@@ -26,7 +26,8 @@ describe('API Overloads', () => {
         const nested = nestedSources.get(1);
         expect(nested).toBeDefined();
         expect(nested?.transforms[0].name).toBe('solid');
-        expect(nested?.transforms[0].userArgs).toEqual([0.1, null, null, null]);
+        // Expect duplicated args for scalar behavior
+        expect(nested?.transforms[0].userArgs).toEqual([0.1, 0.1, 0.1, null]);
     });
 
     it('should support array values in combine transforms (mult)', () => {
@@ -56,5 +57,19 @@ describe('API Overloads', () => {
         expect(source.colorSource?.transforms[0].name).toBe('solid');
         // paint passes all args to solid
         expect(source.colorSource?.transforms[0].userArgs).toEqual([1, 0, 0, 1]);
+    });
+
+    it('should support solid(gray) overload', () => {
+        const source = solid(0.5);
+        expect(source.transforms[0].name).toBe('solid');
+        // Expect duplicated args (plus default alpha)
+        expect(source.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, 1]);
+    });
+
+    it('should support color(gray) overload', () => {
+        const source = osc().color(0.5);
+        expect(source.transforms[1].name).toBe('color');
+        // Expect duplicated args (plus default alpha)
+        expect(source.transforms[1].userArgs).toEqual([0.5, 0.5, 0.5, 1]);
     });
 });

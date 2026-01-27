@@ -75,10 +75,13 @@ class TransformFactory {
 				// If source is a primitive (not a SynthSource), wrap it in a solid() source
 				if (SynthSourceCtor && !(source instanceof SynthSourceCtor)) {
 					const wrapper = new SynthSourceCtor();
-					// solid() expects 4 arguments (r, g, b, a). Map undefined to null.
-					// We pass the source as the first argument (red/value), and null for others.
-					// This relies on solid() handling single-value inputs appropriately.
-					const solidArgs = [source as SynthParameterValue, null, null, null];
+					// solid() expects 4 arguments (r, g, b, a).
+					// If source is a number, replicate it to RGB (grayscale/scalar).
+					// Otherwise pass as first argument.
+					const val = source as SynthParameterValue;
+					const solidArgs =
+						typeof val === 'number' ? [val, val, val, null] : [val, null, null, null];
+
 					wrapper.addTransform('solid', solidArgs);
 					actualSource = wrapper;
 				}
@@ -87,13 +90,32 @@ class TransformFactory {
 			};
 		} else {
 			// Standard transform - just takes parameter values
+			const factory = this;
 			prototype[name] = function (
 				this: SynthSourcePrototype,
 				...args: SynthParameterValue[]
 			) {
+				args = factory._expandColorArgs(name, args);
 				return this.addTransform(name, resolveArgs(inputs, args));
 			};
 		}
+	}
+
+	/**
+	 * Expands single scalar arguments for color transforms into RGB triplets.
+	 * e.g., solid(0.5) -> solid(0.5, 0.5, 0.5)
+	 */
+	private _expandColorArgs(name: string, args: SynthParameterValue[]): SynthParameterValue[] {
+		if (
+			(name === 'solid' || name === 'color') &&
+			args.length === 1 &&
+			typeof args[0] === 'number'
+		) {
+			const val = args[0];
+			// Use [val, val, val] and let defaults handle the rest (alpha)
+			return [val, val, val];
+		}
+		return args;
 	}
 
 	/**
@@ -117,6 +139,7 @@ class TransformFactory {
 
 				functions[name] = (...args: SynthParameterValue[]) => {
 					const source = new SynthSourceCtor();
+					args = this._expandColorArgs(name, args);
 					return source.addTransform(name, resolveArgs(inputs, args)) as SynthSource;
 				};
 			}
@@ -153,6 +176,7 @@ class TransformFactory {
 
 			this._generatedFunctions[name] = (...args: SynthParameterValue[]) => {
 				const source = new SynthSourceCtor();
+				args = this._expandColorArgs(name, args);
 				return source.addTransform(name, resolveArgs(inputs, args)) as SynthSource;
 			};
 		}
