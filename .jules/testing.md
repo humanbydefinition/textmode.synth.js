@@ -41,3 +41,9 @@
 **Pattern:** missing coverage
 **Action:** Created `tests/compiler/FeedbackTracker.test.ts` covering state tracking, accumulation, and resetting behavior.
 **Learning:** State wrappers around pure logic (like `FeedbackTracker` around `channels.ts`) are excellent test candidates because they isolate state management bugs from logic errors.
+
+## Entry #8 — TransformDefinition Coverage
+**Finding:** `TransformDefinition` in `src/transforms` lacked tests for `processTransform`, a pure function generating critical GLSL signatures.
+**Pattern:** missing coverage
+**Action:** Created `tests/transforms/TransformDefinition.test.ts` covering `processTransform` for all transform types and `defineTransform`.
+**Learning:** Testing code-generation functions (like GLSL string builders) ensures consistent output format and prevents subtle syntax errors in generated code.
