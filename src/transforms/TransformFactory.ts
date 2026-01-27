@@ -9,6 +9,7 @@ import type { SynthParameterValue } from '../core/types';
 export interface SynthSourcePrototype {
 	addTransform(name: string, userArgs: SynthParameterValue[]): unknown;
 	addCombineTransform(name: string, source: unknown, userArgs: SynthParameterValue[]): unknown;
+	[key: string]: unknown;
 }
 
 /**
@@ -62,7 +63,7 @@ class TransformFactory {
 
 		// Handle combine and combineCoord types specially (they take a source as first arg)
 		if (type === 'combine' || type === 'combineCoord') {
-			(prototype as unknown as Record<string, unknown>)[name] = function (
+			prototype[name] = function (
 				this: SynthSourcePrototype,
 				source: unknown,
 				...args: SynthParameterValue[]
@@ -71,7 +72,7 @@ class TransformFactory {
 			};
 		} else {
 			// Standard transform - just takes parameter values
-			(prototype as unknown as Record<string, unknown>)[name] = function (
+			prototype[name] = function (
 				this: SynthSourcePrototype,
 				...args: SynthParameterValue[]
 			) {
