@@ -129,11 +129,6 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 	synthContext.bpm = state.bpm ?? getGlobalBpm();
 	synthContext.onError = state.onDynamicError;
 
-	// Initialize resolution array if needed
-	if (!state.resolutionArray) {
-		state.resolutionArray = [0, 0];
-	}
-
 	// Evaluate dynamic parameters with graceful error handling.
 	// On error: report via callback, use fallback value, continue rendering.
 	state.dynamicValues.clear();
@@ -188,10 +183,7 @@ function applySynthUniforms(
 	feedbackBuffer: TextmodeFramebuffer | null
 ) {
 	textmodifier.setUniform('time', ctx.time);
-
-	state.resolutionArray[0] = ctx.cols;
-	state.resolutionArray[1] = ctx.rows;
-	textmodifier.setUniform('resolution', state.resolutionArray);
+	textmodifier.setUniform('resolution', [ctx.cols, ctx.rows]);
 
 	for (const [name, value] of state.dynamicValues) {
 		textmodifier.setUniform(name, value);
