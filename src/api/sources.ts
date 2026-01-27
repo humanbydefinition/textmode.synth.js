@@ -330,6 +330,12 @@ export function solid(
     b?: number | number[] | ((ctx: SynthContext) => number),
     a?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
+    // Handle overload for solid(gray)
+    // If only first argument is provided and it's a number, pass it as single argument
+    // so the underlying factory can replicate it to RGB.
+    if (r !== undefined && g === undefined && b === undefined && a === undefined && typeof r === 'number') {
+        return generatedFunctions['solid'](r);
+    }
     return generatedFunctions['solid'](r ?? null, g ?? null, b ?? null, a ?? null);
 }
 

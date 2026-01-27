@@ -75,10 +75,13 @@ class TransformFactory {
 				// If source is a primitive (not a SynthSource), wrap it in a solid() source
 				if (SynthSourceCtor && !(source instanceof SynthSourceCtor)) {
 					const wrapper = new SynthSourceCtor();
-					// solid() expects 4 arguments (r, g, b, a). Map undefined to null.
-					// We pass the source as the first argument (red/value), and null for others.
-					// This relies on solid() handling single-value inputs appropriately.
-					const solidArgs = [source as SynthParameterValue, null, null, null];
+					// solid() expects 4 arguments (r, g, b, a).
+					// If source is a number, replicate it to RGB (grayscale/scalar).
+					// Otherwise pass as first argument.
+					const val = source as SynthParameterValue;
+					const solidArgs =
+						typeof val === 'number' ? [val, val, val, null] : [val, null, null, null];
+
 					wrapper.addTransform('solid', solidArgs);
 					actualSource = wrapper;
 				}
@@ -91,6 +94,18 @@ class TransformFactory {
 				this: SynthSourcePrototype,
 				...args: SynthParameterValue[]
 			) {
+				// Handle overload for solid(gray) and color(gray)
+				// If single number argument is provided, replicate it to RGB
+				if (
+					(name === 'solid' || name === 'color') &&
+					args.length === 1 &&
+					typeof args[0] === 'number'
+				) {
+					const val = args[0];
+					// Use [val, val, val] and let defaults handle the rest (alpha)
+					args = [val, val, val];
+				}
+
 				return this.addTransform(name, resolveArgs(inputs, args));
 			};
 		}
@@ -117,6 +132,13 @@ class TransformFactory {
 
 				functions[name] = (...args: SynthParameterValue[]) => {
 					const source = new SynthSourceCtor();
+
+					// Handle overload for solid(gray)
+					if (name === 'solid' && args.length === 1 && typeof args[0] === 'number') {
+						const val = args[0];
+						args = [val, val, val];
+					}
+
 					return source.addTransform(name, resolveArgs(inputs, args)) as SynthSource;
 				};
 			}
@@ -153,6 +175,13 @@ class TransformFactory {
 
 			this._generatedFunctions[name] = (...args: SynthParameterValue[]) => {
 				const source = new SynthSourceCtor();
+
+				// Handle overload for solid(gray)
+				if (name === 'solid' && args.length === 1 && typeof args[0] === 'number') {
+					const val = args[0];
+					args = [val, val, val];
+				}
+
 				return source.addTransform(name, resolveArgs(inputs, args)) as SynthSource;
 			};
 		}
