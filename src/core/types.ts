@@ -156,6 +156,12 @@ export interface LayerSynthState {
 	 * Reusable synth context object to avoid per-frame allocation.
 	 */
 	synthContext?: SynthContext;
+
+	/**
+	 * Whether the layer/plugin state has been disposed.
+	 * Used to prevent race conditions during async operations (e.g. compilation).
+	 */
+	isDisposed?: boolean;
 }
 
 /**
