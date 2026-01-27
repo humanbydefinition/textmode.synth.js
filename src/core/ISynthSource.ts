@@ -646,7 +646,6 @@ export interface ISynthSource {
 	 *
 	 * @example
 	 * ```typescript
-	 * // Create textmode.js instance with `SynthPlugin`
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -660,7 +659,6 @@ export interface ISynthSource {
 	 *     .sub(shape(100, 0.3))
 	 * );
 	 *
-	 * // Always make sure the sketch canvas dimensions are equal to the window size
 	 * t.windowResized(() => {
 	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
 	 * });
@@ -675,7 +673,6 @@ export interface ISynthSource {
 	 *
 	 * @example
 	 * ```typescript
-	 * // Create textmode.js instance with `SynthPlugin`
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -690,7 +687,6 @@ export interface ISynthSource {
 	 *     .color(1, 0.5, 0.2)
 	 * );
 	 *
-	 * // Always make sure the sketch canvas dimensions are equal to the window size
 	 * t.windowResized(() => {
 	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
 	 * });
