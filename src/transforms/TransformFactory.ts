@@ -90,25 +90,32 @@ class TransformFactory {
 			};
 		} else {
 			// Standard transform - just takes parameter values
+			const factory = this;
 			prototype[name] = function (
 				this: SynthSourcePrototype,
 				...args: SynthParameterValue[]
 			) {
-				// Handle overload for solid(gray) and color(gray)
-				// If single number argument is provided, replicate it to RGB
-				if (
-					(name === 'solid' || name === 'color') &&
-					args.length === 1 &&
-					typeof args[0] === 'number'
-				) {
-					const val = args[0];
-					// Use [val, val, val] and let defaults handle the rest (alpha)
-					args = [val, val, val];
-				}
-
+				args = factory._expandColorArgs(name, args);
 				return this.addTransform(name, resolveArgs(inputs, args));
 			};
 		}
+	}
+
+	/**
+	 * Expands single scalar arguments for color transforms into RGB triplets.
+	 * e.g., solid(0.5) -> solid(0.5, 0.5, 0.5)
+	 */
+	private _expandColorArgs(name: string, args: SynthParameterValue[]): SynthParameterValue[] {
+		if (
+			(name === 'solid' || name === 'color') &&
+			args.length === 1 &&
+			typeof args[0] === 'number'
+		) {
+			const val = args[0];
+			// Use [val, val, val] and let defaults handle the rest (alpha)
+			return [val, val, val];
+		}
+		return args;
 	}
 
 	/**
@@ -132,13 +139,7 @@ class TransformFactory {
 
 				functions[name] = (...args: SynthParameterValue[]) => {
 					const source = new SynthSourceCtor();
-
-					// Handle overload for solid(gray)
-					if (name === 'solid' && args.length === 1 && typeof args[0] === 'number') {
-						const val = args[0];
-						args = [val, val, val];
-					}
-
+					args = this._expandColorArgs(name, args);
 					return source.addTransform(name, resolveArgs(inputs, args)) as SynthSource;
 				};
 			}
@@ -175,13 +176,7 @@ class TransformFactory {
 
 			this._generatedFunctions[name] = (...args: SynthParameterValue[]) => {
 				const source = new SynthSourceCtor();
-
-				// Handle overload for solid(gray)
-				if (name === 'solid' && args.length === 1 && typeof args[0] === 'number') {
-					const val = args[0];
-					args = [val, val, val];
-				}
-
+				args = this._expandColorArgs(name, args);
 				return source.addTransform(name, resolveArgs(inputs, args)) as SynthSource;
 			};
 		}
