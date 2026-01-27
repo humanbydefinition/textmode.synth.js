@@ -35,6 +35,15 @@ describe('TransformFactory', () => {
 		MockSynthSource = class implements SynthSourcePrototype {
 			[key: string]: unknown;
 
+			static from(value: unknown): unknown {
+				if (value instanceof MockSynthSource) {
+					return value;
+				}
+				const source = new MockSynthSource();
+				// For testing purposes, we assume primitive wrapping just returns a new source
+				return source;
+			}
+
 			addTransform(name: string, userArgs: SynthParameterValue[]): unknown {
 				return { name, args: userArgs, type: 'transform' };
 			}

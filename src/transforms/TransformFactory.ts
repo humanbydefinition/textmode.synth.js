@@ -73,17 +73,11 @@ class TransformFactory {
 				let actualSource = source;
 
 				// If source is a primitive (not a SynthSource), wrap it in a solid() source
-				if (SynthSourceCtor && !(source instanceof SynthSourceCtor)) {
-					const wrapper = new SynthSourceCtor();
-					// solid() expects 4 arguments (r, g, b, a).
-					// If source is a number, replicate it to RGB (grayscale/scalar).
-					// Otherwise pass as first argument.
-					const val = source as SynthParameterValue;
-					const solidArgs =
-						typeof val === 'number' ? [val, val, val, null] : [val, null, null, null];
-
-					wrapper.addTransform('solid', solidArgs);
-					actualSource = wrapper;
+				// We use SynthSource.from(), but accessed via the constructor to avoid circular dependency
+				if (SynthSourceCtor) {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					const Ctor = SynthSourceCtor as any;
+					actualSource = Ctor.from(source);
 				}
 
 				return this.addCombineTransform(name, actualSource, resolveArgs(inputs, args));

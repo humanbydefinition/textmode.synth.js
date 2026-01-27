@@ -115,6 +115,28 @@ export class SynthSource {
 		return this.addTransform('src', []);
 	}
 
+	/**
+	 * Create a SynthSource from a primitive value or existing source.
+	 *
+	 * - If value is a SynthSource, returns it directly.
+	 * - If value is a number, creates a solid grayscale source (r=g=b=val).
+	 * - If value is another primitive, creates a solid source (r=val).
+	 */
+	public static from(value: SynthParameterValue | ISynthSource): SynthSource {
+		if (value instanceof SynthSource) {
+			return value;
+		}
+
+		const source = new SynthSource();
+		const val = value as SynthParameterValue;
+		// If only a single number is provided, replicate it to RGB for grayscale consistency
+		const args =
+			typeof val === 'number' ? [val, val, val, null] : [val, null, null, null];
+		source.addTransform('solid', args as SynthParameterValue[]);
+
+		return source;
+	}
+
 	public charMap(chars: string): this {
 		const charArray = Array.from(chars);
 		const indices: number[] = [];
@@ -134,17 +156,18 @@ export class SynthSource {
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
 	): SynthSource {
-		if (rOrSource instanceof SynthSource) {
-			return rOrSource;
+		// Multi-argument case (explicit color components)
+		if (g !== undefined || b !== undefined || a !== undefined) {
+			const source = new SynthSource();
+			const args = [rOrSource as SynthParameterValue, g, b, a].map((v) =>
+				v === undefined ? null : v
+			);
+			source.addTransform('solid', args);
+			return source;
 		}
-		const source = new SynthSource();
-		// If only a single number is provided, replicate it to RGB for grayscale consistency
-		const args =
-			typeof rOrSource === 'number' && g === undefined && b === undefined && a === undefined
-				? [rOrSource, rOrSource, rOrSource, null]
-				: [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
-		source.addTransform('solid', args as SynthParameterValue[]);
-		return source;
+
+		// Single argument case - delegate to static factory
+		return SynthSource.from(rOrSource);
 	}
 
 	public charColor(
