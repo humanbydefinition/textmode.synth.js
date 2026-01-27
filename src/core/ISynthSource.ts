@@ -200,6 +200,12 @@ export interface ISynthSource {
 	 * @param frequency - Frequency of the oscillation (default: 60.0)
 	 * @param sync - Synchronization offset (default: 0.1)
 	 * @param offset - Phase offset (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Oscillate with frequency 20
+	 * osc(20, 0.1, 0)
+	 * ```
 	 */
 	osc(
 		frequency?: SynthParameterValue,
@@ -211,6 +217,12 @@ export interface ISynthSource {
 	 * Generate Perlin noise patterns.
 	 * @param scale - Scale of the noise pattern (default: 10.0)
 	 * @param speed - Animation speed (default: 0.1)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Noise with scale 10 and default speed
+	 * noise(10, 0.1)
+	 * ```
 	 */
 	noise(scale?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -219,6 +231,12 @@ export interface ISynthSource {
 	 * @param scale - Scale of voronoi cells (default: 5.0)
 	 * @param speed - Animation speed (default: 0.3)
 	 * @param blending - Blending between cell regions (default: 0.3)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Voronoi with high blending
+	 * voronoi(5, 0.3, 0.9)
+	 * ```
 	 */
 	voronoi(
 		scale?: SynthParameterValue,
@@ -242,6 +260,15 @@ export interface ISynthSource {
 	 * @param sides - Number of sides (default: 3)
 	 * @param radius - Radius of the shape (default: 0.3)
 	 * @param smoothing - Edge smoothing amount (default: 0.01)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Triangle
+	 * shape(3)
+	 *
+	 * // Circle (high number of sides)
+	 * shape(100)
+	 * ```
 	 */
 	shape(
 		sides?: SynthParameterValue,
@@ -255,6 +282,12 @@ export interface ISynthSource {
 	 * @param g - Green channel (0-1, default: 0.0)
 	 * @param b - Blue channel (0-1, default: 0.0)
 	 * @param a - Alpha channel (0-1, default: 1.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Solid red
+	 * solid(1, 0, 0)
+	 * ```
 	 */
 	solid(
 		r?: SynthParameterValue,
@@ -552,6 +585,12 @@ export interface ISynthSource {
 	 * Apply hard threshold.
 	 * @param threshold - Threshold value (default: 0.5)
 	 * @param tolerance - Tolerance range (default: 0.04)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Threshold noise
+	 * noise(5).thresh(0.5, 0.1)
+	 * ```
 	 */
 	thresh(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
 
@@ -628,6 +667,12 @@ export interface ISynthSource {
 	 * @param g - Green channel shift (default: 0.0)
 	 * @param b - Blue channel shift (default: 0.0)
 	 * @param a - Alpha channel shift (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Shift red channel
+	 * osc(10).shift(0.5, 0, 0)
+	 * ```
 	 */
 	shift(
 		r?: SynthParameterValue,

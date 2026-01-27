@@ -51,6 +51,13 @@ Generate oscillating patterns using sine waves.
 
 `this`
 
+#### Example
+
+```typescript
+// Oscillate with frequency 20
+osc(20, 0.1, 0)
+```
+
 #### Inherited from
 
 ```ts
@@ -77,6 +84,13 @@ Generate Perlin noise patterns.
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+// Noise with scale 10 and default speed
+noise(10, 0.1)
+```
 
 #### Inherited from
 
@@ -108,6 +122,13 @@ Generate voronoi patterns.
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+// Voronoi with high blending
+voronoi(5, 0.3, 0.9)
+```
 
 #### Inherited from
 
@@ -172,6 +193,16 @@ Generate geometric shapes (polygons).
 
 `this`
 
+#### Example
+
+```typescript
+// Triangle
+shape(3)
+
+// Circle (high number of sides)
+shape(100)
+```
+
 #### Inherited from
 
 ```ts
@@ -204,6 +235,13 @@ Generate a solid color.
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+// Solid red
+solid(1, 0, 0)
+```
 
 #### Inherited from
 
@@ -908,6 +946,13 @@ Apply hard threshold.
 
 `this`
 
+#### Example
+
+```typescript
+// Threshold noise
+noise(5).thresh(0.5, 0.1)
+```
+
 #### Inherited from
 
 ```ts
@@ -1090,6 +1135,13 @@ Shift color channels by adding offset values.
 
 `this`
 
+#### Example
+
+```typescript
+// Shift red channel
+osc(10).shift(0.5, 0, 0)
+```
+
 #### Inherited from
 
 ```ts
@@ -1269,7 +1321,6 @@ Subtract another source.
 #### Example
 
 ```typescript
-// Create textmode.js instance with `SynthPlugin`
 const t = textmode.create({
   width: window.innerWidth,
   height: window.innerHeight,
@@ -1283,7 +1334,6 @@ t.layers.base.synth(
     .sub(shape(100, 0.3))
 );
 
-// Always make sure the sketch canvas dimensions are equal to the window size
 t.windowResized(() => {
   t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
@@ -1319,7 +1369,6 @@ Multiply with another source.
 #### Example
 
 ```typescript
-// Create textmode.js instance with `SynthPlugin`
 const t = textmode.create({
   width: window.innerWidth,
   height: window.innerHeight,
@@ -1334,7 +1383,6 @@ t.layers.base.synth(
     .color(1, 0.5, 0.2)
 );
 
-// Always make sure the sketch canvas dimensions are equal to the window size
 t.windowResized(() => {
   t.resizeCanvas(window.innerWidth, window.innerHeight);
 });

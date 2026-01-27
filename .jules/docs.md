@@ -35,3 +35,9 @@ t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
 ```
+
+## Entry #4 — Missing Examples for Core Methods
+**Finding:** Several core methods (`osc`, `noise`, `voronoi`, `shape`, `solid`, `thresh`, `shift`) in `ISynthSource` lacked usage examples.
+**Pattern:** Missing example blocks
+**Action:** Added `@example` blocks to `src/core/ISynthSource.ts` for these methods, using concise chain syntax consistent with existing interface examples.
+**Learning:** `ISynthSource` interface documentation is the primary reference shown in IDEs. Even if standalone function exports have examples, the interface methods (used for chaining) need their own examples to provide immediate context during development.
