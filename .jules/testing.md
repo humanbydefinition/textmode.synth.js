@@ -35,3 +35,9 @@
 **Pattern:** missing coverage
 **Action:** Created `tests/compiler/channels.test.ts` covering `getTextureChannel` and `updateChannelUsage` for all compilation targets.
 **Learning:** Pure functions like those in `channels.ts` are high-value/low-cost targets for coverage as they require no complex mocking or state management.
+
+## Entry #7 — FeedbackTracker Coverage
+**Finding:** `FeedbackTracker` in `src/compiler` was a stateful class critical for compiling feedback loops but had no tests.
+**Pattern:** missing coverage
+**Action:** Created `tests/compiler/FeedbackTracker.test.ts` covering state tracking, accumulation, and resetting behavior.
+**Learning:** State wrappers around pure logic (like `FeedbackTracker` around `channels.ts`) are excellent test candidates because they isolate state management bugs from logic errors.
