@@ -5,7 +5,28 @@
  * brightness, contrast, saturation, hue shifting, and color manipulation.
  */
 
-import { defineTransform, type TransformDefinition } from '../TransformDefinition';
+import {
+	defineTransform,
+	type TransformDefinition,
+	type TransformInput,
+} from '../TransformDefinition';
+
+const CHANNEL_INPUTS: TransformInput[] = [
+	{ name: 'scale', type: 'float', default: 1.0 },
+	{ name: 'offset', type: 'float', default: 0.0 },
+];
+
+function createChannelTransform(channel: 'r' | 'g' | 'b'): TransformDefinition {
+	return defineTransform({
+		name: channel,
+		type: 'color',
+		inputs: CHANNEL_INPUTS,
+		glsl: `
+	return vec4(_c0.${channel} * scale + offset);
+`,
+		description: `Extract ${channel === 'r' ? 'red' : channel === 'g' ? 'green' : 'blue'} channel`,
+	});
+}
 
 export const brightness = defineTransform({
 	name: 'brightness',
@@ -137,44 +158,11 @@ export const color = defineTransform({
 	description: 'Multiply by color',
 });
 
-export const r = defineTransform({
-	name: 'r',
-	type: 'color',
-	inputs: [
-		{ name: 'scale', type: 'float', default: 1.0 },
-		{ name: 'offset', type: 'float', default: 0.0 },
-	],
-	glsl: `
-	return vec4(_c0.r * scale + offset);
-`,
-	description: 'Extract red channel',
-});
+export const r = createChannelTransform('r');
 
-export const g = defineTransform({
-	name: 'g',
-	type: 'color',
-	inputs: [
-		{ name: 'scale', type: 'float', default: 1.0 },
-		{ name: 'offset', type: 'float', default: 0.0 },
-	],
-	glsl: `
-	return vec4(_c0.g * scale + offset);
-`,
-	description: 'Extract green channel',
-});
+export const g = createChannelTransform('g');
 
-export const b = defineTransform({
-	name: 'b',
-	type: 'color',
-	inputs: [
-		{ name: 'scale', type: 'float', default: 1.0 },
-		{ name: 'offset', type: 'float', default: 0.0 },
-	],
-	glsl: `
-	return vec4(_c0.b * scale + offset);
-`,
-	description: 'Extract blue channel',
-});
+export const b = createChannelTransform('b');
 
 export const shift = defineTransform({
 	name: 'shift',

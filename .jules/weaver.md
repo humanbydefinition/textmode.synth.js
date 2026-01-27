@@ -40,3 +40,9 @@ ENTRY FORMAT:
 **Risk:** Low. Pure logic refactor.
 **Action:** Moved logic to `_packChar` and `_unpackChar` in `UTILITY_FUNCTIONS` (GLSLGenerator).
 **Learning:** Centralizing repetitive GLSL logic into helper functions reduced uncompressed JS bundle size by ~20 bytes, improving maintainability of the binary data protocol.
+
+## Entry #5 — Deduplicated Color Channel Transforms
+**Pattern:** Explicit duplication of `r`, `g`, `b` transforms with identical input structures and GLSL patterns (only channel accessor differed).
+**Risk:** Low. Runtime behavior is identical.
+**Action:** Created `createChannelTransform` helper in `src/transforms/categories/colors.ts` to generate these definitions dynamically.
+**Learning:** For repetitive transforms that only differ by a single property (like a vector component), a factory function significantly reduces source code lines and bundle size (reduced by ~300 bytes).
