@@ -76,20 +76,20 @@ describe('SynthSource', () => {
         source.charColor(0.5);
         expect(source.colorSource).toBeDefined();
         expect(source.colorSource?.transforms[0].name).toBe('solid');
-        // Should expand 0.5 to [0.5, 0.5, 0.5, 1.0]
-        expect(source.colorSource?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, 1.0]);
+        // Should expand 0.5 to [0.5, 0.5, 0.5, null]
+        expect(source.colorSource?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, null]);
 
         // Scalar expansion for cellColor
         source.cellColor(0.2);
         expect(source.cellColorSource).toBeDefined();
         expect(source.cellColorSource?.transforms[0].name).toBe('solid');
-        expect(source.cellColorSource?.transforms[0].userArgs).toEqual([0.2, 0.2, 0.2, 1.0]);
+        expect(source.cellColorSource?.transforms[0].userArgs).toEqual([0.2, 0.2, 0.2, null]);
 
         // Scalar expansion for paint
         const source2 = new SynthSource();
         source2.paint(0.8);
         expect(source2.colorSource).toBeDefined();
-        expect(source2.colorSource?.transforms[0].userArgs).toEqual([0.8, 0.8, 0.8, 1.0]);
-        expect(source2.cellColorSource?.transforms[0].userArgs).toEqual([0.8, 0.8, 0.8, 1.0]);
+        expect(source2.colorSource?.transforms[0].userArgs).toEqual([0.8, 0.8, 0.8, null]);
+        expect(source2.cellColorSource?.transforms[0].userArgs).toEqual([0.8, 0.8, 0.8, null]);
     });
 });
