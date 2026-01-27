@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import '../../src/bootstrap';
 import { osc, noise, solid } from '../../src/api';
-import { SynthSource } from '../../src/core/SynthSource';
 
 describe('API Overloads', () => {
     it('should support primitive values in combine transforms (add)', () => {
