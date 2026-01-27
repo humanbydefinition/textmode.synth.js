@@ -7,11 +7,9 @@ import type { SynthSource } from '../core/SynthSource';
  * Interface for the SynthSource class that will have methods injected.
  * This is used to avoid circular dependencies.
  */
-export interface SynthSourcePrototype {
-	addTransform(name: string, userArgs: SynthParameterValue[]): unknown;
-	addCombineTransform(name: string, source: unknown, userArgs: SynthParameterValue[]): unknown;
+export type SynthSourcePrototype = SynthSource & {
 	[key: string]: unknown;
-}
+};
 
 /**
  * Map of source-type transform names for generator function creation.
@@ -86,7 +84,11 @@ class TransformFactory {
 					actualSource = wrapper;
 				}
 
-				return this.addCombineTransform(name, actualSource, resolveArgs(inputs, args));
+				return this.addCombineTransform(
+					name,
+					actualSource as SynthSource,
+					resolveArgs(inputs, args)
+				);
 			};
 		} else {
 			// Standard transform - just takes parameter values

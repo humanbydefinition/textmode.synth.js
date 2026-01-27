@@ -17,3 +17,9 @@
 **Challenge:** `SynthSourcePrototype` is an interface used for dynamic method injection but lacked an index signature, forcing the use of unsafe casts to "break" the type system to allow assignment of arbitrary methods.
 **Solution:** Added `[key: string]: unknown` to `SynthSourcePrototype`. This accurately reflects the runtime reality that this object acts as a dynamic container for injected transform methods, allowing us to remove the unsafe double casts while keeping the base interface contract intact.
 **Learning:** If an object is intended to be dynamic (like a prototype receiving plugins), explicitly typing it with an index signature is safer and more honest than using `as unknown` to bypass type checks.
+
+## Entry #4 — Strengthening SynthSourcePrototype
+**Pattern:** Loose interface definition (`[key: string]: unknown`) and `unknown` return types.
+**Challenge:** `SynthSourcePrototype` was defined as a loose interface to avoid circular dependencies, resulting in weak types (`unknown`) for core methods like `addTransform` and dynamic method injection.
+**Solution:** Refactored `SynthSourcePrototype` to be a type alias `SynthSource & { [key: string]: unknown }`, utilizing the existing `SynthSource` type (which includes `ISynthSource` via declaration merging). This provides full type safety for the prototype while maintaining flexibility for dynamic injection.
+**Learning:** You can often avoid loose "mock" interfaces by using `import type` and type aliases/intersection types, allowing you to use the real class type even in circular dependency scenarios without runtime cost.
