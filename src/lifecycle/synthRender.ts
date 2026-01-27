@@ -45,20 +45,33 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 	}
 
 	// Compile shader if needed
-	if (state.needsCompile && state.compiled) {
-		// Dispose old shader
-		if (state.shader?.dispose) {
-			state.shader.dispose();
-		}
+	if (state.needsCompile && state.compiled && !state.isCompiling) {
+		state.isCompiling = true;
+		const compilingTarget = state.compiled;
 
 		// Collect external layer references from source
 		if (!justCollected) {
 			state.externalLayerMap = collectExternalLayerRefs(state.source);
 		}
 
-		// Use createFilterShader - leverages the instanced vertex shader
-		state.shader = await textmodifier.createFilterShader(state.compiled.fragmentSource);
-		state.needsCompile = false;
+		try {
+			// Use createFilterShader - leverages the instanced vertex shader
+			const newShader = await textmodifier.createFilterShader(compilingTarget.fragmentSource);
+
+			// Dispose old shader now that the new one is ready
+			if (state.shader?.dispose) {
+				state.shader.dispose();
+			}
+
+			state.shader = newShader;
+
+			// Only mark as clean if the source hasn't changed since we started
+			if (state.compiled === compilingTarget) {
+				state.needsCompile = false;
+			}
+		} finally {
+			state.isCompiling = false;
+		}
 	}
 
 	if (!state.shader || !state.compiled) return;

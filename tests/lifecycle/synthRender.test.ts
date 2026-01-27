@@ -154,4 +154,74 @@ describe('synthRender Lifecycle', () => {
 			expect(state.pingPongBuffers).toBe(initialBuffers);
 		});
 	});
+
+	describe('Shader Management', () => {
+		it('should prevent race conditions and leaks during rapid updates', async () => {
+			// Arrange
+			state.compiled = {
+				fragmentSource: 'void main() {}',
+				uniforms: new Map(),
+				dynamicUpdaters: new Map(),
+			} as any;
+
+			// Mock createFilterShader to return controllable promises
+			let resolveShader1: (v: any) => void;
+			const shaderPromise1 = new Promise((resolve) => { resolveShader1 = resolve; });
+
+			let resolveShader2: (v: any) => void;
+			const shaderPromise2 = new Promise((resolve) => { resolveShader2 = resolve; });
+
+			let callCount = 0;
+			vi.mocked(textmodifier.createFilterShader).mockImplementation(() => {
+				callCount++;
+				if (callCount === 1) return shaderPromise1 as any;
+				return shaderPromise2 as any;
+			});
+
+			// Initial shader
+			const initialShader = { dispose: vi.fn(), id: 'initial' };
+			state.shader = initialShader as any;
+
+			// Act 1: Trigger first compile
+			const render1 = synthRender(layer, textmodifier);
+
+			// Act 2: Trigger second compile immediately (before first finishes)
+			// In the buggy implementation, needsCompile is still true, so this triggers another compile
+			const render2 = synthRender(layer, textmodifier);
+
+			// Resolve promises
+			const shader1 = { dispose: vi.fn(), id: 'shader1' };
+			const shader2 = { dispose: vi.fn(), id: 'shader2' };
+
+			resolveShader1!(shader1);
+			resolveShader2!(shader2);
+
+			await Promise.all([render1, render2]);
+
+			// Assertions for the BUG state:
+			// 1. initialShader disposed twice (once per call)
+			// 2. createFilterShader called twice
+			// 3. state.shader is shader2 (last one wins)
+			// 4. shader1 is NOT disposed (LEAK!)
+
+			// We assert that the FIX prevents this.
+			// Ideally:
+			// 1. initialShader disposed ONCE (after new shader is ready)
+			// 2. createFilterShader called ONCE (second call skipped or queued)
+			// OR if called twice, the intermediate one must be disposed.
+
+			// Check for double free of initial shader
+			expect(initialShader.dispose).toHaveBeenCalledTimes(1);
+
+			// Check for leak of intermediate shader
+			// If shader1 was created but isn't the current shader, it MUST be disposed
+			if (state.shader !== shader1) {
+				// If callCount was 2, shader1 was created. If it's not state.shader, did we dispose it?
+				// In the bug, callCount is 2, shader1 is NOT disposed.
+				const wasDisposed = (shader1.dispose as Mock).mock.calls.length > 0;
+				const isLeak = callCount >= 1 && !wasDisposed;
+				expect(isLeak).toBe(false);
+			}
+		});
+	});
 });

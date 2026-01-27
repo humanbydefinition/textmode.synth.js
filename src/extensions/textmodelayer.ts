@@ -32,6 +32,7 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
 		shader: partial.shader,
 		characterResolver: partial.characterResolver ?? new CharacterResolver(),
 		needsCompile: partial.needsCompile ?? false,
+		isCompiling: partial.isCompiling ?? false,
 		pingPongBuffers: partial.pingPongBuffers,
 		pingPongDimensions: partial.pingPongDimensions,
 		pingPongIndex: partial.pingPongIndex ?? 0,
