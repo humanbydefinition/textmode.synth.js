@@ -1,141 +1,157 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { synthRender } from '../../src/lifecycle/synthRender';
-import { PLUGIN_NAME } from '../../src/plugin/constants';
 import type { TextmodeLayer } from 'textmode.js/layering';
 import type { Textmodifier, TextmodeFramebuffer } from 'textmode.js';
 import type { LayerSynthState } from '../../src/core/types';
 import { SynthSource } from '../../src/core/SynthSource';
 
-// Mocks
-const mockDispose = vi.fn();
-const mockCreateFramebuffer = vi.fn(() => ({
-	dispose: mockDispose,
+const createMockFramebuffer = (): TextmodeFramebuffer => ({
+	dispose: vi.fn(),
 	textures: [{}, {}, {}],
 	begin: vi.fn(),
 	end: vi.fn(),
-} as unknown as TextmodeFramebuffer));
+} as unknown as TextmodeFramebuffer);
 
-const mockShaderDispose = vi.fn();
-const mockCreateFilterShader = vi.fn(() => Promise.resolve({
-	dispose: mockShaderDispose,
-} as any));
-
-const mockTextmodifier = {
-	createFramebuffer: mockCreateFramebuffer,
-	createFilterShader: mockCreateFilterShader,
+const createMockTextmodifier = () => ({
+	createFramebuffer: vi.fn(() => createMockFramebuffer()),
+	createFilterShader: vi.fn(() => Promise.resolve({ dispose: vi.fn() })),
 	setUniform: vi.fn(),
 	clear: vi.fn(),
 	shader: vi.fn(),
 	rect: vi.fn(),
-	secs: 0,
-	frameCount: 0,
-} as unknown as Textmodifier;
+	secs: 10,
+	frameCount: 100,
+} as unknown as Textmodifier);
 
-describe('synthRender Memory Leak', () => {
+const createMockLayer = (cols = 10, rows = 10): TextmodeLayer => ({
+	grid: { cols, rows, width: cols * 10, height: rows * 10 },
+	drawFramebuffer: {
+		begin: vi.fn(),
+		end: vi.fn(),
+		textures: [],
+	},
+	getPluginState: vi.fn(),
+	setPluginState: vi.fn(),
+	font: { characters: [] },
+} as unknown as TextmodeLayer);
+
+describe('synthRender Lifecycle', () => {
 	let layer: TextmodeLayer;
+	let textmodifier: Textmodifier;
 	let state: Partial<LayerSynthState>;
 
 	beforeEach(() => {
-		mockDispose.mockClear();
-		mockCreateFramebuffer.mockClear();
-		mockShaderDispose.mockClear();
-		mockCreateFilterShader.mockClear();
-
+		textmodifier = createMockTextmodifier();
+		layer = createMockLayer();
 		state = {
 			source: new SynthSource(),
 			needsCompile: true,
 			dynamicValues: new Map(),
 			characterResolver: {
 				resolve: () => [],
-				invalidate: () => {},
+				invalidate: () => { },
 			} as any,
 		};
-
-		layer = {
-			grid: { cols: 10, rows: 10, width: 100, height: 100 },
-			drawFramebuffer: {
-				begin: vi.fn(),
-				end: vi.fn(),
-				textures: [],
-			},
-			getPluginState: vi.fn(() => state),
-			setPluginState: vi.fn(),
-			font: { characters: [] },
-		} as unknown as TextmodeLayer;
+		vi.mocked(layer.getPluginState).mockReturnValue(state);
 	});
 
-	it('should dispose ping-pong buffers when feedback is no longer needed', async () => {
-		// 1. Setup state with feedback needed
-		state.compiled = {
-			fragmentSource: 'void main() {}',
-			uniforms: new Map(),
-			dynamicUpdaters: new Map(),
-			usesCharColorFeedback: true, // Needs feedback
-			usesCharFeedback: false,
-			usesCellColorFeedback: false,
-		} as any;
-		state.needsCompile = true;
+	describe('Buffer Management', () => {
+		it('should create ping-pong buffers when feedback is required', async () => {
+			// Arrange
+			state.compiled = {
+				fragmentSource: 'void main() {}',
+				uniforms: new Map(),
+				dynamicUpdaters: new Map(),
+				usesCharColorFeedback: true,
+			} as any;
 
-		// 2. Render first frame (creates buffers)
-		await synthRender(layer, mockTextmodifier);
-		expect(mockCreateFramebuffer).toHaveBeenCalledTimes(2);
-		expect(state.pingPongBuffers).toBeDefined();
+			// Act
+			await synthRender(layer, textmodifier);
 
-		// 3. Setup state with NO feedback needed
-		state.compiled = {
-			fragmentSource: 'void main() {}',
-			uniforms: new Map(),
-			dynamicUpdaters: new Map(),
-			usesCharColorFeedback: false, // No feedback
-			usesCharFeedback: false,
-			usesCellColorFeedback: false,
-		} as any;
-		state.needsCompile = true;
+			// Assert
+			expect(textmodifier.createFramebuffer).toHaveBeenCalledTimes(2);
+			expect(state.pingPongBuffers).toBeDefined();
+			expect(state.pingPongBuffers).toHaveLength(2);
+			expect(state.pingPongDimensions).toEqual({ cols: 10, rows: 10 });
+		});
 
-		// Reset mocks to track new calls
-		mockDispose.mockClear();
+		it('should dispose ping-pong buffers when feedback is disabled dynamically', async () => {
+			// Arrange: Start with buffers
+			state.compiled = {
+				fragmentSource: 'void main() {}',
+				uniforms: new Map(),
+				dynamicUpdaters: new Map(),
+				usesCharColorFeedback: true,
+			} as any;
+			await synthRender(layer, textmodifier);
 
-		// 4. Render second frame
-		await synthRender(layer, mockTextmodifier);
+			const [bufferA, bufferB] = state.pingPongBuffers!;
 
-		// EXPECTATION: Buffers should be disposed
-		expect(mockDispose).toHaveBeenCalledTimes(2); // Should be called for both buffers
-		expect(state.pingPongBuffers).toBeUndefined(); // Should be cleared
-	});
+			// Act: Disable feedback
+			state.compiled = {
+				...state.compiled,
+				usesCharColorFeedback: false,
+			} as any;
+			state.needsCompile = true; // Force re-eval (though logic runs every frame)
 
-	it('should dispose and recreate ping-pong buffers when grid dimensions change', async () => {
-		// 1. Setup state with feedback needed
-		state.compiled = {
-			fragmentSource: 'void main() {}',
-			uniforms: new Map(),
-			dynamicUpdaters: new Map(),
-			usesCharColorFeedback: true,
-			usesCharFeedback: false,
-			usesCellColorFeedback: false,
-		} as any;
-		state.needsCompile = true;
+			await synthRender(layer, textmodifier);
 
-		// 2. Render first frame (10x10)
-		await synthRender(layer, mockTextmodifier);
-		expect(mockCreateFramebuffer).toHaveBeenCalledTimes(2);
-		expect(mockCreateFramebuffer).toHaveBeenCalledWith(expect.objectContaining({ width: 10, height: 10 }));
+			// Assert
+			expect(bufferA.dispose).toHaveBeenCalled();
+			expect(bufferB.dispose).toHaveBeenCalled();
+			expect(state.pingPongBuffers).toBeUndefined();
+			expect(state.pingPongDimensions).toBeUndefined();
+		});
 
-		const initialBuffers = state.pingPongBuffers;
+		it('should recreate buffers when grid dimensions change', async () => {
+			// Arrange: Initial render at 10x10
+			state.compiled = {
+				fragmentSource: 'void main() {}',
+				uniforms: new Map(),
+				dynamicUpdaters: new Map(),
+				usesCharColorFeedback: true,
+			} as any;
+			await synthRender(layer, textmodifier);
 
-		// 3. Change grid dimensions
-		layer.grid = { cols: 20, rows: 20, width: 200, height: 200 };
+			const [oldBufferA, oldBufferB] = state.pingPongBuffers!;
+			vi.clearAllMocks(); // Clear create/dispose calls
 
-		// Reset mocks
-		mockDispose.mockClear();
-		mockCreateFramebuffer.mockClear();
+			// Act: Resize layer
+			(layer as any).grid = { cols: 20, rows: 20, width: 200, height: 200 };
+			await synthRender(layer, textmodifier);
 
-		// 4. Render second frame
-		await synthRender(layer, mockTextmodifier);
+			// Assert: Old buffers disposed
+			expect(oldBufferA.dispose).toHaveBeenCalled();
+			expect(oldBufferB.dispose).toHaveBeenCalled();
 
-		// EXPECTATION: Old buffers disposed, new ones created
-		expect(mockDispose).toHaveBeenCalledTimes(2);
-		expect(mockCreateFramebuffer).toHaveBeenCalledTimes(2);
-		expect(mockCreateFramebuffer).toHaveBeenCalledWith(expect.objectContaining({ width: 20, height: 20 }));
-		expect(state.pingPongBuffers).not.toBe(initialBuffers);
+			// Assert: New buffers created with new dimensions
+			expect(textmodifier.createFramebuffer).toHaveBeenCalledTimes(2);
+			expect(textmodifier.createFramebuffer).toHaveBeenCalledWith(expect.objectContaining({
+				width: 20,
+				height: 20
+			}));
+			expect(state.pingPongDimensions).toEqual({ cols: 20, rows: 20 });
+		});
+
+		it('should maintain existing buffers if dimensions and requirements are unchanged', async () => {
+			// Arrange
+			state.compiled = {
+				fragmentSource: 'void main() {}',
+				uniforms: new Map(),
+				dynamicUpdaters: new Map(),
+				usesCharColorFeedback: true,
+			} as any;
+			await synthRender(layer, textmodifier);
+
+			const initialBuffers = state.pingPongBuffers;
+			vi.clearAllMocks();
+
+			// Act
+			await synthRender(layer, textmodifier);
+
+			// Assert
+			expect(textmodifier.createFramebuffer).not.toHaveBeenCalled();
+			expect(state.pingPongBuffers).toBe(initialBuffers);
+		});
 	});
 });
