@@ -1223,7 +1223,7 @@ Add another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to add |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to add |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 0.5) |
 
 #### Returns
@@ -1259,7 +1259,7 @@ Subtract another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to subtract |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to subtract |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 0.5) |
 
 #### Returns
@@ -1286,7 +1286,7 @@ Multiply with another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to multiply |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to multiply |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 0.5) |
 
 #### Returns
@@ -1313,7 +1313,7 @@ Blend with another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to blend |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to blend |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 0.5) |
 
 #### Returns
@@ -1349,7 +1349,7 @@ Difference with another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to compare |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to compare |
 
 #### Returns
 
@@ -1381,7 +1381,7 @@ Layer another source on top.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to layer |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to layer |
 
 #### Returns
 
@@ -1415,7 +1415,7 @@ Mask using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to use as mask |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to use as mask |
 
 #### Returns
 
@@ -1448,7 +1448,7 @@ Modulate coordinates using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Modulation amount (default: 0.1) |
 
 #### Returns
@@ -1485,7 +1485,7 @@ Modulate scale using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `multiple?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Scale multiplier (default: 1.0) |
 | `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 1.0) |
 
@@ -1523,7 +1523,7 @@ Modulate rotation using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `multiple?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Rotation multiplier (default: 1.0) |
 | `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 0.0) |
 
@@ -1561,7 +1561,7 @@ Modulate pixelation using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `multiple?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Pixelation multiplier (default: 10.0) |
 | `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 3.0) |
 
@@ -1595,7 +1595,7 @@ Modulate kaleidoscope using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `nSides?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Number of sides (default: 4.0) |
 
 #### Returns
@@ -1632,7 +1632,7 @@ Modulate X scroll using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `scrollX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | X scroll amount (default: 0.5) |
 | `speed?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Scroll speed (default: 0.0) |
 
@@ -1669,7 +1669,7 @@ Modulate Y scroll using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `scrollY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Y scroll amount (default: 0.5) |
 | `speed?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Scroll speed (default: 0.0) |
 
@@ -1708,7 +1708,7 @@ Modulate repeat pattern with another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `repeatX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | X repetitions (default: 3.0) |
 | `repeatY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Y repetitions (default: 3.0) |
 | `offsetX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | X offset (default: 0.5) |
@@ -1747,7 +1747,7 @@ Modulate X repeat with another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `reps?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Number of repetitions (default: 3.0) |
 | `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 0.5) |
 
@@ -1784,7 +1784,7 @@ Modulate Y repeat with another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `reps?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Number of repetitions (default: 3.0) |
 | `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 0.5) |
 
@@ -1818,7 +1818,7 @@ Modulate coordinates based on hue differences.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Modulation amount (default: 1.0) |
 
 #### Returns
@@ -1866,14 +1866,21 @@ ISynthSource.charMap
 ### charColor()
 
 ```ts
-charColor(source): this;
+charColor(
+   rOrSource,
+   g?,
+   b?,
+   a?): this;
 ```
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `source` | `SynthSource` |
+| `rOrSource` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` |
+| `g?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
+| `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
+| `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
 
 #### Returns
 
@@ -1914,14 +1921,21 @@ ISynthSource.char
 ### cellColor()
 
 ```ts
-cellColor(source): this;
+cellColor(
+   rOrSource,
+   g?,
+   b?,
+   a?): this;
 ```
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `source` | `SynthSource` |
+| `rOrSource` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` |
+| `g?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
+| `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
+| `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
 
 #### Returns
 
@@ -1938,14 +1952,21 @@ ISynthSource.cellColor
 ### paint()
 
 ```ts
-paint(source): this;
+paint(
+   rOrSource,
+   g?,
+   b?,
+   a?): this;
 ```
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `source` | `SynthSource` |
+| `rOrSource` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` |
+| `g?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
+| `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
+| `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
 
 #### Returns
 

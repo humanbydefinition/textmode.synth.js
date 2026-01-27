@@ -3,7 +3,11 @@
 # Function: charColor()
 
 ```ts
-function charColor(source): SynthSource;
+function charColor(
+   rOrSource,
+   g?,
+   b?,
+   a?): SynthSource;
 ```
 
 Create a synth source with character foreground color defined.
@@ -12,11 +16,16 @@ This function creates a SynthSource where the character foreground color
 is driven by the provided source pattern. This is compositional and can be
 combined with `char()` and `cellColor()`.
 
+Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
+
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | [`SynthSource`](../classes/SynthSource.md) | A SynthSource producing color values for character foreground |
+| `rOrSource` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | A SynthSource producing color values, or Red channel (0-1) |
+| `g?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Green channel (0-1) |
+| `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blue channel (0-1) |
+| `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Alpha channel (0-1) |
 
 ## Returns
 
@@ -33,18 +42,13 @@ const t = textmode.create({
   plugins: [SynthPlugin]
 });
 
-// Start with character color
-const pattern = osc(10, 0.1);
+// Use a solid color (RGBA overload)
 t.layers.base.synth(
-  charColor(pattern)
-    .char(noise(10))
-    .cellColor(solid(0, 0, 0, 0.5))
+  charColor(1, 0, 0).char(noise(10))
 );
 
-// Using different patterns for each aspect
+// Use a pattern source
 t.layers.base.synth(
-  charColor(voronoi(5).mult(osc(20)))
-    .char(noise(10), 16)
-    .charMap('@#%*+=-:. ')
+  charColor(osc(10, 0.1))
 );
 ```
