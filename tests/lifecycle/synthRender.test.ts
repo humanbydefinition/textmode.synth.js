@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { synthRender } from '../../src/lifecycle/synthRender';
+import { synthDispose } from '../../src/lifecycle/synthDispose';
 import type { TextmodeLayer } from 'textmode.js/layering';
 import type { Textmodifier, TextmodeFramebuffer } from 'textmode.js';
 import type { LayerSynthState } from '../../src/core/types';
@@ -222,6 +223,41 @@ describe('synthRender Lifecycle', () => {
 				const isLeak = callCount >= 1 && !wasDisposed;
 				expect(isLeak).toBe(false);
 			}
+		});
+
+		it('should dispose shader created after layer disposal (LEAK FIX)', async () => {
+			// Arrange
+			state.compiled = {
+				fragmentSource: 'void main() {}',
+				uniforms: new Map(),
+				dynamicUpdaters: new Map(),
+			} as any;
+
+			let resolveShader: (v: any) => void;
+			const shaderPromise = new Promise((resolve) => { resolveShader = resolve; });
+
+			// Mock createFilterShader to hang
+			vi.mocked(textmodifier.createFilterShader).mockReturnValue(shaderPromise as any);
+
+			// Act 1: Start rendering (triggers compilation)
+			const renderPromise = synthRender(layer, textmodifier);
+
+			// Act 2: Dispose layer immediately while compiling
+			synthDispose(layer);
+
+			// Verify we are in compiling state
+			expect(state.isCompiling).toBe(true);
+			expect(state.isDisposed).toBe(true);
+
+			// Act 3: Finish compilation
+			const newShader = { dispose: vi.fn(), id: 'leaked_shader' };
+			resolveShader!(newShader);
+			await renderPromise;
+
+			// Assert: The new shader should be disposed because the layer is dead
+			expect(newShader.dispose).toHaveBeenCalled();
+			// And state.shader should NOT be set
+			expect(state.shader).not.toBe(newShader);
 		});
 	});
 });

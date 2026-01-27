@@ -58,6 +58,12 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 			// Use createFilterShader - leverages the instanced vertex shader
 			const newShader = await textmodifier.createFilterShader(compilingTarget.fragmentSource);
 
+			// Check if layer was disposed while compiling
+			if (state.isDisposed) {
+				if (newShader.dispose) newShader.dispose();
+				return;
+			}
+
 			// Dispose old shader now that the new one is ready
 			if (state.shader?.dispose) {
 				state.shader.dispose();
@@ -74,7 +80,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 		}
 	}
 
-	if (!state.shader || !state.compiled) return;
+	if (!state.shader || !state.compiled || state.isDisposed) return;
 
 	// Determine feedback usage
 	const usesFeedback = state.compiled.usesCharColorFeedback;

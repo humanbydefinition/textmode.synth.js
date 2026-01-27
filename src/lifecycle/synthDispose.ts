@@ -14,6 +14,7 @@ import type { LayerSynthState } from '../core/types';
 export function synthDispose(layer: TextmodeLayer) {
 	const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
 	if (state) {
+		state.isDisposed = true;
 		if (state.shader?.dispose) {
 			state.shader.dispose();
 		}

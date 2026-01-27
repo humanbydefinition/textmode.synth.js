@@ -48,6 +48,7 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
 			rows: 0,
 			bpm: 0,
 		},
+		isDisposed: false,
 	};
 }
 
