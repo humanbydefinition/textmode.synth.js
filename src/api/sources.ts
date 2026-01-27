@@ -53,6 +53,7 @@ export function cellColor(
     b?: SynthParameterValue,
     a?: SynthParameterValue
 ): SynthSource;
+
 export function cellColor(
     rOrSource: SynthParameterValue,
     g?: SynthParameterValue,
@@ -138,6 +139,7 @@ export function charColor(
     b?: SynthParameterValue,
     a?: SynthParameterValue
 ): SynthSource;
+
 export function charColor(
     rOrSource: SynthParameterValue,
     g?: SynthParameterValue,
