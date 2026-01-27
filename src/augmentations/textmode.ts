@@ -9,7 +9,7 @@
 
 import type { SynthSource } from '../core/SynthSource';
 
-declare module 'textmode.js' {
+declare module 'textmode.js/layering' {
 	interface TextmodeLayer {
 		/**
 		 * Set a synth source for this layer.
