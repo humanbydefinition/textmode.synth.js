@@ -18,43 +18,53 @@ import type { TextmodeLayer } from 'textmode.js/layering';
  *
  * Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
  *
- * @param rOrSource - A SynthSource producing color values, or Red channel (0-1)
- * @param g - Green channel (0-1)
- * @param b - Blue channel (0-1)
- * @param a - Alpha channel (0-1)
+ * @param source - A SynthSource producing color values
  * @returns A new SynthSource configured with cell color
  *
  * @example
  * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- *
- * // Use a solid color (RGBA overload)
- * t.layers.base.synth(
- *   cellColor(0, 0, 0, 0.5).char(noise(10))
- * );
- *
  * // Use a pattern source
  * t.layers.base.synth(
  *   cellColor(osc(5).invert())
  * );
  * ```
  */
-export const cellColor = (
+export function cellColor(source: SynthSource): SynthSource;
+/**
+ * Create a synth source with cell background color defined using RGBA values.
+ *
+ * @param r - Red channel (0-1) or value
+ * @param g - Green channel (0-1) or value
+ * @param b - Blue channel (0-1) or value
+ * @param a - Alpha channel (0-1) or value
+ * @returns A new SynthSource configured with cell color
+ *
+ * @example
+ * ```typescript
+ * // Use a solid color
+ * t.layers.base.synth(
+ *   cellColor(0, 0, 0, 0.5).char(noise(10))
+ * );
+ * ```
+ */
+export function cellColor(
+    r: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource;
+export function cellColor(
     rOrSource: SynthParameterValue | SynthSource,
     g?: SynthParameterValue,
     b?: SynthParameterValue,
     a?: SynthParameterValue
-): SynthSource => {
+): SynthSource {
     if (rOrSource instanceof SynthSource) {
         return new SynthSource({ cellColorSource: rOrSource });
     }
     // @ts-ignore - solid accepts strict types but underlying implementation supports SynthParameterValue
     return new SynthSource({ cellColorSource: solid(rOrSource, g, b, a) });
-};
+}
 
 /**
  * Create a character source from any color/pattern source.
@@ -94,43 +104,53 @@ export const char = (source: SynthSource): SynthSource => {
  *
  * Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
  *
- * @param rOrSource - A SynthSource producing color values, or Red channel (0-1)
- * @param g - Green channel (0-1)
- * @param b - Blue channel (0-1)
- * @param a - Alpha channel (0-1)
+ * @param source - A SynthSource producing color values
  * @returns A new SynthSource configured with character color
  *
  * @example
  * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- *
- * // Use a solid color (RGBA overload)
- * t.layers.base.synth(
- *   charColor(1, 0, 0).char(noise(10))
- * );
- *
  * // Use a pattern source
  * t.layers.base.synth(
  *   charColor(osc(10, 0.1))
  * );
  * ```
  */
-export const charColor = (
+export function charColor(source: SynthSource): SynthSource;
+/**
+ * Create a synth source with character foreground color defined using RGBA values.
+ *
+ * @param r - Red channel (0-1) or value
+ * @param g - Green channel (0-1) or value
+ * @param b - Blue channel (0-1) or value
+ * @param a - Alpha channel (0-1) or value
+ * @returns A new SynthSource configured with character color
+ *
+ * @example
+ * ```typescript
+ * // Use a solid color
+ * t.layers.base.synth(
+ *   charColor(1, 0, 0).char(noise(10))
+ * );
+ * ```
+ */
+export function charColor(
+    r: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource;
+export function charColor(
     rOrSource: SynthParameterValue | SynthSource,
     g?: SynthParameterValue,
     b?: SynthParameterValue,
     a?: SynthParameterValue
-): SynthSource => {
+): SynthSource {
     if (rOrSource instanceof SynthSource) {
         return new SynthSource({ colorSource: rOrSource });
     }
     // @ts-ignore - solid accepts strict types but underlying implementation supports SynthParameterValue
     return new SynthSource({ colorSource: solid(rOrSource, g, b, a) });
-};
+}
 
 /**
  * Generate a rotating radial gradient.
@@ -224,37 +244,47 @@ export function osc(
  *
  * Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
  *
- * @param rOrSource - A SynthSource producing color values, or Red channel (0-1)
- * @param g - Green channel (0-1)
- * @param b - Blue channel (0-1)
- * @param a - Alpha channel (0-1)
+ * @param source - A SynthSource producing color values
  * @returns A new SynthSource configured with both color sources
  *
  * @example
  * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- *
- * // Use solid color for everything (RGBA overload)
- * t.layers.base.synth(
- *   paint(1, 1, 1)
- * );
- *
  * // Use same pattern for both foreground and background
  * t.layers.base.synth(
  *   paint(osc(10, 0.1))
  * );
  * ```
  */
-export const paint = (
+export function paint(source: SynthSource): SynthSource;
+/**
+ * Create a synth source with both character and cell colors defined using RGBA values.
+ *
+ * @param r - Red channel (0-1) or value
+ * @param g - Green channel (0-1) or value
+ * @param b - Blue channel (0-1) or value
+ * @param a - Alpha channel (0-1) or value
+ * @returns A new SynthSource configured with both color sources
+ *
+ * @example
+ * ```typescript
+ * // Use solid color for everything
+ * t.layers.base.synth(
+ *   paint(1, 1, 1)
+ * );
+ * ```
+ */
+export function paint(
+    r: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource;
+export function paint(
     rOrSource: SynthParameterValue | SynthSource,
     g?: SynthParameterValue,
     b?: SynthParameterValue,
     a?: SynthParameterValue
-): SynthSource => {
+): SynthSource {
     let source: SynthSource;
     if (rOrSource instanceof SynthSource) {
         source = rOrSource;
@@ -266,7 +296,7 @@ export const paint = (
         colorSource: source,
         cellColorSource: source,
     });
-};
+}
 
 /**
  * Generate geometric shapes (polygons).
@@ -302,6 +332,11 @@ export function shape(
 }
 
 /**
+ * Generate a solid grayscale color.
+ * @param gray - Grayscale value (0-1)
+ */
+export function solid(gray: SynthParameterValue): SynthSource;
+/**
  * Generate a solid color.
  * @param r - Red channel (0-1, default: 0.0)
  * @param g - Green channel (0-1, default: 0.0)
@@ -325,10 +360,16 @@ export function shape(
  * ```
  */
 export function solid(
-    r?: number | number[] | ((ctx: SynthContext) => number),
-    g?: number | number[] | ((ctx: SynthContext) => number),
-    b?: number | number[] | ((ctx: SynthContext) => number),
-    a?: number | number[] | ((ctx: SynthContext) => number)
+    r?: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource;
+export function solid(
+    r?: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
 ): SynthSource {
     // Handle overload for solid(gray)
     // If only first argument is provided and it's a number, pass it as single argument
