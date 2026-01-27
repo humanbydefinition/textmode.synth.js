@@ -11,3 +11,9 @@
 **Challenge:** The `bpm` property is added via module augmentation as a method. Deleting it requires the type to have the property as optional. `TextmodePlugin` uninstall hook receives `Textmodifier` where `bpm` is required (via augmentation).
 **Solution:** Cast to `Partial<Textmodifier>`. This accurately represents "I am treating this object as having optional properties for the purpose of deletion", satisfying TypeScript's requirement that the operand of `delete` must be optional, without resorting to `any`.
 **Learning:** `Partial<T>` is a type-safe alternative to `any` when needing to delete properties that are otherwise required in the interface `T`.
+
+## Entry #3 — Removing Unsafe Casts in TransformFactory
+**Pattern:** Double cast `(obj as unknown as Record<string, unknown>)` to perform dynamic property assignment.
+**Challenge:** `SynthSourcePrototype` is an interface used for dynamic method injection but lacked an index signature, forcing the use of unsafe casts to "break" the type system to allow assignment of arbitrary methods.
+**Solution:** Added `[key: string]: unknown` to `SynthSourcePrototype`. This accurately reflects the runtime reality that this object acts as a dynamic container for injected transform methods, allowing us to remove the unsafe double casts while keeping the base interface contract intact.
+**Learning:** If an object is intended to be dynamic (like a prototype receiving plugins), explicitly typing it with an index signature is safer and more honest than using `as unknown` to bypass type checks.
