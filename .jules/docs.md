@@ -35,3 +35,9 @@ t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
 ```
+
+## Entry #4 — Missing Examples for Coordinate Transforms
+**Finding:** Coordinate transform methods `scrollX`, `scrollY`, `repeatX`, and `repeatY` in `ISynthSource` lacked usage examples, while other coordinate transforms like `rotate` and `scale` had them.
+**Pattern:** Missing example blocks
+**Action:** Added `@example` blocks to `scrollX`, `scrollY`, `repeatX`, and `repeatY` in `src/core/ISynthSource.ts`. Used concise snippets to match existing documentation style in the file.
+**Learning:** When checking for missing examples, ensure related methods (like X/Y variants of a transform) are also covered.
