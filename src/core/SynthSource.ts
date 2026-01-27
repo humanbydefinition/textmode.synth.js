@@ -128,21 +128,30 @@ export class SynthSource {
 		return this;
 	}
 
+	private _ensureSource(
+		rOrSource: SynthParameterValue | ISynthSource,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): SynthSource {
+		if (rOrSource instanceof SynthSource) {
+			return rOrSource;
+		}
+
+		const source = new SynthSource();
+		// Map undefined to null to satisfy SynthParameterValue type
+		const args = [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
+		source.addTransform('solid', args as SynthParameterValue[]);
+		return source;
+	}
+
 	public charColor(
 		rOrSource: SynthParameterValue | ISynthSource,
 		g?: SynthParameterValue,
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
 	): this {
-		if (rOrSource instanceof SynthSource) {
-			this._colorSource = rOrSource;
-		} else {
-			const source = new SynthSource();
-			// Map undefined to null to satisfy SynthParameterValue type
-			const args = [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
-			source.addTransform('solid', args as SynthParameterValue[]);
-			this._colorSource = source;
-		}
+		this._colorSource = this._ensureSource(rOrSource, g, b, a);
 		return this;
 	}
 
@@ -157,14 +166,7 @@ export class SynthSource {
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
 	): this {
-		if (rOrSource instanceof SynthSource) {
-			this._cellColorSource = rOrSource;
-		} else {
-			const source = new SynthSource();
-			const args = [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
-			source.addTransform('solid', args as SynthParameterValue[]);
-			this._cellColorSource = source;
-		}
+		this._cellColorSource = this._ensureSource(rOrSource, g, b, a);
 		return this;
 	}
 
@@ -174,15 +176,7 @@ export class SynthSource {
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
 	): this {
-		let source: SynthSource;
-		if (rOrSource instanceof SynthSource) {
-			source = rOrSource;
-		} else {
-			source = new SynthSource();
-			const args = [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
-			source.addTransform('solid', args as SynthParameterValue[]);
-		}
-
+		const source = this._ensureSource(rOrSource, g, b, a);
 		this._colorSource = source;
 		this._cellColorSource = source;
 		return this;
