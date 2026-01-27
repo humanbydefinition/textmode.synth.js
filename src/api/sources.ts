@@ -4,7 +4,7 @@
  * @module
  */
 
-import type { SynthContext } from '../core/types';
+import type { SynthContext, SynthParameterValue } from '../core/types';
 import { SynthSource } from '../core/SynthSource';
 import { generatedFunctions } from '../bootstrap';
 import { TextmodeLayer } from 'textmode.js';
@@ -16,7 +16,12 @@ import { TextmodeLayer } from 'textmode.js';
  * is driven by the provided source pattern. This is compositional and can be
  * combined with `char()` and `charColor()`.
  *
- * @param source - A SynthSource producing color values for cell background
+ * Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
+ *
+ * @param rOrSource - A SynthSource producing color values, or Red channel (0-1)
+ * @param g - Green channel (0-1)
+ * @param b - Blue channel (0-1)
+ * @param a - Alpha channel (0-1)
  * @returns A new SynthSource configured with cell color
  *
  * @example
@@ -27,25 +32,28 @@ import { TextmodeLayer } from 'textmode.js';
  *   plugins: [SynthPlugin]
  * });
  *
- * // Start with cell color
+ * // Use a solid color (RGBA overload)
  * t.layers.base.synth(
- *   cellColor(solid(0, 0, 0, 0.5))
- *     .char(noise(10))
- *     .charColor(osc(5))
+ *   cellColor(0, 0, 0, 0.5).char(noise(10))
  * );
  *
- * // Complete composition - all three defined
- * const colorPattern = voronoi(5, 0.3);
+ * // Use a pattern source
  * t.layers.base.synth(
- *   cellColor(colorPattern.clone().invert())
- *     .char(noise(10), 16)
- *     .charMap('@#%*+=-:. ')
- *     .charColor(colorPattern)
+ *   cellColor(osc(5).invert())
  * );
  * ```
  */
-export const cellColor = (source: SynthSource): SynthSource => {
-    return new SynthSource({ cellColorSource: source });
+export const cellColor = (
+    rOrSource: SynthParameterValue | SynthSource,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource => {
+    if (rOrSource instanceof SynthSource) {
+        return new SynthSource({ cellColorSource: rOrSource });
+    }
+    // @ts-ignore - solid accepts strict types but underlying implementation supports SynthParameterValue
+    return new SynthSource({ cellColorSource: solid(rOrSource, g, b, a) });
 };
 
 /**
@@ -84,7 +92,12 @@ export const char = (source: SynthSource): SynthSource => {
  * is driven by the provided source pattern. This is compositional and can be
  * combined with `char()` and `cellColor()`.
  *
- * @param source - A SynthSource producing color values for character foreground
+ * Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
+ *
+ * @param rOrSource - A SynthSource producing color values, or Red channel (0-1)
+ * @param g - Green channel (0-1)
+ * @param b - Blue channel (0-1)
+ * @param a - Alpha channel (0-1)
  * @returns A new SynthSource configured with character color
  *
  * @example
@@ -95,24 +108,28 @@ export const char = (source: SynthSource): SynthSource => {
  *   plugins: [SynthPlugin]
  * });
  *
- * // Start with character color
- * const pattern = osc(10, 0.1);
+ * // Use a solid color (RGBA overload)
  * t.layers.base.synth(
- *   charColor(pattern)
- *     .char(noise(10))
- *     .cellColor(solid(0, 0, 0, 0.5))
+ *   charColor(1, 0, 0).char(noise(10))
  * );
  *
- * // Using different patterns for each aspect
+ * // Use a pattern source
  * t.layers.base.synth(
- *   charColor(voronoi(5).mult(osc(20)))
- *     .char(noise(10), 16)
- *     .charMap('@#%*+=-:. ')
+ *   charColor(osc(10, 0.1))
  * );
  * ```
  */
-export const charColor = (source: SynthSource): SynthSource => {
-    return new SynthSource({ colorSource: source });
+export const charColor = (
+    rOrSource: SynthParameterValue | SynthSource,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource => {
+    if (rOrSource instanceof SynthSource) {
+        return new SynthSource({ colorSource: rOrSource });
+    }
+    // @ts-ignore - solid accepts strict types but underlying implementation supports SynthParameterValue
+    return new SynthSource({ colorSource: solid(rOrSource, g, b, a) });
 };
 
 /**
@@ -204,10 +221,13 @@ export function osc(
  *
  * This function creates a SynthSource where both the character foreground color
  * and the cell background color are driven by the same source pattern.
- * This is a convenience function equivalent to calling both `charColor()` and
- * `cellColor()` with the same source, allowing for easy pixel art without visible characters.
  *
- * @param source - A SynthSource producing color values for both character and cell colors
+ * Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
+ *
+ * @param rOrSource - A SynthSource producing color values, or Red channel (0-1)
+ * @param g - Green channel (0-1)
+ * @param b - Blue channel (0-1)
+ * @param a - Alpha channel (0-1)
  * @returns A new SynthSource configured with both color sources
  *
  * @example
@@ -218,18 +238,30 @@ export function osc(
  *   plugins: [SynthPlugin]
  * });
  *
- * // Use same pattern for both foreground and background colors
+ * // Use solid color for everything (RGBA overload)
  * t.layers.base.synth(
- *   paint(osc(10, 0.1).mult(voronoi(5)))
+ *   paint(1, 1, 1)
  * );
  *
- * // Paint with gradient
+ * // Use same pattern for both foreground and background
  * t.layers.base.synth(
- *   paint(gradient(0.5))
+ *   paint(osc(10, 0.1))
  * );
  * ```
  */
-export const paint = (source: SynthSource): SynthSource => {
+export const paint = (
+    rOrSource: SynthParameterValue | SynthSource,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource => {
+    let source: SynthSource;
+    if (rOrSource instanceof SynthSource) {
+        source = rOrSource;
+    } else {
+        // @ts-ignore - solid accepts strict types but underlying implementation supports SynthParameterValue
+        source = solid(rOrSource, g, b, a);
+    }
     return new SynthSource({
         colorSource: source,
         cellColorSource: source,

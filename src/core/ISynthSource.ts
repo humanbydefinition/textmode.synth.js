@@ -47,6 +47,27 @@ export interface ISynthSource {
 	 * ```
 	 */
 	charColor(source: ISynthSource): this;
+	/**
+	 * Set the character foreground color using RGBA values.
+	 *
+	 * @param r - Red channel (0-1) or value
+	 * @param g - Green channel (0-1) or value
+	 * @param b - Blue channel (0-1) or value
+	 * @param a - Alpha channel (0-1) or value
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * ```ts
+	 * // Set solid red color
+	 * noise(10).charColor(1, 0, 0)
+	 * ```
+	 */
+	charColor(
+		r: SynthParameterValue,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this;
 
 	/**
 	 * Set the cell background colors using a color source chain.
@@ -64,6 +85,27 @@ export interface ISynthSource {
 	 * ```
 	 */
 	cellColor(source: ISynthSource): this;
+	/**
+	 * Set the cell background color using RGBA values.
+	 *
+	 * @param r - Red channel (0-1) or value
+	 * @param g - Green channel (0-1) or value
+	 * @param b - Blue channel (0-1) or value
+	 * @param a - Alpha channel (0-1) or value
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * ```ts
+	 * // Set semi-transparent black background
+	 * noise(10).cellColor(0, 0, 0, 0.5)
+	 * ```
+	 */
+	cellColor(
+		r: SynthParameterValue,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this;
 
 	/**
 	 * Set the character indices using a character source chain.
@@ -107,6 +149,27 @@ export interface ISynthSource {
 	 * ```
 	 */
 	paint(source: ISynthSource): this;
+	/**
+	 * Set both character foreground and cell background color using RGBA values.
+	 *
+	 * @param r - Red channel (0-1) or value
+	 * @param g - Green channel (0-1) or value
+	 * @param b - Blue channel (0-1) or value
+	 * @param a - Alpha channel (0-1) or value
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * ```ts
+	 * // Paint everything white
+	 * noise(10).paint(1, 1, 1)
+	 * ```
+	 */
+	paint(
+		r: SynthParameterValue,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this;
 
 	/**
 	 * Create a deep clone of this SynthSource.
