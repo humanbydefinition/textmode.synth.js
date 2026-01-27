@@ -17,3 +17,9 @@
 **Pattern:** missing coverage
 **Action:** Created `tests/utils/collectExternalLayerRefs.test.ts` covering direct references, nested sources, and property sources.
 **Learning:** `SynthSource` can be instantiated directly in tests without `bootstrap.ts` if only data properties are being tested, avoiding complex dependency injection setup.
+
+## Entry #4 — TransformRegistry Coverage
+**Finding:** `TransformRegistry` in `src/transforms` was a core singleton completely lacking tests.
+**Pattern:** missing coverage
+**Action:** Created `tests/transforms/TransformRegistry.test.ts` covering all public methods including caching and type filtering.
+**Learning:** Singletons like `transformRegistry` need careful `beforeEach`/`afterEach` cleanup (`clear()`) to prevent state pollution between tests.
