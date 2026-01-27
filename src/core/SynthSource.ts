@@ -157,8 +157,13 @@ export class SynthSource {
 		return this;
 	}
 
-	public char(source: SynthSource): this {
-		this._charSource = source;
+	public char(
+		rOrSource: SynthParameterValue | ISynthSource,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this {
+		this._charSource = this._ensureSource(rOrSource, g, b, a);
 		return this;
 	}
 

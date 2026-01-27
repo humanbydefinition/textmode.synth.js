@@ -126,6 +126,27 @@ export interface ISynthSource {
 	 * ```
 	 */
 	char(source: ISynthSource): this;
+	/**
+	 * Set the character indices using a scalar value or luminance of RGB values.
+	 *
+	 * @param r - Red channel (0-1) or value
+	 * @param g - Green channel (0-1) or value
+	 * @param b - Blue channel (0-1) or value
+	 * @param a - Alpha channel (0-1) or value
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * ```ts
+	 * // Set static character index (e.g. 50% through the charMap)
+	 * char(0.5)
+	 * ```
+	 */
+	char(
+		r: SynthParameterValue,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this;
 
 	/**
 	 * Set both character foreground and cell background color using the same source chain.

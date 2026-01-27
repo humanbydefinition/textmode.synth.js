@@ -91,9 +91,42 @@ export function cellColor(
  * );
  * ```
  */
-export const char = (source: SynthSource): SynthSource => {
-    return new SynthSource({ charSource: source });
-};
+export function char(source: SynthSource): SynthSource;
+/**
+ * Create a character source using a scalar value or luminance of RGB values.
+ *
+ * @param r - Red channel (0-1) or value
+ * @param g - Green channel (0-1) or value
+ * @param b - Blue channel (0-1) or value
+ * @param a - Alpha channel (0-1) or value
+ * @returns A new SynthSource configured for character generation
+ *
+ * @example
+ * ```typescript
+ * // Use a solid value
+ * t.layers.base.synth(
+ *   char(0.5)
+ * );
+ * ```
+ */
+export function char(
+    r: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource;
+
+export function char(
+    rOrSource: SynthParameterValue | SynthSource,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource {
+    if (rOrSource instanceof SynthSource) {
+        return new SynthSource({ charSource: rOrSource });
+    }
+    return new SynthSource({ charSource: solid(rOrSource, g, b, a) });
+}
 
 /**
  * Create a synth source with character foreground color defined.
