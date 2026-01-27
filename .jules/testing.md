@@ -23,3 +23,9 @@
 **Pattern:** missing coverage
 **Action:** Created `tests/transforms/TransformRegistry.test.ts` covering all public methods including caching and type filtering.
 **Learning:** Singletons like `transformRegistry` need careful `beforeEach`/`afterEach` cleanup (`clear()`) to prevent state pollution between tests.
+
+## Entry #5 — Compiler Channel Utilities Coverage
+**Finding:** `src/compiler/channels.ts` had no unit tests despite containing critical pure logic for channel mapping.
+**Pattern:** missing coverage
+**Action:** Created `tests/compiler/channels.test.ts` covering `getTextureChannel` and `updateChannelUsage` for all compilation targets.
+**Learning:** Pure functions like those in `channels.ts` are high-value/low-cost targets for coverage as they require no complex mocking or state management.
