@@ -102,10 +102,7 @@ class TransformFactory {
 
 				functions[name] = (...args: SynthParameterValue[]) => {
 					const source = new SynthSourceCtor();
-					return source.addTransform(
-						name,
-						resolveArgs(inputs, args)
-					) as SynthSource;
+					return source.addTransform(name, resolveArgs(inputs, args)) as SynthSource;
 				};
 			}
 		}
@@ -141,10 +138,7 @@ class TransformFactory {
 
 			this._generatedFunctions[name] = (...args: SynthParameterValue[]) => {
 				const source = new SynthSourceCtor();
-				return source.addTransform(
-					name,
-					resolveArgs(inputs, args)
-				) as SynthSource;
+				return source.addTransform(name, resolveArgs(inputs, args)) as SynthSource;
 			};
 		}
 	}
