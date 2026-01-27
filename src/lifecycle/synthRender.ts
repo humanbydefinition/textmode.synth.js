@@ -72,7 +72,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 	// Manage ping-pong buffer lifecycle
 	if (state.pingPongBuffers) {
 		const dim = state.pingPongDimensions;
-		const resizeNeeded = !dim || dim.width !== grid.cols || dim.height !== grid.rows;
+		const resizeNeeded = !dim || dim.cols !== grid.cols || dim.rows !== grid.rows;
 
 		// Dispose if feedback is disabled OR grid dimensions changed
 		if (!usesAnyFeedback || resizeNeeded) {
@@ -89,7 +89,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 			textmodifier.createFramebuffer({ width: grid.cols, height: grid.rows, attachments: 3 }),
 			textmodifier.createFramebuffer({ width: grid.cols, height: grid.rows, attachments: 3 }),
 		] as [TextmodeFramebuffer, TextmodeFramebuffer];
-		state.pingPongDimensions = { width: grid.cols, height: grid.rows };
+		state.pingPongDimensions = { cols: grid.cols, rows: grid.rows };
 		state.pingPongIndex = 0;
 	}
 
