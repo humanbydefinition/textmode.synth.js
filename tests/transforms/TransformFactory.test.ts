@@ -33,6 +33,8 @@ describe('TransformFactory', () => {
 		transformRegistry.clear();
 		// Create a fresh class for each test to avoid prototype pollution
 		MockSynthSource = class implements SynthSourcePrototype {
+			[key: string]: unknown;
+
 			addTransform(name: string, userArgs: SynthParameterValue[]): unknown {
 				return { name, args: userArgs, type: 'transform' };
 			}
