@@ -24,7 +24,13 @@
 **Action:** Created `tests/transforms/TransformRegistry.test.ts` covering all public methods including caching and type filtering.
 **Learning:** Singletons like `transformRegistry` need careful `beforeEach`/`afterEach` cleanup (`clear()`) to prevent state pollution between tests.
 
-## Entry #5 — Compiler Channel Utilities Coverage
+## Entry #5 — TransformFactory Coverage
+**Finding:** `TransformFactory` in `src/transforms` handles critical dynamic method injection but had no tests.
+**Pattern:** missing coverage
+**Action:** Created `tests/transforms/TransformFactory.test.ts` covering `injectMethods`, `generateStandaloneFunctions`, and `addTransform`.
+**Learning:** Testing singletons that modify prototypes requires careful cleanup and using fresh mock classes in `beforeEach` to avoid prototype pollution between tests.
+
+## Entry #6 — Compiler Channel Utilities Coverage
 **Finding:** `src/compiler/channels.ts` had no unit tests despite containing critical pure logic for channel mapping.
 **Pattern:** missing coverage
 **Action:** Created `tests/compiler/channels.test.ts` covering `getTextureChannel` and `updateChannelUsage` for all compilation targets.
