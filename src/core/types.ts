@@ -171,7 +171,7 @@ export interface LayerSynthState {
 	/**
 	 * Reusable resolution array to avoid per-frame allocation.
 	 */
-	resolutionArray?: [number, number];
+	resolutionArray: [number, number];
 }
 
 /**

@@ -189,13 +189,9 @@ function applySynthUniforms(
 ) {
 	textmodifier.setUniform('time', ctx.time);
 
-	if (state.resolutionArray) {
-		state.resolutionArray[0] = ctx.cols;
-		state.resolutionArray[1] = ctx.rows;
-		textmodifier.setUniform('resolution', state.resolutionArray);
-	} else {
-		textmodifier.setUniform('resolution', [ctx.cols, ctx.rows]);
-	}
+	state.resolutionArray[0] = ctx.cols;
+	state.resolutionArray[1] = ctx.rows;
+	textmodifier.setUniform('resolution', state.resolutionArray);
 
 	for (const [name, value] of state.dynamicValues) {
 		textmodifier.setUniform(name, value);
