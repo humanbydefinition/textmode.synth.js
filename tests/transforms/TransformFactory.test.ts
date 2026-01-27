@@ -87,13 +87,13 @@ describe('TransformFactory', () => {
 
 			expect(prototype).toHaveProperty('mockCombine');
 			const instance = new MockSynthSource();
-			const source = 'anotherSource';
+			const source = new MockSynthSource();
 			// @ts-expect-error - method is injected dynamically
 			const result = instance.mockCombine(source, 0.2);
 
 			expect(result).toEqual({
 				name: 'mockCombine',
-				source: 'anotherSource',
+				source: source,
 				args: [0.2],
 				type: 'combine',
 			});
