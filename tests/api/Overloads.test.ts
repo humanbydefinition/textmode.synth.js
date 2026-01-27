@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import '../../src/bootstrap';
-import { osc, noise, solid, cellColor, charColor, paint } from '../../src/api';
+import { osc, noise, solid, cellColor, charColor, paint, char } from '../../src/api';
 
 describe('API Overloads', () => {
     it('should support primitive values in combine transforms (add)', () => {
@@ -97,6 +97,28 @@ describe('API Overloads', () => {
         expect(source.colorSource).toBeDefined();
         expect(source.colorSource?.transforms[0].name).toBe('solid');
         expect(source.colorSource?.transforms[0].userArgs).toEqual([1, 0, 0, 1]);
+    });
+
+    it('should support char(source) overload', () => {
+        const source = char(osc(10));
+        expect(source.charSource).toBeDefined();
+        expect(source.charSource?.transforms[0].name).toBe('osc');
+    });
+
+    it('should support char(value) overload', () => {
+        const source = char(0.5);
+        expect(source.charSource).toBeDefined();
+        expect(source.charSource?.transforms[0].name).toBe('solid');
+        // Expect duplicated args for scalar behavior (alpha defaults to 1 from solid() factory)
+        expect(source.charSource?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, 1]);
+    });
+
+    it('should support char(r, g, b) overload', () => {
+        const source = char(1, 0, 0);
+        expect(source.charSource).toBeDefined();
+        expect(source.charSource?.transforms[0].name).toBe('solid');
+        // Alpha defaults to 1 from solid() factory
+        expect(source.charSource?.transforms[0].userArgs).toEqual([1, 0, 0, 1]);
     });
 
     it('should support paint(source) overload', () => {
