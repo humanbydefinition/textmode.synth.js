@@ -182,6 +182,32 @@ ISynthSource.shape
 
 ### solid()
 
+#### Call Signature
+
+```ts
+solid(gray): this;
+```
+
+Generate a solid grayscale color.
+
+##### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `gray` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Grayscale value (0-1) |
+
+##### Returns
+
+`this`
+
+##### Inherited from
+
+```ts
+ISynthSource.solid
+```
+
+#### Call Signature
+
 ```ts
 solid(
    r?, 
@@ -192,7 +218,7 @@ solid(
 
 Generate a solid color.
 
-#### Parameters
+##### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
@@ -201,11 +227,11 @@ Generate a solid color.
 | `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blue channel (0-1, default: 0.0) |
 | `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Alpha channel (0-1, default: 1.0) |
 
-#### Returns
+##### Returns
 
 `this`
 
-#### Inherited from
+##### Inherited from
 
 ```ts
 ISynthSource.solid
@@ -241,7 +267,7 @@ Equivalent to hydra's `src(o0)`.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `layer?` | `unknown` | Optional TextmodeLayer to sample from. If omitted, samples from self (feedback). |
+| `layer?` | `TextmodeLayer` | Optional TextmodeLayer to sample from. If omitted, samples from self (feedback). |
 
 #### Returns
 
@@ -407,6 +433,13 @@ Scroll coordinates in X direction.
 
 `this`
 
+#### Example
+
+```typescript
+// Scroll noise horizontally
+noise(10).scrollX(0.5, 0.1)
+```
+
 #### Inherited from
 
 ```ts
@@ -433,6 +466,13 @@ Scroll coordinates in Y direction.
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+// Scroll noise vertically
+noise(10).scrollY(0.5, 0.1)
+```
 
 #### Inherited from
 
@@ -539,6 +579,13 @@ Repeat coordinates in X direction.
 
 `this`
 
+#### Example
+
+```typescript
+// Repeat pattern horizontally 5 times
+shape(4).repeatX(5, 0)
+```
+
 #### Inherited from
 
 ```ts
@@ -565,6 +612,13 @@ Repeat coordinates in Y direction.
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+// Repeat pattern vertically 5 times
+shape(4).repeatY(5, 0)
+```
 
 #### Inherited from
 
@@ -918,6 +972,32 @@ ISynthSource.thresh
 
 ### color()
 
+#### Call Signature
+
+```ts
+color(gray): this;
+```
+
+Multiply all channels by a scalar value (grayscale).
+
+##### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `gray` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Scalar multiplier |
+
+##### Returns
+
+`this`
+
+##### Inherited from
+
+```ts
+ISynthSource.color
+```
+
+#### Call Signature
+
 ```ts
 color(
    r?, 
@@ -931,7 +1011,7 @@ Colorize a grayscale source or multiply an existing color source.
 This is the recommended way to add color to grayscale sources like `osc()`,
 `noise()`, or `voronoi()`.
 
-#### Parameters
+##### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
@@ -940,11 +1020,11 @@ This is the recommended way to add color to grayscale sources like `osc()`,
 | `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blue channel multiplier (default: 1.0) |
 | `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Alpha channel multiplier (default: 1.0) |
 
-#### Returns
+##### Returns
 
 `this`
 
-#### Example
+##### Example
 
 ```typescript
 // Create a blue oscillator
@@ -954,7 +1034,7 @@ osc(10).color(0, 0.5, 1.0)
 noise(5).color(1, 0.2, 0.2)
 ```
 
-#### Inherited from
+##### Inherited from
 
 ```ts
 ISynthSource.color
@@ -1269,7 +1349,6 @@ Subtract another source.
 #### Example
 
 ```typescript
-// Create textmode.js instance with `SynthPlugin`
 const t = textmode.create({
   width: window.innerWidth,
   height: window.innerHeight,
@@ -1283,7 +1362,6 @@ t.layers.base.synth(
     .sub(shape(100, 0.3))
 );
 
-// Always make sure the sketch canvas dimensions are equal to the window size
 t.windowResized(() => {
   t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
@@ -1319,7 +1397,6 @@ Multiply with another source.
 #### Example
 
 ```typescript
-// Create textmode.js instance with `SynthPlugin`
 const t = textmode.create({
   width: window.innerWidth,
   height: window.innerHeight,
@@ -1334,7 +1411,6 @@ t.layers.base.synth(
     .color(1, 0.5, 0.2)
 );
 
-// Always make sure the sketch canvas dimensions are equal to the window size
 t.windowResized(() => {
   t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
