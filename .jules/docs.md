@@ -10,8 +10,30 @@
 **Action:** Added `@example` blocks to `modulateScale`, `modulateRotate`, `modulateScrollX`, and `modulateScrollY` in `src/core/ISynthSource.ts`.
 **Learning:** README often lists categories of functions (e.g., "Modulate"), but the individual interface methods might miss examples. Cross-reference README lists with interface docs.
 
-## Entry #3 — Incomplete Entry Point Example
-**API:** `textmode.synth.js` (main module example)
-**Issue:** The main example in `src/index.ts` was missing imports for `textmode` and the synth functions, making it fail if copy-pasted.
-**Fix:** Added specific imports for `textmode.js` and `textmode.synth.js` to the example block.
-**Pattern:** Incomplete Examples
+## Entry #3 — Docstring Example Standards
+**API:** Docstring Examples
+**Issue:** Previous attempts to "fix" examples by adding explicit imports were incorrect.
+**Fix:** Examples should assume a UMD environment where `textmode`, `SynthPlugin`, and synth functions are globally available.
+**Pattern:**
+```javascript
+// Create textmode.js instance with `SynthPlugin`
+const t = textmode.create({
+	width: window.innerWidth,
+	height: window.innerHeight,
+	fontSize: 8, // or 16
+	plugins: [SynthPlugin]
+});
+
+// Create a synth program
+t.layers.base.synth(
+	voronoi()
+		.color(0.9, 0.25, 0.15)
+		.rotate(() => (t.secs % 360) / 2)
+		.modulate([1, 1, 0, 1])
+);
+
+// Window resize handler
+t.windowResized(() => {
+	t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```

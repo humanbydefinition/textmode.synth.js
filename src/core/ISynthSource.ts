@@ -643,6 +643,28 @@ export interface ISynthSource {
 	 * Subtract another source.
 	 * @param source - Source to subtract
 	 * @param amount - Blend amount (default: 0.5)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Create textmode.js instance with `SynthPlugin`
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   fontSize: 8,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * // Subtract a smaller circle from a larger one to create a ring
+	 * t.layers.base.synth(
+	 *   shape(100, 0.5)
+	 *     .sub(shape(100, 0.3))
+	 * );
+	 *
+	 * // Always make sure the sketch canvas dimensions are equal to the window size
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	sub(source: ISynthSource, amount?: SynthParameterValue): this;
 
@@ -650,6 +672,29 @@ export interface ISynthSource {
 	 * Multiply with another source.
 	 * @param source - Source to multiply
 	 * @param amount - Blend amount (default: 0.5)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Create textmode.js instance with `SynthPlugin`
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   fontSize: 8,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * // Multiply noise with a shape to create a textured polygon
+	 * t.layers.base.synth(
+	 *   shape(3, 0.5)
+	 *     .mult(noise(10, 0.1))
+	 *     .color(1, 0.5, 0.2)
+	 * );
+	 *
+	 * // Always make sure the sketch canvas dimensions are equal to the window size
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	mult(source: ISynthSource, amount?: SynthParameterValue): this;
 
