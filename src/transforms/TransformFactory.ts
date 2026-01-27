@@ -1,6 +1,7 @@
 import type { TransformDefinition, TransformInput } from './TransformDefinition';
 import { transformRegistry } from './TransformRegistry';
 import type { SynthParameterValue } from '../core/types';
+import type { SynthSource } from '../core/SynthSource';
 
 /**
  * Interface for the SynthSource class that will have methods injected.
@@ -21,7 +22,7 @@ const SOURCE_TYPE_TRANSFORMS = new Set(['src']);
  * Generated standalone functions for source transforms.
  */
 export interface GeneratedFunctions {
-	[name: string]: (...args: SynthParameterValue[]) => unknown;
+	[name: string]: (...args: SynthParameterValue[]) => SynthSource;
 }
 
 /**
@@ -108,15 +109,15 @@ class TransformFactory {
 
 		const functions: GeneratedFunctions = {};
 		const transforms = transformRegistry.getAll();
-		const SynthSource = this._synthSourceClass;
+		const SynthSourceCtor = this._synthSourceClass;
 
 		for (const transform of transforms) {
 			if (SOURCE_TYPE_TRANSFORMS.has(transform.type)) {
 				const { name, inputs } = transform;
 
 				functions[name] = (...args: SynthParameterValue[]) => {
-					const source = new SynthSource();
-					return source.addTransform(name, resolveArgs(inputs, args));
+					const source = new SynthSourceCtor();
+					return source.addTransform(name, resolveArgs(inputs, args)) as SynthSource;
 				};
 			}
 		}
@@ -147,12 +148,12 @@ class TransformFactory {
 
 		// Generate standalone function if it's a source type
 		if (SOURCE_TYPE_TRANSFORMS.has(transform.type) && this._synthSourceClass) {
-			const SynthSource = this._synthSourceClass;
+			const SynthSourceCtor = this._synthSourceClass;
 			const { name, inputs } = transform;
 
 			this._generatedFunctions[name] = (...args: SynthParameterValue[]) => {
-				const source = new SynthSource();
-				return source.addTransform(name, resolveArgs(inputs, args));
+				const source = new SynthSourceCtor();
+				return source.addTransform(name, resolveArgs(inputs, args)) as SynthSource;
 			};
 		}
 	}
