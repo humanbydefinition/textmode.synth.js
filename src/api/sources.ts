@@ -54,7 +54,7 @@ export function cellColor(
     a?: SynthParameterValue
 ): SynthSource;
 export function cellColor(
-    rOrSource: SynthParameterValue | SynthSource,
+    rOrSource: SynthParameterValue,
     g?: SynthParameterValue,
     b?: SynthParameterValue,
     a?: SynthParameterValue
@@ -62,7 +62,6 @@ export function cellColor(
     if (rOrSource instanceof SynthSource) {
         return new SynthSource({ cellColorSource: rOrSource });
     }
-    // @ts-ignore - solid accepts strict types but underlying implementation supports SynthParameterValue
     return new SynthSource({ cellColorSource: solid(rOrSource, g, b, a) });
 }
 
@@ -140,7 +139,7 @@ export function charColor(
     a?: SynthParameterValue
 ): SynthSource;
 export function charColor(
-    rOrSource: SynthParameterValue | SynthSource,
+    rOrSource: SynthParameterValue,
     g?: SynthParameterValue,
     b?: SynthParameterValue,
     a?: SynthParameterValue
@@ -148,7 +147,6 @@ export function charColor(
     if (rOrSource instanceof SynthSource) {
         return new SynthSource({ colorSource: rOrSource });
     }
-    // @ts-ignore - solid accepts strict types but underlying implementation supports SynthParameterValue
     return new SynthSource({ colorSource: solid(rOrSource, g, b, a) });
 }
 
@@ -280,7 +278,7 @@ export function paint(
     a?: SynthParameterValue
 ): SynthSource;
 export function paint(
-    rOrSource: SynthParameterValue | SynthSource,
+    rOrSource: SynthParameterValue,
     g?: SynthParameterValue,
     b?: SynthParameterValue,
     a?: SynthParameterValue
@@ -289,7 +287,6 @@ export function paint(
     if (rOrSource instanceof SynthSource) {
         source = rOrSource;
     } else {
-        // @ts-ignore - solid accepts strict types but underlying implementation supports SynthParameterValue
         source = solid(rOrSource, g, b, a);
     }
     return new SynthSource({
@@ -336,6 +333,7 @@ export function shape(
  * @param gray - Grayscale value (0-1)
  */
 export function solid(gray: SynthParameterValue): SynthSource;
+
 /**
  * Generate a solid color.
  * @param r - Red channel (0-1, default: 0.0)
@@ -365,6 +363,7 @@ export function solid(
     b?: SynthParameterValue,
     a?: SynthParameterValue
 ): SynthSource;
+
 export function solid(
     r?: SynthParameterValue,
     g?: SynthParameterValue,
