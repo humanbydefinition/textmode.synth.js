@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import '../../src/bootstrap';
-import { osc, noise, solid } from '../../src/api';
+import { osc, noise, solid, cellColor, charColor, paint } from '../../src/api';
 
 describe('API Overloads', () => {
     it('should support primitive values in combine transforms (add)', () => {
@@ -71,5 +71,46 @@ describe('API Overloads', () => {
         expect(source.transforms[1].name).toBe('color');
         // Expect duplicated args (plus default alpha)
         expect(source.transforms[1].userArgs).toEqual([0.5, 0.5, 0.5, 1]);
+    });
+
+    it('should support cellColor(source) overload', () => {
+        const source = cellColor(osc(10));
+        expect(source.cellColorSource).toBeDefined();
+        expect(source.cellColorSource?.transforms[0].name).toBe('osc');
+    });
+
+    it('should support cellColor(r, g, b, a) overload', () => {
+        const source = cellColor(1, 0, 0, 1);
+        expect(source.cellColorSource).toBeDefined();
+        expect(source.cellColorSource?.transforms[0].name).toBe('solid');
+        expect(source.cellColorSource?.transforms[0].userArgs).toEqual([1, 0, 0, 1]);
+    });
+
+    it('should support charColor(source) overload', () => {
+        const source = charColor(osc(10));
+        expect(source.colorSource).toBeDefined();
+        expect(source.colorSource?.transforms[0].name).toBe('osc');
+    });
+
+    it('should support charColor(r, g, b, a) overload', () => {
+        const source = charColor(1, 0, 0, 1);
+        expect(source.colorSource).toBeDefined();
+        expect(source.colorSource?.transforms[0].name).toBe('solid');
+        expect(source.colorSource?.transforms[0].userArgs).toEqual([1, 0, 0, 1]);
+    });
+
+    it('should support paint(source) overload', () => {
+        const source = paint(osc(10));
+        expect(source.colorSource).toBeDefined();
+        expect(source.cellColorSource).toBeDefined();
+        expect(source.colorSource?.transforms[0].name).toBe('osc');
+    });
+
+    it('should support paint(r, g, b, a) overload', () => {
+        const source = paint(1, 0, 0, 1);
+        expect(source.colorSource).toBeDefined();
+        expect(source.cellColorSource).toBeDefined();
+        expect(source.colorSource?.transforms[0].name).toBe('solid');
+        expect(source.colorSource?.transforms[0].userArgs).toEqual([1, 0, 0, 1]);
     });
 });
