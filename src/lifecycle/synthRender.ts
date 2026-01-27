@@ -190,12 +190,17 @@ function applySynthUniforms(
 	}
 
 	const compiled = state.compiled!;
+	// Only update static uniforms if the shader instance has changed
+	const forceUpdate = state.staticUniformsAppliedTo !== state.shader;
 
 	// Static uniforms
-	for (const [name, uniform] of compiled.uniforms) {
-		if (!uniform.isDynamic && typeof uniform.value !== 'function') {
-			textmodifier.setUniform(name, uniform.value);
+	if (forceUpdate) {
+		for (const [name, uniform] of compiled.uniforms) {
+			if (!uniform.isDynamic && typeof uniform.value !== 'function') {
+				textmodifier.setUniform(name, uniform.value);
+			}
 		}
+		state.staticUniformsAppliedTo = state.shader;
 	}
 
 	// Character mapping uniforms
@@ -204,8 +209,12 @@ function applySynthUniforms(
 			compiled.charMapping.chars,
 			layer.font as TextmodeFont
 		);
-		textmodifier.setUniform('u_charMap', indices);
-		textmodifier.setUniform('u_charMapSize', indices.length);
+		// Only update if mapping changed or shader changed
+		if (forceUpdate || indices !== state.lastCharMapIndices) {
+			textmodifier.setUniform('u_charMap', indices);
+			textmodifier.setUniform('u_charMapSize', indices.length);
+			state.lastCharMapIndices = indices;
+		}
 	}
 
 	// Char source count uniform (for char() function)
