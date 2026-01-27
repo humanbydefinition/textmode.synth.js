@@ -162,6 +162,17 @@ export interface LayerSynthState {
 	 * Used to prevent race conditions during async operations (e.g. compilation).
 	 */
 	isDisposed?: boolean;
+  
+  /**
+	 * Track which shader instance has received static uniforms.
+	 * Static uniforms are only applied when the shader changes.
+	 */
+	staticUniformsAppliedTo?: TextmodeShader;
+
+	/**
+	 * Track the last applied character map indices to avoid redundant uploads.
+	 */
+	lastCharMapIndices?: Int32Array;
 }
 
 /**

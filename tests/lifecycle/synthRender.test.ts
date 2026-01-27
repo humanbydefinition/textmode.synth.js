@@ -216,7 +216,7 @@ describe('synthRender Lifecycle', () => {
 
 			// Check for leak of intermediate shader
 			// If shader1 was created but isn't the current shader, it MUST be disposed
-			if (state.shader !== shader1) {
+			if (state.shader !== shader1 as any) {
 				// If callCount was 2, shader1 was created. If it's not state.shader, did we dispose it?
 				// In the bug, callCount is 2, shader1 is NOT disposed.
 				const wasDisposed = (shader1.dispose as Mock).mock.calls.length > 0;

@@ -367,6 +367,12 @@ export interface ISynthSource {
 	 * Scroll coordinates in X direction.
 	 * @param scrollX - X scroll amount (default: 0.5)
 	 * @param speed - Scroll speed (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Scroll noise horizontally
+	 * noise(10).scrollX(0.5, 0.1)
+	 * ```
 	 */
 	scrollX(scrollX?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -374,6 +380,12 @@ export interface ISynthSource {
 	 * Scroll coordinates in Y direction.
 	 * @param scrollY - Y scroll amount (default: 0.5)
 	 * @param speed - Scroll speed (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Scroll noise vertically
+	 * noise(10).scrollY(0.5, 0.1)
+	 * ```
 	 */
 	scrollY(scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -418,6 +430,12 @@ export interface ISynthSource {
 	 * Repeat coordinates in X direction.
 	 * @param reps - Number of repetitions (default: 3.0)
 	 * @param offset - Offset between repetitions (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Repeat pattern horizontally 5 times
+	 * shape(4).repeatX(5, 0)
+	 * ```
 	 */
 	repeatX(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -425,6 +443,12 @@ export interface ISynthSource {
 	 * Repeat coordinates in Y direction.
 	 * @param reps - Number of repetitions (default: 3.0)
 	 * @param offset - Offset between repetitions (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Repeat pattern vertically 5 times
+	 * shape(4).repeatY(5, 0)
+	 * ```
 	 */
 	repeatY(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
 
