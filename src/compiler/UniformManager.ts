@@ -35,54 +35,18 @@ export class UniformManager {
 	): ProcessedArgument {
 		// Modulated array - create uniform
 		if (isModulatedArray(value)) {
-			const uniformName = `${prefix}_${input.name}`;
-			const uniform: SynthUniform = {
-				name: uniformName,
-				type: input.type as GLSLType,
-				value: (input.default as number) ?? 0,
-				isDynamic: true,
-			};
-
-			const updater = createDynamicUpdater(
-				(ctx: SynthContext) => getArrayValue(value as ModulatedArray, ctx),
-				uniformName,
-				uniform.value as number | number[]
+			return this._createDynamicUniform(input, prefix, (ctx) =>
+				getArrayValue(value as ModulatedArray, ctx)
 			);
-
-			this._uniforms.set(uniformName, uniform);
-			this._dynamicUpdaters.set(uniformName, updater);
-
-			return {
-				glslValue: uniformName,
-				uniform,
-				updater,
-			};
 		}
 
 		// Dynamic function value - create uniform
 		if (typeof value === 'function') {
-			const uniformName = `${prefix}_${input.name}`;
-			const uniform: SynthUniform = {
-				name: uniformName,
-				type: input.type as GLSLType,
-				value: (input.default as number) ?? 0,
-				isDynamic: true,
-			};
-
-			const updater = createDynamicUpdater(
-				value as (ctx: SynthContext) => number,
-				uniformName,
-				uniform.value as number | number[]
+			return this._createDynamicUniform(
+				input,
+				prefix,
+				value as (ctx: SynthContext) => number | number[]
 			);
-
-			this._uniforms.set(uniformName, uniform);
-			this._dynamicUpdaters.set(uniformName, updater);
-
-			return {
-				glslValue: uniformName,
-				uniform,
-				updater,
-			};
 		}
 
 		// Static number value
@@ -113,6 +77,38 @@ export class UniformManager {
 
 		// Fallback to default
 		return this.processDefault(input);
+	}
+
+	/**
+	 * Create a dynamic uniform and register its updater.
+	 */
+	private _createDynamicUniform(
+		input: TransformInput,
+		prefix: string,
+		updaterFn: (ctx: SynthContext) => number | number[]
+	): ProcessedArgument {
+		const uniformName = `${prefix}_${input.name}`;
+		const uniform: SynthUniform = {
+			name: uniformName,
+			type: input.type as GLSLType,
+			value: (input.default as number) ?? 0,
+			isDynamic: true,
+		};
+
+		const updater = createDynamicUpdater(
+			updaterFn,
+			uniformName,
+			uniform.value as number | number[]
+		);
+
+		this._uniforms.set(uniformName, uniform);
+		this._dynamicUpdaters.set(uniformName, updater);
+
+		return {
+			glslValue: uniformName,
+			uniform,
+			updater,
+		};
 	}
 
 	/**
