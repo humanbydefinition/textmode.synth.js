@@ -50,7 +50,9 @@ declare module 'textmode.js/layering' {
 		 */
 		get id(): string;
 	}
+}
 
+declare module 'textmode.js' {
 	interface Textmodifier {
 		/**
 		 * Set the global BPM (Beats Per Minute) for array modulation timing.
