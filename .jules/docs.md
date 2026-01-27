@@ -16,7 +16,6 @@
 **Fix:** Examples should assume a UMD environment where `textmode`, `SynthPlugin`, and synth functions are globally available.
 **Pattern:**
 ```javascript
-// Create textmode.js instance with `SynthPlugin`
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
@@ -32,7 +31,6 @@ t.layers.base.synth(
 		.modulate([1, 1, 0, 1])
 );
 
-// Window resize handler
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
