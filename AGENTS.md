@@ -1,10 +1,10 @@
 # AGENTS.md — textmode.synth.js
 
-> Ground-truth reference for AI coding agents working on this hydra-inspired synthesis add-on for textmode.js.
+> **Ground-truth reference for AI coding agents working on this hydra-inspired synthesis add-on for textmode.js.**
 
 ---
 
-## Quick Context
+## 1. Quick Context
 
 **textmode.synth.js** is an add-on library that brings hydra-synth-style visual synthesis to textmode.js. It compiles method chains like `osc(10).rotate(0.1).kaleid(4)` into optimized GLSL shaders that drive the three-texture textmode rendering system (characters, foreground colors, background colors).
 
@@ -18,19 +18,17 @@
 
 ---
 
-## Verification Command
+## 2. Core Directives
 
-```bash
-npm run verify
-```
-
-This runs: `format:check` → `lint:md` → `build` → `test:run`
-
-**If this fails, do not create a PR.** Fix the issue or abort.
+1. **Always Verify**: Run `npm run verify` before considering *any* task complete. This runs formatting, linting, build, and tests.
+2. **Edit Source, Not Artifacts**: Never edit files in `dist/` or `api/` (generated docs). Trace back to `src/`.
+3. **Strict Typing**: Use strict TypeScript. Avoid `any`. Use `unknown` with narrowing or specific types.
+4. **Zero Runtime Deps**: This is a library. Do not add runtime dependencies. `textmode.js` is a peer dependency.
+5. **Performance First**: We run in the render loop. Minimize allocations, avoid heavy math in JS (move to GLSL), and watch bundle size.
 
 ---
 
-## Architecture Overview
+## 3. Architecture Overview
 
 ```text
 src/
@@ -75,11 +73,9 @@ src/
 
 ---
 
-## Key Concepts
+## 4. Key Concepts
 
-### 1. Transform Types
-
-Transforms are categorized by their input/output signatures:
+### Transform Types
 
 | Type | Description | Examples |
 |------|-------------|----------|
@@ -89,267 +85,134 @@ Transforms are categorized by their input/output signatures:
 | `combine` | Blends two color sources | `add`, `mult`, `blend`, `layer`, `mask` |
 | `combineCoord` | Uses one source to modulate another's UVs | `modulate`, `modulateScale`, `modulateRotate` |
 
-### 2. Compilation Pipeline
+### Three-Texture System
 
-```text
-SynthSource chain
-    ↓
-SynthCompiler.compile()
-    ↓
-├── FeedbackTracker (detect src() usage)
-├── ExternalLayerManager (cross-layer refs)
-├── TransformCodeGenerator (GLSL per transform)
-├── UniformManager (collect uniforms)
-    ↓
-GLSLGenerator.generateFragmentShader()
-    ↓
-MRT Fragment Shader (3 outputs: char, charColor, cellColor)
-```
+We target three framebuffer attachments in textmode.js:
 
-### 3. Three-Texture System
+1. **Character**: Index (RG), flags, rotation.
+2. **Foreground**: RGBA color.
+3. **Background**: RGBA color.
 
-textmode.js renders to three framebuffer attachments:
+### Declaration Merging
 
-- **Target 0**: Character data (index (RG), flags, rotation)
-- **Target 1**: Foreground/character color (RGBA)
-- **Target 2**: Cell background color (RGBA)
+`SynthSource` uses TypeScript declaration merging to support dynamic method injection while maintaining strict typing.
 
-The synth compiler generates shaders that output to all three simultaneously.
-
-### 4. Entry Point Functions
-
-| Function | Purpose |
-|----------|---------|
-| `char(source)` | Drive character indices from a pattern |
-| `charColor(source)` | Drive foreground color |
-| `cellColor(source)` | Drive background color |
-| `paint(source)` | Drive both foreground AND background (pixel art mode) |
-| `osc()`, `noise()`, etc. | Source generators that start chains |
+- **Explicit Methods**: Defined in `SynthSource` class (e.g., `addTransform`).
+- **Injected Methods**: Defined in `ISynthSource` interface in `src/core/ISynthSource.ts` (e.g., `kaleid`, `osc`).
 
 ---
 
-## Development Commands
+## 5. Development Workflow
+
+### Commands
 
 | Command | Purpose |
 |---------|---------|
 | `npm run dev` | Dev server at http://localhost:5174 |
 | `npm run build` | TypeScript + Vite production build |
-| `npm run test:run` | Run tests once |
+| `npm run test:run` | Run tests once (preferred over `vitest`) |
 | `npm run verify` | **Full CI check** (format, lint, build, test) |
-| `npm run format` | Auto-format with Prettier |
 | `npm run size` | Check bundle size limits |
+| `npm run build:docs` | Rebuild API documentation |
+
+### Verification
+
+Always run `npm run verify`. If it fails, do not commit.
+
+### Documentation
+
+- **API Docs**: `src/api/sources.ts` and `src/core/ISynthSource.ts` are the sources of truth.
+- **Examples**:
+  - Use `textmode.create({ ... plugins: [SynthPlugin] })`.
+  - Do not include imports in JSDoc examples unless necessary.
+  - Assume global access for simple snippets (UMD style compatibility).
 
 ---
 
-## Coding Conventions
+## 6. Testing Guidelines
 
-### Naming
+### Strategy
 
-| Element | Convention | Example |
-|---------|------------|---------|
-| Classes | PascalCase | `SynthSource`, `TransformRegistry` |
-| Transform definitions | camelCase | `osc`, `modulateScale` |
-| Internal methods | `_` prefix | `_chain`, `_charMapping` |
-| Types | PascalCase | `SynthContext`, `TransformInput` |
+- **Unit Tests**: Organize in `tests/` mirroring `src/` structure (e.g., `tests/core/SynthSource.test.ts`).
+- **Environment**: JSDOM.
+- **Running**: Use `npm run test:run`.
 
-### Transform Definition Pattern
+### Mocking
 
-```typescript
-// In src/transforms/categories/*.ts
-import { defineTransform } from '../TransformDefinition';
+1. **textmode.js**: Requires deep mocking.
+   - **WebGL2**: Mock `depthMask`, `clearDepth`, `pixelStorei`, `blendFuncSeparate`.
+   - **2D Context**: Mock `beginPath`.
+   - **Layer**: Use `TextmodeLayer` type from `textmode.js/layering`.
+2. **Singletons**: `TransformRegistry` persists.
+   - **Action**: Call `TransformRegistry.clear()` in `beforeEach`/`afterEach`.
+3. **SynthSource**:
+   - **Action**: In transform tests, define a local mock `SynthSource` and inject it via `setSynthSourceClass` to prevent prototype pollution.
 
-export const myTransform = defineTransform({
-  name: 'myTransform',
-  type: 'color', // 'src' | 'coord' | 'color' | 'combine' | 'combineCoord'
-  inputs: [
-    { name: 'amount', type: 'float', default: 1.0 },
-  ],
-  glsl: `
-    return vec4(_c0.rgb * amount, _c0.a);
-  `,
-  description: 'Description for docs',
-});
-```
+### Resource Disposal
 
-### GLSL Conventions
-
-- `_st` = UV coordinates (vec2)
-- `_c0` = Current color (vec4) — for color/combine transforms
-- `_c1` = Second source color (vec4) — for combine transforms
-- `time` = Time in seconds (float)
-- Built-in helpers: `_luminance()`, `_rgbToHsv()`, `_hsvToRgb()`, `_noise()`
+- Verify `dispose()` is called on WebGL resources (framebuffers, shaders).
+- Mock objects should spy on `dispose`.
 
 ---
 
-## Common Tasks
+## 7. Coding Standards
 
-### Adding a New Transform
+### naming
 
-1. Add definition in appropriate `src/transforms/categories/*.ts`
-2. Export from `src/transforms/categories/index.ts`
-3. It's automatically registered via `bootstrap.ts`
-4. If it's a source type, export from `src/api/sources.ts` and `src/index.ts`
+- **Classes**: PascalCase (`SynthSource`)
+- **Transforms**: camelCase (`osc`, `modulateScale`)
+- **Internal**: `_` prefix (`_ensureSource`, `_compile`)
 
-### Adding a New Source Generator
+### Performance
 
-1. Define in `src/transforms/categories/sources.ts` with `type: 'src'`
-2. Export from `src/api/sources.ts` with JSDoc documentation
-3. Export from `src/index.ts`
+- **Math**: Use `val - Math.floor(val)` instead of modulo for hot paths.
+- **Allocations**: Prefer reusing `state.resolutionArray` or `state.staticUniformsAppliedTo` over new allocations in render loop.
+- **GLSL**: Use optimized built-ins defined in `UTILITY_FUNCTIONS` (`src/compiler/GLSLGenerator.ts`).
 
-### Modifying the Compiler
+### Plugin Lifecycle
 
-The compiler is modular. Key files:
-
-- `SynthCompiler.ts` — Orchestration, chain traversal
-- `GLSLGenerator.ts` — Final shader assembly
-- `TransformCodeGenerator.ts` — Per-transform GLSL generation
-- `UniformManager.ts` — Uniform declarations and tracking
+- **Uninstall**: Must strictly clean up state.
+  - `layer.setPluginState(PLUGIN_NAME, undefined)`
+  - `state.isDisposed = true`
+  - Dispose shaders and framebuffers.
 
 ---
 
-## TypeScript Strict Mode
-
-This project uses strict TypeScript. Watch for:
-
-| Error | Fix |
-|-------|-----|
-| `TS6133` unused variable | Remove it or prefix with `_` |
-| `TS2322` type mismatch | Fix the type or add proper cast |
-| `noUnusedParameters` | Prefix unused params with `_` |
-
----
-
-## Bundle Size Limits
-
-| Bundle | Limit (gzip) | Limit (uncompressed) |
-|--------|--------------|----------------------|
-| ESM | 15 kB | 55 kB |
-| UMD | 15 kB | 45 kB |
-
-Run `npm run size` to check. If legitimate changes exceed limits, update `package.json` under `"size-limit"` with rationale in PR.
-
----
-
-## Agent Decision Tree
+## 8. Agent Decision Tree
 
 ```text
 Task received
     │
-    ├─ Is it about transforms/GLSL?
-    │   └─ Check src/transforms/categories/ and compiler/
+    ├─ Is it a transform/GLSL feature?
+    │   ├─ Definition: src/transforms/categories/
+    │   ├─ Injection: src/transforms/TransformFactory.ts
+    │   └─ GLSL: src/compiler/GLSLGenerator.ts
     │
-    ├─ Is it about the plugin/integration?
-    │   └─ Check src/plugin/ and src/extensions/
+    ├─ Is it a documentation task?
+    │   ├─ Public API: src/api/
+    │   ├─ Interfaces: src/core/ISynthSource.ts
+    │   └─ Run: npm run build:docs
     │
-    ├─ Is it about rendering?
-    │   └─ Check src/lifecycle/synthRender.ts
+    ├─ Is it a bug fix?
+    │   ├─ Create test case in tests/
+    │   ├─ Verify with npm run test:run
+    │   └─ Check .jules/memory.md for similar issues
     │
-    ├─ Is it about the API surface?
-    │   └─ Check src/api/ and src/index.ts
-    │
-    └─ Is it about array modulation (.fast(), .ease())?
-        └─ Check src/utils/ArrayUtils.ts
+    └─ Is it performance related?
+        ├─ Check src/lifecycle/synthRender.ts
+        ├─ Run npm run size
+        └─ Log in .jules/performance.md
 ```
 
 ---
 
-## Example Sketches & Documentation
+## 9. Common Pitfalls
 
-When adding or updating code examples in docstrings or documentation files:
-
-### 1. Standard Sketch Pattern
-
-Follow the initialization pattern found in `src/api/sources.ts`. Explicitly create the instance with the plugin:
-
-```typescript
-const t = textmode.create({
-  width: 800,
-  height: 600,
-  plugins: [SynthPlugin]
-});
-
-// Usage
-t.layers.base.synth(osc(10));
-```
-
-- **Instantiation**: Always show `textmode.create()` with `SynthPlugin` in the plugins array.
-- **Globals**: Assume `textmode` and `SynthPlugin` are available (UMD style). Do not add explicit ESM imports (like `import { textmode } ...`) unless the context requires it.
-- **Do Not Refactor**: Do not "modernize" working examples by converting them to strict ESM imports if they follow the pattern above.
-
-### 2. Prioritization
-
-- **Focus on Coverage**: Prioritize creating **missing** example sketches for undocumented functions or classes.
-- **Ignore Style "Fixes"**: Do not waste cycles converting valid simple sketches to complex modular code.
-
----
-
-## Boundaries
-
-### Always Do
-
-- Run `npm run verify` before any PR
-- Keep changes minimal and focused
-- Follow existing patterns in the codebase
-- Document public API with JSDoc
-
-### Ask First
-
-- Adding new peer dependencies
-- Changing the compilation pipeline significantly
-- Modifying the plugin lifecycle hooks
-
-### Never Do
-
-- Skip verification
-- Break existing transform definitions
-- Add runtime dependencies (this is a zero-runtime-dep library)
-- Modify textmode.js types directly (use augmentations)
-
----
-
-## Commit Convention
-
-Uses [Conventional Commits](https://www.conventionalcommits.org/) with commitlint:
-
-```text
-feat(compiler): add new blend mode support
-fix(transforms): correct kaleid center offset
-docs: update API examples
-chore(deps): bump vite
-```
-
-Types: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`
-
----
-
-## Relationship to textmode.js
-
-This is an **add-on library**, not a fork:
-
-- Depends on textmode.js as a peer dependency
-- Extends via the plugin system (`SynthPlugin`)
-- Uses type augmentations in `src/augmentations/` to add methods to textmode.js interfaces
-- Does NOT modify textmode.js source
-
----
-
-## Files to Read First
-
-When starting work on this codebase:
-
-1. [src/index.ts](src/index.ts) — Public exports
-2. [src/core/SynthSource.ts](src/core/SynthSource.ts) — Core chainable class
-3. [src/compiler/SynthCompiler.ts](src/compiler/SynthCompiler.ts) — How chains become shaders
-4. [src/transforms/categories/sources.ts](src/transforms/categories/sources.ts) — Transform definition examples
-5. [src/plugin/SynthPlugin.ts](src/plugin/SynthPlugin.ts) — Plugin integration
-
----
-
-## Abort Conditions
-
-Stop and do not create a PR if:
-
-- `npm run verify` fails after attempted fixes
-- Changes would break existing public API
-- You're unsure about the impact on shader compilation
-- The task requires modifying textmode.js core (wrong repo)
+1. **Race Conditions**: Async shader compilation in `synthRender`.
+   - *Fix*: Check `state.isDisposed` after `await`.
+2. **Singleton Pollution**: `TransformRegistry` leaking between tests.
+   - *Fix*: Explicit `clear()`.
+3. **Type Mismatches**: `TextmodeLayer` vs `ExternalLayerReference`.
+   - *Fix*: Use `textmode.js/layering` types.
+4. **Overloads**: `char(source)` vs `char(value)`.
+   - *Fix*: Use `_ensureSource` and explicit union types in implementation.
