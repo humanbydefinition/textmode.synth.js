@@ -23,3 +23,9 @@
 **Challenge:** `SynthSourcePrototype` was defined as a loose interface to avoid circular dependencies, resulting in weak types (`unknown`) for core methods like `addTransform` and dynamic method injection.
 **Solution:** Refactored `SynthSourcePrototype` to be a type alias `SynthSource & { [key: string]: unknown }`, utilizing the existing `SynthSource` type (which includes `ISynthSource` via declaration merging). This provides full type safety for the prototype while maintaining flexibility for dynamic injection.
 **Learning:** You can often avoid loose "mock" interfaces by using `import type` and type aliases/intersection types, allowing you to use the real class type even in circular dependency scenarios without runtime cost.
+
+## Entry #5 — Removing SynthSourcePrototype Double Casts
+**Pattern:** Double casting `Class as unknown as new () => Prototype` and `Class.prototype as unknown as Prototype` to force type compatibility for dynamic injection.
+**Challenge:** `SynthSourcePrototype` was a "lie" (adding an index signature that the class `SynthSource` didn't actually implement), forcing unsafe casts in `bootstrap.ts` to make the types line up. This exposed this "loose" type globally.
+**Solution:** Removed `SynthSourcePrototype` entirely. Updated `TransformFactory` to work directly with `SynthSource`. Used a localized cast to `Record<string, unknown>` *only* within the `_injectMethod` function where the dynamic assignment actually happens. This confines the type unsafety to a single line implementation detail and allows `bootstrap.ts` to use strict types.
+**Learning:** Instead of polluting the global type definitions or function signatures with loose types to accommodate one implementation detail (monkey-patching), keep the public API strict (`SynthSource`) and perform the necessary cast locally where the strict rules are intentionally bypassed.
