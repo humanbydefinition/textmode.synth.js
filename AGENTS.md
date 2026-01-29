@@ -155,32 +155,7 @@ Always run `npm run verify`. If it fails, do not commit.
 
 ---
 
-## 7. Memory & Journaling
-
-Use the `.jules/` directory to track findings and improvements.
-
-### Files
-
-- `.jules/memory.md`: General learnings, bugs, patterns.
-- `.jules/performance.md`: Optimizations and metrics.
-- `.jules/testing.md`: Coverage gaps and patterns.
-- `.jules/docs.md`: Documentation findings.
-
-### Format
-
-Use the standard entry format:
-
-```markdown
-## Entry #[N] — [Title]
-- **Type**: [Finding/Bug/Pattern]
-- **Description**: ...
-- **Action/Fix**: ...
-- **Learning**: ...
-```
-
----
-
-## 8. Coding Standards
+## 7. Coding Standards
 
 ### naming
 
@@ -194,12 +169,6 @@ Use the standard entry format:
 - **Allocations**: Prefer reusing `state.resolutionArray` or `state.staticUniformsAppliedTo` over new allocations in render loop.
 - **GLSL**: Use optimized built-ins defined in `UTILITY_FUNCTIONS` (`src/compiler/GLSLGenerator.ts`).
 
-### Bundle Size
-
-- **Limits**: 15KB (gzip) ESM/UMD.
-- **Check**: `npm run size`.
-- **Avoid**: Importing large utils for small tasks. Use local implementation or specific imports.
-
 ### Plugin Lifecycle
 
 - **Uninstall**: Must strictly clean up state.
@@ -209,7 +178,7 @@ Use the standard entry format:
 
 ---
 
-## 9. Agent Decision Tree
+## 8. Agent Decision Tree
 
 ```text
 Task received
@@ -237,7 +206,7 @@ Task received
 
 ---
 
-## 10. Common Pitfalls
+## 9. Common Pitfalls
 
 1. **Race Conditions**: Async shader compilation in `synthRender`.
    - *Fix*: Check `state.isDisposed` after `await`.
