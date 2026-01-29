@@ -46,7 +46,7 @@ export const SynthPlugin: TextmodePlugin = {
 		api.registerLayerDisposedHook(synthDispose);
 	},
 
-	uninstall(_textmodifier, api: TextmodePluginAPI) {
+	uninstall(textmodifier, api: TextmodePluginAPI) {
 		// Clean up all synth states
 		const allLayers = [api.layerManager.base, ...api.layerManager.all];
 		for (const layer of allLayers) {
@@ -69,7 +69,7 @@ export const SynthPlugin: TextmodePlugin = {
 		}
 
 		// Remove textmodifier extensions
-		delete (_textmodifier as Partial<Textmodifier>).bpm;
+		delete (textmodifier as Partial<Textmodifier>).bpm;
 
 		// Remove layer extensions
 		api.removeLayerExtension('synth');
