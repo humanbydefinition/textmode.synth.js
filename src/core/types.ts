@@ -173,6 +173,17 @@ export interface LayerSynthState {
 	 * Track the last applied character map indices to avoid redundant uploads.
 	 */
 	lastCharMapIndices?: Int32Array;
+
+	/**
+	 * Optimized copy shader for feedback rendering.
+	 * Used to copy the write buffer to the draw buffer without re-running the synth pipeline.
+	 */
+	copyShader?: TextmodeShader;
+
+	/**
+	 * Whether the copy shader is currently compiling.
+	 */
+	isCompilingCopy?: boolean;
 }
 
 /**

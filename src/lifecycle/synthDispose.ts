@@ -18,6 +18,9 @@ export function synthDispose(layer: TextmodeLayer) {
 		if (state.shader?.dispose) {
 			state.shader.dispose();
 		}
+		if (state.copyShader?.dispose) {
+			state.copyShader.dispose();
+		}
 		if (state.pingPongBuffers) {
 			state.pingPongBuffers[0].dispose?.();
 			state.pingPongBuffers[1].dispose?.();
