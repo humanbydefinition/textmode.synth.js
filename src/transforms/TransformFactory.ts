@@ -46,7 +46,7 @@ class TransformFactory {
 	 * Inject chainable methods into the SynthSource prototype.
 	 * This dynamically adds all registered transforms as methods.
 	 */
-	public injectMethods(prototype: SynthSourcePrototype): void {
+	public injectMethods(prototype: SynthSource): void {
 		const transforms = transformRegistry.getAll();
 
 		for (const transform of transforms) {
@@ -57,9 +57,10 @@ class TransformFactory {
 	/**
 	 * Inject a single method for a transform.
 	 */
-	private _injectMethod(prototype: SynthSourcePrototype, transform: TransformDefinition): void {
+	private _injectMethod(prototype: SynthSource, transform: TransformDefinition): void {
 		const SynthSourceCtor = this._synthSourceClass;
 		const { name, inputs, type } = transform;
+		const proto = prototype as unknown as Record<string, unknown>;
 
 		// Handle combine and combineCoord types specially (they take a source as first arg)
 		if (type === 'combine' || type === 'combineCoord') {
@@ -75,7 +76,11 @@ class TransformFactory {
 					actualSource = SynthSourceCtor.from(source as SynthParameterValue);
 				}
 
-				return this.addCombineTransform(name, actualSource, resolveArgs(inputs, args));
+				return this.addCombineTransform(
+					name,
+					actualSource as SynthSource,
+					resolveArgs(inputs, args)
+				);
 			};
 		} else {
 			// Standard transform - just takes parameter values
@@ -146,7 +151,7 @@ class TransformFactory {
 	 * Add a new transform and inject its method.
 	 * This can be used to add custom transforms at runtime.
 	 */
-	public addTransform(transform: TransformDefinition, prototype?: SynthSourcePrototype): void {
+	public addTransform(transform: TransformDefinition, prototype?: SynthSource): void {
 		// Register in the registry
 		transformRegistry.register(transform);
 
