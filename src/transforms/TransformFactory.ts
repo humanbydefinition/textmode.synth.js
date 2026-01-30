@@ -1,15 +1,13 @@
 import type { TransformDefinition, TransformInput } from './TransformDefinition';
 import { transformRegistry } from './TransformRegistry';
 import type { SynthParameterValue } from '../core/types';
-import type { SynthSource } from '../core/SynthSource';
+import { SynthSource } from '../core/SynthSource';
 
 /**
- * Interface for the SynthSource class that will have methods injected.
- * This is used to avoid circular dependencies.
+ * Interface for dynamic method injection on SynthSource.
+ * Allows indexing with string keys for runtime method generation.
  */
-export interface SynthSourcePrototype {
-	addTransform(name: string, userArgs: SynthParameterValue[]): unknown;
-	addCombineTransform(name: string, source: unknown, userArgs: SynthParameterValue[]): unknown;
+interface SynthSourcePrototype extends SynthSource {
 	[key: string]: unknown;
 }
 
@@ -34,13 +32,13 @@ export interface GeneratedFunctions {
  */
 class TransformFactory {
 	private _generatedFunctions: GeneratedFunctions = {};
-	private _synthSourceClass: (new () => SynthSourcePrototype) | null = null;
+	private _synthSourceClass: typeof SynthSource | null = null;
 
 	/**
 	 * Set the SynthSource class to inject methods into.
 	 * This must be called before injectMethods.
 	 */
-	public setSynthSourceClass(cls: new () => SynthSourcePrototype): void {
+	public setSynthSourceClass(cls: typeof SynthSource): void {
 		this._synthSourceClass = cls;
 	}
 
@@ -66,18 +64,15 @@ class TransformFactory {
 		// Handle combine and combineCoord types specially (they take a source as first arg)
 		if (type === 'combine' || type === 'combineCoord') {
 			prototype[name] = function (
-				this: SynthSourcePrototype,
+				this: SynthSource,
 				source: unknown,
 				...args: SynthParameterValue[]
 			) {
-				let actualSource = source;
+				let actualSource: SynthSource = source as SynthSource;
 
 				// If source is a primitive (not a SynthSource), wrap it in a solid() source
-				// We use SynthSource.from(), but accessed via the constructor to avoid circular dependency
-				if (SynthSourceCtor) {
-					// eslint-disable-next-line @typescript-eslint/no-explicit-any
-					const Ctor = SynthSourceCtor as any;
-					actualSource = Ctor.from(source);
+				if (SynthSourceCtor && !(source instanceof SynthSource)) {
+					actualSource = SynthSourceCtor.from(source as SynthParameterValue);
 				}
 
 				return this.addCombineTransform(name, actualSource, resolveArgs(inputs, args));
@@ -86,7 +81,7 @@ class TransformFactory {
 			// Standard transform - just takes parameter values
 			const factory = this;
 			prototype[name] = function (
-				this: SynthSourcePrototype,
+				this: SynthSource,
 				...args: SynthParameterValue[]
 			) {
 				args = factory._expandColorArgs(name, args);
