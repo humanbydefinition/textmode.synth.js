@@ -54,15 +54,15 @@ export const SynthPlugin: TextmodePlugin = {
 		api.registerLayerDisposedHook(synthDispose);
 	},
 
-	uninstall(_textmodifier, api: TextmodePluginAPI) {
-		// Dispose the global copy shader
-		shaderManager.dispose();
-
+	uninstall(textmodifier, api: TextmodePluginAPI) {
 		// Clean up all synth states
 		const allLayers = [api.layerManager.base, ...api.layerManager.all];
 		for (const layer of allLayers) {
 			const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
 			if (state) {
+				// Mark as disposed to prevent pending async operations from continuing
+				state.isDisposed = true;
+
 				if (state.shader?.dispose) {
 					state.shader.dispose();
 				}
@@ -70,11 +70,14 @@ export const SynthPlugin: TextmodePlugin = {
 					state.pingPongBuffers[0].dispose?.();
 					state.pingPongBuffers[1].dispose?.();
 				}
+
+				// Remove state from layer
+				layer.setPluginState(PLUGIN_NAME, undefined);
 			}
 		}
 
 		// Remove textmodifier extensions
-		delete (_textmodifier as Partial<Textmodifier>).bpm;
+		delete (textmodifier as Partial<Textmodifier>).bpm;
 
 		// Remove layer extensions
 		api.removeLayerExtension('synth');
