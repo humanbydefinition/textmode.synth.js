@@ -130,8 +130,7 @@ export class SynthSource {
 		const source = new SynthSource();
 		const val = value as SynthParameterValue;
 		// If only a single number is provided, replicate it to RGB for grayscale consistency
-		const args =
-			typeof val === 'number' ? [val, val, val, null] : [val, null, null, null];
+		const args = typeof val === 'number' ? [val, val, val, null] : [val, null, null, null];
 		source.addTransform('solid', args as SynthParameterValue[]);
 
 		return source;
