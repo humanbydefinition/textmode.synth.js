@@ -1,13 +1,15 @@
 import type { TransformDefinition, TransformInput } from './TransformDefinition';
 import { transformRegistry } from './TransformRegistry';
 import type { SynthParameterValue } from '../core/types';
-import { SynthSource } from '../core/SynthSource';
+import type { SynthSource } from '../core/SynthSource';
 
 /**
- * Interface for dynamic method injection on SynthSource.
- * Allows indexing with string keys for runtime method generation.
+ * Interface for the SynthSource class that will have methods injected.
+ * This is used to avoid circular dependencies.
  */
-interface SynthSourcePrototype extends SynthSource {
+export interface SynthSourcePrototype {
+	addTransform(name: string, userArgs: SynthParameterValue[]): unknown;
+	addCombineTransform(name: string, source: unknown, userArgs: SynthParameterValue[]): unknown;
 	[key: string]: unknown;
 }
 
@@ -32,13 +34,13 @@ export interface GeneratedFunctions {
  */
 class TransformFactory {
 	private _generatedFunctions: GeneratedFunctions = {};
-	private _synthSourceClass: typeof SynthSource | null = null;
+	private _synthSourceClass: (new () => SynthSourcePrototype) | null = null;
 
 	/**
 	 * Set the SynthSource class to inject methods into.
 	 * This must be called before injectMethods.
 	 */
-	public setSynthSourceClass(cls: typeof SynthSource): void {
+	public setSynthSourceClass(cls: new () => SynthSourcePrototype): void {
 		this._synthSourceClass = cls;
 	}
 
@@ -46,7 +48,7 @@ class TransformFactory {
 	 * Inject chainable methods into the SynthSource prototype.
 	 * This dynamically adds all registered transforms as methods.
 	 */
-	public injectMethods(prototype: SynthSource): void {
+	public injectMethods(prototype: SynthSourcePrototype): void {
 		const transforms = transformRegistry.getAll();
 
 		for (const transform of transforms) {
@@ -57,35 +59,39 @@ class TransformFactory {
 	/**
 	 * Inject a single method for a transform.
 	 */
-	private _injectMethod(prototype: SynthSource, transform: TransformDefinition): void {
+	private _injectMethod(prototype: SynthSourcePrototype, transform: TransformDefinition): void {
 		const SynthSourceCtor = this._synthSourceClass;
 		const { name, inputs, type } = transform;
-		const proto = prototype as unknown as Record<string, unknown>;
+		// Cast to any/Record to allow dynamic assignment by name
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const proto = prototype as any;
 
 		// Handle combine and combineCoord types specially (they take a source as first arg)
 		if (type === 'combine' || type === 'combineCoord') {
-			prototype[name] = function (
-				this: SynthSource,
+			proto[name] = function (
+				this: SynthSourcePrototype,
 				source: unknown,
 				...args: SynthParameterValue[]
 			) {
-				let actualSource: SynthSource = source as SynthSource;
+				let actualSource = source;
 
 				// If source is a primitive (not a SynthSource), wrap it in a solid() source
-				if (SynthSourceCtor && !(source instanceof SynthSource)) {
-					actualSource = SynthSourceCtor.from(source as SynthParameterValue);
+				// We use SynthSource.from(), but accessed via the constructor to avoid circular dependency
+				if (SynthSourceCtor) {
+					// eslint-disable-next-line @typescript-eslint/no-explicit-any
+					const Ctor = SynthSourceCtor as any;
+					actualSource = Ctor.from(source);
 				}
 
-				return this.addCombineTransform(
-					name,
-					actualSource as SynthSource,
-					resolveArgs(inputs, args)
-				);
+				return this.addCombineTransform(name, actualSource, resolveArgs(inputs, args));
 			};
 		} else {
 			// Standard transform - just takes parameter values
 			const factory = this;
-			prototype[name] = function (this: SynthSource, ...args: SynthParameterValue[]) {
+			proto[name] = function (
+				this: SynthSourcePrototype,
+				...args: SynthParameterValue[]
+			) {
 				args = factory._expandColorArgs(name, args);
 				return this.addTransform(name, resolveArgs(inputs, args));
 			};
@@ -151,7 +157,7 @@ class TransformFactory {
 	 * Add a new transform and inject its method.
 	 * This can be used to add custom transforms at runtime.
 	 */
-	public addTransform(transform: TransformDefinition, prototype?: SynthSource): void {
+	public addTransform(transform: TransformDefinition, prototype?: SynthSourcePrototype): void {
 		// Register in the registry
 		transformRegistry.register(transform);
 

@@ -47,9 +47,3 @@
 **Pattern:** missing coverage
 **Action:** Created `tests/transforms/TransformDefinition.test.ts` covering `processTransform` for all transform types and `defineTransform`.
 **Learning:** Testing code-generation functions (like GLSL string builders) ensures consistent output format and prevents subtle syntax errors in generated code.
-
-## Entry #9 — SynthChain Coverage
-**Finding:** `SynthChain` in `src/core` was a fundamental data structure class completely lacking tests.
-**Pattern:** missing coverage
-**Action:** Created `tests/core/SynthChain.test.ts` covering immutable/mutable operations, iteration, and static factories.
-**Learning:** Testing data structure classes like `SynthChain` provides high confidence in the foundation of the system, ensuring that state mutations and immutable operations behave exactly as expected.

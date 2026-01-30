@@ -6,7 +6,7 @@
  */
 
 import { transformRegistry } from './transforms/TransformRegistry';
-import { transformFactory } from './transforms/TransformFactory';
+import { transformFactory, type SynthSourcePrototype } from './transforms/TransformFactory';
 import { ALL_TRANSFORMS } from './transforms/categories';
 import { SynthSource } from './core/SynthSource';
 import { initArrayUtils } from './utils/ArrayUtils';
@@ -18,10 +18,10 @@ initArrayUtils();
 transformRegistry.registerMany(ALL_TRANSFORMS);
 
 // Set up the SynthSource class for method injection
-transformFactory.setSynthSourceClass(SynthSource);
+transformFactory.setSynthSourceClass(SynthSource as unknown as new () => SynthSourcePrototype);
 
 // Inject chainable methods into SynthSource prototype
-transformFactory.injectMethods(SynthSource.prototype);
+transformFactory.injectMethods(SynthSource.prototype as unknown as SynthSourcePrototype);
 
 /**
  * Generated standalone functions for source transforms (e.g., osc(), noise())
