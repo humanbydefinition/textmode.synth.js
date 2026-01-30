@@ -27,6 +27,7 @@ describe('SynthPlugin', () => {
             removeLayerExtension: vi.fn(),
             registerLayerPreRenderHook: vi.fn(),
             registerLayerDisposedHook: vi.fn(),
+            registerPreSetupHook: vi.fn(),
             layerManager: {
                 base: layer,
                 all: [],
@@ -55,7 +56,7 @@ describe('SynthPlugin', () => {
         layer.setPluginState(PLUGIN_NAME, state as any);
 
         // Act
-        SynthPlugin.uninstall(textmodifier, api);
+        SynthPlugin.uninstall?.(textmodifier, api);
 
         // Assert resources disposed
         expect(shaderDispose).toHaveBeenCalled();
@@ -68,7 +69,7 @@ describe('SynthPlugin', () => {
         layer.setPluginState(PLUGIN_NAME, state as any);
 
         // Act
-        SynthPlugin.uninstall(textmodifier, api);
+        SynthPlugin.uninstall?.(textmodifier, api);
 
         // Assert state removed
         expect(layer.getPluginState(PLUGIN_NAME)).toBeUndefined();
@@ -80,7 +81,7 @@ describe('SynthPlugin', () => {
         layer.setPluginState(PLUGIN_NAME, state as any);
 
         // Act
-        SynthPlugin.uninstall(textmodifier, api);
+        SynthPlugin.uninstall?.(textmodifier, api);
 
         // Assert state marked disposed
         expect(state.isDisposed).toBe(true);
