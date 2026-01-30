@@ -8,7 +8,7 @@ import {
 	extendLayerClearSynth,
 	extendTextmodifierBpm,
 } from '../extensions';
-import { synthRender, synthDispose } from '../lifecycle';
+import { synthRender, synthDispose, shaderManager } from '../lifecycle';
 import type { LayerSynthState } from '../core/types';
 
 /**
@@ -35,11 +35,19 @@ export const SynthPlugin: TextmodePlugin = {
 	version: '1.0.0',
 
 	install(textmodifier, api: TextmodePluginAPI) {
+		// Reset copy shader manager in case of plugin reinstall
+		shaderManager.reset();
+
 		// Extensions
 		extendTextmodifierBpm(textmodifier);
 		extendLayerSynth(api);
 		extendLayerBpm(api);
 		extendLayerClearSynth(api);
+
+		// Pre-setup hook: initialize the copy shader once before user code runs
+		api.registerPreSetupHook(async () => {
+			await shaderManager.initialize(textmodifier);
+		});
 
 		// Lifecycle callbacks
 		api.registerLayerPreRenderHook((layer) => synthRender(layer, textmodifier));

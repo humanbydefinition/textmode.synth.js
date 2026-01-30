@@ -13,6 +13,7 @@ import { compileSynthSource } from '../compiler/SynthCompiler';
 import { CHANNEL_SUFFIXES, CHANNEL_SAMPLERS } from '../core/constants';
 import { collectExternalLayerRefs } from '../utils';
 import { getGlobalBpm } from '../core/GlobalState';
+import { shaderManager } from './ShaderManager';
 import type { SynthContext, LayerSynthState } from '../core/types';
 
 /**
@@ -157,10 +158,22 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 		writeBuffer.end();
 
 		// Render to draw framebuffer
+		// Optimization: Use the global copy shader instead of re-running the full synth pipeline
 		drawFramebuffer.begin();
 		textmodifier.clear();
-		textmodifier.shader(state.shader);
-		applySynthUniforms(layer, textmodifier, state, synthContext, readBuffer);
+
+		const copyShader = shaderManager.getShader();
+		if (copyShader) {
+			textmodifier.shader(copyShader);
+			textmodifier.setUniform('u_charTex', writeBuffer.textures[0]);
+			textmodifier.setUniform('u_charColorTex', writeBuffer.textures[1]);
+			textmodifier.setUniform('u_cellColorTex', writeBuffer.textures[2]);
+		} else {
+			// Fallback if copy shader not yet ready (shouldn't happen after pre-setup hook)
+			textmodifier.shader(state.shader);
+			applySynthUniforms(layer, textmodifier, state, synthContext, readBuffer);
+		}
+
 		textmodifier.rect(grid.cols, grid.rows);
 		drawFramebuffer.end();
 
