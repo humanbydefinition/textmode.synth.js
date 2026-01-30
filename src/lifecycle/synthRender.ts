@@ -13,31 +13,8 @@ import { compileSynthSource } from '../compiler/SynthCompiler';
 import { CHANNEL_SUFFIXES, CHANNEL_SAMPLERS } from '../core/constants';
 import { collectExternalLayerRefs } from '../utils';
 import { getGlobalBpm } from '../core/GlobalState';
+import { shaderManager } from './ShaderManager';
 import type { SynthContext, LayerSynthState } from '../core/types';
-
-/**
- * Shader source for the optimized copy pass in feedback loops.
- * Used to blit the write buffer to the draw buffer efficiently.
- */
-const COPY_SHADER_SOURCE = `#version 300 es
-precision highp float;
-
-in vec2 v_uv;
-
-layout(location = 0) out vec4 o_character;
-layout(location = 1) out vec4 o_primaryColor;
-layout(location = 2) out vec4 o_secondaryColor;
-
-uniform sampler2D u_charTex;
-uniform sampler2D u_charColorTex;
-uniform sampler2D u_cellColorTex;
-
-void main() {
-	o_character = texture(u_charTex, v_uv);
-	o_primaryColor = texture(u_charColorTex, v_uv);
-	o_secondaryColor = texture(u_cellColorTex, v_uv);
-}
-`;
 
 /**
  * Render synth source to layer framebuffers.
@@ -180,41 +157,19 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 		textmodifier.rect(grid.cols, grid.rows);
 		writeBuffer.end();
 
-		// Compile copy shader if needed
-		if (!state.copyShader && !state.isCompilingCopy) {
-			state.isCompilingCopy = true;
-			// Fire-and-forget compilation to avoid blocking the render loop
-			textmodifier
-				.createFilterShader(COPY_SHADER_SOURCE)
-				.then((shader) => {
-					if (state.isDisposed) {
-						shader.dispose();
-						return;
-					}
-					state.copyShader = shader;
-				})
-				.catch((err) => {
-					console.warn('[textmode.synth.js] Failed to compile copy shader:', err);
-				})
-				.finally(() => {
-					if (!state.isDisposed) {
-						state.isCompilingCopy = false;
-					}
-				});
-		}
-
 		// Render to draw framebuffer
-		// Optimization: Use lightweight copy shader instead of re-running full synth pipeline
+		// Optimization: Use the global copy shader instead of re-running the full synth pipeline
 		drawFramebuffer.begin();
 		textmodifier.clear();
 
-		if (state.copyShader) {
-			textmodifier.shader(state.copyShader);
+		const copyShader = shaderManager.getShader();
+		if (copyShader) {
+			textmodifier.shader(copyShader);
 			textmodifier.setUniform('u_charTex', writeBuffer.textures[0]);
 			textmodifier.setUniform('u_charColorTex', writeBuffer.textures[1]);
 			textmodifier.setUniform('u_cellColorTex', writeBuffer.textures[2]);
 		} else {
-			// Fallback while copy shader compiles
+			// Fallback if copy shader not yet ready (shouldn't happen after pre-setup hook)
 			textmodifier.shader(state.shader);
 			applySynthUniforms(layer, textmodifier, state, synthContext, readBuffer);
 		}
