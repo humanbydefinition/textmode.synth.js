@@ -60,10 +60,7 @@ export function cellColor(
     b?: SynthParameterValue,
     a?: SynthParameterValue
 ): SynthSource {
-    if (rOrSource instanceof SynthSource) {
-        return new SynthSource({ cellColorSource: rOrSource });
-    }
-    return new SynthSource({ cellColorSource: solid(rOrSource, g, b, a) });
+    return new SynthSource({ cellColorSource: resolveSource(rOrSource, g, b, a) });
 }
 
 /**
@@ -146,10 +143,7 @@ export function charColor(
     b?: SynthParameterValue,
     a?: SynthParameterValue
 ): SynthSource {
-    if (rOrSource instanceof SynthSource) {
-        return new SynthSource({ colorSource: rOrSource });
-    }
-    return new SynthSource({ colorSource: solid(rOrSource, g, b, a) });
+    return new SynthSource({ colorSource: resolveSource(rOrSource, g, b, a) });
 }
 
 /**
@@ -285,12 +279,7 @@ export function paint(
     b?: SynthParameterValue,
     a?: SynthParameterValue
 ): SynthSource {
-    let source: SynthSource;
-    if (rOrSource instanceof SynthSource) {
-        source = rOrSource;
-    } else {
-        source = solid(rOrSource, g, b, a);
-    }
+    const source = resolveSource(rOrSource, g, b, a);
     return new SynthSource({
         colorSource: source,
         cellColorSource: source,
@@ -479,4 +468,20 @@ export function voronoi(
     blending?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
     return generatedFunctions['voronoi'](scale ?? null, speed ?? null, blending ?? null);
+}
+
+/**
+ * Helper to resolve overload between SynthSource and parameter values.
+ * Used by charColor, cellColor, and paint.
+ */
+function resolveSource(
+    rOrSource: SynthParameterValue | SynthSource,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource {
+    if (rOrSource instanceof SynthSource) {
+        return rOrSource;
+    }
+    return solid(rOrSource, g, b, a);
 }
