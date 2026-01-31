@@ -346,12 +346,6 @@ export function shape(
 }
 
 /**
- * Generate a solid grayscale color.
- * @param gray - Grayscale value (0-1)
- */
-export function solid(gray: SynthParameterValue): SynthSource;
-
-/**
  * Generate a solid color.
  * @param r - Red channel (0-1, default: 0.0)
  * @param g - Green channel (0-1, default: 0.0)
@@ -380,6 +374,12 @@ export function solid(
     b?: SynthParameterValue,
     a?: SynthParameterValue
 ): SynthSource;
+
+/**
+ * Generate a solid grayscale color.
+ * @param gray - Grayscale value (0-1)
+ */
+export function solid(gray: SynthParameterValue): SynthSource;
 
 export function solid(
     r?: SynthParameterValue,
