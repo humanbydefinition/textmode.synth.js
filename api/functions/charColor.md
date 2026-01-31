@@ -2,12 +2,10 @@
 
 # Function: charColor()
 
+## Call Signature
+
 ```ts
-function charColor(
-   rOrSource,
-   g?,
-   b?,
-   a?): SynthSource;
+function charColor(source): SynthSource;
 ```
 
 Create a synth source with character foreground color defined.
@@ -18,37 +16,77 @@ combined with `char()` and `cellColor()`.
 
 Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
 
-## Parameters
+### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `rOrSource` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | A SynthSource producing color values, or Red channel (0-1) |
-| `g?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Green channel (0-1) |
-| `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blue channel (0-1) |
-| `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Alpha channel (0-1) |
+| `source` | [`SynthSource`](../classes/SynthSource.md) | A SynthSource producing color values |
 
-## Returns
+### Returns
 
 [`SynthSource`](../classes/SynthSource.md)
 
 A new SynthSource configured with character color
 
-## Example
+### Example
 
 ```typescript
-const t = textmode.create({
-  width: 800,
-  height: 600,
-  plugins: [SynthPlugin]
-});
-
-// Use a solid color (RGBA overload)
-t.layers.base.synth(
-  charColor(1, 0, 0).char(noise(10))
-);
-
 // Use a pattern source
 t.layers.base.synth(
   charColor(osc(10, 0.1))
+);
+```
+
+## Call Signature
+
+```ts
+function charColor(gray): SynthSource;
+```
+
+Create a synth source with character foreground color defined using a grayscale value.
+
+### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `gray` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Grayscale value (0-1) |
+
+### Returns
+
+[`SynthSource`](../classes/SynthSource.md)
+
+## Call Signature
+
+```ts
+function charColor(
+   r,
+   g?,
+   b?,
+   a?): SynthSource;
+```
+
+Create a synth source with character foreground color defined using RGBA values.
+
+### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `r` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Red channel (0-1) or value |
+| `g?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Green channel (0-1) or value |
+| `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blue channel (0-1) or value |
+| `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Alpha channel (0-1) or value |
+
+### Returns
+
+[`SynthSource`](../classes/SynthSource.md)
+
+A new SynthSource configured with character color
+
+### Example
+
+```typescript
+// Use a solid color
+t.layers.base.synth(
+  charColor(1, 0, 0).char(noise(10))
 );
 ```

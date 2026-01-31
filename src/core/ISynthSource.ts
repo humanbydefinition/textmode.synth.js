@@ -49,6 +49,11 @@ export interface ISynthSource {
 	 */
 	charColor(source: ISynthSource): this;
 	/**
+	 * Set the character foreground color using a grayscale value.
+	 * @param gray - Grayscale value (0-1)
+	 */
+	charColor(gray: SynthParameterValue): this;
+	/**
 	 * Set the character foreground color using RGBA values.
 	 *
 	 * @param r - Red channel (0-1) or value
@@ -86,6 +91,11 @@ export interface ISynthSource {
 	 * ```
 	 */
 	cellColor(source: ISynthSource): this;
+	/**
+	 * Set the cell background color using a grayscale value.
+	 * @param gray - Grayscale value (0-1)
+	 */
+	cellColor(gray: SynthParameterValue): this;
 	/**
 	 * Set the cell background color using RGBA values.
 	 *
@@ -150,6 +160,11 @@ export interface ISynthSource {
 	 * ```
 	 */
 	paint(source: ISynthSource): this;
+	/**
+	 * Set both character foreground and cell background color using a grayscale value.
+	 * @param gray - Grayscale value (0-1)
+	 */
+	paint(gray: SynthParameterValue): this;
 	/**
 	 * Set both character foreground and cell background color using RGBA values.
 	 *

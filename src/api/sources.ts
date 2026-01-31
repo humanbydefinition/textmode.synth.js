@@ -31,6 +31,11 @@ import type { TextmodeLayer } from 'textmode.js/layering';
  */
 export function cellColor(source: SynthSource): SynthSource;
 /**
+ * Create a synth source with cell background color defined using a grayscale value.
+ * @param gray - Grayscale value (0-1)
+ */
+export function cellColor(gray: SynthParameterValue): SynthSource;
+/**
  * Create a synth source with cell background color defined using RGBA values.
  *
  * @param r - Red channel (0-1) or value
@@ -116,6 +121,11 @@ export const char = (source: SynthSource): SynthSource => {
  * ```
  */
 export function charColor(source: SynthSource): SynthSource;
+/**
+ * Create a synth source with character foreground color defined using a grayscale value.
+ * @param gray - Grayscale value (0-1)
+ */
+export function charColor(gray: SynthParameterValue): SynthSource;
 /**
  * Create a synth source with character foreground color defined using RGBA values.
  *
@@ -256,6 +266,11 @@ export function osc(
  * ```
  */
 export function paint(source: SynthSource): SynthSource;
+/**
+ * Create a synth source with both character and cell colors defined using a grayscale value.
+ * @param gray - Grayscale value (0-1)
+ */
+export function paint(gray: SynthParameterValue): SynthSource;
 /**
  * Create a synth source with both character and cell colors defined using RGBA values.
  *
