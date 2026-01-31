@@ -1,6 +1,7 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { SynthPlugin } from '../../src/plugin/SynthPlugin';
 import { PLUGIN_NAME } from '../../src/plugin/constants';
+import { shaderManager } from '../../src/lifecycle/ShaderManager';
 import type { TextmodeLayer } from 'textmode.js/layering';
 import type { TextmodePluginAPI } from 'textmode.js/plugins';
 import type { LayerSynthState } from '../../src/core/types';
@@ -21,6 +22,8 @@ describe('SynthPlugin', () => {
     let textmodifier: any;
 
     beforeEach(() => {
+        shaderManager.dispose(); // Ensure clean state
+
         layer = createMockLayer('base');
         api = {
             extendLayer: vi.fn(),
@@ -36,7 +39,12 @@ describe('SynthPlugin', () => {
 
         textmodifier = {
             bpm: undefined,
+            createFilterShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
         };
+    });
+
+    afterEach(() => {
+        shaderManager.dispose();
     });
 
     it('should install and register hooks', () => {
@@ -85,5 +93,28 @@ describe('SynthPlugin', () => {
 
         // Assert state marked disposed
         expect(state.isDisposed).toBe(true);
+    });
+
+    it('should dispose global copy shader on uninstall', async () => {
+        // Mock shader
+        const mockShader = { dispose: vi.fn() };
+        textmodifier.createFilterShader = vi.fn().mockResolvedValue(mockShader);
+
+        // Mock hook to execute immediately
+        const hook = vi.fn((cb) => cb());
+        api.registerPreSetupHook = hook as any;
+
+        // Install and initialize
+        SynthPlugin.install(textmodifier, api);
+        await new Promise(resolve => setTimeout(resolve, 0)); // Wait for async init
+
+        expect(shaderManager.getShader()).toBe(mockShader);
+
+        // Uninstall
+        SynthPlugin.uninstall?.(textmodifier, api);
+
+        // Assert shader disposed
+        expect(mockShader.dispose).toHaveBeenCalled();
+        expect(shaderManager.getShader()).toBeNull();
     });
 });

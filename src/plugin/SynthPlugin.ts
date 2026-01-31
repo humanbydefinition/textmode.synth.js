@@ -83,5 +83,8 @@ export const SynthPlugin: TextmodePlugin = {
 		api.removeLayerExtension('synth');
 		api.removeLayerExtension('bpm');
 		api.removeLayerExtension('clearSynth');
+
+		// Dispose global copy shader
+		shaderManager.dispose();
 	},
 };
