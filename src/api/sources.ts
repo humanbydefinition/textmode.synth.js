@@ -54,6 +54,12 @@ export function cellColor(
     a?: SynthParameterValue
 ): SynthSource;
 
+/**
+ * Create a synth source with cell background color defined using a grayscale value.
+ * @param gray - Grayscale value (0-1)
+ */
+export function cellColor(gray: SynthParameterValue): SynthSource;
+
 export function cellColor(
     rOrSource: SynthParameterValue,
     g?: SynthParameterValue,
@@ -139,6 +145,12 @@ export function charColor(
     b?: SynthParameterValue,
     a?: SynthParameterValue
 ): SynthSource;
+
+/**
+ * Create a synth source with character foreground color defined using a grayscale value.
+ * @param gray - Grayscale value (0-1)
+ */
+export function charColor(gray: SynthParameterValue): SynthSource;
 
 export function charColor(
     rOrSource: SynthParameterValue,
@@ -279,6 +291,13 @@ export function paint(
     b?: SynthParameterValue,
     a?: SynthParameterValue
 ): SynthSource;
+
+/**
+ * Create a synth source with both character and cell colors defined using a grayscale value.
+ * @param gray - Grayscale value (0-1)
+ */
+export function paint(gray: SynthParameterValue): SynthSource;
+
 export function paint(
     rOrSource: SynthParameterValue,
     g?: SynthParameterValue,

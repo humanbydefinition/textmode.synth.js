@@ -69,6 +69,11 @@ export interface ISynthSource {
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
 	): this;
+	/**
+	 * Set the character foreground color using a grayscale value.
+	 * @param gray - Grayscale value (0-1)
+	 */
+	charColor(gray: SynthParameterValue): this;
 
 	/**
 	 * Set the cell background colors using a color source chain.
@@ -107,6 +112,11 @@ export interface ISynthSource {
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
 	): this;
+	/**
+	 * Set the cell background color using a grayscale value.
+	 * @param gray - Grayscale value (0-1)
+	 */
+	cellColor(gray: SynthParameterValue): this;
 
 	/**
 	 * Set the character indices using a character source chain.
@@ -171,6 +181,11 @@ export interface ISynthSource {
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
 	): this;
+	/**
+	 * Set both character foreground and cell background color using a grayscale value.
+	 * @param gray - Grayscale value (0-1)
+	 */
+	paint(gray: SynthParameterValue): this;
 
 	/**
 	 * Create a deep clone of this SynthSource.
