@@ -173,6 +173,11 @@ export interface LayerSynthState {
 	 * Track the last applied character map indices to avoid redundant uploads.
 	 */
 	lastCharMapIndices?: Int32Array;
+
+	/**
+	 * Reusable array for resolution uniform to avoid per-frame allocation.
+	 */
+	resolutionArray?: [number, number];
 }
 
 /**
