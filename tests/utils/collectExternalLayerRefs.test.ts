@@ -60,7 +60,7 @@ describe('collectExternalLayerRefs', () => {
         const charSource = new SynthSource({
             externalLayerRefs: new Map([[0, ref1]])
         });
-        const colorSource = new SynthSource({
+        const charColorSource = new SynthSource({
             externalLayerRefs: new Map([[0, ref2]])
         });
         const cellColorSource = new SynthSource({
@@ -69,7 +69,7 @@ describe('collectExternalLayerRefs', () => {
 
         const source = new SynthSource({
             charSource,
-            colorSource,
+            charColorSource,
             cellColorSource
         });
 
