@@ -76,18 +76,30 @@ describe('GLSLGenerator', () => {
 			expect(shader).toContain('int mappedCharIdx = u_charMap[');
 		});
 
-		it('includes feedback samplers when flags are set', () => {
+		it('includes charColor feedback sampler when usesFeedback is true', () => {
+			const options: ShaderGenerationOptions = { ...baseOptions, usesFeedback: true };
+			const shader = generateFragmentShader(options);
+			expect(shader).toContain(`uniform sampler2D ${CHANNEL_SAMPLERS.charColor};`);
+			expect(shader).not.toContain(`uniform sampler2D ${CHANNEL_SAMPLERS.char};`);
+			expect(shader).not.toContain(`uniform sampler2D ${CHANNEL_SAMPLERS.cellColor};`);
+		});
+
+		it('includes char feedback sampler when usesCharFeedback is true', () => {
+			const options: ShaderGenerationOptions = { ...baseOptions, usesCharFeedback: true };
+			const shader = generateFragmentShader(options);
+			expect(shader).not.toContain(`uniform sampler2D ${CHANNEL_SAMPLERS.charColor};`);
+			expect(shader).toContain(`uniform sampler2D ${CHANNEL_SAMPLERS.char};`);
+			expect(shader).not.toContain(`uniform sampler2D ${CHANNEL_SAMPLERS.cellColor};`);
+		});
+
+		it('includes cellColor feedback sampler when usesCellColorFeedback is true', () => {
 			const options: ShaderGenerationOptions = {
 				...baseOptions,
-				usesFeedback: true,
-				usesCharFeedback: true,
-				usesCellColorFeedback: true
+				usesCellColorFeedback: true,
 			};
-
 			const shader = generateFragmentShader(options);
-
-			expect(shader).toContain(`uniform sampler2D ${CHANNEL_SAMPLERS.charColor};`);
-			expect(shader).toContain(`uniform sampler2D ${CHANNEL_SAMPLERS.char};`);
+			expect(shader).not.toContain(`uniform sampler2D ${CHANNEL_SAMPLERS.charColor};`);
+			expect(shader).not.toContain(`uniform sampler2D ${CHANNEL_SAMPLERS.char};`);
 			expect(shader).toContain(`uniform sampler2D ${CHANNEL_SAMPLERS.cellColor};`);
 		});
 
