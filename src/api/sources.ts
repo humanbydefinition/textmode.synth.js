@@ -475,7 +475,7 @@ export function voronoi(
  * Used by charColor, cellColor, and paint.
  */
 function resolveSource(
-    rOrSource: SynthParameterValue | SynthSource,
+    rOrSource: SynthParameterValue,
     g?: SynthParameterValue,
     b?: SynthParameterValue,
     a?: SynthParameterValue
