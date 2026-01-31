@@ -29,8 +29,8 @@ export function collectExternalLayerRefs(source: SynthSource): Map<string, Textm
 	}
 
 	// Collect from colorSource
-	if (source.colorSource) {
-		const colorRefs = collectExternalLayerRefs(source.colorSource);
+	if (source.charColorSource) {
+		const colorRefs = collectExternalLayerRefs(source.charColorSource);
 		for (const [id, layer] of colorRefs) {
 			layers.set(id, layer);
 		}

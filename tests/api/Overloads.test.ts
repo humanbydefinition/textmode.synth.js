@@ -52,11 +52,11 @@ describe('API Overloads', () => {
     it('should preserve existing behavior for paint/charColor (RGBA support)', () => {
         const source = osc().paint(1, 0, 0, 1);
 
-        // paint is manually implemented, checks colorSource/cellColorSource
-        expect(source.colorSource).toBeDefined();
-        expect(source.colorSource?.transforms[0].name).toBe('solid');
+        // paint is manually implemented, checks charColorSource/cellColorSource
+        expect(source.charColorSource).toBeDefined();
+        expect(source.charColorSource?.transforms[0].name).toBe('solid');
         // paint passes all args to solid
-        expect(source.colorSource?.transforms[0].userArgs).toEqual([1, 0, 0, 1]);
+        expect(source.charColorSource?.transforms[0].userArgs).toEqual([1, 0, 0, 1]);
     });
 
     it('should support solid(gray) overload', () => {
@@ -88,29 +88,29 @@ describe('API Overloads', () => {
 
     it('should support charColor(source) overload', () => {
         const source = charColor(osc(10));
-        expect(source.colorSource).toBeDefined();
-        expect(source.colorSource?.transforms[0].name).toBe('osc');
+        expect(source.charColorSource).toBeDefined();
+        expect(source.charColorSource?.transforms[0].name).toBe('osc');
     });
 
     it('should support charColor(r, g, b, a) overload', () => {
         const source = charColor(1, 0, 0, 1);
-        expect(source.colorSource).toBeDefined();
-        expect(source.colorSource?.transforms[0].name).toBe('solid');
-        expect(source.colorSource?.transforms[0].userArgs).toEqual([1, 0, 0, 1]);
+        expect(source.charColorSource).toBeDefined();
+        expect(source.charColorSource?.transforms[0].name).toBe('solid');
+        expect(source.charColorSource?.transforms[0].userArgs).toEqual([1, 0, 0, 1]);
     });
 
     it('should support paint(source) overload', () => {
         const source = paint(osc(10));
-        expect(source.colorSource).toBeDefined();
+        expect(source.charColorSource).toBeDefined();
         expect(source.cellColorSource).toBeDefined();
-        expect(source.colorSource?.transforms[0].name).toBe('osc');
+        expect(source.charColorSource?.transforms[0].name).toBe('osc');
     });
 
     it('should support paint(r, g, b, a) overload', () => {
         const source = paint(1, 0, 0, 1);
-        expect(source.colorSource).toBeDefined();
+        expect(source.charColorSource).toBeDefined();
         expect(source.cellColorSource).toBeDefined();
-        expect(source.colorSource?.transforms[0].name).toBe('solid');
-        expect(source.colorSource?.transforms[0].userArgs).toEqual([1, 0, 0, 1]);
+        expect(source.charColorSource?.transforms[0].name).toBe('solid');
+        expect(source.charColorSource?.transforms[0].userArgs).toEqual([1, 0, 0, 1]);
     });
 });
