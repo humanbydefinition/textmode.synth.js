@@ -195,13 +195,11 @@ Task received
     │
     ├─ Is it a bug fix?
     │   ├─ Create test case in tests/
-    │   ├─ Verify with npm run test:run
-    │   └─ Check .jules/memory.md for similar issues
+    │   └─ Verify with npm run test:run
     │
     └─ Is it performance related?
         ├─ Check src/lifecycle/synthRender.ts
-        ├─ Run npm run size
-        └─ Log in .jules/performance.md
+        └─ Run npm run size
 ```
 
 ---
