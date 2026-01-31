@@ -158,7 +158,6 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 		writeBuffer.end();
 
 		// Render to draw framebuffer
-		// Optimization: Use the global copy shader instead of re-running the full synth pipeline
 		drawFramebuffer.begin();
 		textmodifier.clear();
 
