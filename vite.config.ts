@@ -12,6 +12,7 @@ export default defineConfig({
     open: '/examples/index.html',
   },
   build: {
+    emptyOutDir: false,
     minify: 'esbuild',
     lib: {
       entry: 'src/index.ts',
