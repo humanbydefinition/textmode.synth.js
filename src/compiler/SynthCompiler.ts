@@ -90,9 +90,9 @@ class SynthCompiler {
 
 		// Compile color source if separate
 		let primaryColorVar = chainResult.colorVar;
-		if (source.colorSource) {
+		if (source.charColorSource) {
 			const colorChain = this._compileChain(
-				source.colorSource,
+				source.charColorSource,
 				'charColor',
 				'vec4(1.0, 1.0, 1.0, 1.0)',
 				'v_uv',

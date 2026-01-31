@@ -143,7 +143,7 @@ export function charColor(
     b?: SynthParameterValue,
     a?: SynthParameterValue
 ): SynthSource {
-    return new SynthSource({ colorSource: resolveSource(rOrSource, g, b, a) });
+    return new SynthSource({ charColorSource: resolveSource(rOrSource, g, b, a) });
 }
 
 /**
@@ -281,7 +281,7 @@ export function paint(
 ): SynthSource {
     const source = resolveSource(rOrSource, g, b, a);
     return new SynthSource({
-        colorSource: source,
+        charColorSource: source,
         cellColorSource: source,
     });
 }
