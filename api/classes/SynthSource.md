@@ -1818,10 +1818,10 @@ ISynthSource.modulateScrollY
 
 ```ts
 modulateRepeat(
-   source, 
-   repeatX?, 
-   repeatY?, 
-   offsetX?, 
+   source,
+   repeatX?,
+   repeatY?,
+   offsetX?,
    offsetY?): this;
 ```
 
@@ -1859,8 +1859,8 @@ ISynthSource.modulateRepeat
 
 ```ts
 modulateRepeatX(
-   source, 
-   reps?, 
+   source,
+   reps?,
    offset?): this;
 ```
 
@@ -1896,8 +1896,8 @@ ISynthSource.modulateRepeatX
 
 ```ts
 modulateRepeatY(
-   source, 
-   reps?, 
+   source,
+   reps?,
    offset?): this;
 ```
 
@@ -1990,9 +1990,9 @@ ISynthSource.charMap
 
 ```ts
 charColor(
-   rOrSource, 
-   g?, 
-   b?, 
+   rOrSource,
+   g?,
+   b?,
    a?): this;
 ```
 
@@ -2045,9 +2045,9 @@ ISynthSource.char
 
 ```ts
 cellColor(
-   rOrSource, 
-   g?, 
-   b?, 
+   rOrSource,
+   g?,
+   b?,
    a?): this;
 ```
 
@@ -2076,9 +2076,9 @@ ISynthSource.cellColor
 
 ```ts
 paint(
-   rOrSource, 
-   g?, 
-   b?, 
+   rOrSource,
+   g?,
+   b?,
    a?): this;
 ```
 

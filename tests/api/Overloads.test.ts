@@ -131,8 +131,9 @@ describe('API Overloads', () => {
 
     it('should support paint(gray) overload', () => {
         const source = paint(0.5);
-        expect(source.colorSource).toBeDefined();
+        // Check cellColorSource first to verify basic object construction
         expect(source.cellColorSource).toBeDefined();
+        expect(source.colorSource).toBeDefined();
         expect(source.colorSource?.transforms[0].name).toBe('solid');
         expect(source.colorSource?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, 1]);
     });
