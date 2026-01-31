@@ -202,7 +202,15 @@ function applySynthUniforms(
 	feedbackBuffer: TextmodeFramebuffer | null
 ) {
 	textmodifier.setUniform('time', ctx.time);
-	textmodifier.setUniform('resolution', [ctx.cols, ctx.rows]);
+
+	// Reuse resolution array to avoid allocation
+	if (!state.resolutionArray) {
+		state.resolutionArray = [ctx.cols, ctx.rows];
+	} else {
+		state.resolutionArray[0] = ctx.cols;
+		state.resolutionArray[1] = ctx.rows;
+	}
+	textmodifier.setUniform('resolution', state.resolutionArray);
 
 	for (const [name, value] of state.dynamicValues) {
 		textmodifier.setUniform(name, value);
