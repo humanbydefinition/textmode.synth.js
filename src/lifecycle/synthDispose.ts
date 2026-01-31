@@ -11,7 +11,7 @@ import type { LayerSynthState } from '../core/types';
 /**
  * Clean up synth resources when a layer is disposed.
  */
-export function synthDispose(layer: TextmodeLayer) {
+export function synthDispose(layer: TextmodeLayer): void {
 	const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
 	if (state) {
 		state.isDisposed = true;

@@ -23,7 +23,7 @@ import type { SynthContext, LayerSynthState } from '../core/types';
  * BEFORE any WebGL operations. If any parameter fails, the entire frame
  * is skipped and the error propagates for the environment to handle.
  */
-export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifier) {
+export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifier): Promise<void> {
 	const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
 	if (!state) return;
 
