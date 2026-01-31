@@ -30,7 +30,7 @@ function createModulateRepeatTransform(axis: 'x' | 'y'): TransformDefinition {
 	const name = axis === 'x' ? 'modulateRepeatX' : 'modulateRepeatY';
 	const vecMult = axis === 'x' ? 'reps, 1.0' : '1.0, reps';
 	const targetAxis = axis === 'x' ? 'y' : 'x';
-	const sourceAxis = axis === 'x' ? 'x' : 'y';
+const sourceAxis = axis;
 
 	return defineTransform({
 		name,
