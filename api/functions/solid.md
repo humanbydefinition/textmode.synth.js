@@ -5,24 +5,6 @@
 ## Call Signature
 
 ```ts
-function solid(gray): SynthSource;
-```
-
-Generate a solid grayscale color.
-
-### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `gray` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Grayscale value (0-1) |
-
-### Returns
-
-[`SynthSource`](../classes/SynthSource.md)
-
-## Call Signature
-
-```ts
 function solid(
    r?, 
    g?, 
@@ -61,3 +43,21 @@ t.layers.base.synth(
     .cellColor(solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1).invert())
 );
 ```
+
+## Call Signature
+
+```ts
+function solid(gray): SynthSource;
+```
+
+Generate a solid grayscale color.
+
+### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `gray` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Grayscale value (0-1) |
+
+### Returns
+
+[`SynthSource`](../classes/SynthSource.md)

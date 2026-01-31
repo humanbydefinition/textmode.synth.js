@@ -58,9 +58,9 @@ Create a synth source with both character and cell colors defined using a graysc
 
 ```ts
 function paint(
-   r,
-   g?,
-   b?,
+   r, 
+   g?, 
+   b?, 
    a?): SynthSource;
 ```
 

@@ -59,9 +59,9 @@ Create a synth source with character foreground color defined using a grayscale 
 
 ```ts
 function charColor(
-   r,
-   g?,
-   b?,
+   r, 
+   g?, 
+   b?, 
    a?): SynthSource;
 ```
 

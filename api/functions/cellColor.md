@@ -59,9 +59,9 @@ Create a synth source with cell background color defined using a grayscale value
 
 ```ts
 function cellColor(
-   r,
-   g?,
-   b?,
+   r, 
+   g?, 
+   b?, 
    a?): SynthSource;
 ```
 
