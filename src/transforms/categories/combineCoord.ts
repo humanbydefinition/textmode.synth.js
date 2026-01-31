@@ -7,6 +7,47 @@
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
 
+function createModulateScrollTransform(axis: 'x' | 'y'): TransformDefinition {
+	const name = axis === 'x' ? 'modulateScrollX' : 'modulateScrollY';
+	const inputName = axis === 'x' ? 'scrollX' : 'scrollY';
+	return defineTransform({
+		name,
+		type: 'combineCoord',
+		inputs: [
+			{ name: inputName, type: 'float', default: 0.5 },
+			{ name: 'speed', type: 'float', default: 0.0 },
+		],
+		glsl: `
+	vec2 st = _st;
+	st.${axis} += _c0.r * ${inputName} + time * speed;
+	return fract(st);
+`,
+		description: `Modulate ${axis.toUpperCase()} scroll with another source`,
+	});
+}
+
+function createModulateRepeatTransform(axis: 'x' | 'y'): TransformDefinition {
+	const name = axis === 'x' ? 'modulateRepeatX' : 'modulateRepeatY';
+	const vecMult = axis === 'x' ? 'reps, 1.0' : '1.0, reps';
+	const targetAxis = axis === 'x' ? 'y' : 'x';
+	const sourceAxis = axis === 'x' ? 'x' : 'y';
+
+	return defineTransform({
+		name,
+		type: 'combineCoord',
+		inputs: [
+			{ name: 'reps', type: 'float', default: 3.0 },
+			{ name: 'offset', type: 'float', default: 0.5 },
+		],
+		glsl: `
+	vec2 st = _st * vec2(${vecMult});
+	st.${targetAxis} += step(1.0, mod(st.${sourceAxis}, 2.0)) + _c0.r * offset;
+	return fract(st);
+`,
+		description: `Modulate ${axis.toUpperCase()} repeat with another source`,
+	});
+}
+
 export const modulate = defineTransform({
 	name: 'modulate',
 	type: 'combineCoord',
@@ -80,35 +121,9 @@ export const modulateKaleid = defineTransform({
 	description: 'Modulate kaleidoscope with another source',
 });
 
-export const modulateScrollX = defineTransform({
-	name: 'modulateScrollX',
-	type: 'combineCoord',
-	inputs: [
-		{ name: 'scrollX', type: 'float', default: 0.5 },
-		{ name: 'speed', type: 'float', default: 0.0 },
-	],
-	glsl: `
-	vec2 st = _st;
-	st.x += _c0.r * scrollX + time * speed;
-	return fract(st);
-`,
-	description: 'Modulate X scroll with another source',
-});
+export const modulateScrollX = createModulateScrollTransform('x');
 
-export const modulateScrollY = defineTransform({
-	name: 'modulateScrollY',
-	type: 'combineCoord',
-	inputs: [
-		{ name: 'scrollY', type: 'float', default: 0.5 },
-		{ name: 'speed', type: 'float', default: 0.0 },
-	],
-	glsl: `
-	vec2 st = _st;
-	st.y += _c0.r * scrollY + time * speed;
-	return fract(st);
-`,
-	description: 'Modulate Y scroll with another source',
-});
+export const modulateScrollY = createModulateScrollTransform('y');
 
 export const modulateRepeat = defineTransform({
 	name: 'modulateRepeat',
@@ -128,35 +143,9 @@ export const modulateRepeat = defineTransform({
 	description: 'Modulate repeat pattern with another source',
 });
 
-export const modulateRepeatX = defineTransform({
-	name: 'modulateRepeatX',
-	type: 'combineCoord',
-	inputs: [
-		{ name: 'reps', type: 'float', default: 3.0 },
-		{ name: 'offset', type: 'float', default: 0.5 },
-	],
-	glsl: `
-	vec2 st = _st * vec2(reps, 1.0);
-	st.y += step(1.0, mod(st.x, 2.0)) + _c0.r * offset;
-	return fract(st);
-`,
-	description: 'Modulate X repeat with another source',
-});
+export const modulateRepeatX = createModulateRepeatTransform('x');
 
-export const modulateRepeatY = defineTransform({
-	name: 'modulateRepeatY',
-	type: 'combineCoord',
-	inputs: [
-		{ name: 'reps', type: 'float', default: 3.0 },
-		{ name: 'offset', type: 'float', default: 0.5 },
-	],
-	glsl: `
-	vec2 st = _st * vec2(1.0, reps);
-	st.x += step(1.0, mod(st.y, 2.0)) + _c0.r * offset;
-	return fract(st);
-`,
-	description: 'Modulate Y repeat with another source',
-});
+export const modulateRepeatY = createModulateRepeatTransform('y');
 
 export const modulateHue = defineTransform({
 	name: 'modulateHue',
