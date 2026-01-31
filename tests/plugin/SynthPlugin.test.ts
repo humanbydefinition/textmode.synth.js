@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { SynthPlugin } from '../../src/plugin/SynthPlugin';
 import { PLUGIN_NAME } from '../../src/plugin/constants';
 import { shaderManager } from '../../src/lifecycle/ShaderManager';
@@ -41,10 +41,6 @@ describe('SynthPlugin', () => {
             bpm: undefined,
             createFilterShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
         };
-    });
-
-    afterEach(() => {
-        shaderManager.dispose();
     });
 
     it('should install and register hooks', () => {
@@ -100,12 +96,13 @@ describe('SynthPlugin', () => {
         const mockShader = { dispose: vi.fn() };
         textmodifier.createFilterShader = vi.fn().mockResolvedValue(mockShader);
 
-        // Mock hook to capture the callback and manually trigger it
-        const hook = vi.fn();
+        // Mock hook to execute immediately
+        const hook = vi.fn((cb) => cb());
         api.registerPreSetupHook = hook as any;
+
+        // Install and initialize
         SynthPlugin.install(textmodifier, api);
-        const [initCallback] = hook.mock.calls[0];
-        await initCallback();
+        await new Promise(resolve => setTimeout(resolve, 0)); // Wait for async init
 
         expect(shaderManager.getShader()).toBe(mockShader);
 
