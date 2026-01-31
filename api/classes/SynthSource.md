@@ -242,12 +242,12 @@ ISynthSource.solid
 ### src()
 
 ```ts
-src(layer?): this;
+src(): this;
 ```
 
-Sample the previous frame for feedback effects, or sample from another layer.
+Sample the previous frame for feedback effects.
 
-**Self-feedback (no argument):** `src()` samples the current layer's previous frame.
+**Self-feedback:** `src()` samples the current layer's previous frame.
 The sampled texture is context-aware based on where it's used in the synth chain:
 
 - Inside `char(...)` → samples previous frame's character data
@@ -255,19 +255,13 @@ The sampled texture is context-aware based on where it's used in the synth chain
 - Inside `cellColor(...)` → samples previous frame's cell color (character background)
 - Outside all three → samples previous frame's primary color
 
-**Cross-layer sampling (with layer argument):** `src(layer)` samples from another
-layer's output, enabling hydra-style multi-output compositions. The sampled texture
-is still context-aware based on the current compilation target.
+**Note:** As a chainable method, `src()` only supports self-feedback.
+To sample from another layer, use the standalone `src(layer)` function
+combined with `blend()`, `layer()`, `modulate()`, etc.
 
-This is the core of feedback loops and multi-layer compositions - enabling effects
-like trails, motion blur, recursive patterns, and complex layered visuals.
+This is the core of feedback loops - enabling effects like trails,
+motion blur, recursive patterns, and complex visuals.
 Equivalent to hydra's `src(o0)`.
-
-#### Parameters
-
-| Parameter | Type | Description |
-| ------ | ------ | ------ |
-| `layer?` | `TextmodeLayer` | Optional TextmodeLayer to sample from. If omitted, samples from self (feedback). |
 
 #### Returns
 
@@ -286,6 +280,9 @@ src().hue(0.01).scale(1.01).blend(osc(10), 0.1)
 char(noise(10).diff(src()))           // src() → character feedback
   .charColor(osc(5).blend(src(), 0.5)) // src() → primary color feedback
   .cellColor(voronoi().diff(src()))    // src() → cell color feedback
+
+// For cross-layer sampling, use the standalone function:
+// blend(src(otherLayer), 0.5)
 ```
 
 #### Inherited from
