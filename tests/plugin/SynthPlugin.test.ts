@@ -100,13 +100,12 @@ describe('SynthPlugin', () => {
         const mockShader = { dispose: vi.fn() };
         textmodifier.createFilterShader = vi.fn().mockResolvedValue(mockShader);
 
-        // Mock hook to execute immediately
-        const hook = vi.fn((cb) => cb());
+        // Mock hook to capture the callback and manually trigger it
+        const hook = vi.fn();
         api.registerPreSetupHook = hook as any;
-
-        // Install and initialize
         SynthPlugin.install(textmodifier, api);
-        await new Promise(resolve => setTimeout(resolve, 0)); // Wait for async init
+        const [initCallback] = hook.mock.calls[0];
+        await initCallback();
 
         expect(shaderManager.getShader()).toBe(mockShader);
 
