@@ -55,7 +55,7 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
 /**
  * Extend layer with synth() method.
  */
-export function extendLayerSynth(api: TextmodePluginAPI) {
+export function extendLayerSynth(api: TextmodePluginAPI): void {
 	api.extendLayer('synth', function (this: TextmodeLayer, source: SynthSource): void {
 		const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
 
@@ -86,7 +86,7 @@ export function extendLayerSynth(api: TextmodePluginAPI) {
 /**
  * Extend layer with clearSynth() method.
  */
-export function extendLayerClearSynth(api: TextmodePluginAPI) {
+export function extendLayerClearSynth(api: TextmodePluginAPI): void {
 	api.extendLayer('clearSynth', function (this: TextmodeLayer): void {
 		const state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
 		if (!state) return;
@@ -110,7 +110,7 @@ export function extendLayerClearSynth(api: TextmodePluginAPI) {
 /**
  * Extend layer with bpm() method.
  */
-export function extendLayerBpm(api: TextmodePluginAPI) {
+export function extendLayerBpm(api: TextmodePluginAPI): void {
 	api.extendLayer('bpm', function (this: TextmodeLayer, value: number): void {
 		let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
 
