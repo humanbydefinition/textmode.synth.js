@@ -29,3 +29,4 @@ t.layers.base.synth(
 | <a id="cols"></a> `cols` | `number` | Grid columns |
 | <a id="rows"></a> `rows` | `number` | Grid rows |
 | <a id="bpm"></a> `bpm` | `number` | Current BPM (beats per minute) for array modulation timing |
+| <a id="onerror"></a> `onError?` | (`error`, `uniformName`) => `void` | Optional callback for handling dynamic parameter evaluation errors |

@@ -1,7 +1,8 @@
 import type { ProcessedTransform } from '../transforms/TransformDefinition';
 import type { CompilationTarget } from './types';
 import type { ExternalLayerReference } from '../core/types';
-import { getTextureChannel, CHANNEL_SAMPLERS, CHANNEL_SUFFIXES } from './channels';
+import { getTextureChannel } from './channels';
+import { CHANNEL_SAMPLERS, CHANNEL_SUFFIXES } from '../core/constants';
 
 /**
  * Result of generating code for a transform.

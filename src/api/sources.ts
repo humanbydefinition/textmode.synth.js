@@ -4,10 +4,10 @@
  * @module
  */
 
-import type { SynthContext } from '../core/types';
+import type { SynthContext, SynthParameterValue } from '../core/types';
 import { SynthSource } from '../core/SynthSource';
 import { generatedFunctions } from '../bootstrap';
-import { TextmodeLayer } from 'textmode.js';
+import type { TextmodeLayer } from 'textmode.js/layering';
 
 /**
  * Create a synth source with cell background color defined.
@@ -16,37 +16,58 @@ import { TextmodeLayer } from 'textmode.js';
  * is driven by the provided source pattern. This is compositional and can be
  * combined with `char()` and `charColor()`.
  *
- * @param source - A SynthSource producing color values for cell background
+ * Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
+ *
+ * @param source - A SynthSource producing color values
  * @returns A new SynthSource configured with cell color
  *
  * @example
  * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- *
- * // Start with cell color
+ * // Use a pattern source
  * t.layers.base.synth(
- *   cellColor(solid(0, 0, 0, 0.5))
- *     .char(noise(10))
- *     .charColor(osc(5))
- * );
- *
- * // Complete composition - all three defined
- * const colorPattern = voronoi(5, 0.3);
- * t.layers.base.synth(
- *   cellColor(colorPattern.clone().invert())
- *     .char(noise(10), 16)
- *     .charMap('@#%*+=-:. ')
- *     .charColor(colorPattern)
+ *   cellColor(osc(5).invert())
  * );
  * ```
  */
-export const cellColor = (source: SynthSource): SynthSource => {
-    return new SynthSource({ cellColorSource: source });
-};
+export function cellColor(source: SynthSource): SynthSource;
+/**
+ * Create a synth source with cell background color defined using RGBA values.
+ *
+ * @param r - Red channel (0-1) or value
+ * @param g - Green channel (0-1) or value
+ * @param b - Blue channel (0-1) or value
+ * @param a - Alpha channel (0-1) or value
+ * @returns A new SynthSource configured with cell color
+ *
+ * @example
+ * ```typescript
+ * // Use a solid color
+ * t.layers.base.synth(
+ *   cellColor(0, 0, 0, 0.5).char(noise(10))
+ * );
+ * ```
+ */
+export function cellColor(
+    r: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource;
+
+/**
+ * Create a synth source with cell background color defined using a grayscale value.
+ * @param gray - Grayscale value (0-1)
+ */
+export function cellColor(gray: SynthParameterValue): SynthSource;
+
+export function cellColor(
+    rOrSource: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource {
+    return new SynthSource({ cellColorSource: resolveSource(rOrSource, g, b, a) });
+}
 
 /**
  * Create a character source from any color/pattern source.
@@ -68,7 +89,7 @@ export const cellColor = (source: SynthSource): SynthSource => {
  *
  * // With limited character count
  * t.layers.base.synth(
- *   char(noise(10), 16)
+ *   char(noise(10))
  *     .charMap('@#%*+=-:. ')
  * );
  * ```
@@ -84,36 +105,58 @@ export const char = (source: SynthSource): SynthSource => {
  * is driven by the provided source pattern. This is compositional and can be
  * combined with `char()` and `cellColor()`.
  *
- * @param source - A SynthSource producing color values for character foreground
+ * Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
+ *
+ * @param source - A SynthSource producing color values
  * @returns A new SynthSource configured with character color
  *
  * @example
  * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- *
- * // Start with character color
- * const pattern = osc(10, 0.1);
+ * // Use a pattern source
  * t.layers.base.synth(
- *   charColor(pattern)
- *     .char(noise(10))
- *     .cellColor(solid(0, 0, 0, 0.5))
- * );
- *
- * // Using different patterns for each aspect
- * t.layers.base.synth(
- *   charColor(voronoi(5).mult(osc(20)))
- *     .char(noise(10), 16)
- *     .charMap('@#%*+=-:. ')
+ *   charColor(osc(10, 0.1))
  * );
  * ```
  */
-export const charColor = (source: SynthSource): SynthSource => {
-    return new SynthSource({ colorSource: source });
-};
+export function charColor(source: SynthSource): SynthSource;
+/**
+ * Create a synth source with character foreground color defined using RGBA values.
+ *
+ * @param r - Red channel (0-1) or value
+ * @param g - Green channel (0-1) or value
+ * @param b - Blue channel (0-1) or value
+ * @param a - Alpha channel (0-1) or value
+ * @returns A new SynthSource configured with character color
+ *
+ * @example
+ * ```typescript
+ * // Use a solid color
+ * t.layers.base.synth(
+ *   charColor(1, 0, 0).char(noise(10))
+ * );
+ * ```
+ */
+export function charColor(
+    r: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource;
+
+/**
+ * Create a synth source with character foreground color defined using a grayscale value.
+ * @param gray - Grayscale value (0-1)
+ */
+export function charColor(gray: SynthParameterValue): SynthSource;
+
+export function charColor(
+    rOrSource: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource {
+    return new SynthSource({ charColorSource: resolveSource(rOrSource, g, b, a) });
+}
 
 /**
  * Generate a rotating radial gradient.
@@ -136,7 +179,7 @@ export const charColor = (source: SynthSource): SynthSource => {
 export function gradient(
     speed?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return (generatedFunctions['gradient'] as Function)(speed);
+    return generatedFunctions['gradient'](speed ?? null);
 }
 
 /**
@@ -162,7 +205,7 @@ export function noise(
     scale?: number | number[] | ((ctx: SynthContext) => number),
     offset?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return (generatedFunctions['noise'] as Function)(scale, offset);
+    return generatedFunctions['noise'](scale ?? null, offset ?? null);
 }
 
 /**
@@ -196,7 +239,7 @@ export function osc(
     sync?: number | number[] | ((ctx: SynthContext) => number),
     offset?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return (generatedFunctions['osc'] as Function)(frequency, sync, offset);
+    return generatedFunctions['osc'](frequency ?? null, sync ?? null, offset ?? null);
 }
 
 /**
@@ -204,37 +247,63 @@ export function osc(
  *
  * This function creates a SynthSource where both the character foreground color
  * and the cell background color are driven by the same source pattern.
- * This is a convenience function equivalent to calling both `charColor()` and
- * `cellColor()` with the same source, allowing for easy pixel art without visible characters.
  *
- * @param source - A SynthSource producing color values for both character and cell colors
+ * Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
+ *
+ * @param source - A SynthSource producing color values
  * @returns A new SynthSource configured with both color sources
  *
  * @example
  * ```typescript
- * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   plugins: [SynthPlugin]
- * });
- *
- * // Use same pattern for both foreground and background colors
+ * // Use same pattern for both foreground and background
  * t.layers.base.synth(
- *   paint(osc(10, 0.1).mult(voronoi(5)))
- * );
- *
- * // Paint with gradient
- * t.layers.base.synth(
- *   paint(gradient(0.5))
+ *   paint(osc(10, 0.1))
  * );
  * ```
  */
-export const paint = (source: SynthSource): SynthSource => {
+export function paint(source: SynthSource): SynthSource;
+/**
+ * Create a synth source with both character and cell colors defined using RGBA values.
+ *
+ * @param r - Red channel (0-1) or value
+ * @param g - Green channel (0-1) or value
+ * @param b - Blue channel (0-1) or value
+ * @param a - Alpha channel (0-1) or value
+ * @returns A new SynthSource configured with both color sources
+ *
+ * @example
+ * ```typescript
+ * // Use solid color for everything
+ * t.layers.base.synth(
+ *   paint(1, 1, 1)
+ * );
+ * ```
+ */
+export function paint(
+    r: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource;
+
+/**
+ * Create a synth source with both character and cell colors defined using a grayscale value.
+ * @param gray - Grayscale value (0-1)
+ */
+export function paint(gray: SynthParameterValue): SynthSource;
+
+export function paint(
+    rOrSource: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource {
+    const source = resolveSource(rOrSource, g, b, a);
     return new SynthSource({
-        colorSource: source,
+        charColorSource: source,
         cellColorSource: source,
     });
-};
+}
 
 /**
  * Generate geometric shapes (polygons).
@@ -266,8 +335,14 @@ export function shape(
     radius?: number | number[] | ((ctx: SynthContext) => number),
     smoothing?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return (generatedFunctions['shape'] as Function)(sides, radius, smoothing);
+    return generatedFunctions['shape'](sides ?? null, radius ?? null, smoothing ?? null);
 }
+
+/**
+ * Generate a solid grayscale color.
+ * @param gray - Grayscale value (0-1)
+ */
+export function solid(gray: SynthParameterValue): SynthSource;
 
 /**
  * Generate a solid color.
@@ -293,12 +368,25 @@ export function shape(
  * ```
  */
 export function solid(
-    r?: number | number[] | ((ctx: SynthContext) => number),
-    g?: number | number[] | ((ctx: SynthContext) => number),
-    b?: number | number[] | ((ctx: SynthContext) => number),
-    a?: number | number[] | ((ctx: SynthContext) => number)
+    r?: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource;
+
+export function solid(
+    r?: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
 ): SynthSource {
-    return (generatedFunctions['solid'] as Function)(r, g, b, a);
+    // Handle overload for solid(gray)
+    // If only first argument is provided and it's a number, pass it as single argument
+    // so the underlying factory can replicate it to RGB.
+    if (r !== undefined && g === undefined && b === undefined && a === undefined && typeof r === 'number') {
+        return generatedFunctions['solid'](r);
+    }
+    return generatedFunctions['solid'](r ?? null, g ?? null, b ?? null, a ?? null);
 }
 
 /**
@@ -354,7 +442,7 @@ export function solid(
  */
 export const src = (layer?: TextmodeLayer): SynthSource => {
     // Get the base src function for self-feedback
-    const baseSrc = generatedFunctions['src'] as () => SynthSource;
+    const baseSrc = generatedFunctions['src'];
 
     if (!layer) {
         // No layer provided - use self-feedback (context-aware)
@@ -398,5 +486,21 @@ export function voronoi(
     speed?: number | number[] | ((ctx: SynthContext) => number),
     blending?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return (generatedFunctions['voronoi'] as Function)(scale, speed, blending);
+    return generatedFunctions['voronoi'](scale ?? null, speed ?? null, blending ?? null);
+}
+
+/**
+ * Helper to resolve overload between SynthSource and parameter values.
+ * Used by charColor, cellColor, and paint.
+ */
+function resolveSource(
+    rOrSource: SynthParameterValue,
+    g?: SynthParameterValue,
+    b?: SynthParameterValue,
+    a?: SynthParameterValue
+): SynthSource {
+    if (rOrSource instanceof SynthSource) {
+        return rOrSource;
+    }
+    return solid(rOrSource, g, b, a);
 }

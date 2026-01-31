@@ -3,7 +3,7 @@
 # Function: char()
 
 ```ts
-function char(source, charCount?): SynthSource;
+function char(source): SynthSource;
 ```
 
 Create a character source from any color/pattern source.
@@ -16,7 +16,6 @@ character indices. The pattern's luminance or color values are mapped to charact
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
 | `source` | [`SynthSource`](../classes/SynthSource.md) | A SynthSource producing color values that will be mapped to characters |
-| `charCount?` | `number` | Number of different characters to use (default: 256) |
 
 ## Returns
 
@@ -36,7 +35,7 @@ t.layers.base.synth(
 
 // With limited character count
 t.layers.base.synth(
-  char(noise(10), 16)
+  char(noise(10))
     .charMap('@#%*+=-:. ')
 );
 ```

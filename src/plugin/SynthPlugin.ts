@@ -1,3 +1,4 @@
+import type { Textmodifier } from 'textmode.js';
 import type { TextmodePlugin, TextmodePluginAPI } from 'textmode.js/plugins';
 
 import { PLUGIN_NAME } from './constants';
@@ -7,7 +8,7 @@ import {
 	extendLayerClearSynth,
 	extendTextmodifierBpm,
 } from '../extensions';
-import { synthRender, synthDispose } from '../lifecycle';
+import { synthRender, synthDispose, shaderManager } from '../lifecycle';
 import type { LayerSynthState } from '../core/types';
 
 /**
@@ -34,23 +35,34 @@ export const SynthPlugin: TextmodePlugin = {
 	version: '1.0.0',
 
 	install(textmodifier, api: TextmodePluginAPI) {
+		// Reset copy shader manager in case of plugin reinstall
+		shaderManager.reset();
+
 		// Extensions
 		extendTextmodifierBpm(textmodifier);
 		extendLayerSynth(api);
 		extendLayerBpm(api);
 		extendLayerClearSynth(api);
 
+		// Pre-setup hook: initialize the copy shader once before user code runs
+		api.registerPreSetupHook(async () => {
+			await shaderManager.initialize(textmodifier);
+		});
+
 		// Lifecycle callbacks
 		api.registerLayerPreRenderHook((layer) => synthRender(layer, textmodifier));
 		api.registerLayerDisposedHook(synthDispose);
 	},
 
-	uninstall(_textmodifier, api: TextmodePluginAPI) {
+	uninstall(textmodifier, api: TextmodePluginAPI) {
 		// Clean up all synth states
 		const allLayers = [api.layerManager.base, ...api.layerManager.all];
 		for (const layer of allLayers) {
 			const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
 			if (state) {
+				// Mark as disposed to prevent pending async operations from continuing
+				state.isDisposed = true;
+
 				if (state.shader?.dispose) {
 					state.shader.dispose();
 				}
@@ -58,15 +70,21 @@ export const SynthPlugin: TextmodePlugin = {
 					state.pingPongBuffers[0].dispose?.();
 					state.pingPongBuffers[1].dispose?.();
 				}
+
+				// Remove state from layer
+				layer.setPluginState(PLUGIN_NAME, undefined);
 			}
 		}
 
 		// Remove textmodifier extensions
-		delete (_textmodifier as any).bpm;
+		delete (textmodifier as Partial<Textmodifier>).bpm;
 
 		// Remove layer extensions
 		api.removeLayerExtension('synth');
 		api.removeLayerExtension('bpm');
 		api.removeLayerExtension('clearSynth');
+
+		// Dispose global copy shader
+		shaderManager.dispose();
 	},
 };

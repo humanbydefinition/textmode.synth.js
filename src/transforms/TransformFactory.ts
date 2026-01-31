@@ -1,15 +1,7 @@
 import type { TransformDefinition, TransformInput } from './TransformDefinition';
 import { transformRegistry } from './TransformRegistry';
 import type { SynthParameterValue } from '../core/types';
-
-/**
- * Interface for the SynthSource class that will have methods injected.
- * This is used to avoid circular dependencies.
- */
-export interface SynthSourcePrototype {
-	addTransform(name: string, userArgs: SynthParameterValue[]): unknown;
-	addCombineTransform(name: string, source: unknown, userArgs: SynthParameterValue[]): unknown;
-}
+import type { SynthSource } from '../core/SynthSource';
 
 /**
  * Map of source-type transform names for generator function creation.
@@ -20,7 +12,7 @@ const SOURCE_TYPE_TRANSFORMS = new Set(['src']);
  * Generated standalone functions for source transforms.
  */
 export interface GeneratedFunctions {
-	[name: string]: (...args: SynthParameterValue[]) => unknown;
+	[name: string]: (...args: SynthParameterValue[]) => SynthSource;
 }
 
 /**
@@ -32,13 +24,13 @@ export interface GeneratedFunctions {
  */
 class TransformFactory {
 	private _generatedFunctions: GeneratedFunctions = {};
-	private _synthSourceClass: (new () => SynthSourcePrototype) | null = null;
+	private _synthSourceClass: (new () => SynthSource) | null = null;
 
 	/**
 	 * Set the SynthSource class to inject methods into.
 	 * This must be called before injectMethods.
 	 */
-	public setSynthSourceClass(cls: new () => SynthSourcePrototype): void {
+	public setSynthSourceClass(cls: new () => SynthSource): void {
 		this._synthSourceClass = cls;
 	}
 
@@ -46,7 +38,7 @@ class TransformFactory {
 	 * Inject chainable methods into the SynthSource prototype.
 	 * This dynamically adds all registered transforms as methods.
 	 */
-	public injectMethods(prototype: SynthSourcePrototype): void {
+	public injectMethods(prototype: SynthSource): void {
 		const transforms = transformRegistry.getAll();
 
 		for (const transform of transforms) {
@@ -57,27 +49,65 @@ class TransformFactory {
 	/**
 	 * Inject a single method for a transform.
 	 */
-	private _injectMethod(prototype: SynthSourcePrototype, transform: TransformDefinition): void {
+	private _injectMethod(prototype: SynthSource, transform: TransformDefinition): void {
+		const SynthSourceCtor = this._synthSourceClass;
 		const { name, inputs, type } = transform;
+		const proto = prototype as unknown as Record<string, unknown>;
 
 		// Handle combine and combineCoord types specially (they take a source as first arg)
 		if (type === 'combine' || type === 'combineCoord') {
-			(prototype as unknown as Record<string, unknown>)[name] = function (
-				this: SynthSourcePrototype,
+			proto[name] = function (
+				this: SynthSource,
 				source: unknown,
 				...args: SynthParameterValue[]
 			) {
-				return this.addCombineTransform(name, source, resolveArgs(inputs, args));
+				let actualSource = source;
+
+				// If source is a primitive (not a SynthSource), wrap it in a solid() source
+				if (SynthSourceCtor && !(source instanceof SynthSourceCtor)) {
+					const wrapper = new SynthSourceCtor();
+					// solid() expects 4 arguments (r, g, b, a).
+					// If source is a number, replicate it to RGB (grayscale/scalar).
+					// Otherwise pass as first argument.
+					const val = source as SynthParameterValue;
+					const solidArgs =
+						typeof val === 'number' ? [val, val, val, null] : [val, null, null, null];
+
+					wrapper.addTransform('solid', solidArgs);
+					actualSource = wrapper;
+				}
+
+				return this.addCombineTransform(
+					name,
+					actualSource as SynthSource,
+					resolveArgs(inputs, args)
+				);
 			};
 		} else {
 			// Standard transform - just takes parameter values
-			(prototype as unknown as Record<string, unknown>)[name] = function (
-				this: SynthSourcePrototype,
-				...args: SynthParameterValue[]
-			) {
+			const factory = this;
+			proto[name] = function (this: SynthSource, ...args: SynthParameterValue[]) {
+				args = factory._expandColorArgs(name, args);
 				return this.addTransform(name, resolveArgs(inputs, args));
 			};
 		}
+	}
+
+	/**
+	 * Expands single scalar arguments for color transforms into RGB triplets.
+	 * e.g., solid(0.5) -> solid(0.5, 0.5, 0.5)
+	 */
+	private _expandColorArgs(name: string, args: SynthParameterValue[]): SynthParameterValue[] {
+		if (
+			(name === 'solid' || name === 'color') &&
+			args.length === 1 &&
+			typeof args[0] === 'number'
+		) {
+			const val = args[0];
+			// Use [val, val, val] and let defaults handle the rest (alpha)
+			return [val, val, val];
+		}
+		return args;
 	}
 
 	/**
@@ -93,15 +123,16 @@ class TransformFactory {
 
 		const functions: GeneratedFunctions = {};
 		const transforms = transformRegistry.getAll();
-		const SynthSource = this._synthSourceClass;
+		const SynthSourceCtor = this._synthSourceClass;
 
 		for (const transform of transforms) {
 			if (SOURCE_TYPE_TRANSFORMS.has(transform.type)) {
 				const { name, inputs } = transform;
 
 				functions[name] = (...args: SynthParameterValue[]) => {
-					const source = new SynthSource();
-					return source.addTransform(name, resolveArgs(inputs, args));
+					const source = new SynthSourceCtor();
+					args = this._expandColorArgs(name, args);
+					return source.addTransform(name, resolveArgs(inputs, args)) as SynthSource;
 				};
 			}
 		}
@@ -121,7 +152,7 @@ class TransformFactory {
 	 * Add a new transform and inject its method.
 	 * This can be used to add custom transforms at runtime.
 	 */
-	public addTransform(transform: TransformDefinition, prototype?: SynthSourcePrototype): void {
+	public addTransform(transform: TransformDefinition, prototype?: SynthSource): void {
 		// Register in the registry
 		transformRegistry.register(transform);
 
@@ -132,12 +163,13 @@ class TransformFactory {
 
 		// Generate standalone function if it's a source type
 		if (SOURCE_TYPE_TRANSFORMS.has(transform.type) && this._synthSourceClass) {
-			const SynthSource = this._synthSourceClass;
+			const SynthSourceCtor = this._synthSourceClass;
 			const { name, inputs } = transform;
 
 			this._generatedFunctions[name] = (...args: SynthParameterValue[]) => {
-				const source = new SynthSource();
-				return source.addTransform(name, resolveArgs(inputs, args));
+				const source = new SynthSourceCtor();
+				args = this._expandColorArgs(name, args);
+				return source.addTransform(name, resolveArgs(inputs, args)) as SynthSource;
 			};
 		}
 	}

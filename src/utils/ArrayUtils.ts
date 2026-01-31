@@ -334,13 +334,19 @@ export function getArrayValue(arr: ModulatedArray, ctx: SynthContext): number {
 	if (smooth !== 0) {
 		const ease = arr._ease ?? EASING_FUNCTIONS.linear;
 		const _index = index - smooth / 2;
+		const indexFloor = Math.floor(_index);
 
 		// Get current and next values with proper wrapping using modulo (not remainder)
-		const currValue = arr[Math.floor(modulo(_index, arr.length))];
-		const nextValue = arr[Math.floor(modulo(_index + 1, arr.length))];
+		const currIndex = modulo(indexFloor, arr.length);
+		// Since currIndex is guaranteed to be positive 0..len-1, we can use simple %
+		const nextIndex = (currIndex + 1) % arr.length;
+
+		const currValue = arr[currIndex];
+		const nextValue = arr[nextIndex];
 
 		// Calculate interpolation parameter
-		const t = Math.min(modulo(_index, 1) / smooth, 1);
+		// modulo(_index, 1) is equivalent to _index - indexFloor
+		const t = Math.min((_index - indexFloor) / smooth, 1);
 
 		// Apply easing and interpolate
 		return ease(t) * (nextValue - currValue) + currValue;

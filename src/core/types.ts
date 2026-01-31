@@ -109,11 +109,18 @@ export interface LayerSynthState {
 	characterResolver: CharacterResolver;
 	/** Whether the shader needs to be recompiled */
 	needsCompile: boolean;
+	/** Whether the shader is currently compiling (async) */
+	isCompiling: boolean;
 	/**
 	 * Ping-pong framebuffers for feedback loops.
 	 * pingPongBuffers[0] = buffer A, pingPongBuffers[1] = buffer B
 	 */
 	pingPongBuffers?: [TextmodeFramebuffer, TextmodeFramebuffer];
+	/**
+	 * Dimensions of the current ping-pong buffers.
+	 * Used to detect when grid resize requires buffer recreation.
+	 */
+	pingPongDimensions?: { cols: number; rows: number };
 	/**
 	 * Current ping-pong index.
 	 * READ from pingPongBuffers[pingPongIndex], WRITE to pingPongBuffers[1 - pingPongIndex].
@@ -149,6 +156,23 @@ export interface LayerSynthState {
 	 * Reusable synth context object to avoid per-frame allocation.
 	 */
 	synthContext?: SynthContext;
+
+	/**
+	 * Whether the layer/plugin state has been disposed.
+	 * Used to prevent race conditions during async operations (e.g. compilation).
+	 */
+	isDisposed?: boolean;
+
+	/**
+	 * Track which shader instance has received static uniforms.
+	 * Static uniforms are only applied when the shader changes.
+	 */
+	staticUniformsAppliedTo?: TextmodeShader;
+
+	/**
+	 * Track the last applied character map indices to avoid redundant uploads.
+	 */
+	lastCharMapIndices?: Int32Array;
 }
 
 /**
@@ -169,7 +193,7 @@ export interface ExternalLayerReference {
 	/** Unique identifier for the layer (typically layer.id or generated) */
 	layerId: string;
 	/** The layer object reference (opaque to the compiler, used by plugin) */
-	layer: unknown;
+	layer: TextmodeLayer;
 }
 
 /**
@@ -223,3 +247,11 @@ export const TRANSFORM_TYPE_INFO: Record<
 		],
 	},
 };
+
+/**
+ * Texture channels used in the synthesis pipeline.
+ * - `charColor`: The character color output
+ * - `char`: The character data output
+ * - `cellColor`: The cell background color output
+ */
+export type TextureChannel = 'charColor' | 'char' | 'cellColor';

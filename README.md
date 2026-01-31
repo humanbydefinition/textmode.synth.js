@@ -66,7 +66,7 @@ t.windowResized(() => {
 
 | Function | Purpose |
 |----------|---------|
-| `char(source, charCount?)` | Character generation |
+| `char(source)` | Character generation |
 | `charColor(source)` | Foreground color |
 | `cellColor(source)` | Background color |
 | `paint(source)` | Both foreground & background |

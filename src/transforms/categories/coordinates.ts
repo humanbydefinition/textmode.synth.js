@@ -7,6 +7,46 @@
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
 
+function createScrollTransform(axis: 'x' | 'y'): TransformDefinition {
+	const name = axis === 'x' ? 'scrollX' : 'scrollY';
+	return defineTransform({
+		name,
+		type: 'coord',
+		inputs: [
+			{ name, type: 'float', default: 0.5 },
+			{ name: 'speed', type: 'float', default: 0.0 },
+		],
+		glsl: `
+	vec2 st = _st;
+	st.${axis} += ${name} + time * speed;
+	return fract(st);
+`,
+		description: `Scroll ${axis.toUpperCase()} coordinate`,
+	});
+}
+
+function createRepeatTransform(axis: 'x' | 'y'): TransformDefinition {
+	const name = axis === 'x' ? 'repeatX' : 'repeatY';
+	const vecMult = axis === 'x' ? 'reps, 1.0' : '1.0, reps';
+	const targetAxis = axis === 'x' ? 'y' : 'x';
+	const sourceAxis = axis;
+
+	return defineTransform({
+		name,
+		type: 'coord',
+		inputs: [
+			{ name: 'reps', type: 'float', default: 3.0 },
+			{ name: 'offset', type: 'float', default: 0.0 },
+		],
+		glsl: `
+	vec2 st = _st * vec2(${vecMult});
+	st.${targetAxis} += step(1.0, mod(st.${sourceAxis}, 2.0)) * offset;
+	return fract(st);
+`,
+		description: `Repeat pattern ${axis === 'x' ? 'horizontally' : 'vertically'}`,
+	});
+}
+
 export const rotate = defineTransform({
 	name: 'rotate',
 	type: 'coord',
@@ -61,35 +101,9 @@ export const scroll = defineTransform({
 	description: 'Scroll coordinates',
 });
 
-export const scrollX = defineTransform({
-	name: 'scrollX',
-	type: 'coord',
-	inputs: [
-		{ name: 'scrollX', type: 'float', default: 0.5 },
-		{ name: 'speed', type: 'float', default: 0.0 },
-	],
-	glsl: `
-	vec2 st = _st;
-	st.x += scrollX + time * speed;
-	return fract(st);
-`,
-	description: 'Scroll X coordinate',
-});
+export const scrollX = createScrollTransform('x');
 
-export const scrollY = defineTransform({
-	name: 'scrollY',
-	type: 'coord',
-	inputs: [
-		{ name: 'scrollY', type: 'float', default: 0.5 },
-		{ name: 'speed', type: 'float', default: 0.0 },
-	],
-	glsl: `
-	vec2 st = _st;
-	st.y += scrollY + time * speed;
-	return fract(st);
-`,
-	description: 'Scroll Y coordinate',
-});
+export const scrollY = createScrollTransform('y');
 
 export const pixelate = defineTransform({
 	name: 'pixelate',
@@ -123,35 +137,9 @@ export const repeat = defineTransform({
 	description: 'Repeat pattern',
 });
 
-export const repeatX = defineTransform({
-	name: 'repeatX',
-	type: 'coord',
-	inputs: [
-		{ name: 'reps', type: 'float', default: 3.0 },
-		{ name: 'offset', type: 'float', default: 0.0 },
-	],
-	glsl: `
-	vec2 st = _st * vec2(reps, 1.0);
-	st.y += step(1.0, mod(st.x, 2.0)) * offset;
-	return fract(st);
-`,
-	description: 'Repeat pattern horizontally',
-});
+export const repeatX = createRepeatTransform('x');
 
-export const repeatY = defineTransform({
-	name: 'repeatY',
-	type: 'coord',
-	inputs: [
-		{ name: 'reps', type: 'float', default: 3.0 },
-		{ name: 'offset', type: 'float', default: 0.0 },
-	],
-	glsl: `
-	vec2 st = _st * vec2(1.0, reps);
-	st.x += step(1.0, mod(st.y, 2.0)) * offset;
-	return fract(st);
-`,
-	description: 'Repeat pattern vertically',
-});
+export const repeatY = createRepeatTransform('y');
 
 export const kaleid = defineTransform({
 	name: 'kaleid',

@@ -2,9 +2,9 @@ name: CI
 
 on:
   pull_request:
-    branches: [main, master]
+    branches: [main, master, beta, dev]
   push:
-    branches: [main, master]
+    branches: [main, master, beta, dev]
 
 jobs:
   test:
@@ -26,6 +26,12 @@ jobs:
 
       - name: Check formatting
         run: npm run format:check
+
+      - name: Lint Markdown
+        run: npm run lint:md
+
+      - name: Run tests
+        run: npm run test:run
 
       - name: Build
         run: npm run build

@@ -9,7 +9,7 @@ export function collectExternalLayerRefs(source: SynthSource): Map<string, Textm
 
 	// Collect from main source
 	for (const [, ref] of source.externalLayerRefs) {
-		layers.set(ref.layerId, ref.layer as TextmodeLayer);
+		layers.set(ref.layerId, ref.layer);
 	}
 
 	// Collect from nested sources
@@ -29,8 +29,8 @@ export function collectExternalLayerRefs(source: SynthSource): Map<string, Textm
 	}
 
 	// Collect from colorSource
-	if (source.colorSource) {
-		const colorRefs = collectExternalLayerRefs(source.colorSource);
+	if (source.charColorSource) {
+		const colorRefs = collectExternalLayerRefs(source.charColorSource);
 		for (const [id, layer] of colorRefs) {
 			layers.set(id, layer);
 		}

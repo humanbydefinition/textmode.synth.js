@@ -24,6 +24,7 @@ import { UniformManager } from './UniformManager';
 import { generateFragmentShader, generateCharacterOutputCode } from './GLSLGenerator';
 import { transformRegistry } from '../transforms/TransformRegistry';
 import type { ProcessedTransform } from '../transforms/TransformDefinition';
+import type { ExternalLayerReference } from '../core';
 
 /**
  * Compile a SynthSource chain into a complete MRT GLSL shader.
@@ -89,9 +90,9 @@ class SynthCompiler {
 
 		// Compile color source if separate
 		let primaryColorVar = chainResult.colorVar;
-		if (source.colorSource) {
+		if (source.charColorSource) {
 			const colorChain = this._compileChain(
-				source.colorSource,
+				source.charColorSource,
 				'charColor',
 				'vec4(1.0, 1.0, 1.0, 1.0)',
 				'v_uv',
@@ -188,9 +189,7 @@ class SynthCompiler {
 		this._mainCode.push(
 			`\tint charIdx_${charVar} = int(charLum_${charVar} * u_charSourceCount);`
 		);
-		this._mainCode.push(
-			`\tvec4 ${charVar} = vec4(float(charIdx_${charVar} % 256) / 255.0, float(charIdx_${charVar} / 256) / 255.0, 0.0, 0.0);`
-		);
+		this._mainCode.push(`\tvec4 ${charVar} = _packChar(charIdx_${charVar});`);
 
 		return charVar;
 	}
@@ -335,7 +334,7 @@ class SynthCompiler {
 	/**
 	 * Track src() usage for feedback or external layer.
 	 */
-	private _trackSrcUsage(externalRef?: { layerId: string; layer: unknown }): void {
+	private _trackSrcUsage(externalRef?: ExternalLayerReference): void {
 		if (externalRef) {
 			// External layer reference
 			this._externalLayerManager.trackUsage(externalRef, this._currentTarget);

@@ -7,12 +7,13 @@
 
 import type { TextmodeLayer } from 'textmode.js/layering';
 import type { TextmodeFont } from 'textmode.js/loadables';
-import type { TextmodeFramebuffer } from 'textmode.js';
+import type { TextmodeFramebuffer, Textmodifier } from 'textmode.js';
 import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
-import { CHANNEL_SUFFIXES } from '../compiler/channels';
+import { CHANNEL_SUFFIXES, CHANNEL_SAMPLERS } from '../core/constants';
 import { collectExternalLayerRefs } from '../utils';
 import { getGlobalBpm } from '../core/GlobalState';
+import { shaderManager } from './ShaderManager';
 import type { SynthContext, LayerSynthState } from '../core/types';
 
 /**
@@ -22,7 +23,7 @@ import type { SynthContext, LayerSynthState } from '../core/types';
  * BEFORE any WebGL operations. If any parameter fails, the entire frame
  * is skipped and the error propagates for the environment to handle.
  */
-export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
+export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifier): Promise<void> {
 	const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
 	if (!state) return;
 
@@ -45,23 +46,42 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 	}
 
 	// Compile shader if needed
-	if (state.needsCompile && state.compiled) {
-		// Dispose old shader
-		if (state.shader?.dispose) {
-			state.shader.dispose();
-		}
+	if (state.needsCompile && state.compiled && !state.isCompiling) {
+		state.isCompiling = true;
+		const compilingTarget = state.compiled;
 
 		// Collect external layer references from source
 		if (!justCollected) {
 			state.externalLayerMap = collectExternalLayerRefs(state.source);
 		}
 
-		// Use createFilterShader - leverages the instanced vertex shader
-		state.shader = await textmodifier.createFilterShader(state.compiled.fragmentSource);
-		state.needsCompile = false;
+		try {
+			// Use createFilterShader - leverages the instanced vertex shader
+			const newShader = await textmodifier.createFilterShader(compilingTarget.fragmentSource);
+
+			// Check if layer was disposed while compiling
+			if (state.isDisposed) {
+				if (newShader.dispose) newShader.dispose();
+				return;
+			}
+
+			// Dispose old shader now that the new one is ready
+			if (state.shader?.dispose) {
+				state.shader.dispose();
+			}
+
+			state.shader = newShader;
+
+			// Only mark as clean if the source hasn't changed since we started
+			if (state.compiled === compilingTarget) {
+				state.needsCompile = false;
+			}
+		} finally {
+			state.isCompiling = false;
+		}
 	}
 
-	if (!state.shader || !state.compiled) return;
+	if (!state.shader || !state.compiled || state.isDisposed) return;
 
 	// Determine feedback usage
 	const usesFeedback = state.compiled.usesCharColorFeedback;
@@ -69,12 +89,27 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 	const usesCellColorFeedback = state.compiled.usesCellColorFeedback;
 	const usesAnyFeedback = usesFeedback || usesCharFeedback || usesCellColorFeedback;
 
+	// Manage ping-pong buffer lifecycle
+	if (state.pingPongBuffers) {
+		const dim = state.pingPongDimensions;
+		const resizeNeeded = !dim || dim.cols !== grid.cols || dim.rows !== grid.rows;
+
+		// Dispose if feedback is disabled OR grid dimensions changed
+		if (!usesAnyFeedback || resizeNeeded) {
+			state.pingPongBuffers[0].dispose();
+			state.pingPongBuffers[1].dispose();
+			state.pingPongBuffers = undefined;
+			state.pingPongDimensions = undefined;
+		}
+	}
+
 	// Create ping-pong buffers for feedback
 	if (usesAnyFeedback && !state.pingPongBuffers) {
 		state.pingPongBuffers = [
 			textmodifier.createFramebuffer({ width: grid.cols, height: grid.rows, attachments: 3 }),
 			textmodifier.createFramebuffer({ width: grid.cols, height: grid.rows, attachments: 3 }),
 		] as [TextmodeFramebuffer, TextmodeFramebuffer];
+		state.pingPongDimensions = { cols: grid.cols, rows: grid.rows };
 		state.pingPongIndex = 0;
 	}
 
@@ -125,8 +160,19 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
 		// Render to draw framebuffer
 		drawFramebuffer.begin();
 		textmodifier.clear();
-		textmodifier.shader(state.shader);
-		applySynthUniforms(layer, textmodifier, state, synthContext, readBuffer);
+
+		const copyShader = shaderManager.getShader();
+		if (copyShader) {
+			textmodifier.shader(copyShader);
+			textmodifier.setUniform('u_charTex', writeBuffer.textures[0]);
+			textmodifier.setUniform('u_charColorTex', writeBuffer.textures[1]);
+			textmodifier.setUniform('u_cellColorTex', writeBuffer.textures[2]);
+		} else {
+			// Fallback if copy shader not yet ready (shouldn't happen after pre-setup hook)
+			textmodifier.shader(state.shader);
+			applySynthUniforms(layer, textmodifier, state, synthContext, readBuffer);
+		}
+
 		textmodifier.rect(grid.cols, grid.rows);
 		drawFramebuffer.end();
 
@@ -149,7 +195,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: any) {
  */
 function applySynthUniforms(
 	layer: TextmodeLayer,
-	textmodifier: any,
+	textmodifier: Textmodifier,
 	state: LayerSynthState,
 	ctx: SynthContext,
 	feedbackBuffer: TextmodeFramebuffer | null
@@ -162,12 +208,17 @@ function applySynthUniforms(
 	}
 
 	const compiled = state.compiled!;
+	// Only update static uniforms if the shader instance has changed
+	const forceUpdate = state.staticUniformsAppliedTo !== state.shader;
 
 	// Static uniforms
-	for (const [name, uniform] of compiled.uniforms) {
-		if (!uniform.isDynamic && typeof uniform.value !== 'function') {
-			textmodifier.setUniform(name, uniform.value);
+	if (forceUpdate) {
+		for (const [name, uniform] of compiled.uniforms) {
+			if (!uniform.isDynamic && typeof uniform.value !== 'function') {
+				textmodifier.setUniform(name, uniform.value);
+			}
 		}
+		state.staticUniformsAppliedTo = state.shader;
 	}
 
 	// Character mapping uniforms
@@ -176,8 +227,12 @@ function applySynthUniforms(
 			compiled.charMapping.chars,
 			layer.font as TextmodeFont
 		);
-		textmodifier.setUniform('u_charMap', indices);
-		textmodifier.setUniform('u_charMapSize', indices.length);
+		// Only update if mapping changed or shader changed
+		if (forceUpdate || indices !== state.lastCharMapIndices) {
+			textmodifier.setUniform('u_charMap', indices);
+			textmodifier.setUniform('u_charMapSize', indices.length);
+			state.lastCharMapIndices = indices;
+		}
 	}
 
 	// Char source count uniform (for char() function)
@@ -192,13 +247,13 @@ function applySynthUniforms(
 	// Feedback texture uniforms
 	if (feedbackBuffer) {
 		if (compiled.usesCharColorFeedback) {
-			textmodifier.setUniform('prevCharColorBuffer', feedbackBuffer.textures[1]);
+			textmodifier.setUniform(CHANNEL_SAMPLERS.charColor, feedbackBuffer.textures[1]);
 		}
 		if (compiled.usesCharFeedback) {
-			textmodifier.setUniform('prevCharBuffer', feedbackBuffer.textures[0]);
+			textmodifier.setUniform(CHANNEL_SAMPLERS.char, feedbackBuffer.textures[0]);
 		}
 		if (compiled.usesCellColorFeedback) {
-			textmodifier.setUniform('prevCellColorBuffer', feedbackBuffer.textures[2]);
+			textmodifier.setUniform(CHANNEL_SAMPLERS.cellColor, feedbackBuffer.textures[2]);
 		}
 	}
 
@@ -213,7 +268,7 @@ function applySynthUniforms(
 			}
 
 			const extState = extLayer.getPluginState<LayerSynthState>(PLUGIN_NAME);
-			let extTextures: any[] | undefined;
+			let extTextures: WebGLTexture[] | undefined;
 
 			if (extState?.pingPongBuffers) {
 				const extReadBuffer = extState.pingPongBuffers[extState.pingPongIndex];

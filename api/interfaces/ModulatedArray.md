@@ -127,9 +127,9 @@ Easing controls the acceleration curve of transitions between values.
 Automatically enables smoothing when applied. Use built-in easing names
 or provide a custom function that takes a value 0-1 and returns 0-1.
 
-Available easing functions: `'linear'`, `'easeInQuad'`, `'easeOutQuad'`, 
-`'easeInOutQuad'`, `'easeInCubic'`, `'easeOutCubic'`, `'easeInOutCubic'`, 
-`'easeInQuart'`, `'easeOutQuart'`, `'easeInOutQuart'`, `'easeInQuint'`, 
+Available easing functions: `'linear'`, `'easeInQuad'`, `'easeOutQuad'`,
+`'easeInOutQuad'`, `'easeInCubic'`, `'easeOutCubic'`, `'easeInOutCubic'`,
+`'easeInQuart'`, `'easeOutQuart'`, `'easeInOutQuart'`, `'easeInQuint'`,
 `'easeOutQuint'`, `'easeInOutQuint'`, `'sin'`
 
 #### Parameters

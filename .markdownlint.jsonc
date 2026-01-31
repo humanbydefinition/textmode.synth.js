@@ -1,0 +1,167 @@
+{
+  // textmode.js Markdown lint configuration
+  // https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+  //
+  // Using markdownlint-cli2: https://github.com/DavidAnson/markdownlint-cli2
+  // Defaults to true for all rules
+  "default": true,
+  // MD003 - Heading style (use ATX style)
+  "MD003": {
+    "style": "atx"
+  },
+  // MD004 - Unordered list style
+  "MD004": {
+    "style": "dash"
+  },
+  // MD007 - Unordered list indentation
+  "MD007": {
+    "indent": 2
+  },
+  // MD009 - Trailing spaces (allow for line breaks)
+  "MD009": {
+    "br_spaces": 2
+  },
+  // MD010 - Hard tabs (allow in code blocks)
+  "MD010": {
+    "code_blocks": true,
+    "spaces_per_tab": 4
+  },
+  // MD012 - Multiple consecutive blank lines
+  "MD012": {
+    "maximum": 1
+  },
+  // MD013 - Line length
+  // Disabled because some tables and code examples exceed reasonable lengths
+  "MD013": false,
+  // MD024 - Multiple headings with same content
+  // Allow in different sections (siblings_only)
+  "MD024": {
+    "siblings_only": true
+  },
+  // MD025 - Multiple top-level headings
+  // Allow multiple H1s - CHANGELOG has version headings
+  "MD025": false,
+  // MD026 - Trailing punctuation in heading
+  "MD026": {
+    "punctuation": ".,;:!。，；：！"
+  },
+  // MD029 - Ordered list item prefix
+  "MD029": {
+    "style": "ordered"
+  },
+  // MD033 - Inline HTML
+  // Allow certain HTML elements commonly used in markdown
+  // Also allow XML-like tags used in AI agent prompts (.agents/*.md, AGENTS.md)
+  "MD033": {
+    "allowed_elements": [
+      "a",
+      "br",
+      "code",
+      "div",
+      "em",
+      "h3",
+      "img",
+      "kbd",
+      "p",
+      "pre",
+      "span",
+      "strong",
+      "sub",
+      "sup",
+      "table",
+      "tbody",
+      "td",
+      "th",
+      "thead",
+      "tr",
+      "picture",
+      "source",
+      "ai_agent_instructions",
+      "agent_identity",
+      "agentic_patterns",
+      "abort_conditions",
+      "boundaries",
+      "context",
+      "coordinate_system",
+      "critical_rules",
+      "description",
+      "detection_patterns",
+      "example",
+      "examples",
+      "guardrails",
+      "mocking_rules",
+      "priorities",
+      "process",
+      "self_check",
+      "self_correction",
+      "success_criteria",
+      "thinking",
+      "reflection",
+      "tsc_rules",
+      "verification_critical",
+      "vitest_patterns",
+      "tsc_errors"
+    ]
+  },
+  // MD034 - Bare URLs
+  // Disabled - often URLs are intentionally bare in code examples
+  "MD034": false,
+  // MD036 - Emphasis used instead of a heading
+  // Disabled - sometimes emphasis is stylistic
+  "MD036": false,
+  // MD040 - Fenced code blocks should have a language specified
+  "MD040": true,
+  // MD041 - First line should be a heading
+  // Disabled - some files start with badges or images
+  "MD041": false,
+  // MD044 - Proper names should have correct capitalization
+  "MD044": {
+    "names": [
+      "textmode.js",
+      "textmode",
+      "WebGL",
+      "WebGL2",
+      "TypeScript",
+      "JavaScript",
+      "Node.js",
+      "GitHub",
+      "npm",
+      "ASCII",
+      "GLSL",
+      "PETSCII"
+    ],
+    "code_blocks": false,
+    "html_elements": false
+  },
+  // MD046 - Code block style
+  "MD046": {
+    "style": "fenced"
+  },
+  // MD048 - Code fence style
+  "MD048": {
+    "style": "backtick"
+  },
+  // MD049 - Emphasis style
+  "MD049": {
+    "style": "asterisk"
+  },
+  // MD050 - Strong style  
+  "MD050": {
+    "style": "asterisk"
+  },
+  // MD051 - Link fragments should be valid
+  "MD051": true,
+  // MD053 - Link and image reference definitions should be needed
+  "MD053": true,
+  // MD055 - Table pipe style (consistent)
+  "MD055": {
+    "style": "leading_and_trailing"
+  },
+  // MD056 - Table column count
+  "MD056": true,
+  // MD058 - Tables should be surrounded by blank lines
+  "MD058": true,
+  // MD060 - Table column style
+  // Disabled - existing tables use compact style without spaces around pipes
+  "MD060": false
+}

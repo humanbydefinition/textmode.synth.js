@@ -1,30 +1,5 @@
 import type { CompilationTarget, ChannelUsage } from './types';
-
-/**
- * Texture channels used in the synthesis pipeline.
- * - `charColor`: The character color output
- * - `char`: The character data output
- * - `cellColor`: The cell background color output
- */
-export type TextureChannel = 'charColor' | 'char' | 'cellColor';
-
-/**
- * Mapping from texture channel to self-feedback sampler uniform name.
- */
-export const CHANNEL_SAMPLERS: Record<TextureChannel, string> = {
-	charColor: 'prevCharColorBuffer',
-	char: 'prevCharBuffer',
-	cellColor: 'prevCellColorBuffer',
-};
-
-/**
- * Mapping from texture channel to external layer uniform suffix.
- */
-export const CHANNEL_SUFFIXES: Record<TextureChannel, string> = {
-	charColor: '_charColor',
-	char: '_char',
-	cellColor: '_cellColor',
-};
+import type { TextureChannel } from '../core/types';
 
 /**
  * Get the texture channel associated with a compilation target.
@@ -36,16 +11,10 @@ export const CHANNEL_SUFFIXES: Record<TextureChannel, string> = {
  * @returns The corresponding texture channel
  */
 export function getTextureChannel(target: CompilationTarget): TextureChannel {
-	switch (target) {
-		case 'char':
-			return 'char';
-		case 'cellColor':
-			return 'cellColor';
-		case 'charColor':
-		case 'main':
-		default:
-			return 'charColor';
+	if (target === 'char' || target === 'cellColor') {
+		return target;
 	}
+	return 'charColor';
 }
 
 /**

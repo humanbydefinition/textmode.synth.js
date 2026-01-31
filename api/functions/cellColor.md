@@ -3,7 +3,11 @@
 # Function: cellColor()
 
 ```ts
-function cellColor(source): SynthSource;
+function cellColor(
+   rOrSource,
+   g?,
+   b?,
+   a?): SynthSource;
 ```
 
 Create a synth source with cell background color defined.
@@ -12,11 +16,16 @@ This function creates a SynthSource where the cell background color
 is driven by the provided source pattern. This is compositional and can be
 combined with `char()` and `charColor()`.
 
+Accepts either a `SynthSource` (pattern) or RGBA values (solid color).
+
 ## Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | [`SynthSource`](../classes/SynthSource.md) | A SynthSource producing color values for cell background |
+| `rOrSource` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | A SynthSource producing color values, or Red channel (0-1) |
+| `g?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Green channel (0-1) |
+| `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blue channel (0-1) |
+| `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Alpha channel (0-1) |
 
 ## Returns
 
@@ -33,19 +42,13 @@ const t = textmode.create({
   plugins: [SynthPlugin]
 });
 
-// Start with cell color
+// Use a solid color (RGBA overload)
 t.layers.base.synth(
-  cellColor(solid(0, 0, 0, 0.5))
-    .char(noise(10))
-    .charColor(osc(5))
+  cellColor(0, 0, 0, 0.5).char(noise(10))
 );
 
-// Complete composition - all three defined
-const colorPattern = voronoi(5, 0.3);
+// Use a pattern source
 t.layers.base.synth(
-  cellColor(colorPattern.clone().invert())
-    .char(noise(10), 16)
-    .charMap('@#%*+=-:. ')
-    .charColor(colorPattern)
+  cellColor(osc(5).invert())
 );
 ```

@@ -49,6 +49,7 @@ t.layers.base.synth(synth);
 | ------ | ------ |
 | [SynthParameterValue](type-aliases/SynthParameterValue.md) | Dynamic parameter value types supported by the synth system. |
 | [EasingFunction](type-aliases/EasingFunction.md) | Easing functions from https://gist.github.com/gre/1650294 |
+| [DynamicErrorCallback](type-aliases/DynamicErrorCallback.md) | Callback signature for dynamic parameter evaluation errors. Live coding environments can use this to display errors without interrupting rendering. |
 
 ## Variables
 
@@ -71,3 +72,4 @@ t.layers.base.synth(synth);
 | [solid](functions/solid.md) | Generate a solid color. |
 | [src](functions/src.md) | Sample the previous frame's output for feedback effects. |
 | [voronoi](functions/voronoi.md) | Generate voronoi patterns. |
+| [setGlobalErrorCallback](functions/setGlobalErrorCallback.md) | Set a global error callback for dynamic parameter evaluation errors. |

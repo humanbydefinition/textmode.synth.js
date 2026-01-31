@@ -182,6 +182,32 @@ ISynthSource.shape
 
 ### solid()
 
+#### Call Signature
+
+```ts
+solid(gray): this;
+```
+
+Generate a solid grayscale color.
+
+##### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `gray` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Grayscale value (0-1) |
+
+##### Returns
+
+`this`
+
+##### Inherited from
+
+```ts
+ISynthSource.solid
+```
+
+#### Call Signature
+
 ```ts
 solid(
    r?, 
@@ -192,7 +218,7 @@ solid(
 
 Generate a solid color.
 
-#### Parameters
+##### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
@@ -201,11 +227,11 @@ Generate a solid color.
 | `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blue channel (0-1, default: 0.0) |
 | `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Alpha channel (0-1, default: 1.0) |
 
-#### Returns
+##### Returns
 
 `this`
 
-#### Inherited from
+##### Inherited from
 
 ```ts
 ISynthSource.solid
@@ -229,11 +255,11 @@ The sampled texture is context-aware based on where it's used in the synth chain
 - Inside `cellColor(...)` → samples previous frame's cell color (character background)
 - Outside all three → samples previous frame's primary color
 
-**Cross-layer sampling (with layer argument):** `src(layer)` samples from another 
+**Cross-layer sampling (with layer argument):** `src(layer)` samples from another
 layer's output, enabling hydra-style multi-output compositions. The sampled texture
 is still context-aware based on the current compilation target.
 
-This is the core of feedback loops and multi-layer compositions - enabling effects 
+This is the core of feedback loops and multi-layer compositions - enabling effects
 like trails, motion blur, recursive patterns, and complex layered visuals.
 Equivalent to hydra's `src(o0)`.
 
@@ -241,7 +267,7 @@ Equivalent to hydra's `src(o0)`.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `layer?` | `unknown` | Optional TextmodeLayer to sample from. If omitted, samples from self (feedback). |
+| `layer?` | `TextmodeLayer` | Optional TextmodeLayer to sample from. If omitted, samples from self (feedback). |
 
 #### Returns
 
@@ -293,7 +319,7 @@ Rotate coordinates.
 
 ```typescript
 // Rotate shape continuously
-osc(50, 0, 0, 16)
+osc(50, 0, 0)
   .rotate((ctx) => ctx.time % 360)
   .charColor(osc(50).rotate((ctx) => ctx.time % 360));
 ```
@@ -407,6 +433,13 @@ Scroll coordinates in X direction.
 
 `this`
 
+#### Example
+
+```typescript
+// Scroll noise horizontally
+noise(10).scrollX(0.5, 0.1)
+```
+
 #### Inherited from
 
 ```ts
@@ -433,6 +466,13 @@ Scroll coordinates in Y direction.
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+// Scroll noise vertically
+noise(10).scrollY(0.5, 0.1)
+```
 
 #### Inherited from
 
@@ -539,6 +579,13 @@ Repeat coordinates in X direction.
 
 `this`
 
+#### Example
+
+```typescript
+// Repeat pattern horizontally 5 times
+shape(4).repeatX(5, 0)
+```
+
 #### Inherited from
 
 ```ts
@@ -565,6 +612,13 @@ Repeat coordinates in Y direction.
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+// Repeat pattern vertically 5 times
+shape(4).repeatY(5, 0)
+```
 
 #### Inherited from
 
@@ -596,7 +650,7 @@ Apply kaleidoscope effect.
 
 ```typescript
 // Create a 50-sided kaleidoscope pattern
-osc(25, -0.1, 0.5, 32)
+osc(25, -0.1, 0.5)
   .kaleid(50)
   .charColor(osc(25, -0.1, 0.5).kaleid(50));
 ```
@@ -735,7 +789,7 @@ Adjust color saturation.
 
 ```typescript
 // Animate saturation
-osc(10, 0, 1, 16)
+osc(10, 0, 1)
   .charColor(
     osc(10, 0, 1).saturate((ctx) => Math.sin(ctx.time) * 10)
   );
@@ -918,6 +972,32 @@ ISynthSource.thresh
 
 ### color()
 
+#### Call Signature
+
+```ts
+color(gray): this;
+```
+
+Multiply all channels by a scalar value (grayscale).
+
+##### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `gray` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Scalar multiplier |
+
+##### Returns
+
+`this`
+
+##### Inherited from
+
+```ts
+ISynthSource.color
+```
+
+#### Call Signature
+
 ```ts
 color(
    r?, 
@@ -931,7 +1011,7 @@ Colorize a grayscale source or multiply an existing color source.
 This is the recommended way to add color to grayscale sources like `osc()`,
 `noise()`, or `voronoi()`.
 
-#### Parameters
+##### Parameters
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
@@ -940,11 +1020,11 @@ This is the recommended way to add color to grayscale sources like `osc()`,
 | `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blue channel multiplier (default: 1.0) |
 | `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Alpha channel multiplier (default: 1.0) |
 
-#### Returns
+##### Returns
 
 `this`
 
-#### Example
+##### Example
 
 ```typescript
 // Create a blue oscillator
@@ -954,7 +1034,7 @@ osc(10).color(0, 0.5, 1.0)
 noise(5).color(1, 0.2, 0.2)
 ```
 
-#### Inherited from
+##### Inherited from
 
 ```ts
 ISynthSource.color
@@ -988,7 +1068,7 @@ Extract the red channel as a grayscale value.
 voronoi(5).hue(0.4).r()
 
 // Convert red intensity to character indices
-char(osc(10).hue(0.5).r(), 16)
+char(osc(10).hue(0.5).r())
 ```
 
 #### Inherited from
@@ -1223,7 +1303,7 @@ Add another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to add |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to add |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 0.5) |
 
 #### Returns
@@ -1259,12 +1339,33 @@ Subtract another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to subtract |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to subtract |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 0.5) |
 
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  fontSize: 8,
+  plugins: [SynthPlugin]
+});
+
+// Subtract a smaller circle from a larger one to create a ring
+t.layers.base.synth(
+  shape(100, 0.5)
+    .sub(shape(100, 0.3))
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 #### Inherited from
 
@@ -1286,12 +1387,34 @@ Multiply with another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to multiply |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to multiply |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 0.5) |
 
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  fontSize: 8,
+  plugins: [SynthPlugin]
+});
+
+// Multiply noise with a shape to create a textured polygon
+t.layers.base.synth(
+  shape(3, 0.5)
+    .mult(noise(10, 0.1))
+    .color(1, 0.5, 0.2)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 #### Inherited from
 
@@ -1313,7 +1436,7 @@ Blend with another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to blend |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to blend |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 0.5) |
 
 #### Returns
@@ -1349,7 +1472,7 @@ Difference with another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to compare |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to compare |
 
 #### Returns
 
@@ -1381,7 +1504,7 @@ Layer another source on top.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to layer |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to layer |
 
 #### Returns
 
@@ -1415,7 +1538,7 @@ Mask using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Source to use as mask |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to use as mask |
 
 #### Returns
 
@@ -1448,7 +1571,7 @@ Modulate coordinates using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Modulation amount (default: 0.1) |
 
 #### Returns
@@ -1485,13 +1608,20 @@ Modulate scale using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `multiple?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Scale multiplier (default: 1.0) |
 | `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 1.0) |
 
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+// Modulate scale of shape with oscillator
+shape(3).modulateScale(osc(10), 10, 0)
+```
 
 #### Inherited from
 
@@ -1516,13 +1646,20 @@ Modulate rotation using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `multiple?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Rotation multiplier (default: 1.0) |
 | `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 0.0) |
 
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+// Modulate rotation of shape with noise
+shape(3).modulateRotate(noise(2), 2, 0)
+```
 
 #### Inherited from
 
@@ -1547,7 +1684,7 @@ Modulate pixelation using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `multiple?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Pixelation multiplier (default: 10.0) |
 | `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 3.0) |
 
@@ -1581,7 +1718,7 @@ Modulate kaleidoscope using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `nSides?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Number of sides (default: 4.0) |
 
 #### Returns
@@ -1618,13 +1755,19 @@ Modulate X scroll using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `scrollX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | X scroll amount (default: 0.5) |
 | `speed?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Scroll speed (default: 0.0) |
 
 #### Returns
 
 `this`
+
+#### Example
+
+```typescript
+osc(10).modulateScrollX(osc(10), 0.5, 0)
+```
 
 #### Inherited from
 
@@ -1649,7 +1792,7 @@ Modulate Y scroll using another source.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `source` | `ISynthSource` | Modulation source |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
 | `scrollY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Y scroll amount (default: 0.5) |
 | `speed?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Scroll speed (default: 0.0) |
 
@@ -1657,10 +1800,164 @@ Modulate Y scroll using another source.
 
 `this`
 
+#### Example
+
+```typescript
+osc(10).modulateScrollY(osc(10), 0.5, 0)
+```
+
 #### Inherited from
 
 ```ts
 ISynthSource.modulateScrollY
+```
+
+***
+
+### modulateRepeat()
+
+```ts
+modulateRepeat(
+   source,
+   repeatX?,
+   repeatY?,
+   offsetX?,
+   offsetY?): this;
+```
+
+Modulate repeat pattern with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
+| `repeatX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | X repetitions (default: 3.0) |
+| `repeatY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Y repetitions (default: 3.0) |
+| `offsetX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | X offset (default: 0.5) |
+| `offsetY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Y offset (default: 0.5) |
+
+#### Returns
+
+`this`
+
+#### Example
+
+```typescript
+shape(4).modulateRepeat(noise(3), 3, 3, 0.5, 0.5)
+```
+
+#### Inherited from
+
+```ts
+ISynthSource.modulateRepeat
+```
+
+***
+
+### modulateRepeatX()
+
+```ts
+modulateRepeatX(
+   source,
+   reps?,
+   offset?): this;
+```
+
+Modulate X repeat with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
+| `reps?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Number of repetitions (default: 3.0) |
+| `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 0.5) |
+
+#### Returns
+
+`this`
+
+#### Example
+
+```typescript
+shape(4).modulateRepeatX(noise(3), 3, 0.5)
+```
+
+#### Inherited from
+
+```ts
+ISynthSource.modulateRepeatX
+```
+
+***
+
+### modulateRepeatY()
+
+```ts
+modulateRepeatY(
+   source,
+   reps?,
+   offset?): this;
+```
+
+Modulate Y repeat with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
+| `reps?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Number of repetitions (default: 3.0) |
+| `offset?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Offset amount (default: 0.5) |
+
+#### Returns
+
+`this`
+
+#### Example
+
+```typescript
+shape(4).modulateRepeatY(noise(3), 3, 0.5)
+```
+
+#### Inherited from
+
+```ts
+ISynthSource.modulateRepeatY
+```
+
+***
+
+### modulateHue()
+
+```ts
+modulateHue(source, amount?): this;
+```
+
+Modulate coordinates based on hue differences.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Modulation source |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Modulation amount (default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Example
+
+```typescript
+src().modulateHue(src().scale(1.01), 1.0)
+```
+
+#### Inherited from
+
+```ts
+ISynthSource.modulateHue
 ```
 
 ***
@@ -1692,14 +1989,21 @@ ISynthSource.charMap
 ### charColor()
 
 ```ts
-charColor(source): this;
+charColor(
+   rOrSource,
+   g?,
+   b?,
+   a?): this;
 ```
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `source` | `SynthSource` |
+| `rOrSource` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` |
+| `g?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
+| `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
+| `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
 
 #### Returns
 
@@ -1716,7 +2020,7 @@ ISynthSource.charColor
 ### char()
 
 ```ts
-char(source, charCount): this;
+char(source): this;
 ```
 
 #### Parameters
@@ -1724,7 +2028,6 @@ char(source, charCount): this;
 | Parameter | Type |
 | ------ | ------ |
 | `source` | `SynthSource` |
-| `charCount` | `number` |
 
 #### Returns
 
@@ -1741,14 +2044,21 @@ ISynthSource.char
 ### cellColor()
 
 ```ts
-cellColor(source): this;
+cellColor(
+   rOrSource,
+   g?,
+   b?,
+   a?): this;
 ```
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `source` | `SynthSource` |
+| `rOrSource` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` |
+| `g?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
+| `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
+| `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
 
 #### Returns
 
@@ -1765,14 +2075,21 @@ ISynthSource.cellColor
 ### paint()
 
 ```ts
-paint(source): this;
+paint(
+   rOrSource,
+   g?,
+   b?,
+   a?): this;
 ```
 
 #### Parameters
 
 | Parameter | Type |
 | ------ | ------ |
-| `source` | `SynthSource` |
+| `rOrSource` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` |
+| `g?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
+| `b?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
+| `a?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) |
 
 #### Returns
 

@@ -32,7 +32,9 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
 		shader: partial.shader,
 		characterResolver: partial.characterResolver ?? new CharacterResolver(),
 		needsCompile: partial.needsCompile ?? false,
+		isCompiling: partial.isCompiling ?? false,
 		pingPongBuffers: partial.pingPongBuffers,
+		pingPongDimensions: partial.pingPongDimensions,
 		pingPongIndex: partial.pingPongIndex ?? 0,
 		externalLayerMap: partial.externalLayerMap,
 		bpm: partial.bpm,
@@ -46,13 +48,14 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
 			rows: 0,
 			bpm: 0,
 		},
+		isDisposed: false,
 	};
 }
 
 /**
  * Extend layer with synth() method.
  */
-export function extendLayerSynth(api: TextmodePluginAPI) {
+export function extendLayerSynth(api: TextmodePluginAPI): void {
 	api.extendLayer('synth', function (this: TextmodeLayer, source: SynthSource): void {
 		const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
 
@@ -83,7 +86,7 @@ export function extendLayerSynth(api: TextmodePluginAPI) {
 /**
  * Extend layer with clearSynth() method.
  */
-export function extendLayerClearSynth(api: TextmodePluginAPI) {
+export function extendLayerClearSynth(api: TextmodePluginAPI): void {
 	api.extendLayer('clearSynth', function (this: TextmodeLayer): void {
 		const state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
 		if (!state) return;
@@ -107,7 +110,7 @@ export function extendLayerClearSynth(api: TextmodePluginAPI) {
 /**
  * Extend layer with bpm() method.
  */
-export function extendLayerBpm(api: TextmodePluginAPI) {
+export function extendLayerBpm(api: TextmodePluginAPI): void {
 	api.extendLayer('bpm', function (this: TextmodeLayer, value: number): void {
 		let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
 

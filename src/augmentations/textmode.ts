@@ -9,7 +9,7 @@
 
 import type { SynthSource } from '../core/SynthSource';
 
-declare module 'textmode.js' {
+declare module 'textmode.js/layering' {
 	interface TextmodeLayer {
 		/**
 		 * Set a synth source for this layer.
@@ -50,7 +50,9 @@ declare module 'textmode.js' {
 		 */
 		get id(): string;
 	}
+}
 
+declare module 'textmode.js' {
 	interface Textmodifier {
 		/**
 		 * Set the global BPM (Beats Per Minute) for array modulation timing.

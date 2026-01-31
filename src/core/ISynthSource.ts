@@ -1,4 +1,5 @@
-import type { SynthParameterValue } from './types';
+import type { TextmodeLayer } from 'textmode.js/layering';
+import type { ExternalLayerReference, SynthParameterValue } from './types';
 
 /**
  * Interface defining all chainable methods available on SynthSource.
@@ -47,6 +48,32 @@ export interface ISynthSource {
 	 * ```
 	 */
 	charColor(source: ISynthSource): this;
+	/**
+	 * Set the character foreground color using RGBA values.
+	 *
+	 * @param r - Red channel (0-1) or value
+	 * @param g - Green channel (0-1) or value
+	 * @param b - Blue channel (0-1) or value
+	 * @param a - Alpha channel (0-1) or value
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * ```ts
+	 * // Set solid red color
+	 * noise(10).charColor(1, 0, 0)
+	 * ```
+	 */
+	charColor(
+		r: SynthParameterValue,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this;
+	/**
+	 * Set the character foreground color using a grayscale value.
+	 * @param gray - Grayscale value (0-1)
+	 */
+	charColor(gray: SynthParameterValue): this;
 
 	/**
 	 * Set the cell background colors using a color source chain.
@@ -64,6 +91,32 @@ export interface ISynthSource {
 	 * ```
 	 */
 	cellColor(source: ISynthSource): this;
+	/**
+	 * Set the cell background color using RGBA values.
+	 *
+	 * @param r - Red channel (0-1) or value
+	 * @param g - Green channel (0-1) or value
+	 * @param b - Blue channel (0-1) or value
+	 * @param a - Alpha channel (0-1) or value
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * ```ts
+	 * // Set semi-transparent black background
+	 * noise(10).cellColor(0, 0, 0, 0.5)
+	 * ```
+	 */
+	cellColor(
+		r: SynthParameterValue,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this;
+	/**
+	 * Set the cell background color using a grayscale value.
+	 * @param gray - Grayscale value (0-1)
+	 */
+	cellColor(gray: SynthParameterValue): this;
 
 	/**
 	 * Set the character indices using a character source chain.
@@ -107,6 +160,32 @@ export interface ISynthSource {
 	 * ```
 	 */
 	paint(source: ISynthSource): this;
+	/**
+	 * Set both character foreground and cell background color using RGBA values.
+	 *
+	 * @param r - Red channel (0-1) or value
+	 * @param g - Green channel (0-1) or value
+	 * @param b - Blue channel (0-1) or value
+	 * @param a - Alpha channel (0-1) or value
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * ```ts
+	 * // Paint everything white
+	 * noise(10).paint(1, 1, 1)
+	 * ```
+	 */
+	paint(
+		r: SynthParameterValue,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this;
+	/**
+	 * Set both character foreground and cell background color using a grayscale value.
+	 * @param gray - Grayscale value (0-1)
+	 */
+	paint(gray: SynthParameterValue): this;
 
 	/**
 	 * Create a deep clone of this SynthSource.
@@ -187,6 +266,11 @@ export interface ISynthSource {
 	): this;
 
 	/**
+	 * Generate a solid grayscale color.
+	 * @param gray - Grayscale value (0-1)
+	 */
+	solid(gray: SynthParameterValue): this;
+	/**
 	 * Generate a solid color.
 	 * @param r - Red channel (0-1, default: 0.0)
 	 * @param g - Green channel (0-1, default: 0.0)
@@ -235,7 +319,7 @@ export interface ISynthSource {
 	 *   .cellColor(voronoi().diff(src()))    // src() → cell color feedback
 	 * ```
 	 */
-	src(layer?: unknown): this;
+	src(layer?: TextmodeLayer): this;
 
 	/**
 	 * Rotate coordinates.
@@ -245,7 +329,7 @@ export interface ISynthSource {
 	 * @example
 	 * ```typescript
 	 * // Rotate shape continuously
-	 * osc(50, 0, 0, 16)
+	 * osc(50, 0, 0)
 	 *   .rotate((ctx) => ctx.time % 360)
 	 *   .charColor(osc(50).rotate((ctx) => ctx.time % 360));
 	 * ```
@@ -298,6 +382,12 @@ export interface ISynthSource {
 	 * Scroll coordinates in X direction.
 	 * @param scrollX - X scroll amount (default: 0.5)
 	 * @param speed - Scroll speed (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Scroll noise horizontally
+	 * noise(10).scrollX(0.5, 0.1)
+	 * ```
 	 */
 	scrollX(scrollX?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -305,6 +395,12 @@ export interface ISynthSource {
 	 * Scroll coordinates in Y direction.
 	 * @param scrollY - Y scroll amount (default: 0.5)
 	 * @param speed - Scroll speed (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Scroll noise vertically
+	 * noise(10).scrollY(0.5, 0.1)
+	 * ```
 	 */
 	scrollY(scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -349,6 +445,12 @@ export interface ISynthSource {
 	 * Repeat coordinates in X direction.
 	 * @param reps - Number of repetitions (default: 3.0)
 	 * @param offset - Offset between repetitions (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Repeat pattern horizontally 5 times
+	 * shape(4).repeatX(5, 0)
+	 * ```
 	 */
 	repeatX(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -356,6 +458,12 @@ export interface ISynthSource {
 	 * Repeat coordinates in Y direction.
 	 * @param reps - Number of repetitions (default: 3.0)
 	 * @param offset - Offset between repetitions (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Repeat pattern vertically 5 times
+	 * shape(4).repeatY(5, 0)
+	 * ```
 	 */
 	repeatY(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -366,7 +474,7 @@ export interface ISynthSource {
 	 * @example
 	 * ```typescript
 	 * // Create a 50-sided kaleidoscope pattern
-	 * osc(25, -0.1, 0.5, 32)
+	 * osc(25, -0.1, 0.5)
 	 *   .kaleid(50)
 	 *   .charColor(osc(25, -0.1, 0.5).kaleid(50));
 	 * ```
@@ -421,7 +529,7 @@ export interface ISynthSource {
 	 * @example
 	 * ```typescript
 	 * // Animate saturation
-	 * osc(10, 0, 1, 16)
+	 * osc(10, 0, 1)
 	 *   .charColor(
 	 *     osc(10, 0, 1).saturate((ctx) => Math.sin(ctx.time) * 10)
 	 *   );
@@ -493,6 +601,11 @@ export interface ISynthSource {
 	thresh(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
 
 	/**
+	 * Multiply all channels by a scalar value (grayscale).
+	 * @param gray - Scalar multiplier
+	 */
+	color(gray: SynthParameterValue): this;
+	/**
 	 * Colorize a grayscale source or multiply an existing color source.
 	 *
 	 * This is the recommended way to add color to grayscale sources like `osc()`,
@@ -530,7 +643,7 @@ export interface ISynthSource {
 	 * voronoi(5).hue(0.4).r()
 	 *
 	 * // Convert red intensity to character indices
-	 * char(osc(10).hue(0.5).r(), 16)
+	 * char(osc(10).hue(0.5).r())
 	 * ```
 	 */
 	r(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
@@ -637,21 +750,62 @@ export interface ISynthSource {
 	 *   .add(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
 	 * ```
 	 */
-	add(source: ISynthSource, amount?: SynthParameterValue): this;
+	add(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
 	/**
 	 * Subtract another source.
 	 * @param source - Source to subtract
 	 * @param amount - Blend amount (default: 0.5)
+	 *
+	 * @example
+	 * ```typescript
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   fontSize: 8,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * // Subtract a smaller circle from a larger one to create a ring
+	 * t.layers.base.synth(
+	 *   shape(100, 0.5)
+	 *     .sub(shape(100, 0.3))
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
-	sub(source: ISynthSource, amount?: SynthParameterValue): this;
+	sub(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
 	/**
 	 * Multiply with another source.
 	 * @param source - Source to multiply
 	 * @param amount - Blend amount (default: 0.5)
+	 *
+	 * @example
+	 * ```typescript
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   fontSize: 8,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * // Multiply noise with a shape to create a textured polygon
+	 * t.layers.base.synth(
+	 *   shape(3, 0.5)
+	 *     .mult(noise(10, 0.1))
+	 *     .color(1, 0.5, 0.2)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
-	mult(source: ISynthSource, amount?: SynthParameterValue): this;
+	mult(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
 	/**
 	 * Blend with another source.
@@ -666,7 +820,7 @@ export interface ISynthSource {
 	 *   .blend(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
 	 * ```
 	 */
-	blend(source: ISynthSource, amount?: SynthParameterValue): this;
+	blend(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
 	/**
 	 * Difference with another source.
@@ -677,7 +831,7 @@ export interface ISynthSource {
 	 * osc(1, 0.1, 2).diff(osc(1, 0.5, 5))
 	 * ```
 	 */
-	diff(source: ISynthSource): this;
+	diff(source: ISynthSource | SynthParameterValue): this;
 
 	/**
 	 * Layer another source on top.
@@ -690,7 +844,7 @@ export interface ISynthSource {
 	 *   .cellColor(osc(30).layer(osc(15).rotate(1).luma()).invert())
 	 * ```
 	 */
-	layer(source: ISynthSource): this;
+	layer(source: ISynthSource | SynthParameterValue): this;
 
 	/**
 	 * Mask using another source.
@@ -702,7 +856,7 @@ export interface ISynthSource {
 	 * gradient(5).mask(voronoi()).invert([0, 1])
 	 * ```
 	 */
-	mask(source: ISynthSource): this;
+	mask(source: ISynthSource | SynthParameterValue): this;
 
 	/**
 	 * Modulate coordinates using another source.
@@ -715,16 +869,22 @@ export interface ISynthSource {
 	 *     .modulate(noise().add(gradient(), -1), 1)
 	 * ```
 	 */
-	modulate(source: ISynthSource, amount?: SynthParameterValue): this;
+	modulate(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
 	/**
 	 * Modulate scale using another source.
 	 * @param source - Modulation source
 	 * @param multiple - Scale multiplier (default: 1.0)
 	 * @param offset - Offset amount (default: 1.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Modulate scale of shape with oscillator
+	 * shape(3).modulateScale(osc(10), 10, 0)
+	 * ```
 	 */
 	modulateScale(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		multiple?: SynthParameterValue,
 		offset?: SynthParameterValue
 	): this;
@@ -734,9 +894,15 @@ export interface ISynthSource {
 	 * @param source - Modulation source
 	 * @param multiple - Rotation multiplier (default: 1.0)
 	 * @param offset - Offset amount (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Modulate rotation of shape with noise
+	 * shape(3).modulateRotate(noise(2), 2, 0)
+	 * ```
 	 */
 	modulateRotate(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		multiple?: SynthParameterValue,
 		offset?: SynthParameterValue
 	): this;
@@ -753,7 +919,7 @@ export interface ISynthSource {
 	 * ```
 	 */
 	modulatePixelate(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		multiple?: SynthParameterValue,
 		offset?: SynthParameterValue
 	): this;
@@ -769,16 +935,21 @@ export interface ISynthSource {
 	 *     .modulateKaleid(osc(16).kaleid(999), 1)
 	 * ```
 	 */
-	modulateKaleid(source: ISynthSource, nSides?: SynthParameterValue): this;
+	modulateKaleid(source: ISynthSource | SynthParameterValue, nSides?: SynthParameterValue): this;
 
 	/**
 	 * Modulate X scroll using another source.
 	 * @param source - Modulation source
 	 * @param scrollX - X scroll amount (default: 0.5)
 	 * @param speed - Scroll speed (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * osc(10).modulateScrollX(osc(10), 0.5, 0)
+	 * ```
 	 */
 	modulateScrollX(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		scrollX?: SynthParameterValue,
 		speed?: SynthParameterValue
 	): this;
@@ -788,12 +959,84 @@ export interface ISynthSource {
 	 * @param source - Modulation source
 	 * @param scrollY - Y scroll amount (default: 0.5)
 	 * @param speed - Scroll speed (default: 0.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * osc(10).modulateScrollY(osc(10), 0.5, 0)
+	 * ```
 	 */
 	modulateScrollY(
-		source: ISynthSource,
+		source: ISynthSource | SynthParameterValue,
 		scrollY?: SynthParameterValue,
 		speed?: SynthParameterValue
 	): this;
+
+	/**
+	 * Modulate repeat pattern with another source.
+	 * @param source - Modulation source
+	 * @param repeatX - X repetitions (default: 3.0)
+	 * @param repeatY - Y repetitions (default: 3.0)
+	 * @param offsetX - X offset (default: 0.5)
+	 * @param offsetY - Y offset (default: 0.5)
+	 *
+	 * @example
+	 * ```typescript
+	 * shape(4).modulateRepeat(noise(3), 3, 3, 0.5, 0.5)
+	 * ```
+	 */
+	modulateRepeat(
+		source: ISynthSource | SynthParameterValue,
+		repeatX?: SynthParameterValue,
+		repeatY?: SynthParameterValue,
+		offsetX?: SynthParameterValue,
+		offsetY?: SynthParameterValue
+	): this;
+
+	/**
+	 * Modulate X repeat with another source.
+	 * @param source - Modulation source
+	 * @param reps - Number of repetitions (default: 3.0)
+	 * @param offset - Offset amount (default: 0.5)
+	 *
+	 * @example
+	 * ```typescript
+	 * shape(4).modulateRepeatX(noise(3), 3, 0.5)
+	 * ```
+	 */
+	modulateRepeatX(
+		source: ISynthSource | SynthParameterValue,
+		reps?: SynthParameterValue,
+		offset?: SynthParameterValue
+	): this;
+
+	/**
+	 * Modulate Y repeat with another source.
+	 * @param source - Modulation source
+	 * @param reps - Number of repetitions (default: 3.0)
+	 * @param offset - Offset amount (default: 0.5)
+	 *
+	 * @example
+	 * ```typescript
+	 * shape(4).modulateRepeatY(noise(3), 3, 0.5)
+	 * ```
+	 */
+	modulateRepeatY(
+		source: ISynthSource | SynthParameterValue,
+		reps?: SynthParameterValue,
+		offset?: SynthParameterValue
+	): this;
+
+	/**
+	 * Modulate coordinates based on hue differences.
+	 * @param source - Modulation source
+	 * @param amount - Modulation amount (default: 1.0)
+	 *
+	 * @example
+	 * ```typescript
+	 * src().modulateHue(src().scale(1.01), 1.0)
+	 * ```
+	 */
+	modulateHue(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
 	// ─────────────────────────────────────────────────────────────────────────
 	// Internal methods (used by TransformFactory and declaration merging)
@@ -815,5 +1058,5 @@ export interface ISynthSource {
 	 * Add an external layer reference at the current transform index.
 	 * @ignore
 	 */
-	addExternalLayerRef(ref: unknown): this;
+	addExternalLayerRef(ref: ExternalLayerReference): this;
 }

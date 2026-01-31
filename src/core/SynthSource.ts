@@ -12,7 +12,7 @@ export interface SynthSource extends ISynthSource {}
 export interface SynthSourceCreateOptions {
 	chain?: SynthChain;
 	charMapping?: CharacterMapping;
-	colorSource?: SynthSource;
+	charColorSource?: SynthSource;
 	cellColorSource?: SynthSource;
 	charSource?: SynthSource;
 	nestedSources?: Map<number, SynthSource>;
@@ -53,7 +53,7 @@ export class SynthSource {
 	private readonly _externalLayerRefs: Map<number, ExternalLayerReference>;
 
 	/** Reference to the color source chain (if any) */
-	private _colorSource?: SynthSource;
+	private _charColorSource?: SynthSource;
 
 	/** Reference to the cell color source chain (if any) */
 	private _cellColorSource?: SynthSource;
@@ -69,7 +69,7 @@ export class SynthSource {
 	constructor(options?: SynthSourceCreateOptions) {
 		this._chain = options?.chain ?? SynthChain.empty();
 		this._charMapping = options?.charMapping;
-		this._colorSource = options?.colorSource;
+		this._charColorSource = options?.charColorSource;
 		this._cellColorSource = options?.cellColorSource;
 		this._charSource = options?.charSource;
 		this._nestedSources = options?.nestedSources ?? new Map();
@@ -128,8 +128,32 @@ export class SynthSource {
 		return this;
 	}
 
-	public charColor(source: SynthSource): this {
-		this._colorSource = source;
+	private _ensureSource(
+		rOrSource: SynthParameterValue | ISynthSource,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): SynthSource {
+		if (rOrSource instanceof SynthSource) {
+			return rOrSource;
+		}
+		const source = new SynthSource();
+		// If only a single number is provided, replicate it to RGB for grayscale consistency
+		const args =
+			typeof rOrSource === 'number' && g === undefined && b === undefined && a === undefined
+				? [rOrSource, rOrSource, rOrSource, null]
+				: [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
+		source.addTransform('solid', args as SynthParameterValue[]);
+		return source;
+	}
+
+	public charColor(
+		rOrSource: SynthParameterValue | ISynthSource,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this {
+		this._charColorSource = this._ensureSource(rOrSource, g, b, a);
 		return this;
 	}
 
@@ -138,13 +162,24 @@ export class SynthSource {
 		return this;
 	}
 
-	public cellColor(source: SynthSource): this {
-		this._cellColorSource = source;
+	public cellColor(
+		rOrSource: SynthParameterValue | ISynthSource,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this {
+		this._cellColorSource = this._ensureSource(rOrSource, g, b, a);
 		return this;
 	}
 
-	public paint(source: SynthSource): this {
-		this._colorSource = source;
+	public paint(
+		rOrSource: SynthParameterValue | ISynthSource,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): this {
+		const source = this._ensureSource(rOrSource, g, b, a);
+		this._charColorSource = source;
 		this._cellColorSource = source;
 		return this;
 	}
@@ -165,7 +200,7 @@ export class SynthSource {
 		return new SynthSource({
 			chain: SynthChain.from(this._chain.transforms),
 			charMapping: this._charMapping,
-			colorSource: this._colorSource?.clone(),
+			charColorSource: this._charColorSource?.clone(),
 			cellColorSource: this._cellColorSource?.clone(),
 			charSource: this._charSource?.clone(),
 			nestedSources: clonedNestedSources,
@@ -193,8 +228,8 @@ export class SynthSource {
 	 * Get the color source if defined.
 	 * @ignore
 	 */
-	public get colorSource(): SynthSource | undefined {
-		return this._colorSource;
+	public get charColorSource(): SynthSource | undefined {
+		return this._charColorSource;
 	}
 
 	/**
