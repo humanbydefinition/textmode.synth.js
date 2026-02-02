@@ -57,52 +57,56 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
  * Extend layer with synth() method.
  */
 export function extendLayerSynth(api: TextmodePluginAPI): void {
-	api.extendLayer('synth', function (this: TextmodeLayer, sourceOrFactory: SynthSource | (() => SynthSource)): void {
-		const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
+	api.extendLayer(
+		'synth',
+		function (this: TextmodeLayer, sourceOrFactory: SynthSource | (() => SynthSource)): void {
+			const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
 
-		let source: SynthSource;
-		let sourceFactory: (() => SynthSource) | undefined;
+			let source: SynthSource;
+			let sourceFactory: (() => SynthSource) | undefined;
 
-		if (typeof sourceOrFactory === 'function') {
-			sourceFactory = sourceOrFactory;
-			// Evaluate immediately if we can, or use an empty/default source if expected to fail?
-			// Best strategy: Try to evaluate. If it fails (shouldn't if just composition), use result.
-			// Actually, the WHOLE POINT is that it might depend on undefined variables.
-			// So we CANNOT evaluate safely here if those variables are undefined.
+			if (typeof sourceOrFactory === 'function') {
+				sourceFactory = sourceOrFactory;
+				// Evaluate immediately if we can, or use an empty/default source if expected to fail?
+				// Best strategy: Try to evaluate. If it fails (shouldn't if just composition), use result.
+				// Actually, the WHOLE POINT is that it might depend on undefined variables.
+				// So we CANNOT evaluate safely here if those variables are undefined.
 
-			// We'll use a dummy source initially.
-			// BUT, what if the user expects it to work immediately?
-			// We will assume "lazy" implies "wait for render".
-			source = new SynthSourceClass();
-		} else {
-			source = sourceOrFactory;
-		}
-
-		let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
-
-		if (state) {
-			// Update existing state
-			state.source = source;
-			state.sourceFactory = sourceFactory;
-			state.needsCompile = true;
-			state.characterResolver.invalidate();
-
-			// Only compile immediately if we have a real source (not just a placeholder from factory)
-			if (isInitialized && !sourceFactory) {
-				state.compiled = compileSynthSource(source);
+				// We'll use a dummy source initially.
+				// BUT, what if the user expects it to work immediately?
+				// We will assume "lazy" implies "wait for render".
+				source = new SynthSourceClass();
+			} else {
+				source = sourceOrFactory;
 			}
-		} else {
-			// Create new state using factory
-			state = createLayerSynthState({
-				source,
-				sourceFactory,
-				compiled: (isInitialized && !sourceFactory) ? compileSynthSource(source) : undefined,
-				needsCompile: true,
-			});
-		}
 
-		this.setPluginState(PLUGIN_NAME, state);
-	});
+			let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+
+			if (state) {
+				// Update existing state
+				state.source = source;
+				state.sourceFactory = sourceFactory;
+				state.needsCompile = true;
+				state.characterResolver.invalidate();
+
+				// Only compile immediately if we have a real source (not just a placeholder from factory)
+				if (isInitialized && !sourceFactory) {
+					state.compiled = compileSynthSource(source);
+				}
+			} else {
+				// Create new state using factory
+				state = createLayerSynthState({
+					source,
+					sourceFactory,
+					compiled:
+						isInitialized && !sourceFactory ? compileSynthSource(source) : undefined,
+					needsCompile: true,
+				});
+			}
+
+			this.setPluginState(PLUGIN_NAME, state);
+		}
+	);
 }
 
 /**
