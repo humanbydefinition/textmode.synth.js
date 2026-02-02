@@ -262,13 +262,18 @@ vec4 ${funcName}(vec2 _st) {
 		const uniformName = getUniformName(ref.sourceId);
 		const funcName = `srcTexture_${uniformName}_${target}`;
 
+		const source = typeof ref.source === 'function' ? ref.source() : ref.source;
+		// Use fallback 1x1 dimensions if source is not yet available (avoids divide by zero)
+		const width = source?.width ?? 1.0;
+		const height = source?.height ?? 1.0;
+
 		return `
 vec4 ${funcName}(vec2 _st) {
 	// Flip Y axis to match image orientation (top-left origin)
 	vec2 st = vec2(_st.x, 1.0 - _st.y);
 
 	// Source dimensions
-	vec2 dim = vec2(${ref.source.width.toFixed(2)}, ${ref.source.height.toFixed(2)});
+	vec2 dim = vec2(${width.toFixed(2)}, ${height.toFixed(2)});
 
 	// Scale coordinates based on source dimensions vs grid resolution
 	// Higher scale value = smaller texture relative to screen

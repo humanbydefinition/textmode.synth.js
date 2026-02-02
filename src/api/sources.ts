@@ -445,15 +445,48 @@ export function solid(
  *     .charColor(src(img))
  *     .cellColor(src(img).invert())
  * );
+ *
+ * // Lazy evaluation (allows global definition before load)
+ * let video;
+ * // This works even if video is currently undefined
+ * t.layers.base.synth(src(() => video));
+ *
+ * t.setup(async () => {
+ *   video = await t.loadVideo('video.mp4');
+ * });
  * ```
  */
-export const src = (source?: TextmodeLayer | TextmodeSource): SynthSource => {
+export const src = (
+    source?:
+        | TextmodeLayer
+        | TextmodeSource
+        | (() => TextmodeSource | TextmodeLayer | undefined)
+): SynthSource => {
     // Get the base src function for self-feedback
     const baseSrc = generatedFunctions['src'];
 
     if (!source) {
         // No source provided - use self-feedback (context-aware)
         return baseSrc();
+    }
+
+    // Handle lazy function
+    if (typeof source === 'function') {
+        const synthSource = new SynthSource();
+        const sourceId = `tms_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+
+        // We assume function returns a TextmodeSource for type safety in storage
+        // If it returns a Layer, we might support that later, but src(layer) path
+        // specifically needs TextmodeLayer object for compilation.
+        // For now, treat lazy sources as TextmodeSources (images/videos).
+        // TODO: Support lazy layers if needed.
+
+        synthSource.addTextmodeSourceRef({
+            sourceId,
+            source: source as () => UpdatableTextmodeSource | undefined,
+        });
+
+        return synthSource;
     }
 
     // Check if it's a TextmodeSource (image/video) using duck-typing

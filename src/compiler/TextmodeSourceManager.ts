@@ -53,6 +53,15 @@ export class TextmodeSourceManager {
 	 * @param target - The current compilation target (affects which channel is marked as used)
 	 */
 	public trackUsage(ref: TextmodeSourceReference, target: CompilationTarget): void {
+		const source = typeof ref.source === 'function' ? ref.source() : ref.source;
+
+		// If source is not yet available, we can't track dimensions or use it effectively.
+		// However, we still need to track that it exists so we can generate a uniform.
+		// We'll use default 0x0 dimensions if not available, assuming it will be available
+		// by render time (or the user will see black/transparent).
+		const width = source?.width ?? 0;
+		const height = source?.height ?? 0;
+
 		let info = this._sources.get(ref.sourceId);
 
 		if (!info) {
@@ -63,14 +72,14 @@ export class TextmodeSourceManager {
 				usesCharColor: false,
 				usesCellColor: false,
 				sourceRef: ref,
-				width: ref.source.width,
-				height: ref.source.height,
+				width,
+				height,
 			};
 			this._sources.set(ref.sourceId, info);
 		} else {
 			// Update dimensions in case they changed (re-compilation scenario)
-			info.width = ref.source.width;
-			info.height = ref.source.height;
+			info.width = width;
+			info.height = height;
 		}
 
 		// Track which channels are used based on compilation context

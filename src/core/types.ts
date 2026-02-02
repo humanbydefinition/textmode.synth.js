@@ -224,8 +224,8 @@ export type UpdatableTextmodeSource = TextmodeSource & {
 export interface TextmodeSourceReference {
 	/** Unique identifier for this source reference */
 	sourceId: string;
-	/** The TextmodeSource object (TextmodeImage or TextmodeVideo) */
-	source: UpdatableTextmodeSource;
+	/** The TextmodeSource object (TextmodeImage or TextmodeVideo) or a lazy getter */
+	source: UpdatableTextmodeSource | (() => UpdatableTextmodeSource | undefined);
 }
 
 /**

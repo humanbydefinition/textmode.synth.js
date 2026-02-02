@@ -10,7 +10,10 @@ export function collectTextmodeSourceRefs(source: SynthSource): Map<string, Text
 
 	// Collect from main source
 	for (const [, ref] of source.textmodeSourceRefs) {
-		sources.set(ref.sourceId, ref.source);
+		const resolved = typeof ref.source === 'function' ? ref.source() : ref.source;
+		if (resolved) {
+			sources.set(ref.sourceId, resolved);
+		}
 	}
 
 	// Collect from nested sources
