@@ -96,7 +96,7 @@ export function cellColor(
  * ```
  */
 export const char = (source: SynthSource): SynthSource => {
-    return new SynthSource({ charSource: source });
+        return new SynthSource({ charSource: source });
 };
 
 /**

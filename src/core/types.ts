@@ -102,6 +102,11 @@ export interface SynthContext {
 export interface LayerSynthState {
 	/** The original SynthSource */
 	source: SynthSource;
+	/**
+	 * Factory function to lazily create the SynthSource.
+	 * Used when dependencies (like video elements) are not available at definition time.
+	 */
+	sourceFactory?: () => SynthSource;
 	/** Compiled shader data */
 	compiled?: CompiledSynthShader;
 	/** The compiled GLShader instance */

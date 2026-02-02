@@ -17,9 +17,9 @@ declare module 'textmode.js/layering' {
 		 * The synth will render procedurally generated characters and colors
 		 * directly to the layer's draw framebuffer before the draw callback runs.
 		 *
-		 * @param source A SynthSource chain defining the procedural generation
+		 * @param source A SynthSource chain or a factory function returning one
 		 */
-		synth(source: SynthSource): void;
+		synth(source: SynthSource | (() => SynthSource)): void;
 
 		/**
 		 * Clear the synth from this layer.

@@ -38,12 +38,46 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 	let justCollected = false;
 
 	// Lazy compile on first render
-	if (!state.compiled) {
-		state.compiled = compileSynthSource(state.source);
-		state.externalLayerMap = collectExternalLayerRefs(state.source);
-		state.textmodeSourceMap = collectTextmodeSourceRefs(state.source);
-		justCollected = true;
-		state.needsCompile = true;
+	// Lazy compile on first render or dynamic re-eval
+	if (state.sourceFactory || !state.compiled) {
+		let sourceToCompile = state.source;
+		let shouldCompile = false;
+
+		// Evaluate factory if present to check for updates
+		if (state.sourceFactory) {
+			try {
+				const newSource = state.sourceFactory();
+
+				// Quick dirty check: has the source chain transformed?
+				// Since SynthSource is mutable/chainable, comparing objects is hard.
+				// However, if we compile it, we know for sure if the shader changed.
+				// This compilation is relatively cheap (string generation).
+				const newTarget = compileSynthSource(newSource);
+
+				// Compare with existing compiled source
+				if (!state.compiled || newTarget.fragmentSource !== state.compiled.fragmentSource) {
+					// Source changed! usage of new dependencies (like video) detected.
+					state.source = newSource;
+					sourceToCompile = newSource;
+					// We use the newly compiled target
+					state.compiled = newTarget;
+					justCollected = false; // Need to recollect based on new source
+					shouldCompile = true;
+				}
+			} catch (e) {
+				console.warn('[textmode.synth.js] Failed to evaluate synth factory:', e);
+			}
+		}
+
+		if (shouldCompile || !state.compiled || state.needsCompile) {
+			if (!state.compiled) {
+				state.compiled = compileSynthSource(sourceToCompile);
+			}
+			state.externalLayerMap = collectExternalLayerRefs(sourceToCompile);
+			state.textmodeSourceMap = collectTextmodeSourceRefs(sourceToCompile);
+			justCollected = true;
+			state.needsCompile = true;
+		}
 	}
 
 	// Compile shader if needed
