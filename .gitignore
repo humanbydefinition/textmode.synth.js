@@ -22,6 +22,4 @@ dist-ssr
 *.sln
 *.sw?
 
-examples
-
 dist/
