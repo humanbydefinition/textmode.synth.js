@@ -470,57 +470,35 @@ export const src = (
         return baseSrc();
     }
 
+    const synthSource = new SynthSource();
+
     // Handle lazy function
     if (typeof source === 'function') {
-        const synthSource = new SynthSource();
-
-        // Probe the lazy function to determine what type it returns
-        // This is safe because the function is expected to be a simple getter
         const probeResult = source();
-
-        // If probe returns a layer-like object, treat as lazy layer
         if (probeResult && isTextmodeLayerObject(probeResult)) {
             const layerId =
                 probeResult.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-            synthSource.addExternalLayerRef({
-                layerId,
-                layer: source as () => TextmodeLayer | undefined,
+            synthSource.addExternalLayerRef({ layerId, layer: source as () => TextmodeLayer | undefined });
+        } else {
+            const sourceId = `tms_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+            synthSource.addTextmodeSourceRef({
+                sourceId,
+                source: source as () => UpdatableTextmodeSource | undefined,
             });
-            return synthSource;
         }
-
-        // If probe returns a TextmodeSource or undefined, treat as lazy TextmodeSource
+    } else if (isTextmodeSourceObject(source)) {
+        // Check if it's a TextmodeSource (image/video) using duck-typing
         const sourceId = `tms_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-        synthSource.addTextmodeSourceRef({
-            sourceId,
-            source: source as () => UpdatableTextmodeSource | undefined,
-        });
-
-        return synthSource;
-    }
-
-    // Check if it's a TextmodeSource (image/video) using duck-typing
-    if (isTextmodeSourceObject(source)) {
-        const synthSource = new SynthSource();
-        const sourceId = `tms_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-
         synthSource.addTextmodeSourceRef({
             sourceId,
             source: source as UpdatableTextmodeSource,
         });
-
-        return synthSource;
+    } else {
+        // Layer provided - create external layer reference
+        const layer = source as TextmodeLayer;
+        const layerId = layer.id! ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+        synthSource.addExternalLayerRef({ layerId, layer });
     }
-
-    // Layer provided - create external layer reference
-    const layer = source as TextmodeLayer;
-    const synthSource = new SynthSource();
-    const layerId = layer.id! ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-
-    synthSource.addExternalLayerRef({
-        layerId,
-        layer,
-    });
 
     return synthSource;
 };
