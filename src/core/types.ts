@@ -102,10 +102,7 @@ export interface SynthContext {
 export interface LayerSynthState {
 	/** The original SynthSource */
 	source: SynthSource;
-	/**
-	 * Factory function to lazily create the SynthSource.
-	 * Used when dependencies (like video elements) are not available at definition time.
-	 */
+	/** Factory function to lazily create the SynthSource. */
 	sourceFactory?: () => SynthSource;
 	/** Compiled shader data */
 	compiled?: CompiledSynthShader;
@@ -153,7 +150,6 @@ export interface LayerSynthState {
 
 	/**
 	 * Pre-allocated map for dynamic uniform values.
-	 *
 	 * Re-used each frame to avoid GC pressure from re-allocating `new Map()`.
 	 */
 	dynamicValues: Map<string, number | number[]>;
@@ -205,8 +201,8 @@ export interface CharacterMapping {
 export interface ExternalLayerReference {
 	/** Unique identifier for the layer (typically layer.id or generated) */
 	layerId: string;
-	/** The layer object reference (opaque to the compiler, used by plugin) */
-	layer: TextmodeLayer;
+	/** The layer object or lazy getter */
+	layer: TextmodeLayer | (() => TextmodeLayer | undefined);
 }
 
 /**

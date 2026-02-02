@@ -96,7 +96,7 @@ export function cellColor(
  * ```
  */
 export const char = (source: SynthSource): SynthSource => {
-        return new SynthSource({ charSource: source });
+    return new SynthSource({ charSource: source });
 };
 
 /**
@@ -473,14 +473,24 @@ export const src = (
     // Handle lazy function
     if (typeof source === 'function') {
         const synthSource = new SynthSource();
+
+        // Probe the lazy function to determine what type it returns
+        // This is safe because the function is expected to be a simple getter
+        const probeResult = source();
+
+        // If probe returns a layer-like object, treat as lazy layer
+        if (probeResult && isTextmodeLayerObject(probeResult)) {
+            const layerId =
+                probeResult.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+            synthSource.addExternalLayerRef({
+                layerId,
+                layer: source as () => TextmodeLayer | undefined,
+            });
+            return synthSource;
+        }
+
+        // If probe returns a TextmodeSource or undefined, treat as lazy TextmodeSource
         const sourceId = `tms_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-
-        // We assume function returns a TextmodeSource for type safety in storage
-        // If it returns a Layer, we might support that later, but src(layer) path
-        // specifically needs TextmodeLayer object for compilation.
-        // For now, treat lazy sources as TextmodeSources (images/videos).
-        // TODO: Support lazy layers if needed.
-
         synthSource.addTextmodeSourceRef({
             sourceId,
             source: source as () => UpdatableTextmodeSource | undefined,
@@ -526,6 +536,19 @@ function isTextmodeSourceObject(source: unknown): source is TextmodeSource {
         'texture' in source &&
         'originalWidth' in source &&
         'originalHeight' in source
+    );
+}
+
+/**
+ * Type guard to check if a source is a TextmodeLayer.
+ * Uses duck-typing to detect TextmodeLayer instances.
+ */
+function isTextmodeLayerObject(source: unknown): source is TextmodeLayer {
+    return (
+        source !== null &&
+        typeof source === 'object' &&
+        'grid' in source &&
+        'drawFramebuffer' in source
     );
 }
 

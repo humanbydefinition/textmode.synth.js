@@ -121,4 +121,32 @@ describe('collectExternalLayerRefs', () => {
         expect(refs.size).toBe(1);
         expect(refs.get('layer1')).toBe(layer1);
     });
+
+    it('should resolve lazy layer getter functions', () => {
+        const layer1 = createMockLayer('layer1');
+        const lazyLayer = () => layer1;
+        const ref1: ExternalLayerReference = { layerId: 'layer1', layer: lazyLayer };
+
+        const externalLayerRefs = new Map<number, ExternalLayerReference>();
+        externalLayerRefs.set(0, ref1);
+
+        const source = new SynthSource({ externalLayerRefs });
+        const refs = collectExternalLayerRefs(source);
+
+        expect(refs.size).toBe(1);
+        expect(refs.get('layer1')).toBe(layer1);
+    });
+
+    it('should skip undefined lazy layer results', () => {
+        const lazyUndefined = () => undefined;
+        const ref1: ExternalLayerReference = { layerId: 'layer1', layer: lazyUndefined };
+
+        const externalLayerRefs = new Map<number, ExternalLayerReference>();
+        externalLayerRefs.set(0, ref1);
+
+        const source = new SynthSource({ externalLayerRefs });
+        const refs = collectExternalLayerRefs(source);
+
+        expect(refs.size).toBe(0);
+    });
 });

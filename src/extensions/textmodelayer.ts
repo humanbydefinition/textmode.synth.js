@@ -67,14 +67,6 @@ export function extendLayerSynth(api: TextmodePluginAPI): void {
 
 			if (typeof sourceOrFactory === 'function') {
 				sourceFactory = sourceOrFactory;
-				// Evaluate immediately if we can, or use an empty/default source if expected to fail?
-				// Best strategy: Try to evaluate. If it fails (shouldn't if just composition), use result.
-				// Actually, the WHOLE POINT is that it might depend on undefined variables.
-				// So we CANNOT evaluate safely here if those variables are undefined.
-
-				// We'll use a dummy source initially.
-				// BUT, what if the user expects it to work immediately?
-				// We will assume "lazy" implies "wait for render".
 				source = new SynthSourceClass();
 			} else {
 				source = sourceOrFactory;
@@ -89,7 +81,7 @@ export function extendLayerSynth(api: TextmodePluginAPI): void {
 				state.needsCompile = true;
 				state.characterResolver.invalidate();
 
-				// Only compile immediately if we have a real source (not just a placeholder from factory)
+				// Only compile immediately if we have a real source
 				if (isInitialized && !sourceFactory) {
 					state.compiled = compileSynthSource(source);
 				}

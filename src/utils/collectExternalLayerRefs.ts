@@ -9,7 +9,10 @@ export function collectExternalLayerRefs(source: SynthSource): Map<string, Textm
 
 	// Collect from main source
 	for (const [, ref] of source.externalLayerRefs) {
-		layers.set(ref.layerId, ref.layer);
+		const resolved = typeof ref.layer === 'function' ? ref.layer() : ref.layer;
+		if (resolved) {
+			layers.set(ref.layerId, resolved);
+		}
 	}
 
 	// Collect from nested sources

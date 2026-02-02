@@ -37,7 +37,6 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 
 	let justCollected = false;
 
-	// Lazy compile on first render
 	// Lazy compile on first render or dynamic re-eval
 	if (state.sourceFactory || !state.compiled) {
 		let sourceToCompile = state.source;
@@ -47,19 +46,13 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 		if (state.sourceFactory) {
 			try {
 				const newSource = state.sourceFactory();
-
-				// Quick dirty check: has the source chain transformed?
-				// Since SynthSource is mutable/chainable, comparing objects is hard.
-				// However, if we compile it, we know for sure if the shader changed.
-				// This compilation is relatively cheap (string generation).
 				const newTarget = compileSynthSource(newSource);
 
 				// Compare with existing compiled source
 				if (!state.compiled || newTarget.fragmentSource !== state.compiled.fragmentSource) {
-					// Source changed! usage of new dependencies (like video) detected.
+					// Source changed! Usage of new dependencies (like video) detected.
 					state.source = newSource;
 					sourceToCompile = newSource;
-					// We use the newly compiled target
 					state.compiled = newTarget;
 					justCollected = false; // Need to recollect based on new source
 					shouldCompile = true;
