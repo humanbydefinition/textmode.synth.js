@@ -1,4 +1,9 @@
-import type { SynthParameterValue, CharacterMapping, ExternalLayerReference } from './types';
+import type {
+	SynthParameterValue,
+	CharacterMapping,
+	ExternalLayerReference,
+	TextmodeSourceReference,
+} from './types';
 import { SynthChain, type TransformRecord } from './SynthChain';
 import type { ISynthSource } from './ISynthSource';
 
@@ -17,6 +22,7 @@ export interface SynthSourceCreateOptions {
 	charSource?: SynthSource;
 	nestedSources?: Map<number, SynthSource>;
 	externalLayerRefs?: Map<number, ExternalLayerReference>;
+	textmodeSourceRefs?: Map<number, TextmodeSourceReference>;
 }
 
 /**
@@ -61,6 +67,9 @@ export class SynthSource {
 	/** Reference to the character source chain (if any) - used by char() function */
 	private _charSource?: SynthSource;
 
+	/** TextmodeSource references for image/video sampling (indexed by transform position) */
+	private readonly _textmodeSourceRefs: Map<number, TextmodeSourceReference>;
+
 	/**
 	 * Create a new SynthSource.
 	 * @param options Optional initialization options
@@ -74,6 +83,7 @@ export class SynthSource {
 		this._charSource = options?.charSource;
 		this._nestedSources = options?.nestedSources ?? new Map();
 		this._externalLayerRefs = options?.externalLayerRefs ?? new Map();
+		this._textmodeSourceRefs = options?.textmodeSourceRefs ?? new Map();
 	}
 
 	/**
@@ -113,6 +123,17 @@ export class SynthSource {
 		const index = this._chain.length;
 		this._externalLayerRefs.set(index, ref);
 		return this.addTransform('src', []);
+	}
+
+	/**
+	 * Add a TextmodeSource reference at the current transform index.
+	 * Used by src(textmodeSource) to track image/video sampling.
+	 * @ignore
+	 */
+	public addTextmodeSourceRef(ref: TextmodeSourceReference): this {
+		const index = this._chain.length;
+		this._textmodeSourceRefs.set(index, ref);
+		return this.addTransform('srcTexture', []);
 	}
 
 	public charMap(chars: string): this {
@@ -197,6 +218,12 @@ export class SynthSource {
 			clonedExternalLayerRefs.set(key, { ...value });
 		}
 
+		// Clone textmode source refs (shallow copy - sources are references)
+		const clonedTextmodeSourceRefs = new Map<number, TextmodeSourceReference>();
+		for (const [key, value] of this._textmodeSourceRefs) {
+			clonedTextmodeSourceRefs.set(key, { ...value });
+		}
+
 		return new SynthSource({
 			chain: SynthChain.from(this._chain.transforms),
 			charMapping: this._charMapping,
@@ -205,6 +232,7 @@ export class SynthSource {
 			charSource: this._charSource?.clone(),
 			nestedSources: clonedNestedSources,
 			externalLayerRefs: clonedExternalLayerRefs,
+			textmodeSourceRefs: clonedTextmodeSourceRefs,
 		});
 	}
 
@@ -262,5 +290,13 @@ export class SynthSource {
 	 */
 	public get externalLayerRefs(): Map<number, ExternalLayerReference> {
 		return this._externalLayerRefs;
+	}
+
+	/**
+	 * Get all TextmodeSource references for image/video sampling.
+	 * @ignore
+	 */
+	public get textmodeSourceRefs(): Map<number, TextmodeSourceReference> {
+		return this._textmodeSourceRefs;
 	}
 }

@@ -3,6 +3,7 @@
  */
 
 import type { SynthUniform, SynthContext, CharacterMapping, TextureChannel } from '../core/types';
+import type { TextmodeSourceInfo } from './TextmodeSourceManager';
 
 /**
  * Compilation target context determining which texture `src()` samples from.
@@ -59,7 +60,12 @@ export interface CompiledSynthShader {
 	usesCharSource: boolean;
 	/** External layer references used in this shader, keyed by layer ID */
 	externalLayers: Map<string, ExternalLayerInfo>;
+	/** TextmodeSource references used in this shader, keyed by source ID */
+	textmodeSources: Map<string, TextmodeSourceInfo>;
 }
+
+// Re-export TextmodeSourceInfo from its manager module
+export type { TextmodeSourceInfo } from './TextmodeSourceManager';
 
 /**
  * Intermediate representation node for a transform.

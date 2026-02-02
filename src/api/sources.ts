@@ -4,10 +4,11 @@
  * @module
  */
 
-import type { SynthContext, SynthParameterValue } from '../core/types';
+import type { SynthContext, SynthParameterValue, UpdatableTextmodeSource } from '../core/types';
 import { SynthSource } from '../core/SynthSource';
 import { generatedFunctions } from '../bootstrap';
 import type { TextmodeLayer } from 'textmode.js/layering';
+import { TextmodeSource } from 'textmode.js/loadables';
 
 /**
  * Create a synth source with cell background color defined.
@@ -390,25 +391,31 @@ export function solid(
 }
 
 /**
- * Sample the previous frame's output for feedback effects.
+ * Sample a source for synth compositions.
  *
- * This is the core of feedback loops - it reads from the previous frame,
- * enabling effects like trails, motion blur, and recursive patterns.
+ * This is the core of feedback loops and source sampling - it reads from various sources,
+ * enabling effects like trails, motion blur, image processing, and recursive patterns.
  *
- * **Context-aware behavior:** When called without arguments, `src()` automatically
- * samples the appropriate texture based on where it's used in the synth chain:
- * - Inside `char(...)` → samples previous frame's character data
- * - Inside `charColor(...)` → samples previous frame's primary color
- * - Inside `cellColor(...)` → samples previous frame's cell color
+ * **Three modes of operation:**
  *
- * **Cross-layer sampling:** When called with a layer argument, `src(layer)` samples
- * from another layer's output, enabling hydra-style multi-output compositions:
- * - The sampled texture is still context-aware based on the current compilation target
+ * 1. **Self-feedback** (`src()` with no arguments): Samples from the previous frame
+ *    - Context-aware: automatically samples the appropriate texture based on compilation context
+ *    - Inside `char(...)` → samples previous frame's character data
+ *    - Inside `charColor(...)` → samples previous frame's primary color
+ *    - Inside `cellColor(...)` → samples previous frame's cell color
+ *
+ * 2. **Cross-layer sampling** (`src(layer)`): Samples from another layer's output
+ *    - Enables hydra-style multi-output compositions
+ *    - Context-aware based on current compilation target
+ *
+ * 3. **TextmodeSource sampling** (`src(image)` or `src(video)`): Samples from loaded media
+ *    - Works with TextmodeImage and TextmodeVideo loaded via `t.loadImage()` or `t.loadVideo()`
+ *    - Samples directly from the source texture
  *
  * Equivalent to hydra's `src(o0)`.
  *
- * @param layer - Optional TextmodeLayer to sample from. If omitted, samples from self (feedback).
- * @returns A new SynthSource that samples the specified layer or self
+ * @param source - Optional source to sample from: TextmodeLayer for cross-layer, or TextmodeImage/TextmodeVideo for media
+ * @returns A new SynthSource that samples the specified source or self
  *
  * @example
  * ```typescript
@@ -425,41 +432,69 @@ export function solid(
  *
  * // Cross-layer sampling (hydra-style o0, o1, etc.)
  * const layer1 = t.layers.add();
- * const layer2 = t.layers.add();
- *
  * layer1.synth(noise(10).mult(osc(20)));
+ * t.layers.base.synth(src(layer1).invert());
  *
- * layer2.synth(
- *   char(voronoi(5).diff(src(layer1)))  // Sample layer1's char texture
- *     .charColor(osc(10).blend(src(layer1), 0.5))  // Sample layer1's primary color
- * );
- *
- * // Complex multi-layer composition
+ * // TextmodeImage/Video sampling
+ * let img;
+ * t.setup(async () => {
+ *   img = await t.loadImage('https://example.com/image.jpg');
+ * });
  * t.layers.base.synth(
- *   noise(3, 0.3).thresh(0.3).diff(src(layer2), 0.3)
+ *   char(src(img))
+ *     .charColor(src(img))
+ *     .cellColor(src(img).invert())
  * );
  * ```
  */
-export const src = (layer?: TextmodeLayer): SynthSource => {
+export const src = (source?: TextmodeLayer | TextmodeSource): SynthSource => {
     // Get the base src function for self-feedback
     const baseSrc = generatedFunctions['src'];
 
-    if (!layer) {
-        // No layer provided - use self-feedback (context-aware)
+    if (!source) {
+        // No source provided - use self-feedback (context-aware)
         return baseSrc();
     }
 
+    // Check if it's a TextmodeSource (image/video) using duck-typing
+    if (isTextmodeSourceObject(source)) {
+        const synthSource = new SynthSource();
+        const sourceId = `tms_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+
+        synthSource.addTextmodeSourceRef({
+            sourceId,
+            source: source as UpdatableTextmodeSource,
+        });
+
+        return synthSource;
+    }
+
     // Layer provided - create external layer reference
-    const source = new SynthSource();
+    const layer = source as TextmodeLayer;
+    const synthSource = new SynthSource();
     const layerId = layer.id! ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 
-    source.addExternalLayerRef({
+    synthSource.addExternalLayerRef({
         layerId,
         layer,
     });
 
-    return source;
+    return synthSource;
 };
+
+/**
+ * Type guard to check if a source is a TextmodeSource (image/video).
+ * Uses duck-typing to detect TextmodeImage and TextmodeVideo instances.
+ */
+function isTextmodeSourceObject(source: unknown): source is TextmodeSource {
+    return (
+        source !== null &&
+        typeof source === 'object' &&
+        'texture' in source &&
+        'originalWidth' in source &&
+        'originalHeight' in source
+    );
+}
 
 /**
  * Generate voronoi patterns.

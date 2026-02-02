@@ -18,6 +18,9 @@ export { CharacterResolver } from './CharacterResolver';
 // External layer reference collection
 export { collectExternalLayerRefs } from './collectExternalLayerRefs';
 
+// TextmodeSource reference collection
+export { collectTextmodeSourceRefs } from './collectTextmodeSourceRefs';
+
 // Dynamic parameter evaluation
 export {
 	setGlobalErrorCallback,

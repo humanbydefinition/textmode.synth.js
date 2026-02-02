@@ -11,6 +11,7 @@ import type { TextmodeLayer } from 'textmode.js/layering';
 import type { SynthSource } from './SynthSource';
 import type { CompiledSynthShader } from '../compiler/types';
 import type { CharacterResolver } from '../utils/CharacterResolver';
+import { TextmodeSource } from 'textmode.js/loadables';
 
 /**
  * Transform type categories determining how functions compose in the shader pipeline.
@@ -173,6 +174,13 @@ export interface LayerSynthState {
 	 * Track the last applied character map indices to avoid redundant uploads.
 	 */
 	lastCharMapIndices?: Int32Array;
+
+	/**
+	 * Map of TextmodeSource references (images/videos) by their source IDs.
+	 * Collected at compile time, used at render time to bind textures.
+	 * Uses UpdatableTextmodeSource to include optional update() method.
+	 */
+	textmodeSourceMap?: Map<string, UpdatableTextmodeSource>;
 }
 
 /**
@@ -194,6 +202,30 @@ export interface ExternalLayerReference {
 	layerId: string;
 	/** The layer object reference (opaque to the compiler, used by plugin) */
 	layer: TextmodeLayer;
+}
+
+/**
+ * TextmodeSource with optional update method.
+ * TextmodeImage extends TextmodeSource directly (no update needed - static image).
+ * TextmodeVideo extends TextmodeTexture which has update() for frame updates.
+ */
+export type UpdatableTextmodeSource = TextmodeSource & {
+	/**
+	 * Update the texture from its source.
+	 * Present on TextmodeTexture and TextmodeVideo, not on TextmodeImage.
+	 */
+	update?: () => void;
+};
+
+/**
+ * Reference to a TextmodeSource (image/video) for sampling.
+ * Used by src(textmodeSource) to enable sampling from loaded images/videos.
+ */
+export interface TextmodeSourceReference {
+	/** Unique identifier for this source reference */
+	sourceId: string;
+	/** The TextmodeSource object (TextmodeImage or TextmodeVideo) */
+	source: UpdatableTextmodeSource;
 }
 
 /**

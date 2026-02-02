@@ -6,7 +6,7 @@
  */
 
 import type { SynthUniform, CharacterMapping } from '../core/types';
-import type { ExternalLayerInfo } from './types';
+import type { ExternalLayerInfo, TextmodeSourceInfo } from './types';
 import { CHANNEL_SAMPLERS, CHANNEL_SUFFIXES } from '../core/constants';
 
 /**
@@ -37,6 +37,8 @@ export interface ShaderGenerationOptions {
 	usesCharSource?: boolean;
 	/** External layer references used in this shader */
 	externalLayers?: Map<string, ExternalLayerInfo>;
+	/** TextmodeSource references used in this shader */
+	textmodeSources?: Map<string, TextmodeSourceInfo>;
 }
 
 /**
@@ -169,6 +171,7 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 		usesCellColorFeedback,
 		usesCharSource,
 		externalLayers,
+		textmodeSources,
 	} = options;
 
 	// Build uniform declarations
@@ -230,6 +233,18 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 			? `// External layer samplers\n${externalLayerDecls.join('\n')}`
 			: '';
 
+	// TextmodeSource sampler declarations
+	const textmodeSourceDecls: string[] = [];
+	if (textmodeSources) {
+		for (const [, info] of textmodeSources) {
+			textmodeSourceDecls.push(`uniform sampler2D ${info.uniformName};`);
+		}
+	}
+	const textmodeSourceDecl =
+		textmodeSourceDecls.length > 0
+			? `// TextmodeSource samplers (images/videos)\n${textmodeSourceDecls.join('\n')}`
+			: '';
+
 	return `#version 300 es
 precision highp float;
 
@@ -243,9 +258,10 @@ layout(location = 2) out vec4 o_secondaryColor;
 
 // Standard uniforms
 uniform float time;
-uniform vec2 resolution;
+uniform vec2 u_resolution;
 ${feedbackDecl}
 ${externalLayerDecl}
+${textmodeSourceDecl}
 ${charMapDecl}
 ${charSourceDecl}
 
