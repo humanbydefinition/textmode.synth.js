@@ -38,7 +38,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 	let justCollected = false;
 
 	// Lazy compile on first render or dynamic re-eval
-	if (state.sourceFactory || !state.compiled) {
+	if ((state.sourceFactory && state.needsCompile) || !state.compiled) {
 		let sourceToCompile = state.source;
 		let shouldCompile = false;
 
