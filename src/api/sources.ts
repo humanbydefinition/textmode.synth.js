@@ -496,7 +496,7 @@ export const src = (
     } else {
         // Layer provided - create external layer reference
         const layer = source as TextmodeLayer;
-        const layerId = layer.id! ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+        const layerId = layer.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
         synthSource.addExternalLayerRef({ layerId, layer });
     }
 
