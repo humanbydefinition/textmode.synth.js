@@ -19,6 +19,7 @@ import type { SynthSource } from '../core/SynthSource';
 import type { CompiledSynthShader, ChainCompilationResult, CompilationTarget } from './types';
 import { FeedbackTracker } from './FeedbackTracker';
 import { ExternalLayerManager } from './ExternalLayerManager';
+import { TextmodeSourceManager } from './TextmodeSourceManager';
 import { TransformCodeGenerator } from './TransformCodeGenerator';
 import { UniformManager } from './UniformManager';
 import { generateFragmentShader, generateCharacterOutputCode } from './GLSLGenerator';
@@ -58,6 +59,7 @@ class SynthCompiler {
 	private readonly _uniformManager = new UniformManager();
 	private readonly _feedbackTracker = new FeedbackTracker();
 	private readonly _externalLayerManager = new ExternalLayerManager();
+	private readonly _textmodeSourceManager = new TextmodeSourceManager();
 	private readonly _codeGenerator = new TransformCodeGenerator();
 
 	// Compilation state
@@ -138,6 +140,7 @@ class SynthCompiler {
 			usesCellColorFeedback: feedbackUsage.usesCellColorFeedback,
 			usesCharSource: this._usesCharSource,
 			externalLayers: this._externalLayerManager.getExternalLayers(),
+			textmodeSources: this._textmodeSourceManager.getSources(),
 		});
 
 		return {
@@ -150,6 +153,7 @@ class SynthCompiler {
 			usesCellColorFeedback: feedbackUsage.usesCellColorFeedback,
 			usesCharSource: this._usesCharSource,
 			externalLayers: this._externalLayerManager.getExternalLayers(),
+			textmodeSources: this._textmodeSourceManager.getSources(),
 		};
 	}
 
@@ -161,6 +165,7 @@ class SynthCompiler {
 		this._uniformManager.clear();
 		this._feedbackTracker.reset();
 		this._externalLayerManager.reset();
+		this._textmodeSourceManager.reset();
 		this._glslFunctions.clear();
 		this._mainCode.length = 0;
 		this._currentTarget = 'main';
@@ -239,9 +244,14 @@ class SynthCompiler {
 			// Check for external layer reference at this index
 			const externalRef = source.externalLayerRefs.get(i);
 
-			// Track feedback/external layer usage
+			// Check for TextmodeSource reference at this index
+			const textmodeSourceRef = source.textmodeSourceRefs.get(i);
+
+			// Track feedback/external layer/textmode source usage
 			if (record.name === 'src') {
 				this._trackSrcUsage(externalRef);
+			} else if (record.name === 'srcTexture' && textmodeSourceRef) {
+				this._textmodeSourceManager.trackUsage(textmodeSourceRef, this._currentTarget);
 			}
 
 			// Add GLSL function (with context-aware src handling)
@@ -250,7 +260,9 @@ class SynthCompiler {
 				record.name,
 				this._currentTarget,
 				externalRef,
-				(layerId) => this._externalLayerManager.getPrefix(layerId)
+				textmodeSourceRef,
+				(layerId) => this._externalLayerManager.getPrefix(layerId),
+				(sourceId) => this._textmodeSourceManager.getUniformName(sourceId)
 			);
 			this._glslFunctions.add(glslFunc);
 
@@ -289,7 +301,9 @@ class SynthCompiler {
 				this._currentTarget,
 				nestedColorVar,
 				externalRef,
-				(layerId) => this._externalLayerManager.getPrefix(layerId)
+				textmodeSourceRef,
+				(layerId) => this._externalLayerManager.getPrefix(layerId),
+				(sourceId) => this._textmodeSourceManager.getUniformName(sourceId)
 			);
 
 			colorVar = result.colorVar;

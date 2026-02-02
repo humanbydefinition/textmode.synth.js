@@ -28,6 +28,7 @@ import { CharacterResolver } from '../utils/CharacterResolver';
 function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSynthState {
 	return {
 		source: partial.source ?? new SynthSourceClass(),
+		sourceFactory: partial.sourceFactory,
 		compiled: partial.compiled,
 		shader: partial.shader,
 		characterResolver: partial.characterResolver ?? new CharacterResolver(),
@@ -56,31 +57,48 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
  * Extend layer with synth() method.
  */
 export function extendLayerSynth(api: TextmodePluginAPI): void {
-	api.extendLayer('synth', function (this: TextmodeLayer, source: SynthSource): void {
-		const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
+	api.extendLayer(
+		'synth',
+		function (this: TextmodeLayer, sourceOrFactory: SynthSource | (() => SynthSource)): void {
+			const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
 
-		let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+			let source: SynthSource;
+			let sourceFactory: (() => SynthSource) | undefined;
 
-		if (state) {
-			// Update existing state
-			state.source = source;
-			state.needsCompile = true;
-			state.characterResolver.invalidate();
-
-			if (isInitialized) {
-				state.compiled = compileSynthSource(source);
+			if (typeof sourceOrFactory === 'function') {
+				sourceFactory = sourceOrFactory;
+				source = new SynthSourceClass();
+			} else {
+				source = sourceOrFactory;
 			}
-		} else {
-			// Create new state using factory
-			state = createLayerSynthState({
-				source,
-				compiled: isInitialized ? compileSynthSource(source) : undefined,
-				needsCompile: true,
-			});
-		}
 
-		this.setPluginState(PLUGIN_NAME, state);
-	});
+			let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+
+			if (state) {
+				// Update existing state
+				state.source = source;
+				state.sourceFactory = sourceFactory;
+				state.needsCompile = true;
+				state.characterResolver.invalidate();
+
+				// Only compile immediately if we have a real source
+				if (isInitialized && !sourceFactory) {
+					state.compiled = compileSynthSource(source);
+				}
+			} else {
+				// Create new state using factory
+				state = createLayerSynthState({
+					source,
+					sourceFactory,
+					compiled:
+						isInitialized && !sourceFactory ? compileSynthSource(source) : undefined,
+					needsCompile: true,
+				});
+			}
+
+			this.setPluginState(PLUGIN_NAME, state);
+		}
+	);
 }
 
 /**

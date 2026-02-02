@@ -11,7 +11,7 @@ import type { TextmodeFramebuffer, Textmodifier } from 'textmode.js';
 import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
 import { CHANNEL_SUFFIXES, CHANNEL_SAMPLERS } from '../core/constants';
-import { collectExternalLayerRefs } from '../utils';
+import { collectExternalLayerRefs, collectTextmodeSourceRefs } from '../utils';
 import { getGlobalBpm } from '../core/GlobalState';
 import { shaderManager } from './ShaderManager';
 import type { SynthContext, LayerSynthState } from '../core/types';
@@ -37,12 +37,40 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 
 	let justCollected = false;
 
-	// Lazy compile on first render
-	if (!state.compiled) {
-		state.compiled = compileSynthSource(state.source);
-		state.externalLayerMap = collectExternalLayerRefs(state.source);
-		justCollected = true;
-		state.needsCompile = true;
+	// Lazy compile on first render or dynamic re-eval
+	if ((state.sourceFactory && state.needsCompile) || !state.compiled) {
+		let sourceToCompile = state.source;
+		let shouldCompile = false;
+
+		// Evaluate factory if present to check for updates
+		if (state.sourceFactory) {
+			try {
+				const newSource = state.sourceFactory();
+				const newTarget = compileSynthSource(newSource);
+
+				// Compare with existing compiled source
+				if (!state.compiled || newTarget.fragmentSource !== state.compiled.fragmentSource) {
+					// Source changed! Usage of new dependencies (like video) detected.
+					state.source = newSource;
+					sourceToCompile = newSource;
+					state.compiled = newTarget;
+					justCollected = false; // Need to recollect based on new source
+					shouldCompile = true;
+				}
+			} catch (e) {
+				console.warn('[textmode.synth.js] Failed to evaluate synth factory:', e);
+			}
+		}
+
+		if (shouldCompile || !state.compiled || state.needsCompile) {
+			if (!state.compiled) {
+				state.compiled = compileSynthSource(sourceToCompile);
+			}
+			state.externalLayerMap = collectExternalLayerRefs(sourceToCompile);
+			state.textmodeSourceMap = collectTextmodeSourceRefs(sourceToCompile);
+			justCollected = true;
+			state.needsCompile = true;
+		}
 	}
 
 	// Compile shader if needed
@@ -53,6 +81,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 		// Collect external layer references from source
 		if (!justCollected) {
 			state.externalLayerMap = collectExternalLayerRefs(state.source);
+			state.textmodeSourceMap = collectTextmodeSourceRefs(state.source);
 		}
 
 		try {
@@ -187,6 +216,9 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 		textmodifier.rect(grid.cols, grid.rows);
 		drawFramebuffer.end();
 	}
+
+	// Reset to default shader so other layers aren't affected by synth uniforms
+	textmodifier.resetShader();
 }
 
 /**
@@ -201,7 +233,7 @@ function applySynthUniforms(
 	feedbackBuffer: TextmodeFramebuffer | null
 ) {
 	textmodifier.setUniform('time', ctx.time);
-	textmodifier.setUniform('resolution', [ctx.cols, ctx.rows]);
+	textmodifier.setUniform('u_resolution', [ctx.cols, ctx.rows]);
 
 	for (const [name, value] of state.dynamicValues) {
 		textmodifier.setUniform(name, value);
@@ -297,6 +329,32 @@ function applySynthUniforms(
 					);
 				}
 			}
+		}
+	}
+
+	// TextmodeSource texture uniforms (images/videos)
+	const textmodeSources = compiled.textmodeSources;
+	if (textmodeSources && textmodeSources.size > 0 && state.textmodeSourceMap) {
+		for (const [sourceId, info] of textmodeSources) {
+			const tms = state.textmodeSourceMap.get(sourceId);
+			if (!tms) {
+				console.warn(`[textmode.synth.js] TextmodeSource not found: ${sourceId}`);
+				continue;
+			}
+
+			// For video sources, update the texture to capture the current frame
+			if (tms.update) {
+				tms.update();
+			}
+
+			// Check that the texture exists
+			if (!tms.texture) {
+				console.warn(`[textmode.synth.js] TextmodeSource texture not loaded: ${sourceId}`);
+				continue;
+			}
+
+			// Bind the source's texture using the generated uniform name
+			textmodifier.setUniform(info.uniformName, tms.texture);
 		}
 	}
 }

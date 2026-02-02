@@ -11,6 +11,7 @@ import type { TextmodeLayer } from 'textmode.js/layering';
 import type { SynthSource } from './SynthSource';
 import type { CompiledSynthShader } from '../compiler/types';
 import type { CharacterResolver } from '../utils/CharacterResolver';
+import { TextmodeSource } from 'textmode.js/loadables';
 
 /**
  * Transform type categories determining how functions compose in the shader pipeline.
@@ -101,6 +102,8 @@ export interface SynthContext {
 export interface LayerSynthState {
 	/** The original SynthSource */
 	source: SynthSource;
+	/** Factory function to lazily create the SynthSource. */
+	sourceFactory?: () => SynthSource;
 	/** Compiled shader data */
 	compiled?: CompiledSynthShader;
 	/** The compiled GLShader instance */
@@ -147,7 +150,6 @@ export interface LayerSynthState {
 
 	/**
 	 * Pre-allocated map for dynamic uniform values.
-	 *
 	 * Re-used each frame to avoid GC pressure from re-allocating `new Map()`.
 	 */
 	dynamicValues: Map<string, number | number[]>;
@@ -173,6 +175,13 @@ export interface LayerSynthState {
 	 * Track the last applied character map indices to avoid redundant uploads.
 	 */
 	lastCharMapIndices?: Int32Array;
+
+	/**
+	 * Map of TextmodeSource references (images/videos) by their source IDs.
+	 * Collected at compile time, used at render time to bind textures.
+	 * Uses UpdatableTextmodeSource to include optional update() method.
+	 */
+	textmodeSourceMap?: Map<string, UpdatableTextmodeSource>;
 }
 
 /**
@@ -192,8 +201,32 @@ export interface CharacterMapping {
 export interface ExternalLayerReference {
 	/** Unique identifier for the layer (typically layer.id or generated) */
 	layerId: string;
-	/** The layer object reference (opaque to the compiler, used by plugin) */
-	layer: TextmodeLayer;
+	/** The layer object or lazy getter */
+	layer: TextmodeLayer | (() => TextmodeLayer | undefined);
+}
+
+/**
+ * TextmodeSource with optional update method.
+ * TextmodeImage extends TextmodeSource directly (no update needed - static image).
+ * TextmodeVideo extends TextmodeTexture which has update() for frame updates.
+ */
+export type UpdatableTextmodeSource = TextmodeSource & {
+	/**
+	 * Update the texture from its source.
+	 * Present on TextmodeTexture and TextmodeVideo, not on TextmodeImage.
+	 */
+	update?: () => void;
+};
+
+/**
+ * Reference to a TextmodeSource (image/video) for sampling.
+ * Used by src(textmodeSource) to enable sampling from loaded images/videos.
+ */
+export interface TextmodeSourceReference {
+	/** Unique identifier for this source reference */
+	sourceId: string;
+	/** The TextmodeSource object (TextmodeImage or TextmodeVideo) or a lazy getter */
+	source: UpdatableTextmodeSource | (() => UpdatableTextmodeSource | undefined);
 }
 
 /**

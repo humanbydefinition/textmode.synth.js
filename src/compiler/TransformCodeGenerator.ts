@@ -1,6 +1,6 @@
 import type { ProcessedTransform } from '../transforms/TransformDefinition';
 import type { CompilationTarget } from './types';
-import type { ExternalLayerReference } from '../core/types';
+import type { ExternalLayerReference, TextmodeSourceReference } from '../core/types';
 import { getTextureChannel } from './channels';
 import { CHANNEL_SAMPLERS, CHANNEL_SUFFIXES } from '../core/constants';
 
@@ -26,7 +26,7 @@ export interface TransformCodeResult {
  */
 export class TransformCodeGenerator {
 	/**
-	 * Generate a context-aware GLSL function for src().
+	 * Generate a context-aware GLSL function for src() or srcTexture().
 	 *
 	 * When the transform is 'src', this generates a context-specific GLSL function
 	 * that samples the appropriate texture based on the current compilation target:
@@ -37,11 +37,16 @@ export class TransformCodeGenerator {
 	 * For external layer references, generates a function that samples from
 	 * the external layer's texture uniforms.
 	 *
+	 * For TextmodeSource references (srcTexture), generates a function that samples
+	 * from the TextmodeSource's texture uniform.
+	 *
 	 * @param def - The processed transform definition
 	 * @param name - The transform name
 	 * @param currentTarget - The current compilation target
 	 * @param externalRef - Optional external layer reference
+	 * @param textmodeSourceRef - Optional TextmodeSource reference
 	 * @param getExternalPrefix - Function to get external layer uniform prefix
+	 * @param getTextmodeSourceUniform - Function to get TextmodeSource uniform name
 	 * @returns The GLSL function code
 	 */
 	public getContextAwareGlslFunction(
@@ -49,8 +54,19 @@ export class TransformCodeGenerator {
 		name: string,
 		currentTarget: CompilationTarget,
 		externalRef?: ExternalLayerReference,
-		getExternalPrefix?: (layerId: string) => string
+		textmodeSourceRef?: TextmodeSourceReference,
+		getExternalPrefix?: (layerId: string) => string,
+		getTextmodeSourceUniform?: (sourceId: string) => string
 	): string {
+		// Handle srcTexture for TextmodeSource (images/videos)
+		if (name === 'srcTexture' && textmodeSourceRef && getTextmodeSourceUniform) {
+			return this._generateTextmodeSourceFunction(
+				textmodeSourceRef,
+				currentTarget,
+				getTextmodeSourceUniform
+			);
+		}
+
 		if (name !== 'src') {
 			return def.glslFunction;
 		}
@@ -66,14 +82,22 @@ export class TransformCodeGenerator {
 
 	/**
 	 * Get the function name to call for a transform.
-	 * Handles context-aware naming for src() operations.
+	 * Handles context-aware naming for src() and srcTexture() operations.
 	 */
 	public getFunctionName(
 		def: ProcessedTransform,
 		currentTarget: CompilationTarget,
 		externalRef?: ExternalLayerReference,
-		getExternalPrefix?: (layerId: string) => string
+		textmodeSourceRef?: TextmodeSourceReference,
+		getExternalPrefix?: (layerId: string) => string,
+		getTextmodeSourceUniform?: (sourceId: string) => string
 	): string {
+		// Handle srcTexture for TextmodeSource
+		if (def.name === 'srcTexture' && textmodeSourceRef && getTextmodeSourceUniform) {
+			const uniformName = getTextmodeSourceUniform(textmodeSourceRef.sourceId);
+			return `srcTexture_${uniformName}_${currentTarget}`;
+		}
+
 		if (def.name !== 'src') {
 			return def.name;
 		}
@@ -117,10 +141,19 @@ export class TransformCodeGenerator {
 		currentTarget: CompilationTarget,
 		nestedColorVar?: string,
 		externalRef?: ExternalLayerReference,
-		getExternalPrefix?: (layerId: string) => string
+		textmodeSourceRef?: TextmodeSourceReference,
+		getExternalPrefix?: (layerId: string) => string,
+		getTextmodeSourceUniform?: (sourceId: string) => string
 	): TransformCodeResult {
 		// Get the function name to call
-		const funcName = this.getFunctionName(def, currentTarget, externalRef, getExternalPrefix);
+		const funcName = this.getFunctionName(
+			def,
+			currentTarget,
+			externalRef,
+			textmodeSourceRef,
+			getExternalPrefix,
+			getTextmodeSourceUniform
+		);
 
 		// Build function call arguments
 		const buildArgs = (...baseArgs: string[]) => [...baseArgs, ...args].join(', ');
@@ -212,6 +245,53 @@ vec4 ${funcName}(vec2 _st) {
 		return `
 vec4 ${funcName}(vec2 _st) {
 	return texture(${sampler}, fract(_st));
+}
+`;
+	}
+
+	/**
+	 * Generate GLSL function for TextmodeSource (image/video) sampling.
+	 * Note: We flip the Y coordinate because WebGL textures have origin at bottom-left,
+	 * but images/videos are loaded with origin at top-left.
+	 */
+	private _generateTextmodeSourceFunction(
+		ref: TextmodeSourceReference,
+		target: CompilationTarget,
+		getUniformName: (sourceId: string) => string
+	): string {
+		const uniformName = getUniformName(ref.sourceId);
+		const funcName = `srcTexture_${uniformName}_${target}`;
+
+		const source = typeof ref.source === 'function' ? ref.source() : ref.source;
+		// Use fallback 1x1 dimensions if source is not yet available (avoids divide by zero)
+		const width = source?.width ?? 1.0;
+		const height = source?.height ?? 1.0;
+
+		return `
+vec4 ${funcName}(vec2 _st) {
+	// Flip Y axis to match image orientation (top-left origin)
+	vec2 st = vec2(_st.x, 1.0 - _st.y);
+
+	// Source dimensions
+	vec2 dim = vec2(${width.toFixed(2)}, ${height.toFixed(2)});
+
+	// Scale coordinates based on source dimensions vs grid resolution
+	// Higher scale value = smaller texture relative to screen
+	vec2 scale = u_resolution / dim;
+	
+	// Calculate offset to center the texture
+	// offset = (scale - 1.0) * 0.5
+	vec2 offset = (scale - 1.0) * 0.5;
+	
+	// Apply scaling and offset
+	vec2 uv = st * scale - offset;
+
+	// Bounds check - return black/transparent if outside texture area
+	if (uv.x < 0.0 || uv.x > 1.0 || uv.y < 0.0 || uv.y > 1.0) {
+		return vec4(0.0);
+	}
+
+	return texture(${uniformName}, uv);
 }
 `;
 	}

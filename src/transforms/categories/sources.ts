@@ -129,6 +129,18 @@ export const src = defineTransform({
 		'Sample the previous frame for feedback effects. Context-aware: automatically samples the appropriate texture based on where it is used (char, charColor, or cellColor context).',
 });
 
+export const srcTexture = defineTransform({
+	name: 'srcTexture',
+	type: 'src',
+	inputs: [],
+	glsl: `
+	// Placeholder - actual texture sampling is handled dynamically per TextmodeSource
+	return texture(u_textmodeSource0, fract(_st));
+`,
+	description:
+		'Sample from a TextmodeSource (image/video). Context-aware: the actual sampler uniform is determined at compile time based on the source reference.',
+});
+
 /**
  * All source generator transforms.
  */
@@ -140,4 +152,5 @@ export const SOURCE_TRANSFORMS: TransformDefinition[] = [
 	shape,
 	solid,
 	src,
+	srcTexture,
 ];
