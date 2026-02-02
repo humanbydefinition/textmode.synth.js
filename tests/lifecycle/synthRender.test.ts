@@ -20,6 +20,7 @@ const createMockTextmodifier = () => ({
 	clear: vi.fn(),
 	shader: vi.fn(),
 	rect: vi.fn(),
+	resetShader: vi.fn(),
 	secs: 10,
 	frameCount: 100,
 } as unknown as Textmodifier);

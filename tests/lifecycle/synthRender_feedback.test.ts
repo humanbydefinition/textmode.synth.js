@@ -23,6 +23,7 @@ const createMockTextmodifier = () =>
 		clear: vi.fn(),
 		shader: vi.fn(),
 		rect: vi.fn(),
+		resetShader: vi.fn(),
 		secs: 10,
 		frameCount: 100,
 	}) as unknown as Textmodifier;
@@ -58,7 +59,7 @@ describe('synthRender Feedback Optimization', () => {
 			dynamicValues: new Map(),
 			characterResolver: {
 				resolve: () => [],
-				invalidate: () => {},
+				invalidate: () => { },
 			} as any,
 			pingPongIndex: 0,
 		};
