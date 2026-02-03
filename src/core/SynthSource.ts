@@ -137,6 +137,12 @@ export class SynthSource {
 	}
 
 	public charMap(chars: string): this {
+
+		if (chars.length === 0) {
+			this._charMapping = undefined;
+			return this;
+		}
+
 		const charArray = Array.from(chars);
 		const indices: number[] = [];
 
