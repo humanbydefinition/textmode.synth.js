@@ -949,6 +949,62 @@ export interface ISynthSource {
 	mask(source: ISynthSource | SynthParameterValue): this;
 
 	/**
+	 * Screen blend with another source.
+	 * @param source - Source to screen
+	 * @param amount - Blend amount (default: 1.0)
+	 */
+	screen(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+	/**
+	 * Overlay blend with another source.
+	 * @param source - Source to overlay
+	 * @param amount - Blend amount (default: 1.0)
+	 */
+	overlay(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+	/**
+	 * Soft light blend with another source.
+	 * @param source - Source to softlight
+	 * @param amount - Blend amount (default: 1.0)
+	 */
+	softlight(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+	/**
+	 * Hard light blend with another source.
+	 * @param source - Source to hardlight
+	 * @param amount - Blend amount (default: 1.0)
+	 */
+	hardlight(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+	/**
+	 * Color dodge blend with another source.
+	 * @param source - Source to dodge
+	 * @param amount - Blend amount (default: 1.0)
+	 */
+	dodge(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+	/**
+	 * Color burn blend with another source.
+	 * @param source - Source to burn
+	 * @param amount - Blend amount (default: 1.0)
+	 */
+	burn(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+	/**
+	 * Lighten blend with another source.
+	 * @param source - Source to lighten
+	 * @param amount - Blend amount (default: 1.0)
+	 */
+	lighten(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+	/**
+	 * Darken blend with another source.
+	 * @param source - Source to darken
+	 * @param amount - Blend amount (default: 1.0)
+	 */
+	darken(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+	/**
 	 * Modulate coordinates using another source.
 	 * @param source - Modulation source
 	 * @param amount - Modulation amount (default: 0.1)

@@ -40,7 +40,24 @@ export {
 	g,
 	b,
 } from './colors';
-export { COMBINE_TRANSFORMS, add, sub, mult, blend, diff, layer, mask } from './combine';
+export {
+	COMBINE_TRANSFORMS,
+	add,
+	sub,
+	mult,
+	blend,
+	diff,
+	layer,
+	mask,
+	screen,
+	overlay,
+	softlight,
+	hardlight,
+	dodge,
+	burn,
+	lighten,
+	darken,
+} from './combine';
 export {
 	COMBINE_COORD_TRANSFORMS,
 	modulate,
