@@ -190,9 +190,12 @@ class SynthCompiler {
 
 		// Use uniform for char count - set at render time based on charMap or font
 		this._mainCode.push(`\t// Convert charSource color to character index`);
-		this._mainCode.push(`\tfloat charLum_${charVar} = _luminance(${charChain.colorVar}.rgb);`);
 		this._mainCode.push(
-			`\tint charIdx_${charVar} = int(charLum_${charVar} * u_charSourceCount);`
+			`\tfloat charLum_${charVar} = clamp(_luminance(${charChain.colorVar}.rgb), 0.0, 1.0);`
+		);
+		this._mainCode.push(`\tfloat charCount_${charVar} = max(u_charSourceCount, 1.0);`);
+		this._mainCode.push(
+			`\tint charIdx_${charVar} = int(min(charLum_${charVar} * charCount_${charVar}, charCount_${charVar} - 1.0));`
 		);
 		this._mainCode.push(`\tvec4 ${charVar} = _packChar(charIdx_${charVar});`);
 
