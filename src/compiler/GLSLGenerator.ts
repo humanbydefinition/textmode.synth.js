@@ -238,6 +238,7 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 	if (textmodeSources) {
 		for (const [, info] of textmodeSources) {
 			textmodeSourceDecls.push(`uniform sampler2D ${info.uniformName};`);
+			textmodeSourceDecls.push(`uniform vec2 ${info.uniformName}_dim;`);
 		}
 	}
 	const textmodeSourceDecl =

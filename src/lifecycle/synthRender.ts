@@ -347,6 +347,12 @@ function applySynthUniforms(
 				tms.update();
 			}
 
+			const sourceWidth = tms.width ?? 1;
+			const sourceHeight = tms.height ?? 1;
+			const safeWidth = sourceWidth > 0 ? sourceWidth : 1;
+			const safeHeight = sourceHeight > 0 ? sourceHeight : 1;
+			textmodifier.setUniform(`${info.uniformName}_dim`, [safeWidth, safeHeight]);
+
 			// Check that the texture exists
 			if (!tms.texture) {
 				console.warn(`[textmode.synth.js] TextmodeSource texture not loaded: ${sourceId}`);
