@@ -210,6 +210,54 @@ export function noise(
 }
 
 /**
+ * Generate plasma-like sine field patterns.
+ * @param scale - Spatial scale of the plasma (default: 10.0)
+ * @param speed - Animation speed (default: 0.5)
+ * @param phase - Phase offset (default: 0.0)
+ * @param contrast - Contrast adjustment (default: 1.0)
+ */
+export function plasma(
+    scale?: number | number[] | ((ctx: SynthContext) => number),
+    speed?: number | number[] | ((ctx: SynthContext) => number),
+    phase?: number | number[] | ((ctx: SynthContext) => number),
+    contrast?: number | number[] | ((ctx: SynthContext) => number)
+): SynthSource {
+    return generatedFunctions['plasma'](
+        scale ?? null,
+        speed ?? null,
+        phase ?? null,
+        contrast ?? null
+    );
+}
+
+/**
+ * Generate moire interference patterns.
+ * @param freqA - Frequency of first grating (default: 20.0)
+ * @param freqB - Frequency of second grating (default: 21.0)
+ * @param angleA - Angle of first grating in radians (default: 0.0)
+ * @param angleB - Angle of second grating in radians (default: 1.5708)
+ * @param speed - Animation speed (default: 0.1)
+ * @param phase - Phase offset (default: 0.0)
+ */
+export function moire(
+    freqA?: number | number[] | ((ctx: SynthContext) => number),
+    freqB?: number | number[] | ((ctx: SynthContext) => number),
+    angleA?: number | number[] | ((ctx: SynthContext) => number),
+    angleB?: number | number[] | ((ctx: SynthContext) => number),
+    speed?: number | number[] | ((ctx: SynthContext) => number),
+    phase?: number | number[] | ((ctx: SynthContext) => number)
+): SynthSource {
+    return generatedFunctions['moire'](
+        freqA ?? null,
+        freqB ?? null,
+        angleA ?? null,
+        angleB ?? null,
+        speed ?? null,
+        phase ?? null
+    );
+}
+
+/**
  * Generate oscillating patterns using sine waves.
  * @param frequency - Frequency of the oscillation (default: 60.0)
  * @param sync - Synchronization offset (default: 0.1)

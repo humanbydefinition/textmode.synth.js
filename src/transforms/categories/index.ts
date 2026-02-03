@@ -2,7 +2,18 @@
  * Categories index - exports all transform categories.
  */
 
-export { SOURCE_TRANSFORMS, osc, noise, voronoi, gradient, shape, solid, src } from './sources';
+export {
+	SOURCE_TRANSFORMS,
+	osc,
+	noise,
+	plasma,
+	moire,
+	voronoi,
+	gradient,
+	shape,
+	solid,
+	src,
+} from './sources';
 export {
 	COORD_TRANSFORMS,
 	rotate,

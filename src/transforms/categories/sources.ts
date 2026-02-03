@@ -39,6 +39,54 @@ export const noise = defineTransform({
 	description: 'Generate noise pattern',
 });
 
+export const plasma = defineTransform({
+	name: 'plasma',
+	type: 'src',
+	inputs: [
+		{ name: 'scale', type: 'float', default: 10.0 },
+		{ name: 'speed', type: 'float', default: 0.5 },
+		{ name: 'phase', type: 'float', default: 0.0 },
+		{ name: 'contrast', type: 'float', default: 1.0 },
+	],
+	glsl: `
+	float t = time * speed + phase;
+	float v = 0.0;
+	v += sin((_st.x * scale) + t);
+	v += sin((_st.y * scale * 1.1) + t * 1.2);
+	v += sin(((_st.x + _st.y) * scale * 0.7) + t * 0.8);
+	v = v / 3.0;
+	v = v * 0.5 + 0.5;
+	v = clamp((v - 0.5) * contrast + 0.5, 0.0, 1.0);
+	return vec4(vec3(v), 1.0);
+`,
+	description: 'Generate plasma-like sine field',
+});
+
+export const moire = defineTransform({
+	name: 'moire',
+	type: 'src',
+	inputs: [
+		{ name: 'freqA', type: 'float', default: 20.0 },
+		{ name: 'freqB', type: 'float', default: 21.0 },
+		{ name: 'angleA', type: 'float', default: 0.0 },
+		{ name: 'angleB', type: 'float', default: 1.5708 },
+		{ name: 'speed', type: 'float', default: 0.1 },
+		{ name: 'phase', type: 'float', default: 0.0 },
+	],
+	glsl: `
+	float t = time * speed + phase;
+	vec2 p = _st - vec2(0.5);
+	vec2 dirA = vec2(cos(angleA), sin(angleA));
+	vec2 dirB = vec2(cos(angleB), sin(angleB));
+	float a = sin(dot(p, dirA) * freqA + t);
+	float b = sin(dot(p, dirB) * freqB - t * 0.7);
+	float v = a * b;
+	v = v * 0.5 + 0.5;
+	return vec4(vec3(v), 1.0);
+`,
+	description: 'Generate moire interference patterns',
+});
+
 export const voronoi = defineTransform({
 	name: 'voronoi',
 	type: 'src',
@@ -147,6 +195,8 @@ export const srcTexture = defineTransform({
 export const SOURCE_TRANSFORMS: TransformDefinition[] = [
 	osc,
 	noise,
+	plasma,
+	moire,
 	voronoi,
 	gradient,
 	shape,
