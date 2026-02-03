@@ -482,6 +482,96 @@ export interface ISynthSource {
 	kaleid(nSides?: SynthParameterValue): this;
 
 	/**
+	 * Convert coordinates to polar space.
+	 * @param angle - Angle offset in radians (default: 0.0)
+	 * @param radius - Radius multiplier (default: 1.0)
+	 */
+	polar(angle?: SynthParameterValue, radius?: SynthParameterValue): this;
+
+	/**
+	 * Twirl distortion with radial falloff.
+	 * @param amount - Twirl strength (default: 2.0)
+	 * @param radius - Effect radius (default: 0.5)
+	 * @param centerX - Center X (default: 0.5)
+	 * @param centerY - Center Y (default: 0.5)
+	 */
+	twirl(
+		amount?: SynthParameterValue,
+		radius?: SynthParameterValue,
+		centerX?: SynthParameterValue,
+		centerY?: SynthParameterValue
+	): this;
+
+	/**
+	 * Swirl distortion around a center.
+	 * @param amount - Swirl strength (default: 4.0)
+	 * @param centerX - Center X (default: 0.5)
+	 * @param centerY - Center Y (default: 0.5)
+	 */
+	swirl(
+		amount?: SynthParameterValue,
+		centerX?: SynthParameterValue,
+		centerY?: SynthParameterValue
+	): this;
+
+	/**
+	 * Mirror coordinates across X and/or Y axes.
+	 * @param mirrorX - Mirror X (0-1, default: 1.0)
+	 * @param mirrorY - Mirror Y (0-1, default: 1.0)
+	 */
+	mirror(mirrorX?: SynthParameterValue, mirrorY?: SynthParameterValue): this;
+
+	/**
+	 * Shear coordinates along X and Y axes.
+	 * @param x - X shear amount (default: 0.0)
+	 * @param y - Y shear amount (default: 0.0)
+	 * @param centerX - Center X (default: 0.5)
+	 * @param centerY - Center Y (default: 0.5)
+	 */
+	shear(
+		x?: SynthParameterValue,
+		y?: SynthParameterValue,
+		centerX?: SynthParameterValue,
+		centerY?: SynthParameterValue
+	): this;
+
+	/**
+	 * Barrel distortion (bulge outward).
+	 * @param amount - Distortion amount (default: 0.5)
+	 * @param centerX - Center X (default: 0.5)
+	 * @param centerY - Center Y (default: 0.5)
+	 */
+	barrel(
+		amount?: SynthParameterValue,
+		centerX?: SynthParameterValue,
+		centerY?: SynthParameterValue
+	): this;
+
+	/**
+	 * Pinch distortion (pull inward).
+	 * @param amount - Distortion amount (default: 0.5)
+	 * @param centerX - Center X (default: 0.5)
+	 * @param centerY - Center Y (default: 0.5)
+	 */
+	pinch(
+		amount?: SynthParameterValue,
+		centerX?: SynthParameterValue,
+		centerY?: SynthParameterValue
+	): this;
+
+	/**
+	 * Fisheye lens distortion.
+	 * @param amount - Distortion amount (default: 1.0)
+	 * @param centerX - Center X (default: 0.5)
+	 * @param centerY - Center Y (default: 0.5)
+	 */
+	fisheye(
+		amount?: SynthParameterValue,
+		centerX?: SynthParameterValue,
+		centerY?: SynthParameterValue
+	): this;
+
+	/**
 	 * Adjust brightness.
 	 * @param amount - Brightness adjustment amount (default: 0.4)
 	 *

@@ -158,6 +158,159 @@ export const kaleid = defineTransform({
 	description: 'Kaleidoscope effect',
 });
 
+export const polar = defineTransform({
+	name: 'polar',
+	type: 'coord',
+	inputs: [
+		{ name: 'angle', type: 'float', default: 0.0 },
+		{ name: 'radius', type: 'float', default: 1.0 },
+	],
+	glsl: `
+	vec2 st = _st - vec2(0.5);
+	float r = length(st) * radius;
+	float a = atan(st.y, st.x) + angle;
+	a = a / (2.0 * 3.1416);
+	return vec2(fract(a), r);
+`,
+	description: 'Convert to polar coordinates',
+});
+
+export const twirl = defineTransform({
+	name: 'twirl',
+	type: 'coord',
+	inputs: [
+		{ name: 'amount', type: 'float', default: 2.0 },
+		{ name: 'radius', type: 'float', default: 0.5 },
+		{ name: 'centerX', type: 'float', default: 0.5 },
+		{ name: 'centerY', type: 'float', default: 0.5 },
+	],
+	glsl: `
+	vec2 center = vec2(centerX, centerY);
+	vec2 p = _st - center;
+	float r = length(p);
+	float safeRadius = max(radius, 0.00001);
+	float t = clamp((safeRadius - r) / safeRadius, 0.0, 1.0);
+	float angle = amount * t * t;
+	float s = sin(angle);
+	float c = cos(angle);
+	p = vec2(c * p.x - s * p.y, s * p.x + c * p.y);
+	return p + center;
+`,
+	description: 'Twirl distortion with radial falloff',
+});
+
+export const swirl = defineTransform({
+	name: 'swirl',
+	type: 'coord',
+	inputs: [
+		{ name: 'amount', type: 'float', default: 4.0 },
+		{ name: 'centerX', type: 'float', default: 0.5 },
+		{ name: 'centerY', type: 'float', default: 0.5 },
+	],
+	glsl: `
+	vec2 center = vec2(centerX, centerY);
+	vec2 p = _st - center;
+	float r = length(p);
+	float angle = amount * r;
+	float s = sin(angle);
+	float c = cos(angle);
+	p = vec2(c * p.x - s * p.y, s * p.x + c * p.y);
+	return p + center;
+`,
+	description: 'Swirl distortion around a center',
+});
+
+export const mirror = defineTransform({
+	name: 'mirror',
+	type: 'coord',
+	inputs: [
+		{ name: 'mirrorX', type: 'float', default: 1.0 },
+		{ name: 'mirrorY', type: 'float', default: 1.0 },
+	],
+	glsl: `
+	vec2 m = abs(fract(_st * 2.0) - 1.0);
+	vec2 mixAmt = clamp(vec2(mirrorX, mirrorY), 0.0, 1.0);
+	return mix(_st, m, mixAmt);
+`,
+	description: 'Mirror coordinates across X and/or Y axes',
+});
+
+export const shear = defineTransform({
+	name: 'shear',
+	type: 'coord',
+	inputs: [
+		{ name: 'x', type: 'float', default: 0.0 },
+		{ name: 'y', type: 'float', default: 0.0 },
+		{ name: 'centerX', type: 'float', default: 0.5 },
+		{ name: 'centerY', type: 'float', default: 0.5 },
+	],
+	glsl: `
+	vec2 center = vec2(centerX, centerY);
+	vec2 p = _st - center;
+	p = vec2(p.x + y * p.y, p.y + x * p.x);
+	return p + center;
+`,
+	description: 'Shear coordinates along X and Y',
+});
+
+export const barrel = defineTransform({
+	name: 'barrel',
+	type: 'coord',
+	inputs: [
+		{ name: 'amount', type: 'float', default: 0.5 },
+		{ name: 'centerX', type: 'float', default: 0.5 },
+		{ name: 'centerY', type: 'float', default: 0.5 },
+	],
+	glsl: `
+	vec2 center = vec2(centerX, centerY);
+	vec2 p = _st - center;
+	float r2 = dot(p, p);
+	p *= 1.0 + amount * r2;
+	return p + center;
+`,
+	description: 'Barrel distortion (bulge outward)',
+});
+
+export const pinch = defineTransform({
+	name: 'pinch',
+	type: 'coord',
+	inputs: [
+		{ name: 'amount', type: 'float', default: 0.5 },
+		{ name: 'centerX', type: 'float', default: 0.5 },
+		{ name: 'centerY', type: 'float', default: 0.5 },
+	],
+	glsl: `
+	vec2 center = vec2(centerX, centerY);
+	vec2 p = _st - center;
+	float r2 = dot(p, p);
+	p *= 1.0 / (1.0 + amount * r2);
+	return p + center;
+`,
+	description: 'Pinch distortion (pull inward)',
+});
+
+export const fisheye = defineTransform({
+	name: 'fisheye',
+	type: 'coord',
+	inputs: [
+		{ name: 'amount', type: 'float', default: 1.0 },
+		{ name: 'centerX', type: 'float', default: 0.5 },
+		{ name: 'centerY', type: 'float', default: 0.5 },
+	],
+	glsl: `
+	vec2 center = vec2(centerX, centerY);
+	vec2 p = _st - center;
+	float r = length(p);
+	if (r > 0.0) {
+		float k = max(amount, 0.00001);
+		float r2 = atan(r * k) / atan(k);
+		p = p / r * r2;
+	}
+	return p + center;
+`,
+	description: 'Fisheye lens distortion',
+});
+
 /**
  * All coordinate transforms.
  */
@@ -172,4 +325,12 @@ export const COORD_TRANSFORMS: TransformDefinition[] = [
 	repeatX,
 	repeatY,
 	kaleid,
+	polar,
+	twirl,
+	swirl,
+	mirror,
+	shear,
+	barrel,
+	pinch,
+	fisheye,
 ];

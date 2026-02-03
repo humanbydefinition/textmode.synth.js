@@ -15,6 +15,14 @@ export {
 	repeatX,
 	repeatY,
 	kaleid,
+	polar,
+	twirl,
+	swirl,
+	mirror,
+	shear,
+	barrel,
+	pinch,
+	fisheye,
 } from './coordinates';
 export {
 	COLOR_TRANSFORMS,
