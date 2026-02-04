@@ -29,3 +29,13 @@ export const TT_COMBINE = 'combine';
  * Transform type: Coordinate modulation (combine coords)
  */
 export const TT_COMBINE_COORD = 'combineCoord';
+
+/**
+ * Set of transform types that involve combining sources.
+ */
+export const COMBINE_TYPES = new Set([TT_COMBINE, TT_COMBINE_COORD]);
+
+/**
+ * Set of transform types that operatate on or produce coordinates.
+ */
+export const COORD_TYPES = new Set([TT_COORD, TT_COMBINE_COORD]);
