@@ -12,6 +12,7 @@ import type { SynthSource } from './SynthSource';
 import type { CompiledSynthShader } from '../compiler/types';
 import type { CharacterResolver } from '../utils/CharacterResolver';
 import { TextmodeSource } from 'textmode.js/loadables';
+import { TT_SRC, TT_COORD, TT_COLOR, TT_COMBINE, TT_COMBINE_COORD } from './transform-types';
 
 /**
  * Transform type categories determining how functions compose in the shader pipeline.
@@ -23,7 +24,12 @@ import { TextmodeSource } from 'textmode.js/loadables';
  * - `combine`: Blending operations that combine two color sources
  * - `combineCoord`: Modulation that uses one source to affect another's coordinates
  */
-export type SynthTransformType = 'src' | 'coord' | 'color' | 'combine' | 'combineCoord';
+export type SynthTransformType =
+	| typeof TT_SRC
+	| typeof TT_COORD
+	| typeof TT_COLOR
+	| typeof TT_COMBINE
+	| typeof TT_COMBINE_COORD;
 
 /**
  * GLSL type for transform inputs.
@@ -253,26 +259,26 @@ export const TRANSFORM_TYPE_INFO: Record<
 		args: Array<{ type: string; name: string }>;
 	}
 > = {
-	src: {
+	[TT_SRC]: {
 		returnType: 'vec4',
 		args: [{ type: 'vec2', name: '_st' }],
 	},
-	coord: {
+	[TT_COORD]: {
 		returnType: 'vec2',
 		args: [{ type: 'vec2', name: '_st' }],
 	},
-	color: {
+	[TT_COLOR]: {
 		returnType: 'vec4',
 		args: [{ type: 'vec4', name: '_c0' }],
 	},
-	combine: {
+	[TT_COMBINE]: {
 		returnType: 'vec4',
 		args: [
 			{ type: 'vec4', name: '_c0' },
 			{ type: 'vec4', name: '_c1' },
 		],
 	},
-	combineCoord: {
+	[TT_COMBINE_COORD]: {
 		returnType: 'vec2',
 		args: [
 			{ type: 'vec2', name: '_st' },

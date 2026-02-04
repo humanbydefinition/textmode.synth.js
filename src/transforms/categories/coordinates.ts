@@ -6,12 +6,13 @@
  */
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
+import { TT_COORD } from '../../core/transform-types';
 
 function createScrollTransform(axis: 'x' | 'y'): TransformDefinition {
 	const name = axis === 'x' ? 'scrollX' : 'scrollY';
 	return defineTransform({
 		name,
-		type: 'coord',
+		type: TT_COORD,
 		inputs: [
 			{ name, type: 'float', default: 0.5 },
 			{ name: 'speed', type: 'float', default: 0.0 },
@@ -33,7 +34,7 @@ function createRepeatTransform(axis: 'x' | 'y'): TransformDefinition {
 
 	return defineTransform({
 		name,
-		type: 'coord',
+		type: TT_COORD,
 		inputs: [
 			{ name: 'reps', type: 'float', default: 3.0 },
 			{ name: 'offset', type: 'float', default: 0.0 },
@@ -49,7 +50,7 @@ function createRepeatTransform(axis: 'x' | 'y'): TransformDefinition {
 
 export const rotate = defineTransform({
 	name: 'rotate',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'angle', type: 'float', default: 10.0 },
 		{ name: 'speed', type: 'float', default: 0.0 },
@@ -66,7 +67,7 @@ export const rotate = defineTransform({
 
 export const scale = defineTransform({
 	name: 'scale',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'amount', type: 'float', default: 1.5 },
 		{ name: 'xMult', type: 'float', default: 1.0 },
@@ -85,7 +86,7 @@ export const scale = defineTransform({
 
 export const scroll = defineTransform({
 	name: 'scroll',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'scrollX', type: 'float', default: 0.5 },
 		{ name: 'scrollY', type: 'float', default: 0.5 },
@@ -107,7 +108,7 @@ export const scrollY = createScrollTransform('y');
 
 export const pixelate = defineTransform({
 	name: 'pixelate',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'pixelX', type: 'float', default: 20.0 },
 		{ name: 'pixelY', type: 'float', default: 20.0 },
@@ -121,7 +122,7 @@ export const pixelate = defineTransform({
 
 export const repeat = defineTransform({
 	name: 'repeat',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'repeatX', type: 'float', default: 3.0 },
 		{ name: 'repeatY', type: 'float', default: 3.0 },
@@ -143,7 +144,7 @@ export const repeatY = createRepeatTransform('y');
 
 export const kaleid = defineTransform({
 	name: 'kaleid',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [{ name: 'nSides', type: 'float', default: 4.0 }],
 	glsl: `
 	vec2 st = _st;
@@ -160,7 +161,7 @@ export const kaleid = defineTransform({
 
 export const polar = defineTransform({
 	name: 'polar',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'angle', type: 'float', default: 0.0 },
 		{ name: 'radius', type: 'float', default: 1.0 },
@@ -177,7 +178,7 @@ export const polar = defineTransform({
 
 export const twirl = defineTransform({
 	name: 'twirl',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'amount', type: 'float', default: 2.0 },
 		{ name: 'radius', type: 'float', default: 0.5 },
@@ -201,7 +202,7 @@ export const twirl = defineTransform({
 
 export const swirl = defineTransform({
 	name: 'swirl',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'amount', type: 'float', default: 4.0 },
 		{ name: 'centerX', type: 'float', default: 0.5 },
@@ -222,7 +223,7 @@ export const swirl = defineTransform({
 
 export const mirror = defineTransform({
 	name: 'mirror',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'mirrorX', type: 'float', default: 1.0 },
 		{ name: 'mirrorY', type: 'float', default: 1.0 },
@@ -237,7 +238,7 @@ export const mirror = defineTransform({
 
 export const shear = defineTransform({
 	name: 'shear',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'x', type: 'float', default: 0.0 },
 		{ name: 'y', type: 'float', default: 0.0 },
@@ -255,7 +256,7 @@ export const shear = defineTransform({
 
 export const barrel = defineTransform({
 	name: 'barrel',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'amount', type: 'float', default: 0.5 },
 		{ name: 'centerX', type: 'float', default: 0.5 },
@@ -273,7 +274,7 @@ export const barrel = defineTransform({
 
 export const pinch = defineTransform({
 	name: 'pinch',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'amount', type: 'float', default: 0.5 },
 		{ name: 'centerX', type: 'float', default: 0.5 },
@@ -291,7 +292,7 @@ export const pinch = defineTransform({
 
 export const fisheye = defineTransform({
 	name: 'fisheye',
-	type: 'coord',
+	type: TT_COORD,
 	inputs: [
 		{ name: 'amount', type: 'float', default: 1.0 },
 		{ name: 'centerX', type: 'float', default: 0.5 },

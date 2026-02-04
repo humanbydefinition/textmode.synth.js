@@ -1,12 +1,13 @@
 import type { TransformDefinition, TransformInput } from './TransformDefinition';
 import { transformRegistry } from './TransformRegistry';
-import type { SynthParameterValue } from '../core/types';
+import type { SynthParameterValue, SynthTransformType } from '../core/types';
 import type { SynthSource } from '../core/SynthSource';
+import { TT_COMBINE, TT_COMBINE_COORD, TT_SRC } from '../core/transform-types';
 
 /**
  * Map of source-type transform names for generator function creation.
  */
-const SOURCE_TYPE_TRANSFORMS = new Set(['src']);
+const SOURCE_TYPE_TRANSFORMS = new Set<SynthTransformType>([TT_SRC]);
 
 /**
  * Generated standalone functions for source transforms.
@@ -55,7 +56,7 @@ class TransformFactory {
 		const proto = prototype as unknown as Record<string, unknown>;
 
 		// Handle combine and combineCoord types specially (they take a source as first arg)
-		if (type === 'combine' || type === 'combineCoord') {
+		if (type === TT_COMBINE || type === TT_COMBINE_COORD) {
 			proto[name] = function (
 				this: SynthSource,
 				source: unknown,

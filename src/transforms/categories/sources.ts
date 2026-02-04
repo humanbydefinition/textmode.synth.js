@@ -7,10 +7,11 @@
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
 import { CHANNEL_SAMPLERS } from '../../core/constants';
+import { TT_SRC } from '../../core/transform-types';
 
 export const osc = defineTransform({
 	name: 'osc',
-	type: 'src',
+	type: TT_SRC,
 	inputs: [
 		{ name: 'frequency', type: 'float', default: 60.0 },
 		{ name: 'sync', type: 'float', default: 0.1 },
@@ -28,7 +29,7 @@ export const osc = defineTransform({
 
 export const noise = defineTransform({
 	name: 'noise',
-	type: 'src',
+	type: TT_SRC,
 	inputs: [
 		{ name: 'scale', type: 'float', default: 10.0 },
 		{ name: 'offset', type: 'float', default: 0.1 },
@@ -41,7 +42,7 @@ export const noise = defineTransform({
 
 export const plasma = defineTransform({
 	name: 'plasma',
-	type: 'src',
+	type: TT_SRC,
 	inputs: [
 		{ name: 'scale', type: 'float', default: 10.0 },
 		{ name: 'speed', type: 'float', default: 0.5 },
@@ -64,7 +65,7 @@ export const plasma = defineTransform({
 
 export const moire = defineTransform({
 	name: 'moire',
-	type: 'src',
+	type: TT_SRC,
 	inputs: [
 		{ name: 'freqA', type: 'float', default: 20.0 },
 		{ name: 'freqB', type: 'float', default: 21.0 },
@@ -89,7 +90,7 @@ export const moire = defineTransform({
 
 export const voronoi = defineTransform({
 	name: 'voronoi',
-	type: 'src',
+	type: TT_SRC,
 	inputs: [
 		{ name: 'scale', type: 'float', default: 5.0 },
 		{ name: 'speed', type: 'float', default: 0.3 },
@@ -125,7 +126,7 @@ export const voronoi = defineTransform({
 
 export const gradient = defineTransform({
 	name: 'gradient',
-	type: 'src',
+	type: TT_SRC,
 	inputs: [{ name: 'speed', type: 'float', default: 0.0 }],
 	glsl: `
 	return vec4(_st, sin(time * speed), 1.0);
@@ -135,7 +136,7 @@ export const gradient = defineTransform({
 
 export const shape = defineTransform({
 	name: 'shape',
-	type: 'src',
+	type: TT_SRC,
 	inputs: [
 		{ name: 'sides', type: 'float', default: 3.0 },
 		{ name: 'radius', type: 'float', default: 0.3 },
@@ -153,7 +154,7 @@ export const shape = defineTransform({
 
 export const solid = defineTransform({
 	name: 'solid',
-	type: 'src',
+	type: TT_SRC,
 	inputs: [
 		{ name: 'r', type: 'float', default: 0.0 },
 		{ name: 'g', type: 'float', default: 0.0 },
@@ -168,7 +169,7 @@ export const solid = defineTransform({
 
 export const src = defineTransform({
 	name: 'src',
-	type: 'src',
+	type: TT_SRC,
 	inputs: [],
 	glsl: `
 	return texture(${CHANNEL_SAMPLERS.charColor}, fract(_st));
@@ -179,7 +180,7 @@ export const src = defineTransform({
 
 export const srcTexture = defineTransform({
 	name: 'srcTexture',
-	type: 'src',
+	type: TT_SRC,
 	inputs: [],
 	glsl: `
 	// Placeholder - actual texture sampling is handled dynamically per TextmodeSource
