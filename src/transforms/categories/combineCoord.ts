@@ -153,7 +153,7 @@ export const modulateHue = defineTransform({
 	type: TT_COMBINE_COORD,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
-	return _st + (vec2(_c0.g - _c0.r, _c0.b - _c0.g) * amount * 1.0 / resolution);
+	return _st + (vec2(_c0.g - _c0.r, _c0.b - _c0.g) * amount * 1.0 / u_resolution);
 `,
 	description: 'Modulate coordinates based on hue differences',
 });
