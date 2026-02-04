@@ -6,13 +6,14 @@
  */
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
+import { TT_COMBINE_COORD } from '../../core/transform-types';
 
 function createModulateScrollTransform(axis: 'x' | 'y'): TransformDefinition {
 	const name = axis === 'x' ? 'modulateScrollX' : 'modulateScrollY';
 	const inputName = axis === 'x' ? 'scrollX' : 'scrollY';
 	return defineTransform({
 		name,
-		type: 'combineCoord',
+		type: TT_COMBINE_COORD,
 		inputs: [
 			{ name: inputName, type: 'float', default: 0.5 },
 			{ name: 'speed', type: 'float', default: 0.0 },
@@ -34,7 +35,7 @@ function createModulateRepeatTransform(axis: 'x' | 'y'): TransformDefinition {
 
 	return defineTransform({
 		name,
-		type: 'combineCoord',
+		type: TT_COMBINE_COORD,
 		inputs: [
 			{ name: 'reps', type: 'float', default: 3.0 },
 			{ name: 'offset', type: 'float', default: 0.5 },
@@ -50,7 +51,7 @@ function createModulateRepeatTransform(axis: 'x' | 'y'): TransformDefinition {
 
 export const modulate = defineTransform({
 	name: 'modulate',
-	type: 'combineCoord',
+	type: TT_COMBINE_COORD,
 	inputs: [{ name: 'amount', type: 'float', default: 0.1 }],
 	glsl: `
 	return _st + _c0.xy * amount;
@@ -60,7 +61,7 @@ export const modulate = defineTransform({
 
 export const modulateScale = defineTransform({
 	name: 'modulateScale',
-	type: 'combineCoord',
+	type: TT_COMBINE_COORD,
 	inputs: [
 		{ name: 'multiple', type: 'float', default: 1.0 },
 		{ name: 'offset', type: 'float', default: 1.0 },
@@ -76,7 +77,7 @@ export const modulateScale = defineTransform({
 
 export const modulateRotate = defineTransform({
 	name: 'modulateRotate',
-	type: 'combineCoord',
+	type: TT_COMBINE_COORD,
 	inputs: [
 		{ name: 'multiple', type: 'float', default: 1.0 },
 		{ name: 'offset', type: 'float', default: 0.0 },
@@ -93,7 +94,7 @@ export const modulateRotate = defineTransform({
 
 export const modulatePixelate = defineTransform({
 	name: 'modulatePixelate',
-	type: 'combineCoord',
+	type: TT_COMBINE_COORD,
 	inputs: [
 		{ name: 'multiple', type: 'float', default: 10.0 },
 		{ name: 'offset', type: 'float', default: 3.0 },
@@ -107,7 +108,7 @@ export const modulatePixelate = defineTransform({
 
 export const modulateKaleid = defineTransform({
 	name: 'modulateKaleid',
-	type: 'combineCoord',
+	type: TT_COMBINE_COORD,
 	inputs: [{ name: 'nSides', type: 'float', default: 4.0 }],
 	glsl: `
 	vec2 st = _st - 0.5;
@@ -127,7 +128,7 @@ export const modulateScrollY = createModulateScrollTransform('y');
 
 export const modulateRepeat = defineTransform({
 	name: 'modulateRepeat',
-	type: 'combineCoord',
+	type: TT_COMBINE_COORD,
 	inputs: [
 		{ name: 'repeatX', type: 'float', default: 3.0 },
 		{ name: 'repeatY', type: 'float', default: 3.0 },
@@ -149,7 +150,7 @@ export const modulateRepeatY = createModulateRepeatTransform('y');
 
 export const modulateHue = defineTransform({
 	name: 'modulateHue',
-	type: 'combineCoord',
+	type: TT_COMBINE_COORD,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	return _st + (vec2(_c0.g - _c0.r, _c0.b - _c0.g) * amount * 1.0 / resolution);

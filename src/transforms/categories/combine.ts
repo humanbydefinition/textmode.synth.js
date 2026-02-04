@@ -6,10 +6,11 @@
  */
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
+import { TT_COMBINE } from '../../core/transform-types';
 
 export const add = defineTransform({
 	name: 'add',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	return (_c0 + _c1) * amount + _c0 * (1.0 - amount);
@@ -19,7 +20,7 @@ export const add = defineTransform({
 
 export const sub = defineTransform({
 	name: 'sub',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	return (_c0 - _c1) * amount + _c0 * (1.0 - amount);
@@ -29,7 +30,7 @@ export const sub = defineTransform({
 
 export const mult = defineTransform({
 	name: 'mult',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	return _c0 * (1.0 - amount) + (_c0 * _c1) * amount;
@@ -39,7 +40,7 @@ export const mult = defineTransform({
 
 export const blend = defineTransform({
 	name: 'blend',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [{ name: 'amount', type: 'float', default: 0.5 }],
 	glsl: `
 	return _c0 * (1.0 - amount) + _c1 * amount;
@@ -49,7 +50,7 @@ export const blend = defineTransform({
 
 export const diff = defineTransform({
 	name: 'diff',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [],
 	glsl: `
 	return vec4(abs(_c0.rgb - _c1.rgb), max(_c0.a, _c1.a));
@@ -59,7 +60,7 @@ export const diff = defineTransform({
 
 export const layer = defineTransform({
 	name: 'layer',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [],
 	glsl: `
 	return vec4(mix(_c0.rgb, _c1.rgb, _c1.a), clamp(_c0.a + _c1.a, 0.0, 1.0));
@@ -69,7 +70,7 @@ export const layer = defineTransform({
 
 export const mask = defineTransform({
 	name: 'mask',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [],
 	glsl: `
 	float a = _luminance(_c1.rgb);
@@ -80,7 +81,7 @@ export const mask = defineTransform({
 
 export const screen = defineTransform({
 	name: 'screen',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	vec3 result = 1.0 - (1.0 - _c0.rgb) * (1.0 - _c1.rgb);
@@ -93,7 +94,7 @@ export const screen = defineTransform({
 
 export const overlay = defineTransform({
 	name: 'overlay',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	vec3 mult = 2.0 * _c0.rgb * _c1.rgb;
@@ -108,7 +109,7 @@ export const overlay = defineTransform({
 
 export const softlight = defineTransform({
 	name: 'softlight',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	vec3 result = (1.0 - 2.0 * _c1.rgb) * _c0.rgb * _c0.rgb + 2.0 * _c1.rgb * _c0.rgb;
@@ -121,7 +122,7 @@ export const softlight = defineTransform({
 
 export const hardlight = defineTransform({
 	name: 'hardlight',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	vec3 mult = 2.0 * _c0.rgb * _c1.rgb;
@@ -136,7 +137,7 @@ export const hardlight = defineTransform({
 
 export const dodge = defineTransform({
 	name: 'dodge',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	vec3 result = _c0.rgb / max(vec3(0.00001), 1.0 - _c1.rgb);
@@ -150,7 +151,7 @@ export const dodge = defineTransform({
 
 export const burn = defineTransform({
 	name: 'burn',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	vec3 result = 1.0 - (1.0 - _c0.rgb) / max(vec3(0.00001), _c1.rgb);
@@ -164,7 +165,7 @@ export const burn = defineTransform({
 
 export const lighten = defineTransform({
 	name: 'lighten',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	vec3 result = max(_c0.rgb, _c1.rgb);
@@ -177,7 +178,7 @@ export const lighten = defineTransform({
 
 export const darken = defineTransform({
 	name: 'darken',
-	type: 'combine',
+	type: TT_COMBINE,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	vec3 result = min(_c0.rgb, _c1.rgb);

@@ -1,6 +1,7 @@
 import type { TransformDefinition, ProcessedTransform } from './TransformDefinition';
 import { processTransform } from './TransformDefinition';
 import type { SynthTransformType } from '../core/types';
+import { TT_SRC } from '../core/transform-types';
 
 /**
  * Centralized registry for synthesis transforms.
@@ -91,7 +92,7 @@ class TransformRegistry {
 	 * Get source-type transforms (those that can start a chain).
 	 */
 	public getSourceTransforms(): TransformDefinition[] {
-		return this.getByType('src');
+		return this.getByType(TT_SRC);
 	}
 
 	/**

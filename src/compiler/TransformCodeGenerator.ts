@@ -3,6 +3,7 @@ import type { CompilationTarget } from './types';
 import type { ExternalLayerReference, TextmodeSourceReference } from '../core/types';
 import { getTextureChannel } from './channels';
 import { CHANNEL_SAMPLERS, CHANNEL_SUFFIXES } from '../core/constants';
+import { TT_COMBINE, TT_COMBINE_COORD, TT_COLOR, TT_COORD, TT_SRC } from '../core/transform-types';
 
 /**
  * Result of generating code for a transform.
@@ -164,28 +165,28 @@ export class TransformCodeGenerator {
 		let newRotationVar = rotationVar;
 
 		switch (def.type) {
-			case 'src': {
+			case TT_SRC: {
 				const newColor = `c${varId}`;
 				mainCode.push(`\tvec4 ${newColor} = ${funcName}(${buildArgs(coordVar)});`);
 				newColorVar = newColor;
 				break;
 			}
 
-			case 'coord': {
+			case TT_COORD: {
 				const newCoord = `st${varId}`;
 				mainCode.push(`\tvec2 ${newCoord} = ${funcName}(${buildArgs(coordVar)});`);
 				mainCode.push(`\t${coordVar} = ${newCoord};`);
 				break;
 			}
 
-			case 'color': {
+			case TT_COLOR: {
 				const newColor = `c${varId}`;
 				mainCode.push(`\tvec4 ${newColor} = ${funcName}(${buildArgs(colorVar)});`);
 				newColorVar = newColor;
 				break;
 			}
 
-			case 'combine': {
+			case TT_COMBINE: {
 				const newColor = `c${varId}`;
 				mainCode.push(
 					`\tvec4 ${newColor} = ${funcName}(${buildArgs(colorVar, nestedColorVar ?? 'vec4(0.0)')});`
@@ -194,7 +195,7 @@ export class TransformCodeGenerator {
 				break;
 			}
 
-			case 'combineCoord': {
+			case TT_COMBINE_COORD: {
 				const newCoord = `st${varId}`;
 				mainCode.push(
 					`\tvec2 ${newCoord} = ${funcName}(${buildArgs(coordVar, nestedColorVar ?? 'vec4(0.0)')});`

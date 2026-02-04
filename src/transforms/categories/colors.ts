@@ -10,6 +10,7 @@ import {
 	type TransformDefinition,
 	type TransformInput,
 } from '../TransformDefinition';
+import { TT_COLOR } from '../../core/transform-types';
 
 const CHANNEL_INPUTS: TransformInput[] = [
 	{ name: 'scale', type: 'float', default: 1.0 },
@@ -19,7 +20,7 @@ const CHANNEL_INPUTS: TransformInput[] = [
 function createChannelTransform(channel: 'r' | 'g' | 'b'): TransformDefinition {
 	return defineTransform({
 		name: channel,
-		type: 'color',
+		type: TT_COLOR,
 		inputs: CHANNEL_INPUTS,
 		glsl: `
 	return vec4(_c0.${channel} * scale + offset);
@@ -30,7 +31,7 @@ function createChannelTransform(channel: 'r' | 'g' | 'b'): TransformDefinition {
 
 export const brightness = defineTransform({
 	name: 'brightness',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [{ name: 'amount', type: 'float', default: 0.4 }],
 	glsl: `
 	return vec4(_c0.rgb + vec3(amount), _c0.a);
@@ -40,7 +41,7 @@ export const brightness = defineTransform({
 
 export const contrast = defineTransform({
 	name: 'contrast',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [{ name: 'amount', type: 'float', default: 1.6 }],
 	glsl: `
 	vec4 c = (_c0 - vec4(0.5)) * vec4(amount) + vec4(0.5);
@@ -51,7 +52,7 @@ export const contrast = defineTransform({
 
 export const invert = defineTransform({
 	name: 'invert',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	return vec4((1.0 - _c0.rgb) * amount + _c0.rgb * (1.0 - amount), _c0.a);
@@ -61,7 +62,7 @@ export const invert = defineTransform({
 
 export const saturate = defineTransform({
 	name: 'saturate',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [{ name: 'amount', type: 'float', default: 2.0 }],
 	glsl: `
 	vec3 intensity = vec3(_luminance(_c0.rgb));
@@ -72,7 +73,7 @@ export const saturate = defineTransform({
 
 export const hue = defineTransform({
 	name: 'hue',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [{ name: 'hue', type: 'float', default: 0.4 }],
 	glsl: `
 	vec3 c = _rgbToHsv(_c0.rgb);
@@ -84,7 +85,7 @@ export const hue = defineTransform({
 
 export const colorama = defineTransform({
 	name: 'colorama',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [{ name: 'amount', type: 'float', default: 0.005 }],
 	glsl: `
 	vec3 c = _rgbToHsv(_c0.rgb);
@@ -98,7 +99,7 @@ export const colorama = defineTransform({
 
 export const posterize = defineTransform({
 	name: 'posterize',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [
 		{ name: 'bins', type: 'float', default: 3.0 },
 		{ name: 'gamma', type: 'float', default: 0.6 },
@@ -116,7 +117,7 @@ export const posterize = defineTransform({
 
 export const luma = defineTransform({
 	name: 'luma',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [
 		{ name: 'threshold', type: 'float', default: 0.5 },
 		{ name: 'tolerance', type: 'float', default: 0.1 },
@@ -130,7 +131,7 @@ export const luma = defineTransform({
 
 export const thresh = defineTransform({
 	name: 'thresh',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [
 		{ name: 'threshold', type: 'float', default: 0.5 },
 		{ name: 'tolerance', type: 'float', default: 0.04 },
@@ -143,7 +144,7 @@ export const thresh = defineTransform({
 
 export const color = defineTransform({
 	name: 'color',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [
 		{ name: 'r', type: 'float', default: 1.0 },
 		{ name: 'g', type: 'float', default: 1.0 },
@@ -166,7 +167,7 @@ export const b = createChannelTransform('b');
 
 export const shift = defineTransform({
 	name: 'shift',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [
 		{ name: 'r', type: 'float', default: 0.5 },
 		{ name: 'g', type: 'float', default: 0.0 },
@@ -186,7 +187,7 @@ export const shift = defineTransform({
 
 export const gamma = defineTransform({
 	name: 'gamma',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	return vec4(pow(max(vec3(0.0), _c0.rgb), vec3(1.0 / amount)), _c0.a);
@@ -196,7 +197,7 @@ export const gamma = defineTransform({
 
 export const levels = defineTransform({
 	name: 'levels',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [
 		{ name: 'inMin', type: 'float', default: 0.0 },
 		{ name: 'inMax', type: 'float', default: 1.0 },
@@ -215,7 +216,7 @@ export const levels = defineTransform({
 
 export const clamp = defineTransform({
 	name: 'clamp',
-	type: 'color',
+	type: TT_COLOR,
 	inputs: [
 		{ name: 'min', type: 'float', default: 0.0 },
 		{ name: 'max', type: 'float', default: 1.0 },

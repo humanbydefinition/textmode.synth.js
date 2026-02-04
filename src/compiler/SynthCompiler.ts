@@ -26,6 +26,7 @@ import { generateFragmentShader, generateCharacterOutputCode } from './GLSLGener
 import { transformRegistry } from '../transforms/TransformRegistry';
 import type { ProcessedTransform } from '../transforms/TransformDefinition';
 import type { ExternalLayerReference } from '../core';
+import { COMBINE_TYPES, COORD_TYPES } from '../core/transform-types';
 
 /**
  * Compile a SynthSource chain into a complete MRT GLSL shader.
@@ -279,7 +280,7 @@ class SynthCompiler {
 			// Handle nested sources for combine operations
 			const nestedSource = source.nestedSources.get(i);
 			let nestedColorVar: string | undefined;
-			if (nestedSource && (def.type === 'combine' || def.type === 'combineCoord')) {
+			if (nestedSource && COMBINE_TYPES.has(def.type)) {
 				const nestedResult = this._compileChain(
 					nestedSource,
 					`${prefix}_nested_${i}`,
@@ -323,7 +324,7 @@ class SynthCompiler {
 		// 2) Apply all remaining transforms in forward call order
 		for (let i = 0; i < transforms.length; i++) {
 			const def = defs[i];
-			if (def && (def.type === 'coord' || def.type === 'combineCoord')) continue;
+			if (def && COORD_TYPES.has(def.type)) continue;
 			applyTransformAtIndex(i);
 		}
 
@@ -341,7 +342,7 @@ class SynthCompiler {
 		for (let i = 0; i < defs.length; i++) {
 			const def = defs[i];
 			if (!def) continue;
-			if (def.type === 'coord' || def.type === 'combineCoord') {
+			if (COORD_TYPES.has(def.type)) {
 				coordWrapperIndices.push(i);
 			}
 		}
