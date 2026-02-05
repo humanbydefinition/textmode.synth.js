@@ -71,6 +71,31 @@ export class SynthSource {
 	private readonly _textmodeSourceRefs: Map<number, TextmodeSourceReference>;
 
 	/**
+	 * Create a SynthSource from a value or existing source.
+	 * If source is already a SynthSource, returns it.
+	 * If source is a number, creates a solid grayscale source (replicated to RGB).
+	 * Otherwise creates a solid source with the provided arguments.
+	 */
+	static from(
+		rOrSource: SynthParameterValue | ISynthSource,
+		g?: SynthParameterValue,
+		b?: SynthParameterValue,
+		a?: SynthParameterValue
+	): SynthSource {
+		if (rOrSource instanceof SynthSource) {
+			return rOrSource;
+		}
+		const source = new SynthSource();
+		// If only a single number is provided, replicate it to RGB for grayscale consistency
+		const args =
+			typeof rOrSource === 'number' && g === undefined && b === undefined && a === undefined
+				? [rOrSource, rOrSource, rOrSource, null]
+				: [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
+		source.addTransform('solid', args as SynthParameterValue[]);
+		return source;
+	}
+
+	/**
 	 * Create a new SynthSource.
 	 * @param options Optional initialization options
 	 * @ignore Use generator functions like `osc()`, `noise()` instead
@@ -154,32 +179,13 @@ export class SynthSource {
 		return this;
 	}
 
-	private _ensureSource(
-		rOrSource: SynthParameterValue | ISynthSource,
-		g?: SynthParameterValue,
-		b?: SynthParameterValue,
-		a?: SynthParameterValue
-	): SynthSource {
-		if (rOrSource instanceof SynthSource) {
-			return rOrSource;
-		}
-		const source = new SynthSource();
-		// If only a single number is provided, replicate it to RGB for grayscale consistency
-		const args =
-			typeof rOrSource === 'number' && g === undefined && b === undefined && a === undefined
-				? [rOrSource, rOrSource, rOrSource, null]
-				: [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
-		source.addTransform('solid', args as SynthParameterValue[]);
-		return source;
-	}
-
 	public charColor(
 		rOrSource: SynthParameterValue | ISynthSource,
 		g?: SynthParameterValue,
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
 	): this {
-		this._charColorSource = this._ensureSource(rOrSource, g, b, a);
+		this._charColorSource = SynthSource.from(rOrSource, g, b, a);
 		return this;
 	}
 
@@ -194,7 +200,7 @@ export class SynthSource {
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
 	): this {
-		this._cellColorSource = this._ensureSource(rOrSource, g, b, a);
+		this._cellColorSource = SynthSource.from(rOrSource, g, b, a);
 		return this;
 	}
 
@@ -204,7 +210,7 @@ export class SynthSource {
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
 	): this {
-		const source = this._ensureSource(rOrSource, g, b, a);
+		const source = SynthSource.from(rOrSource, g, b, a);
 		this._charColorSource = source;
 		this._cellColorSource = source;
 		return this;
