@@ -67,8 +67,8 @@ class TransformFactory {
 				// If source is a primitive (not a SynthSource), wrap it in a solid() source
 				if (SynthSourceCtor) {
 					// Use the static helper to ensure we have a valid source object
-					// Cast to any to access static method since type definition doesn't include it here
-					actualSource = (SynthSourceCtor as any).from(source);
+					// The constructor type is cast to the class type to access static methods.
+					actualSource = (SynthSourceCtor as typeof SynthSource).from(source as SynthParameterValue | ISynthSource);
 				}
 
 				return this.addCombineTransform(
