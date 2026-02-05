@@ -8,6 +8,12 @@
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
 import { TT_COMBINE } from '../../core/transform-types';
 
+const GLSL_MIX_RESULT = `
+	vec3 outRgb = mix(_c0.rgb, result, amount);
+	float outA = mix(_c0.a, _c1.a, amount);
+	return vec4(outRgb, outA);
+`;
+
 export const add = defineTransform({
 	name: 'add',
 	type: TT_COMBINE,
@@ -85,9 +91,7 @@ export const screen = defineTransform({
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	vec3 result = 1.0 - (1.0 - _c0.rgb) * (1.0 - _c1.rgb);
-	vec3 outRgb = mix(_c0.rgb, result, amount);
-	float outA = mix(_c0.a, _c1.a, amount);
-	return vec4(outRgb, outA);
+${GLSL_MIX_RESULT}
 `,
 	description: 'Screen blend with another source',
 });
@@ -100,9 +104,7 @@ export const overlay = defineTransform({
 	vec3 mult = 2.0 * _c0.rgb * _c1.rgb;
 	vec3 screen = 1.0 - 2.0 * (1.0 - _c0.rgb) * (1.0 - _c1.rgb);
 	vec3 result = mix(mult, screen, step(0.5, _c0.rgb));
-	vec3 outRgb = mix(_c0.rgb, result, amount);
-	float outA = mix(_c0.a, _c1.a, amount);
-	return vec4(outRgb, outA);
+${GLSL_MIX_RESULT}
 `,
 	description: 'Overlay blend with another source',
 });
@@ -113,9 +115,7 @@ export const softlight = defineTransform({
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	vec3 result = (1.0 - 2.0 * _c1.rgb) * _c0.rgb * _c0.rgb + 2.0 * _c1.rgb * _c0.rgb;
-	vec3 outRgb = mix(_c0.rgb, result, amount);
-	float outA = mix(_c0.a, _c1.a, amount);
-	return vec4(outRgb, outA);
+${GLSL_MIX_RESULT}
 `,
 	description: 'Soft light blend with another source',
 });
@@ -128,9 +128,7 @@ export const hardlight = defineTransform({
 	vec3 mult = 2.0 * _c0.rgb * _c1.rgb;
 	vec3 screen = 1.0 - 2.0 * (1.0 - _c0.rgb) * (1.0 - _c1.rgb);
 	vec3 result = mix(mult, screen, step(0.5, _c1.rgb));
-	vec3 outRgb = mix(_c0.rgb, result, amount);
-	float outA = mix(_c0.a, _c1.a, amount);
-	return vec4(outRgb, outA);
+${GLSL_MIX_RESULT}
 `,
 	description: 'Hard light blend with another source',
 });
@@ -142,9 +140,7 @@ export const dodge = defineTransform({
 	glsl: `
 	vec3 result = _c0.rgb / max(vec3(0.00001), 1.0 - _c1.rgb);
 	result = clamp(result, 0.0, 1.0);
-	vec3 outRgb = mix(_c0.rgb, result, amount);
-	float outA = mix(_c0.a, _c1.a, amount);
-	return vec4(outRgb, outA);
+${GLSL_MIX_RESULT}
 `,
 	description: 'Color dodge blend with another source',
 });
@@ -156,9 +152,7 @@ export const burn = defineTransform({
 	glsl: `
 	vec3 result = 1.0 - (1.0 - _c0.rgb) / max(vec3(0.00001), _c1.rgb);
 	result = clamp(result, 0.0, 1.0);
-	vec3 outRgb = mix(_c0.rgb, result, amount);
-	float outA = mix(_c0.a, _c1.a, amount);
-	return vec4(outRgb, outA);
+${GLSL_MIX_RESULT}
 `,
 	description: 'Color burn blend with another source',
 });
@@ -169,9 +163,7 @@ export const lighten = defineTransform({
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	vec3 result = max(_c0.rgb, _c1.rgb);
-	vec3 outRgb = mix(_c0.rgb, result, amount);
-	float outA = mix(_c0.a, _c1.a, amount);
-	return vec4(outRgb, outA);
+${GLSL_MIX_RESULT}
 `,
 	description: 'Lighten blend with another source',
 });
@@ -182,9 +174,7 @@ export const darken = defineTransform({
 	inputs: [{ name: 'amount', type: 'float', default: 1.0 }],
 	glsl: `
 	vec3 result = min(_c0.rgb, _c1.rgb);
-	vec3 outRgb = mix(_c0.rgb, result, amount);
-	float outA = mix(_c0.a, _c1.a, amount);
-	return vec4(outRgb, outA);
+${GLSL_MIX_RESULT}
 `,
 	description: 'Darken blend with another source',
 });
