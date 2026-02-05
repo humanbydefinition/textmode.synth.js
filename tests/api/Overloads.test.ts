@@ -119,14 +119,15 @@ describe('API Overloads', () => {
         expect(source.charColorSource).toBeDefined();
         expect(source.charColorSource?.transforms[0].name).toBe('solid');
         // single arg (number) logic in SynthSource expands to [val, val, val, 1] (default alpha)
-        expect(source.charColorSource?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, 1]);
+        // null signals to use the default value (1.0) during compilation
+        expect(source.charColorSource?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, null]);
     });
 
     it('should support cellColor(gray) overload', () => {
         const source = cellColor(0.5);
         expect(source.cellColorSource).toBeDefined();
         expect(source.cellColorSource?.transforms[0].name).toBe('solid');
-        expect(source.cellColorSource?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, 1]);
+        expect(source.cellColorSource?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, null]);
     });
 
     it('should support paint(gray) overload', () => {
@@ -134,6 +135,6 @@ describe('API Overloads', () => {
         expect(source.charColorSource).toBeDefined();
         expect(source.cellColorSource).toBeDefined();
         expect(source.charColorSource?.transforms[0].name).toBe('solid');
-        expect(source.charColorSource?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, 1]);
+        expect(source.charColorSource?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, null]);
     });
 });
