@@ -38,7 +38,7 @@ import type { LayerSynthState } from '../core/types';
  */
 export const SynthPlugin: TextmodePlugin = {
 	name: PLUGIN_NAME,
-	version: '1.0.0',
+	version: '1.5.0',
 
 	install(textmodifier, api: TextmodePluginAPI) {
 		// Reset copy shader manager in case of plugin reinstall
