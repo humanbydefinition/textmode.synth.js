@@ -1,3 +1,13 @@
+---
+title: ModulatedArray
+description: Extended array interface with modulation methods.
+category: Interfaces
+api: true
+kind: Interface
+lastModified: 2026-02-06
+isInterface: true
+---
+
 [textmode.synth.js](../index.md) / ModulatedArray
 
 # Interface: ModulatedArray

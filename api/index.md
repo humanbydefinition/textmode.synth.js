@@ -1,6 +1,6 @@
-# textmode.synth.js
-
-A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack),
+---
+title: textmode.synth.js
+description: A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), adapted for the [textmode.js](http...%0Acategory:%20API%20Reference%0Aapi:%20true%0Akind:%20Project%0AlastModified:%202026-02-06%0A---%0A%0A#textmode-synth-jsa-derivative-work-of-hydra-synth-https-github-com-hydra-synth-hydra-synth) by [Olivia Jack](https://github.com/ojack),
 adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem, providing
 a visual synthesis system for procedural generation of characters, colors,
 and visual effects through method chaining.

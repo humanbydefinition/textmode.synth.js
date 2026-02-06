@@ -1,3 +1,13 @@
+---
+title: SynthSource
+description: A chainable synthesis source that accumulates transforms to be compiled into a shader.
+category: Classes
+api: true
+kind: Class
+lastModified: 2026-02-06
+hasConstructor: false
+---
+
 [textmode.synth.js](../index.md) / SynthSource
 
 # Class: SynthSource

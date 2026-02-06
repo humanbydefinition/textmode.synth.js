@@ -1,3 +1,12 @@
+---
+title: SynthPlugin
+description: The `textmode.synth.js` plugin to install.
+category: Variables
+api: true
+kind: Variable
+lastModified: 2026-02-06
+---
+
 [textmode.synth.js](../index.md) / SynthPlugin
 
 # Variable: SynthPlugin

@@ -1,3 +1,12 @@
+---
+title: SynthParameterValue
+description: Dynamic parameter value types supported by the synth system.
+category: Type Aliases
+api: true
+kind: TypeAlias
+lastModified: 2026-02-06
+---
+
 [textmode.synth.js](../index.md) / SynthParameterValue
 
 # Type Alias: SynthParameterValue

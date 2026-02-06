@@ -1,3 +1,13 @@
+---
+title: SynthContext
+description: Context passed to dynamic parameter functions during rendering.
+category: Interfaces
+api: true
+kind: Interface
+lastModified: 2026-02-06
+isInterface: true
+---
+
 [textmode.synth.js](../index.md) / SynthContext
 
 # Interface: SynthContext

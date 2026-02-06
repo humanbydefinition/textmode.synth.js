@@ -1,3 +1,12 @@
+---
+title: voronoi
+description: voronoi function API reference for textmode.js.
+category: Functions
+api: true
+kind: Function
+lastModified: 2026-02-06
+---
+
 [textmode.synth.js](../index.md) / voronoi
 
 # Function: voronoi()

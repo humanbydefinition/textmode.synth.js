@@ -1,3 +1,12 @@
+---
+title: EasingFunction
+description: Easing functions from https://gist.github.com/gre/1650294
+category: Type Aliases
+api: true
+kind: TypeAlias
+lastModified: 2026-02-06
+---
+
 [textmode.synth.js](../index.md) / EasingFunction
 
 # Type Alias: EasingFunction

@@ -1,3 +1,12 @@
+---
+title: solid
+description: solid function API reference for textmode.js.
+category: Functions
+api: true
+kind: Function
+lastModified: 2026-02-06
+---
+
 [textmode.synth.js](../index.md) / solid
 
 # Function: solid()
