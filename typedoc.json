@@ -20,12 +20,15 @@
     "logLevel": "Verbose",
     "plugin": [
         "typedoc-plugin-markdown",
+        "typedoc-plugin-frontmatter",
         "typedoc-vitepress-theme",
+        "./typedoc-plugins/custom-frontmatter.js"
     ],
+    "preserveFrontmatterCommentTags": false,
+    "frontmatterNamingConvention": "camelCase",
     "indexFormat": "table",
     "parametersFormat": "table",
     "interfacePropertiesFormat": "table",
-    "classPropertiesFormat": "list",
     "enumMembersFormat": "table",
     "propertyMembersFormat": "table",
     "typeDeclarationFormat": "table",
