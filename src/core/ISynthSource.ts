@@ -861,7 +861,7 @@ export interface ISynthSource {
 
 	/**
 	 * Set a seed for deterministic randomness in this source chain.
-	 * 
+	 *
 	 * When set, noise-based functions (noise, voronoi) will produce
 	 * reproducible patterns. Different seeds produce different patterns.
 	 *
@@ -874,7 +874,6 @@ export interface ISynthSource {
 	 * ```
 	 */
 	seed(value: SynthParameterValue): this;
-
 
 	/**
 	 * Add another source.
