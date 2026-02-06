@@ -12,7 +12,7 @@ import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
 import { CHANNEL_SUFFIXES, CHANNEL_SAMPLERS } from '../core/constants';
 import { collectExternalLayerRefs, collectTextmodeSourceRefs } from '../utils';
-import { getGlobalBpm } from '../core/GlobalState';
+import { getInstanceBpm } from '../extensions/textmodifier';
 import { shaderManager } from './ShaderManager';
 import type { SynthContext, LayerSynthState } from '../core/types';
 
@@ -162,7 +162,7 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 	synthContext.height = grid.height;
 	synthContext.cols = grid.cols;
 	synthContext.rows = grid.rows;
-	synthContext.bpm = state.bpm ?? getGlobalBpm();
+	synthContext.bpm = state.bpm ?? getInstanceBpm(textmodifier);
 	synthContext.onError = state.onDynamicError;
 
 	// Evaluate dynamic parameters with graceful error handling.

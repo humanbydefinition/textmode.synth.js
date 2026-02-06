@@ -15,6 +15,3 @@ export { SynthSource } from './SynthSource';
 
 // Interfaces (for documentation)
 export type { ISynthSource } from './ISynthSource';
-
-// State
-export { setGlobalBpm, getGlobalBpm } from './GlobalState';
