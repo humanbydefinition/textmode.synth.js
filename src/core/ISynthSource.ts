@@ -16,7 +16,7 @@ export interface ISynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -43,7 +43,7 @@ export interface ISynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -71,7 +71,7 @@ export interface ISynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -99,7 +99,7 @@ export interface ISynthSource {
 	 * @param gray - Grayscale value (0-1)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -125,7 +125,7 @@ export interface ISynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -153,7 +153,7 @@ export interface ISynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -181,7 +181,7 @@ export interface ISynthSource {
 	 * @param gray - Grayscale value (0-1)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -209,7 +209,7 @@ export interface ISynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -241,7 +241,7 @@ export interface ISynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -269,7 +269,7 @@ export interface ISynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -297,7 +297,7 @@ export interface ISynthSource {
 	 * @param gray - Grayscale value (0-1)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -324,7 +324,7 @@ export interface ISynthSource {
 	 * @returns A new SynthSource with the same transform chain
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -353,7 +353,7 @@ export interface ISynthSource {
 	 * @param offset - Phase offset (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -383,7 +383,7 @@ export interface ISynthSource {
 	 * @param speed - Animation speed (default: 0.1)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -410,7 +410,7 @@ export interface ISynthSource {
 	 * @param contrast - Contrast adjustment (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -444,7 +444,7 @@ export interface ISynthSource {
 	 * @param phase - Phase offset (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -477,7 +477,7 @@ export interface ISynthSource {
 	 * @param blending - Blending between cell regions (default: 0.3)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -505,7 +505,7 @@ export interface ISynthSource {
 	 * @param speed - Rotation speed (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -531,7 +531,7 @@ export interface ISynthSource {
 	 * @param smoothing - Edge smoothing amount (default: 0.01)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -559,7 +559,7 @@ export interface ISynthSource {
 	 * @param gray - Grayscale value (0-1)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -585,7 +585,7 @@ export interface ISynthSource {
 	 * @param a - Alpha channel (0-1, default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -631,7 +631,7 @@ export interface ISynthSource {
 	 * @param layer - Optional TextmodeLayer to sample from. If omitted, samples from self (feedback).
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -657,7 +657,7 @@ export interface ISynthSource {
 	 * @param speed - Rotation speed multiplier (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -686,7 +686,7 @@ export interface ISynthSource {
 	 * @param offsetY - Y offset (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -719,7 +719,7 @@ export interface ISynthSource {
 	 * @param speedY - Y scroll speed (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -749,7 +749,7 @@ export interface ISynthSource {
 	 * @param speed - Scroll speed (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -774,7 +774,7 @@ export interface ISynthSource {
 	 * @param speed - Scroll speed (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -800,7 +800,7 @@ export interface ISynthSource {
 	 * @param pixelY - Pixel size in Y (default: 20.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -828,7 +828,7 @@ export interface ISynthSource {
 	 * @param offsetY - Y offset between repetitions (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -858,7 +858,7 @@ export interface ISynthSource {
 	 * @param offset - Offset between repetitions (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -883,7 +883,7 @@ export interface ISynthSource {
 	 * @param offset - Offset between repetitions (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -907,7 +907,7 @@ export interface ISynthSource {
 	 * @param nSides - Number of kaleidoscope sides (default: 4.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -933,7 +933,7 @@ export interface ISynthSource {
 	 * @param radius - Radius multiplier (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -961,7 +961,7 @@ export interface ISynthSource {
 	 * @param centerY - Center Y (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -992,7 +992,7 @@ export interface ISynthSource {
 	 * @param centerY - Center Y (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1021,7 +1021,7 @@ export interface ISynthSource {
 	 * @param mirrorY - Mirror Y (0-1, default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1048,7 +1048,7 @@ export interface ISynthSource {
 	 * @param centerY - Center Y (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1079,7 +1079,7 @@ export interface ISynthSource {
 	 * @param centerY - Center Y (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1109,7 +1109,7 @@ export interface ISynthSource {
 	 * @param centerY - Center Y (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1139,7 +1139,7 @@ export interface ISynthSource {
 	 * @param centerY - Center Y (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1167,7 +1167,7 @@ export interface ISynthSource {
 	 * @param amount - Brightness adjustment amount (default: 0.4)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1191,7 +1191,7 @@ export interface ISynthSource {
 	 * @param amount - Contrast amount (default: 1.6)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1215,7 +1215,7 @@ export interface ISynthSource {
 	 * @param amount - Inversion amount (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1239,7 +1239,7 @@ export interface ISynthSource {
 	 * @param amount - Saturation amount (default: 2.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1263,7 +1263,7 @@ export interface ISynthSource {
 	 * @param hue - Hue shift amount (default: 0.4)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1287,7 +1287,7 @@ export interface ISynthSource {
 	 * @param amount - Effect amount (default: 0.005)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1312,7 +1312,7 @@ export interface ISynthSource {
 	 * @param gamma - Gamma correction (default: 0.6)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1337,7 +1337,7 @@ export interface ISynthSource {
 	 * @param tolerance - Tolerance range (default: 0.1)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1362,7 +1362,7 @@ export interface ISynthSource {
 	 * @param tolerance - Tolerance range (default: 0.04)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1386,7 +1386,7 @@ export interface ISynthSource {
 	 * @param gray - Scalar multiplier
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1416,7 +1416,7 @@ export interface ISynthSource {
 	 * @param a - Alpha channel multiplier (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1446,7 +1446,7 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1472,7 +1472,7 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1498,7 +1498,7 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1526,7 +1526,7 @@ export interface ISynthSource {
 	 * @param a - Alpha channel shift (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1555,7 +1555,7 @@ export interface ISynthSource {
 	 * @param amount - Gamma value (default: 1.0, < 1.0 brightens, > 1.0 darkens)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1583,7 +1583,7 @@ export interface ISynthSource {
 	 * @param gamma - Gamma correction (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1614,7 +1614,7 @@ export interface ISynthSource {
 	 * @param max - Maximum value (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1643,7 +1643,7 @@ export interface ISynthSource {
 	 * @param value - Seed value (any number)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1669,7 +1669,7 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1694,7 +1694,7 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1719,7 +1719,7 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1745,7 +1745,7 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1769,7 +1769,7 @@ export interface ISynthSource {
 	 * @param source - Source to compare
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1793,7 +1793,7 @@ export interface ISynthSource {
 	 * @param source - Source to layer
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1817,7 +1817,7 @@ export interface ISynthSource {
 	 * @param source - Source to use as mask
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1842,7 +1842,7 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1867,7 +1867,7 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1892,7 +1892,7 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1917,7 +1917,7 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1942,7 +1942,7 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1967,7 +1967,7 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -1992,7 +1992,7 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -2017,7 +2017,7 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -2042,7 +2042,7 @@ export interface ISynthSource {
 	 * @param amount - Modulation amount (default: 0.1)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -2068,7 +2068,7 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -2098,7 +2098,7 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -2128,7 +2128,7 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 3.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -2157,7 +2157,7 @@ export interface ISynthSource {
 	 * @param nSides - Number of sides (default: 4.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -2183,7 +2183,7 @@ export interface ISynthSource {
 	 * @param speed - Scroll speed (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -2213,7 +2213,7 @@ export interface ISynthSource {
 	 * @param speed - Scroll speed (default: 0.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -2245,7 +2245,7 @@ export interface ISynthSource {
 	 * @param offsetY - Y offset (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -2277,7 +2277,7 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -2307,7 +2307,7 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 0.5)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -2336,7 +2336,7 @@ export interface ISynthSource {
 	 * @param amount - Modulation amount (default: 1.0)
 	 *
 	 * @example
-	 * ```ts
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,

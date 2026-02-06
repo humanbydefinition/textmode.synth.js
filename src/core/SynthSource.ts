@@ -33,7 +33,7 @@ export interface SynthSourceCreateOptions {
  * transform to the chain, which is later compiled into a GLSL shader.
  *
  * @example
- * ```ts
+ * ```javascript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,

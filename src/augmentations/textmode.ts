@@ -20,7 +20,7 @@ declare module 'textmode.js/layering' {
 		 * @param source A SynthSource chain or a factory function returning one
 		 *
 		 * @example
-		 * ```ts
+		 * ```javascript
 		 * const t = textmode.create({
 		 *   width: window.innerWidth,
 		 *   height: window.innerHeight,
@@ -50,7 +50,7 @@ declare module 'textmode.js/layering' {
 		 * Use this to reset a layer's synth state without removing the layer itself.
 		 *
 		 * @example
-		 * ```ts
+		 * ```javascript
 		 * const t = textmode.create({
 		 *   width: window.innerWidth,
 		 *   height: window.innerHeight,
@@ -82,7 +82,7 @@ declare module 'textmode.js/layering' {
 		 * @param value BPM value (beats per minute) for this layer
 		 *
 		 * @example
-		 * ```ts
+		 * ```javascript
 		 * const t = textmode.create({
 		 *   width: window.innerWidth,
 		 *   height: window.innerHeight,
@@ -128,7 +128,7 @@ declare module 'textmode.js' {
 		 * @returns The BPM value that was set (for chaining)
 		 *
 		 * @example
-		 * ```ts
+		 * ```javascript
 		 * const t = textmode.create({
 		 *   width: window.innerWidth,
 		 *   height: window.innerHeight,
@@ -160,7 +160,7 @@ declare module 'textmode.js' {
 		 * @returns The seed value that was set
 		 *
 		 * @example
-		 * ```ts
+		 * ```javascript
 		 * const t = textmode.create({
 		 *   width: window.innerWidth,
 		 *   height: window.innerHeight,
