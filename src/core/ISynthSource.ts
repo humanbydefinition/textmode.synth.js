@@ -860,6 +860,23 @@ export interface ISynthSource {
 	clamp(min?: SynthParameterValue, max?: SynthParameterValue): this;
 
 	/**
+	 * Set a seed for deterministic randomness in this source chain.
+	 * 
+	 * When set, noise-based functions (noise, voronoi) will produce
+	 * reproducible patterns. Different seeds produce different patterns.
+	 *
+	 * @param value - Seed value (any number)
+	 *
+	 * @example
+	 * ```typescript
+	 * // Same seed = same pattern every time
+	 * noise(10).seed(42).charMap('@#%*+=-:. ')
+	 * ```
+	 */
+	seed(value: SynthParameterValue): this;
+
+
+	/**
 	 * Add another source.
 	 * @param source - Source to add
 	 * @param amount - Blend amount (default: 0.5)

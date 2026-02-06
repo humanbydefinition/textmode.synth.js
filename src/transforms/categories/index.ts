@@ -50,6 +50,7 @@ export {
 	r,
 	g,
 	b,
+	seed,
 } from './colors';
 export {
 	COMBINE_TRANSFORMS,

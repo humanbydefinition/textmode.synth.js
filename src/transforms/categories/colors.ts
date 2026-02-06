@@ -227,6 +227,18 @@ export const clamp = defineTransform({
 	description: 'Clamp color values to a range',
 });
 
+export const seed = defineTransform({
+	name: 'seed',
+	type: TT_COLOR,
+	inputs: [{ name: 'value', type: 'float', default: 0.0 }],
+	glsl: `
+	// Set seed for subsequent noise/voronoi calls in this chain
+	_seed = value;
+	return _c0;
+`,
+	description: 'Set seed for deterministic randomness in subsequent noise operations',
+});
+
 /**
  * All color transforms.
  */
@@ -248,4 +260,5 @@ export const COLOR_TRANSFORMS: TransformDefinition[] = [
 	gamma,
 	levels,
 	clamp,
+	seed,
 ];

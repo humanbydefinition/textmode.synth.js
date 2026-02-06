@@ -45,6 +45,10 @@ export interface ShaderGenerationOptions {
  * GLSL utility functions included in all shaders.
  */
 const UTILITY_FUNCTIONS = `
+// Global mutable seed variable - can be modified by seed() transform
+// Initialized from u_seed uniform in main()
+float _seed = 0.0;
+
 // Utility functions
 float _luminance(vec3 rgb) {
 	const vec3 W = vec3(0.2125, 0.7154, 0.0721);
@@ -80,6 +84,15 @@ vec4 taylorInvSqrt(vec4 r) {
 }
 
 float _noise(vec3 v) {
+	// Apply seed offset for deterministic randomness
+	// Use fract() to keep values bounded and avoid float precision issues with large seeds
+	vec3 seedOffset = vec3(
+		fract(_seed * 0.1271) * 1000.0,
+		fract(_seed * 0.3117) * 1000.0,
+		fract(_seed * 0.0747) * 1000.0
+	);
+	v = v + seedOffset;
+	
 	const vec2 C = vec2(1.0/6.0, 1.0/3.0);
 	const vec4 D = vec4(0.0, 0.5, 1.0, 2.0);
 
@@ -259,6 +272,7 @@ layout(location = 2) out vec4 o_secondaryColor;
 
 // Standard uniforms
 uniform float time;
+uniform float u_seed;
 uniform vec2 u_resolution;
 ${feedbackDecl}
 ${externalLayerDecl}
@@ -275,6 +289,9 @@ ${UTILITY_FUNCTIONS}
 ${Array.from(glslFunctions).join('\n')}
 
 void main() {
+	// Initialize mutable seed from uniform (can be overridden by seed() transform)
+	_seed = u_seed;
+	
 	// Transform chain
 ${mainCode.join('\n')}
 

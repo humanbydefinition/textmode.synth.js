@@ -316,15 +316,25 @@ class SynthCompiler {
 			if (result.rotationVar) rotationVar = result.rotationVar;
 		};
 
-		// 1) Apply coordinate wrappers in reverse call order
+		// 1) Apply seed transforms first (so _seed is set before noise/voronoi run)
+		for (let i = 0; i < transforms.length; i++) {
+			const def = defs[i];
+			if (def && transforms[i].name === 'seed') {
+				applyTransformAtIndex(i);
+			}
+		}
+
+		// 2) Apply coordinate wrappers in reverse call order
 		for (let w = coordWrapperIndices.length - 1; w >= 0; w--) {
 			applyTransformAtIndex(coordWrapperIndices[w]);
 		}
 
-		// 2) Apply all remaining transforms in forward call order
+		// 3) Apply all remaining transforms in forward call order
 		for (let i = 0; i < transforms.length; i++) {
 			const def = defs[i];
+			// Skip coordinate transforms and seed (already applied)
 			if (def && COORD_TYPES.has(def.type)) continue;
+			if (transforms[i].name === 'seed') continue;
 			applyTransformAtIndex(i);
 		}
 

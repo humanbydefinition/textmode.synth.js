@@ -12,7 +12,7 @@ import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
 import { CHANNEL_SUFFIXES, CHANNEL_SAMPLERS } from '../core/constants';
 import { collectExternalLayerRefs, collectTextmodeSourceRefs } from '../utils';
-import { getInstanceBpm } from '../extensions/textmodifier';
+import { getInstanceBpm, getInstanceSeed } from '../extensions/textmodifier';
 import { shaderManager } from './ShaderManager';
 import type { SynthContext, LayerSynthState } from '../core/types';
 
@@ -234,6 +234,10 @@ function applySynthUniforms(
 ) {
 	textmodifier.setUniform('time', ctx.time);
 	textmodifier.setUniform('u_resolution', [ctx.cols, ctx.rows]);
+
+	// Apply seed uniform for deterministic randomness
+	const seed = getInstanceSeed(textmodifier);
+	textmodifier.setUniform('u_seed', seed ?? 0);
 
 	for (const [name, value] of state.dynamicValues) {
 		textmodifier.setUniform(name, value);

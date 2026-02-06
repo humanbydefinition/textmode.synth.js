@@ -7,6 +7,7 @@ import {
 	extendLayerBpm,
 	extendLayerClearSynth,
 	extendTextmodifierBpm,
+	extendTextmodifierSeed,
 } from '../extensions';
 import { synthRender, synthDispose, shaderManager } from '../lifecycle';
 import type { LayerSynthState } from '../core/types';
@@ -40,6 +41,7 @@ export const SynthPlugin: TextmodePlugin = {
 
 		// Extensions
 		extendTextmodifierBpm(textmodifier);
+		extendTextmodifierSeed(textmodifier);
 		extendLayerSynth(api);
 		extendLayerBpm(api);
 		extendLayerClearSynth(api);
@@ -78,6 +80,7 @@ export const SynthPlugin: TextmodePlugin = {
 
 		// Remove textmodifier extensions
 		delete (textmodifier as Partial<Textmodifier>).bpm;
+		delete (textmodifier as Partial<Textmodifier & { seed?: unknown }>).seed;
 
 		// Remove layer extensions
 		api.removeLayerExtension('synth');

@@ -68,5 +68,17 @@ declare module 'textmode.js' {
 		 * @returns The BPM value that was set (for chaining)
 		 */
 		bpm(value: number): number;
+
+		/**
+		 * Set the global seed for deterministic randomness.
+		 *
+		 * When set, noise-based functions (noise, voronoi) will produce
+		 * reproducible patterns across runs. Set to null to disable
+		 * determinism and use time-based animation.
+		 *
+		 * @param value - Seed value (any number) or null to disable
+		 * @returns The seed value that was set
+		 */
+		seed(value: number | null): number | null;
 	}
 }

@@ -10,4 +10,4 @@
 export { extendLayerSynth, extendLayerClearSynth, extendLayerBpm } from './textmodelayer';
 
 // Textmodifier extensions
-export { extendTextmodifierBpm } from './textmodifier';
+export { extendTextmodifierBpm, extendTextmodifierSeed } from './textmodifier';

@@ -107,7 +107,10 @@ export const voronoi = defineTransform({
 		for (int i = -1; i <= 1; i++) {
 			vec2 neighbor = vec2(float(i), float(j));
 			vec2 p = i_st + neighbor;
-			vec2 point = fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453);
+		// Apply seed offset to hash function for deterministic randomness
+			// Use fract() to avoid precision issues with large seeds
+			vec2 seedOffset = vec2(fract(_seed * 0.1271) * 1000.0, fract(_seed * 0.3117) * 1000.0);
+			vec2 point = fract(sin(vec2(dot(p + seedOffset, vec2(127.1, 311.7)), dot(p + seedOffset, vec2(269.5, 183.3)))) * 43758.5453);
 			point = 0.5 + 0.5 * sin(time * speed + 6.2831 * point);
 			vec2 diff = neighbor + point - f_st;
 			float dist = length(diff);
