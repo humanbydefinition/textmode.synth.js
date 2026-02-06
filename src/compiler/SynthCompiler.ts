@@ -26,7 +26,7 @@ import { generateFragmentShader, generateCharacterOutputCode } from './GLSLGener
 import { transformRegistry } from '../transforms/TransformRegistry';
 import type { ProcessedTransform } from '../transforms/TransformDefinition';
 import type { ExternalLayerReference } from '../core';
-import { COMBINE_TYPES, COORD_TYPES } from '../core/transform-types';
+import { COMBINE_TYPES, COORD_TYPES } from '../core/constants';
 
 /**
  * Compile a SynthSource chain into a complete MRT GLSL shader.

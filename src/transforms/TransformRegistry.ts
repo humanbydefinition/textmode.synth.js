@@ -1,7 +1,7 @@
 import type { TransformDefinition, ProcessedTransform } from './TransformDefinition';
 import { processTransform } from './TransformDefinition';
 import type { SynthTransformType } from '../core/types';
-import { TT_SRC } from '../core/transform-types';
+import { TT_SRC } from '../core/constants';
 
 /**
  * Centralized registry for synthesis transforms.

@@ -6,8 +6,7 @@
  */
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
-import { CHANNEL_SAMPLERS } from '../../core/constants';
-import { TT_SRC } from '../../core/transform-types';
+import { CHANNEL_SAMPLERS, TT_SRC } from '../../core/constants';
 
 export const osc = defineTransform({
 	name: 'osc',

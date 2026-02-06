@@ -2,8 +2,15 @@ import type { ProcessedTransform } from '../transforms/TransformDefinition';
 import type { CompilationTarget } from './types';
 import type { ExternalLayerReference, TextmodeSourceReference } from '../core/types';
 import { getTextureChannel } from './channels';
-import { CHANNEL_SAMPLERS, CHANNEL_SUFFIXES } from '../core/constants';
-import { TT_COMBINE, TT_COMBINE_COORD, TT_COLOR, TT_COORD, TT_SRC } from '../core/transform-types';
+import {
+	CHANNEL_SAMPLERS,
+	CHANNEL_SUFFIXES,
+	TT_COMBINE,
+	TT_COMBINE_COORD,
+	TT_COLOR,
+	TT_COORD,
+	TT_SRC,
+} from '../core/constants';
 
 /**
  * Result of generating code for a transform.

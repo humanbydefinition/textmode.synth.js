@@ -10,7 +10,7 @@ import {
 	type TransformDefinition,
 	type TransformInput,
 } from '../TransformDefinition';
-import { TT_COLOR } from '../../core/transform-types';
+import { TT_COLOR } from '../../core/constants';
 
 const CHANNEL_INPUTS: TransformInput[] = [
 	{ name: 'scale', type: 'float', default: 1.0 },

@@ -6,7 +6,7 @@
  */
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
-import { TT_COORD } from '../../core/transform-types';
+import { TT_COORD } from '../../core/constants';
 
 function createScrollTransform(axis: 'x' | 'y'): TransformDefinition {
 	const name = axis === 'x' ? 'scrollX' : 'scrollY';

@@ -6,7 +6,7 @@
  */
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
-import { TT_COMBINE_COORD } from '../../core/transform-types';
+import { TT_COMBINE_COORD } from '../../core/constants';
 
 function createModulateScrollTransform(axis: 'x' | 'y'): TransformDefinition {
 	const name = axis === 'x' ? 'modulateScrollX' : 'modulateScrollY';

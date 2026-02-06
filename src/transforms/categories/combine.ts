@@ -6,7 +6,7 @@
  */
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
-import { TT_COMBINE } from '../../core/transform-types';
+import { TT_COMBINE } from '../../core/constants';
 
 const GLSL_MIX_RESULT = `
 	vec3 outRgb = mix(_c0.rgb, result, amount);

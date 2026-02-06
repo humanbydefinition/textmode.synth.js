@@ -2,7 +2,7 @@ import type { TransformDefinition, TransformInput } from './TransformDefinition'
 import { transformRegistry } from './TransformRegistry';
 import type { SynthParameterValue, SynthTransformType } from '../core/types';
 import type { SynthSource } from '../core/SynthSource';
-import { COMBINE_TYPES, TT_SRC } from '../core/transform-types';
+import { COMBINE_TYPES, TT_SRC } from '../core/constants';
 
 /**
  * Map of source-type transform names for generator function creation.

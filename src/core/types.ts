@@ -12,7 +12,7 @@ import type { SynthSource } from './SynthSource';
 import type { CompiledSynthShader } from '../compiler/types';
 import type { CharacterResolver } from '../utils/CharacterResolver';
 import { TextmodeSource } from 'textmode.js/loadables';
-import { TT_SRC, TT_COORD, TT_COLOR, TT_COMBINE, TT_COMBINE_COORD } from './transform-types';
+import { TT_SRC, TT_COORD, TT_COLOR, TT_COMBINE, TT_COMBINE_COORD } from './constants';
 
 /**
  * Transform type categories determining how functions compose in the shader pipeline.
