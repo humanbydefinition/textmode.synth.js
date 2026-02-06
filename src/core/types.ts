@@ -71,7 +71,7 @@ export type SynthParameterValue =
  * Context passed to dynamic parameter functions during rendering.
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,

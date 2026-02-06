@@ -23,7 +23,7 @@ import { TextmodeSource } from 'textmode.js/loadables';
  * @returns A new SynthSource configured with cell color
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -51,7 +51,7 @@ export function cellColor(source: SynthSource): SynthSource;
  * @returns A new SynthSource configured with cell color
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -80,7 +80,7 @@ export function cellColor(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -118,7 +118,7 @@ export function cellColor(
  * @returns A new SynthSource configured for character generation
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -153,7 +153,7 @@ export const char = (source: SynthSource): SynthSource => {
  * @returns A new SynthSource configured with character color
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -181,7 +181,7 @@ export function charColor(source: SynthSource): SynthSource;
  * @returns A new SynthSource configured with character color
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -210,7 +210,7 @@ export function charColor(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -243,7 +243,7 @@ export function charColor(
  * @param speed - Rotation speed (default: 0.0)
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -272,7 +272,7 @@ export function gradient(
  * @param offset - Offset in noise space (default: 0.1)
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -304,7 +304,7 @@ export function noise(
  * @param contrast - Contrast adjustment (default: 1.0)
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -345,7 +345,7 @@ export function plasma(
  * @param phase - Phase offset (default: 0.0)
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -387,7 +387,7 @@ export function moire(
  * @param offset - Phase offset (default: 0.0)
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -425,7 +425,7 @@ export function osc(
  * @returns A new SynthSource configured with both color sources
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -453,7 +453,7 @@ export function paint(source: SynthSource): SynthSource;
  * @returns A new SynthSource configured with both color sources
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -482,7 +482,7 @@ export function paint(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -521,7 +521,7 @@ export function paint(
  * @param smoothing - Edge smoothing amount (default: 0.01)
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -551,7 +551,7 @@ export function shape(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -578,7 +578,7 @@ export function solid(gray: SynthParameterValue): SynthSource;
  * @param a - Alpha channel (0-1, default: 1.0)
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -645,7 +645,7 @@ export function solid(
  * @returns A new SynthSource that samples the specified source or self
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -744,7 +744,7 @@ function isTextmodeLayerObject(source: unknown): source is TextmodeLayer {
  * @param blending - Blending between cell regions (default: 0.3)
  *
  * @example
- * ```ts
+ * ```typescript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,

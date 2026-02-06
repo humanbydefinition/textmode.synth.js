@@ -34,7 +34,7 @@ let globalErrorCallback: DynamicErrorCallback | null = null;
  * notifications whenever a dynamic parameter fails to evaluate.
  *
  * @example
- * ```ts
+ * ```typescript
  * setGlobalErrorCallback((error, uniformName) => {
  *   console.error(`[Synth] Parameter "${uniformName}" error:`, error);
  * });
