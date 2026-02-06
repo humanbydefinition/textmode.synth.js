@@ -135,6 +135,25 @@ function getNamespacePath(model) {
 }
 
 /**
+ * Sanitize text for use in YAML frontmatter.
+ * Strips markdown links and other problematic syntax.
+ * @param {string} text
+ * @returns {string}
+ */
+function sanitizeForYaml(text) {
+	return text
+		// Convert markdown links [text](url) to just text
+		.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+		// Remove any remaining raw URLs that could cause YAML issues
+		.replace(/https?:\/\/[^\s]+/g, '')
+		// Remove backticks (inline code)
+		.replace(/`[^`]+`/g, (match) => match.slice(1, -1))
+		// Collapse multiple spaces
+		.replace(/\s+/g, ' ')
+		.trim();
+}
+
+/**
  * Extract description from TypeDoc comment
  * @param {any} model
  * @returns {string | undefined}
@@ -151,14 +170,14 @@ function extractDescription(model) {
 			// Extract only the first paragraph (before the first blank line)
 			const firstParagraph = summary.split(/\n\s*\n/)[0].trim();
 			
-			// Clean up the description: remove extra whitespace
-			const cleaned = firstParagraph.replace(/\s+/g, ' ').trim();
+			// Sanitize markdown syntax that breaks YAML frontmatter
+			const sanitized = sanitizeForYaml(firstParagraph);
 			
 			// Limit to ~160 characters for SEO (good meta description length)
-			if (cleaned.length > 160) {
-				return cleaned.substring(0, 157) + '...';
+			if (sanitized.length > 160) {
+				return sanitized.substring(0, 157) + '...';
 			}
-			return cleaned;
+			return sanitized;
 		}
 	}
 
