@@ -36,13 +36,15 @@ import './bootstrap';
 // Extend textmode.js interfaces (imported for side effects)
 import './augmentations';
 
-export { SynthPlugin } from './plugin';
+import { SynthPlugin } from './plugin';
+export { SynthPlugin };
 
-export { SynthSource } from './core/SynthSource';
+import { SynthSource } from './core/SynthSource';
+export { SynthSource };
 
 export type { SynthParameterValue, SynthContext } from './core/types';
 
-export {
+import {
 	cellColor,
 	char,
 	charColor,
@@ -57,9 +59,45 @@ export {
 	src,
 	voronoi,
 } from './api';
+export {
+	cellColor,
+	char,
+	charColor,
+	gradient,
+	moire,
+	noise,
+	osc,
+	paint,
+	plasma,
+	shape,
+	solid,
+	src,
+	voronoi,
+};
 
 export type { ModulatedArray, EasingFunction } from './utils/ArrayUtils';
 
 // Error handling for live coding environments
-export { setGlobalErrorCallback } from './utils/SafeEvaluator';
+import { setGlobalErrorCallback } from './utils/SafeEvaluator';
+export { setGlobalErrorCallback };
 export type { DynamicErrorCallback } from './utils/SafeEvaluator';
+
+// UMD global exports
+if (typeof window !== 'undefined') {
+	(window as any).SynthPlugin = SynthPlugin;
+	(window as any).SynthSource = SynthSource;
+	(window as any).cellColor = cellColor;
+	(window as any).char = char;
+	(window as any).charColor = charColor;
+	(window as any).gradient = gradient;
+	(window as any).moire = moire;
+	(window as any).noise = noise;
+	(window as any).osc = osc;
+	(window as any).paint = paint;
+	(window as any).plasma = plasma;
+	(window as any).shape = shape;
+	(window as any).solid = solid;
+	(window as any).src = src;
+	(window as any).voronoi = voronoi;
+	(window as any).setGlobalErrorCallback = setGlobalErrorCallback;
+}
