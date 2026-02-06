@@ -13,6 +13,11 @@
       "require": "./dist/textmode.synth.umd.js"
     }
   },
+  "sideEffects": [
+    "./src/bootstrap.ts",
+    "./dist/textmode.synth.esm.js",
+    "./dist/textmode.synth.umd.js"
+  ],
   "scripts": {
     "dev": "vite --port 5174 --host",
     "build": "vite build && tsc",
