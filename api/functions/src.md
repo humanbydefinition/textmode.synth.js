@@ -3,23 +3,29 @@
 # Function: src()
 
 ```ts
-function src(layer?): SynthSource;
+function src(source?): SynthSource;
 ```
 
-Sample the previous frame's output for feedback effects.
+Sample a source for synth compositions.
 
-This is the core of feedback loops - it reads from the previous frame,
-enabling effects like trails, motion blur, and recursive patterns.
+This is the core of feedback loops and source sampling - it reads from various sources,
+enabling effects like trails, motion blur, image processing, and recursive patterns.
 
-**Context-aware behavior:** When called without arguments, `src()` automatically
-samples the appropriate texture based on where it's used in the synth chain:
-- Inside `char(...)` → samples previous frame's character data
-- Inside `charColor(...)` → samples previous frame's primary color
-- Inside `cellColor(...)` → samples previous frame's cell color
+**Three modes of operation:**
 
-**Cross-layer sampling:** When called with a layer argument, `src(layer)` samples
-from another layer's output, enabling hydra-style multi-output compositions:
-- The sampled texture is still context-aware based on the current compilation target
+1. **Self-feedback** (`src()` with no arguments): Samples from the previous frame
+   - Context-aware: automatically samples the appropriate texture based on compilation context
+   - Inside `char(...)` → samples previous frame's character data
+   - Inside `charColor(...)` → samples previous frame's primary color
+   - Inside `cellColor(...)` → samples previous frame's cell color
+
+2. **Cross-layer sampling** (`src(layer)`): Samples from another layer's output
+   - Enables hydra-style multi-output compositions
+   - Context-aware based on current compilation target
+
+3. **TextmodeSource sampling** (`src(image)` or `src(video)`): Samples from loaded media
+   - Works with TextmodeImage and TextmodeVideo loaded via `t.loadImage()` or `t.loadVideo()`
+   - Samples directly from the source texture
 
 Equivalent to hydra's `src(o0)`.
 
@@ -27,13 +33,13 @@ Equivalent to hydra's `src(o0)`.
 
 | Parameter | Type | Description |
 | ------ | ------ | ------ |
-| `layer?` | `TextmodeLayer` | Optional TextmodeLayer to sample from. If omitted, samples from self (feedback). |
+| `source?` | \| `TextmodeLayer` \| `TextmodeSource` \| () => `TextmodeLayer` \| `TextmodeSource` \| `undefined` | Optional source to sample from: TextmodeLayer for cross-layer, or TextmodeImage/TextmodeVideo for media |
 
 ## Returns
 
 [`SynthSource`](../classes/SynthSource.md)
 
-A new SynthSource that samples the specified layer or self
+A new SynthSource that samples the specified source or self
 
 ## Example
 
@@ -51,17 +57,26 @@ t.layers.base.synth(
 
 // Cross-layer sampling (hydra-style o0, o1, etc.)
 const layer1 = t.layers.add();
-const layer2 = t.layers.add();
-
 layer1.synth(noise(10).mult(osc(20)));
+t.layers.base.synth(src(layer1).invert());
 
-layer2.synth(
-  char(voronoi(5).diff(src(layer1)))  // Sample layer1's char texture
-    .charColor(osc(10).blend(src(layer1), 0.5))  // Sample layer1's primary color
-);
-
-// Complex multi-layer composition
+// TextmodeImage/Video sampling
+let img;
+t.setup(async () => {
+  img = await t.loadImage('https://example.com/image.jpg');
+});
 t.layers.base.synth(
-  noise(3, 0.3).thresh(0.3).diff(src(layer2), 0.3)
+  char(src(img))
+    .charColor(src(img))
+    .cellColor(src(img).invert())
 );
+
+// Lazy evaluation (allows global definition before load)
+let video;
+// This works even if video is currently undefined
+t.layers.base.synth(src(() => video));
+
+t.setup(async () => {
+  video = await t.loadVideo('video.mp4');
+});
 ```

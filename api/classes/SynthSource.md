@@ -86,6 +86,76 @@ ISynthSource.noise
 
 ***
 
+### plasma()
+
+```ts
+plasma(
+   scale?, 
+   speed?, 
+   phase?, 
+   contrast?): this;
+```
+
+Generate plasma-like sine field patterns.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `scale?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Spatial scale of the plasma (default: 10.0) |
+| `speed?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Animation speed (default: 0.5) |
+| `phase?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Phase offset (default: 0.0) |
+| `contrast?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Contrast adjustment (default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.plasma
+```
+
+***
+
+### moire()
+
+```ts
+moire(
+   freqA?, 
+   freqB?, 
+   angleA?, 
+   angleB?, 
+   speed?, 
+   phase?): this;
+```
+
+Generate moire interference patterns.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `freqA?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Frequency of first grating (default: 20.0) |
+| `freqB?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Frequency of second grating (default: 21.0) |
+| `angleA?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Angle of first grating in radians (default: 0.0) |
+| `angleB?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Angle of second grating in radians (default: 1.5708) |
+| `speed?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Animation speed (default: 0.1) |
+| `phase?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Phase offset (default: 0.0) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.moire
+```
+
+***
+
 ### voronoi()
 
 ```ts
@@ -659,6 +729,250 @@ osc(25, -0.1, 0.5)
 
 ```ts
 ISynthSource.kaleid
+```
+
+***
+
+### polar()
+
+```ts
+polar(angle?, radius?): this;
+```
+
+Convert coordinates to polar space.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `angle?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Angle offset in radians (default: 0.0) |
+| `radius?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Radius multiplier (default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.polar
+```
+
+***
+
+### twirl()
+
+```ts
+twirl(
+   amount?, 
+   radius?, 
+   centerX?, 
+   centerY?): this;
+```
+
+Twirl distortion with radial falloff.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Twirl strength (default: 2.0) |
+| `radius?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Effect radius (default: 0.5) |
+| `centerX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Center X (default: 0.5) |
+| `centerY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Center Y (default: 0.5) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.twirl
+```
+
+***
+
+### swirl()
+
+```ts
+swirl(
+   amount?, 
+   centerX?, 
+   centerY?): this;
+```
+
+Swirl distortion around a center.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Swirl strength (default: 4.0) |
+| `centerX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Center X (default: 0.5) |
+| `centerY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Center Y (default: 0.5) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.swirl
+```
+
+***
+
+### mirror()
+
+```ts
+mirror(mirrorX?, mirrorY?): this;
+```
+
+Mirror coordinates across X and/or Y axes.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `mirrorX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Mirror X (0-1, default: 1.0) |
+| `mirrorY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Mirror Y (0-1, default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.mirror
+```
+
+***
+
+### shear()
+
+```ts
+shear(
+   x?, 
+   y?, 
+   centerX?, 
+   centerY?): this;
+```
+
+Shear coordinates along X and Y axes.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `x?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | X shear amount (default: 0.0) |
+| `y?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Y shear amount (default: 0.0) |
+| `centerX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Center X (default: 0.5) |
+| `centerY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Center Y (default: 0.5) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.shear
+```
+
+***
+
+### barrel()
+
+```ts
+barrel(
+   amount?, 
+   centerX?, 
+   centerY?): this;
+```
+
+Barrel distortion (bulge outward).
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Distortion amount (default: 0.5) |
+| `centerX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Center X (default: 0.5) |
+| `centerY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Center Y (default: 0.5) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.barrel
+```
+
+***
+
+### pinch()
+
+```ts
+pinch(
+   amount?, 
+   centerX?, 
+   centerY?): this;
+```
+
+Pinch distortion (pull inward).
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Distortion amount (default: 0.5) |
+| `centerX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Center X (default: 0.5) |
+| `centerY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Center Y (default: 0.5) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.pinch
+```
+
+***
+
+### fisheye()
+
+```ts
+fisheye(
+   amount?, 
+   centerX?, 
+   centerY?): this;
+```
+
+Fisheye lens distortion.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Distortion amount (default: 1.0) |
+| `centerX?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Center X (default: 0.5) |
+| `centerY?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Center Y (default: 0.5) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.fisheye
 ```
 
 ***
@@ -1291,6 +1605,42 @@ ISynthSource.clamp
 
 ***
 
+### seed()
+
+```ts
+seed(value): this;
+```
+
+Set a seed for deterministic randomness in this source chain.
+
+When set, noise-based functions (noise, voronoi) will produce
+reproducible patterns. Different seeds produce different patterns.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `value` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Seed value (any number) |
+
+#### Returns
+
+`this`
+
+#### Example
+
+```typescript
+// Same seed = same pattern every time
+noise(10).seed(42).charMap('@#%*+=-:. ')
+```
+
+#### Inherited from
+
+```ts
+ISynthSource.seed
+```
+
+***
+
 ### add()
 
 ```ts
@@ -1559,6 +1909,222 @@ ISynthSource.mask
 
 ***
 
+### screen()
+
+```ts
+screen(source, amount?): this;
+```
+
+Screen blend with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to screen |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.screen
+```
+
+***
+
+### overlay()
+
+```ts
+overlay(source, amount?): this;
+```
+
+Overlay blend with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to overlay |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.overlay
+```
+
+***
+
+### softlight()
+
+```ts
+softlight(source, amount?): this;
+```
+
+Soft light blend with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to softlight |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.softlight
+```
+
+***
+
+### hardlight()
+
+```ts
+hardlight(source, amount?): this;
+```
+
+Hard light blend with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to hardlight |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.hardlight
+```
+
+***
+
+### dodge()
+
+```ts
+dodge(source, amount?): this;
+```
+
+Color dodge blend with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to dodge |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.dodge
+```
+
+***
+
+### burn()
+
+```ts
+burn(source, amount?): this;
+```
+
+Color burn blend with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to burn |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.burn
+```
+
+***
+
+### lighten()
+
+```ts
+lighten(source, amount?): this;
+```
+
+Lighten blend with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to lighten |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.lighten
+```
+
+***
+
+### darken()
+
+```ts
+darken(source, amount?): this;
+```
+
+Darken blend with another source.
+
+#### Parameters
+
+| Parameter | Type | Description |
+| ------ | ------ | ------ |
+| `source` | \| [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) \| `ISynthSource` | Source to darken |
+| `amount?` | [`SynthParameterValue`](../type-aliases/SynthParameterValue.md) | Blend amount (default: 1.0) |
+
+#### Returns
+
+`this`
+
+#### Inherited from
+
+```ts
+ISynthSource.darken
+```
+
+***
+
 ### modulate()
 
 ```ts
@@ -1818,10 +2384,10 @@ ISynthSource.modulateScrollY
 
 ```ts
 modulateRepeat(
-   source,
-   repeatX?,
-   repeatY?,
-   offsetX?,
+   source, 
+   repeatX?, 
+   repeatY?, 
+   offsetX?, 
    offsetY?): this;
 ```
 
@@ -1859,8 +2425,8 @@ ISynthSource.modulateRepeat
 
 ```ts
 modulateRepeatX(
-   source,
-   reps?,
+   source, 
+   reps?, 
    offset?): this;
 ```
 
@@ -1896,8 +2462,8 @@ ISynthSource.modulateRepeatX
 
 ```ts
 modulateRepeatY(
-   source,
-   reps?,
+   source, 
+   reps?, 
    offset?): this;
 ```
 
@@ -1990,9 +2556,9 @@ ISynthSource.charMap
 
 ```ts
 charColor(
-   rOrSource,
-   g?,
-   b?,
+   rOrSource, 
+   g?, 
+   b?, 
    a?): this;
 ```
 
@@ -2045,9 +2611,9 @@ ISynthSource.char
 
 ```ts
 cellColor(
-   rOrSource,
-   g?,
-   b?,
+   rOrSource, 
+   g?, 
+   b?, 
    a?): this;
 ```
 
@@ -2076,9 +2642,9 @@ ISynthSource.cellColor
 
 ```ts
 paint(
-   rOrSource,
-   g?,
-   b?,
+   rOrSource, 
+   g?, 
+   b?, 
    a?): this;
 ```
 

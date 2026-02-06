@@ -66,10 +66,12 @@ t.layers.base.synth(synth);
 | [charColor](functions/charColor.md) | Create a synth source with character foreground color defined. |
 | [gradient](functions/gradient.md) | Generate a rotating radial gradient. |
 | [noise](functions/noise.md) | Generate Perlin noise patterns. |
+| [plasma](functions/plasma.md) | Generate plasma-like sine field patterns. |
+| [moire](functions/moire.md) | Generate moire interference patterns. |
 | [osc](functions/osc.md) | Generate oscillating patterns using sine waves. |
 | [paint](functions/paint.md) | Create a synth source with both character and cell colors defined. |
 | [shape](functions/shape.md) | Generate geometric shapes (polygons). |
-| [solid](functions/solid.md) | Generate a solid color. |
-| [src](functions/src.md) | Sample the previous frame's output for feedback effects. |
+| [solid](functions/solid.md) | Generate a solid grayscale color. |
+| [src](functions/src.md) | Sample a source for synth compositions. |
 | [voronoi](functions/voronoi.md) | Generate voronoi patterns. |
 | [setGlobalErrorCallback](functions/setGlobalErrorCallback.md) | Set a global error callback for dynamic parameter evaluation errors. |
