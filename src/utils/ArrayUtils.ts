@@ -37,18 +37,21 @@ export const EASING_FUNCTIONS = {
  * `'easeInOutQuart'`, `'easeInQuint'`, `'easeOutQuint'`, `'easeInOutQuint'`, `'sin'`
  *
  * @example
- * ```typescript
+ * ```ts
  * const t = textmode.create({
- *   width: 800,
- *   height: 600,
+ *   width: window.innerWidth,
+ *   height: window.innerHeight,
  *   plugins: [SynthPlugin]
  * });
  *
- * // Rotating shape with eased animation
  * t.layers.base.synth(
  *   shape(4)
- *     .rotate([-3.14, 3.14].ease('easeInOutCubic'))
+ *     .rotate([-1.5, 1.5].ease('easeInOutCubic'))
  * );
+ *
+ * t.windowResized(() => {
+ *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+ * });
  * ```
  */
 export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => number);
@@ -61,18 +64,21 @@ export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => num
  * manually tracking time or state.
  *
  * @example
- * ```typescript
+ * ```ts
  * const t = textmode.create({
- *   width: 800,
- *   height: 600,
+ *   width: window.innerWidth,
+ *   height: window.innerHeight,
  *   plugins: [SynthPlugin]
  * });
  *
- * // Rotating shape with eased animation
  * t.layers.base.synth(
- *   shape(4)
- *     .rotate([-3.14, 3.14].ease('easeInOutCubic'))
+ *   osc([4, 8, 12].fast(1.5), 0.1, 1.2)
+ *     .kaleid(5)
  * );
+ *
+ * t.windowResized(() => {
+ *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+ * });
  * ```
  */
 export interface ModulatedArray extends Array<number> {
@@ -95,17 +101,21 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * ```typescript
-	 * // Fast cycling through frequencies
-	 * osc([1, 2, 4].fast(2), 0.1, 1.5)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Slow cycling through scroll positions
-	 * shape(4).scrollX([-0.5, 0.5].fast(0.3))
+	 * t.layers.base.synth(
+	 *   osc([4, 8, 12].fast(2), 0.1, 1.2)
+	 *     .kaleid(5)
+	 * );
 	 *
-	 * // Use same array for multiple parameters
-	 * const speeds = [1, 3, 6].fast(2);
-	 * osc(speeds, 0.1, 1.5, 16)
-	 *   .charColor(osc(speeds, 0.1, 1.5))
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	fast(speed: number): this;
@@ -121,15 +131,21 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * ```typescript
-	 * // Smooth scrolling between positions
-	 * shape(999).scrollX([-0.2, 0.2].smooth())
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Gentle rotation animation
-	 * shape(4).rotate([-3.14, 0, 3.14].smooth(0.8))
+	 * t.layers.base.synth(
+	 *   shape(5, 0.4)
+	 *     .scale([0.6, 1.2].smooth(0.8))
+	 * );
 	 *
-	 * // Smooth color transitions
-	 * solid([0, 0.5, 1].smooth(), 0, 0)
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	smooth(amount?: number): this;
@@ -150,23 +166,21 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * ```typescript
-	 * // Smooth rotation with cubic easing
-	 * shape(4).rotate([-3.14, 3.14].ease('easeInOutCubic'))
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Sine wave easing for natural motion
-	 * shape(3).scale([0.5, 1.5].ease('sin'))
+	 * t.layers.base.synth(
+	 *   shape(4)
+	 *     .rotate([-1.5, 1.5].ease('sin'))
+	 * );
 	 *
-	 * // Custom easing function (bounce effect)
-	 * const bounce = (t) => {
-	 *   const n1 = 7.5625;
-	 *   const d1 = 2.75;
-	 *   if (t < 1 / d1) return n1 * t * t;
-	 *   if (t < 2 / d1) return n1 * (t -= 1.5 / d1) * t + 0.75;
-	 *   if (t < 2.5 / d1) return n1 * (t -= 2.25 / d1) * t + 0.9375;
-	 *   return n1 * (t -= 2.625 / d1) * t + 0.984375;
-	 * };
-	 * shape(5).scale([0.8, 1.2].ease(bounce))
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	ease(ease: EasingFunction): this;
@@ -185,21 +199,23 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * ```typescript
-	 * // Two shapes scrolling in opposite phase
-	 * shape(999).scrollX([-0.2, 0.2])
-	 *   .add(shape(4).scrollX([-0.2, 0.2].offset(0.5)))
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Create layered animations with phase shifts
-	 * const positions = [-0.3, 0.3];
-	 * shape(3).scroll(positions, positions.offset(0.25))
+	 * const base = [6, 12, 18].fast(1.5);
 	 *
-	 * // Three oscillators with 120° phase difference
-	 * osc([5, 10].offset(0)).add(
-	 *   osc([5, 10].offset(0.33)), 0.5
-	 * ).add(
-	 *   osc([5, 10].offset(0.66)), 0.5
-	 * )
+	 * t.layers.base.synth(
+	 *   osc(base, 0.1, 1.2)
+	 *     .layer(osc(base.offset(0.5), 0.1, 1.2), 0.5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	offset(offset: number): this;
@@ -219,16 +235,21 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns A new ModulatedArray with remapped values
 	 *
 	 * @example
-	 * ```typescript
-	 * // Remap 0-4 range to -0.2 to 0.2 for subtle scrolling
-	 * shape(999).scrollX([0, 1, 2, 3, 4].fit(-0.2, 0.2))
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Normalize arbitrary values to 0-1 range
-	 * const values = [50, 100, 75, 125].fit(0, 1);
-	 * solid(values, 0, 0)
+	 * t.layers.base.synth(
+	 *   shape(6)
+	 *     .scale([2, 6].fit(0.5, 1.5))
+	 * );
 	 *
-	 * // Combine with other modulation
-	 * shape(3).scale([0, 100].fit(0.5, 1.5).smooth().fast(0.5))
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	fit(low: number, high: number): ModulatedArray;

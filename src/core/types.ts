@@ -71,16 +71,21 @@ export type SynthParameterValue =
  * Context passed to dynamic parameter functions during rendering.
  *
  * @example
- * ```typescript
+ * ```ts
  * const t = textmode.create({
- *   width: 800,
- *   height: 600,
+ *   width: window.innerWidth,
+ *   height: window.innerHeight,
  *   plugins: [SynthPlugin]
  * });
  *
  * t.layers.base.synth(
- *   noise((ctx) => Math.sin(ctx.time) * 10)
+ *   noise((ctx) => 6 + Math.sin(ctx.time) * 4)
+ *     .kaleid(5)
  * );
+ *
+ * t.windowResized(() => {
+ *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+ * });
  * ```
  */
 export interface SynthContext {

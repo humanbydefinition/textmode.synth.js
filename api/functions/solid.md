@@ -20,6 +20,25 @@ Generate a solid grayscale color.
 
 [`SynthSource`](../classes/SynthSource.md)
 
+### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  solid(0.4)
+    .char(osc(6, 0.1, 1.2))
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 ## Call Signature
 
 ```ts
@@ -47,17 +66,19 @@ Generate a solid color.
 
 ### Example
 
-```typescript
+```ts
 const t = textmode.create({
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
   plugins: [SynthPlugin]
 });
 
-// Solid colors with array modulation
 t.layers.base.synth(
-  solid(0.6, 0, 0, 1)
-    .charColor(solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1))
-    .cellColor(solid([1, 0, 0], [0, 1, 0], [0, 0, 1], 1).invert())
+  solid(0.1, 0.2, 0.5, 1)
+    .char(noise(8))
 );
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```

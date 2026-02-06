@@ -17,14 +17,21 @@ export interface ISynthSource {
 	 *
 	 * @example
 	 * ```ts
-	 * // Map noise values to ASCII art characters
-	 * noise(10).charMap('@#%*+=-:. ')
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Use lowercase alphabet characters
-	 * osc(1).charMap('abcdefghijklmnopqrstuvwxyz')
+	 * t.layers.base.synth(
+	 *   char(noise(8))
+	 *     .charMap('@#%*+=-:. ')
+	 *     .charColor(osc(6, 0.1, 1.2))
+	 * );
 	 *
-	 * // Use custom symbols
-	 * gradient().charMap('-<>^v')
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	charMap(chars: string): this;
@@ -37,14 +44,20 @@ export interface ISynthSource {
 	 *
 	 * @example
 	 * ```ts
-	 * // Use oscillator for grayscale colors
-	 * noise(10).charColor(osc(5, 0.1))
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Use solid color
-	 * noise(10).charColor(solid(1, 0.5, 0))
+	 * t.layers.base.synth(
+	 *   noise(8)
+	 *     .charColor(osc(6, 0.1, 1.2).kaleid(4))
+	 * );
 	 *
-	 * // Use gradient
-	 * noise(10).charColor(gradient(0.5).hue(0.3))
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	charColor(source: ISynthSource): this;
@@ -59,8 +72,20 @@ export interface ISynthSource {
 	 *
 	 * @example
 	 * ```ts
-	 * // Set solid red color
-	 * noise(10).charColor(1, 0, 0)
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(8)
+	 *     .charColor(1, 0.2, 0.1, 1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	charColor(
@@ -72,6 +97,24 @@ export interface ISynthSource {
 	/**
 	 * Set the character foreground color using a grayscale value.
 	 * @param gray - Grayscale value (0-1)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(8)
+	 *     .charColor(0.9)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	charColor(gray: SynthParameterValue): this;
 
@@ -83,11 +126,20 @@ export interface ISynthSource {
 	 *
 	 * @example
 	 * ```ts
-	 * // Transparent background
-	 * noise(10).cellColor(solid(0, 0, 0, 0))
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Complement of character color
-	 * noise(10).charColor(osc(5)).cellColor(osc(5).invert())
+	 * t.layers.base.synth(
+	 *   noise(8)
+	 *     .cellColor(osc(6, 0.1, 1.2).invert())
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	cellColor(source: ISynthSource): this;
@@ -102,8 +154,20 @@ export interface ISynthSource {
 	 *
 	 * @example
 	 * ```ts
-	 * // Set semi-transparent black background
-	 * noise(10).cellColor(0, 0, 0, 0.5)
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(8)
+	 *     .cellColor(0.05, 0.08, 0.1, 0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	cellColor(
@@ -115,6 +179,24 @@ export interface ISynthSource {
 	/**
 	 * Set the cell background color using a grayscale value.
 	 * @param gray - Grayscale value (0-1)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(8)
+	 *     .cellColor(0.2)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	cellColor(gray: SynthParameterValue): this;
 
@@ -128,11 +210,21 @@ export interface ISynthSource {
 	 *
 	 * @example
 	 * ```ts
-	 * // Use noise to select characters from charMap
-	 * char(noise(10)).charMap('@#%*+=-:. ')
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Use oscillator with default font characters
-	 * char(osc(5))
+	 * t.layers.base.synth(
+	 *   char(osc(6, 0.1, 1.2))
+	 *     .charMap('@#%*+=-:. ')
+	 *     .charColor(osc(12, 0.05, 0.2))
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	char(source: ISynthSource): this;
@@ -150,13 +242,20 @@ export interface ISynthSource {
 	 *
 	 * @example
 	 * ```ts
-	 * // Apply same color to both character and cell background
-	 * noise(10).paint(osc(5, 0.1).kaleid(4))
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Apply color to both, then invert just the cell background
-	 * noise(10)
-	 *   .paint(voronoi(10, 0.5).mult(osc(20)))
-	 *   .cellColor(voronoi(10, 0.5).mult(osc(20)).invert())
+	 * t.layers.base.synth(
+	 *   noise(8)
+	 *     .paint(osc(6, 0.1, 1.2).kaleid(4))
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	paint(source: ISynthSource): this;
@@ -171,8 +270,20 @@ export interface ISynthSource {
 	 *
 	 * @example
 	 * ```ts
-	 * // Paint everything white
-	 * noise(10).paint(1, 1, 1)
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(8)
+	 *     .paint(0.9, 0.8, 0.7)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	paint(
@@ -184,6 +295,24 @@ export interface ISynthSource {
 	/**
 	 * Set both character foreground and cell background color using a grayscale value.
 	 * @param gray - Grayscale value (0-1)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(8)
+	 *     .paint(0.3)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	paint(gray: SynthParameterValue): this;
 
@@ -196,17 +325,23 @@ export interface ISynthSource {
 	 *
 	 * @example
 	 * ```ts
-	 * // Create a color chain and use a modified clone for cell color
-	 * const colorChain = voronoi(10, 0.5).mult(osc(20));
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * noise(10)
-	 *   .paint(colorChain)
-	 *   .cellColor(colorChain.clone().invert())
+	 * const base = osc(6, 0.1, 1.2).kaleid(4);
 	 *
-	 * // Or use it to create variations of a base pattern
-	 * const base = osc(10, 0.1);
-	 * const rotated = base.clone().rotate(0.5);
-	 * const scaled = base.clone().scale(2);
+	 * t.layers.base.synth(
+	 *   noise(8)
+	 *     .charColor(base)
+	 *     .cellColor(base.clone().invert())
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	clone(): ISynthSource;
@@ -216,6 +351,25 @@ export interface ISynthSource {
 	 * @param frequency - Frequency of the oscillation (default: 60.0)
 	 * @param sync - Synchronization offset (default: 0.1)
 	 * @param offset - Phase offset (default: 0.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(8, 0.1, 1.2)
+	 *     .kaleid(5)
+	 *     .color(0.9, 0.2, 1.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	osc(
 		frequency?: SynthParameterValue,
@@ -227,6 +381,24 @@ export interface ISynthSource {
 	 * Generate Perlin noise patterns.
 	 * @param scale - Scale of the noise pattern (default: 10.0)
 	 * @param speed - Animation speed (default: 0.1)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(10, 0.1)
+	 *     .color(0.2, 0.6, 1.0)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	noise(scale?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -236,6 +408,24 @@ export interface ISynthSource {
 	 * @param speed - Animation speed (default: 0.5)
 	 * @param phase - Phase offset (default: 0.0)
 	 * @param contrast - Contrast adjustment (default: 1.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   plasma(8, 0.6, 0.2, 1.3)
+	 *     .kaleid(4)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	plasma(
 		scale?: SynthParameterValue,
@@ -252,6 +442,24 @@ export interface ISynthSource {
 	 * @param angleB - Angle of second grating in radians (default: 1.5708)
 	 * @param speed - Animation speed (default: 0.1)
 	 * @param phase - Phase offset (default: 0.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   moire(14, 15, 0.2, 1.2, 0.2, 0.1)
+	 *     .color(0.7, 0.5, 1.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	moire(
 		freqA?: SynthParameterValue,
@@ -267,6 +475,24 @@ export interface ISynthSource {
 	 * @param scale - Scale of voronoi cells (default: 5.0)
 	 * @param speed - Animation speed (default: 0.3)
 	 * @param blending - Blending between cell regions (default: 0.3)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   voronoi(6, 0.4, 0.2)
+	 *     .color(0.8, 0.4, 1.2)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	voronoi(
 		scale?: SynthParameterValue,
@@ -279,8 +505,21 @@ export interface ISynthSource {
 	 * @param speed - Rotation speed (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * gradient([1,2,4])
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   gradient(0.2)
+	 *     .kaleid(5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	gradient(speed?: SynthParameterValue): this;
@@ -290,6 +529,24 @@ export interface ISynthSource {
 	 * @param sides - Number of sides (default: 3)
 	 * @param radius - Radius of the shape (default: 0.3)
 	 * @param smoothing - Edge smoothing amount (default: 0.01)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(6, 0.35, 0.02)
+	 *     .rotate(() => t.secs)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	shape(
 		sides?: SynthParameterValue,
@@ -300,6 +557,24 @@ export interface ISynthSource {
 	/**
 	 * Generate a solid grayscale color.
 	 * @param gray - Grayscale value (0-1)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   solid(0.4)
+	 *     .char(osc(6, 0.1, 1.2))
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	solid(gray: SynthParameterValue): this;
 	/**
@@ -308,6 +583,24 @@ export interface ISynthSource {
 	 * @param g - Green channel (0-1, default: 0.0)
 	 * @param b - Blue channel (0-1, default: 0.0)
 	 * @param a - Alpha channel (0-1, default: 1.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   solid(0.1, 0.2, 0.5, 1)
+	 *     .char(noise(8))
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	solid(
 		r?: SynthParameterValue,
@@ -338,17 +631,22 @@ export interface ISynthSource {
 	 * @param layer - Optional TextmodeLayer to sample from. If omitted, samples from self (feedback).
 	 *
 	 * @example
-	 * ```typescript
-	 * // Classic hydra-style feedback loop with noise modulation
-	 * src().modulate(noise(3), 0.005).blend(shape(4), 0.01)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Feedback with color shift
-	 * src().hue(0.01).scale(1.01).blend(osc(10), 0.1)
+	 * t.layers.base.synth(
+	 *   src()
+	 *     .scale(1.01)
+	 *     .blend(osc(6, 0.1, 1.2), 0.1)
+	 * );
 	 *
-	 * // Context-aware: src() samples the appropriate texture automatically
-	 * char(noise(10).diff(src()))           // src() → character feedback
-	 *   .charColor(osc(5).blend(src(), 0.5)) // src() → primary color feedback
-	 *   .cellColor(voronoi().diff(src()))    // src() → cell color feedback
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	src(layer?: TextmodeLayer): this;
@@ -359,11 +657,22 @@ export interface ISynthSource {
 	 * @param speed - Rotation speed multiplier (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Rotate shape continuously
-	 * osc(50, 0, 0)
-	 *   .rotate((ctx) => ctx.time % 360)
-	 *   .charColor(osc(50).rotate((ctx) => ctx.time % 360));
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(8, 0.1, 1.2)
+	 *     .rotate(0.4, 0.1)
+	 *     .kaleid(5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	rotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this;
@@ -377,9 +686,21 @@ export interface ISynthSource {
 	 * @param offsetY - Y offset (default: 0.5)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Scale a triangle shape
-	 * shape(3).scale(1.5, 1, 1);
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(4, 0.35)
+	 *     .scale(1.6, 1.2, 0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	scale(
@@ -398,9 +719,21 @@ export interface ISynthSource {
 	 * @param speedY - Y scroll speed (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Scroll a shape diagonally
-	 * shape(3).scroll(0.1, -0.3);
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(6, 0.1)
+	 *     .scroll(0.2, -0.1, 0.05, 0.02)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	scroll(
@@ -416,9 +749,21 @@ export interface ISynthSource {
 	 * @param speed - Scroll speed (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Scroll noise horizontally
-	 * noise(10).scrollX(0.5, 0.1)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(8, 0.1, 1.2)
+	 *     .scrollX(0.3, 0.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	scrollX(scrollX?: SynthParameterValue, speed?: SynthParameterValue): this;
@@ -429,9 +774,22 @@ export interface ISynthSource {
 	 * @param speed - Scroll speed (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Scroll noise vertically
-	 * noise(10).scrollY(0.5, 0.1)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(8, 0.1, 1.2)
+	 *     .rotate(0.5)
+	 *     .scrollY(-0.3, 0.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	scrollY(scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
@@ -442,11 +800,22 @@ export interface ISynthSource {
 	 * @param pixelY - Pixel size in Y (default: 20.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Pixelate noise pattern
-	 * noise(1, 0.05)
-	 *   .pixelate(20, 20)
-	 *   .charColor(noise().pixelate(20, 20));
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(8, 0.1)
+	 *     .pixelate(12, 8)
+	 *     .color(0.9, 0.6, 0.2)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	pixelate(pixelX?: SynthParameterValue, pixelY?: SynthParameterValue): this;
@@ -459,11 +828,21 @@ export interface ISynthSource {
 	 * @param offsetY - Y offset between repetitions (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Repeat a shape in a 3x3 grid
-	 * shape(3)
-	 *   .repeat(3, 3, 0, 0)
-	 *   .charColor(shape().repeat(3, 3, 0, 0));
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(4, 0.25)
+	 *     .repeat(4, 3, 0.1, 0.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	repeat(
@@ -479,9 +858,21 @@ export interface ISynthSource {
 	 * @param offset - Offset between repetitions (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Repeat pattern horizontally 5 times
-	 * shape(4).repeatX(5, 0)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(4, 0.25)
+	 *     .repeatX(6, 0.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	repeatX(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
@@ -492,9 +883,21 @@ export interface ISynthSource {
 	 * @param offset - Offset between repetitions (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Repeat pattern vertically 5 times
-	 * shape(4).repeatY(5, 0)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(4, 0.25)
+	 *     .repeatY(6, 0.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	repeatY(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
@@ -504,11 +907,22 @@ export interface ISynthSource {
 	 * @param nSides - Number of kaleidoscope sides (default: 4.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Create a 50-sided kaleidoscope pattern
-	 * osc(25, -0.1, 0.5)
-	 *   .kaleid(50)
-	 *   .charColor(osc(25, -0.1, 0.5).kaleid(50));
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .kaleid(7)
+	 *     .color(0.9, 0.2, 1.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	kaleid(nSides?: SynthParameterValue): this;
@@ -517,6 +931,25 @@ export interface ISynthSource {
 	 * Convert coordinates to polar space.
 	 * @param angle - Angle offset in radians (default: 0.0)
 	 * @param radius - Radius multiplier (default: 1.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   gradient(0.2)
+	 *     .polar(0.2, 1.2)
+	 *     .kaleid(5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	polar(angle?: SynthParameterValue, radius?: SynthParameterValue): this;
 
@@ -526,6 +959,24 @@ export interface ISynthSource {
 	 * @param radius - Effect radius (default: 0.5)
 	 * @param centerX - Center X (default: 0.5)
 	 * @param centerY - Center Y (default: 0.5)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(5, 0.35)
+	 *     .twirl(1.5, 0.4)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	twirl(
 		amount?: SynthParameterValue,
@@ -539,6 +990,24 @@ export interface ISynthSource {
 	 * @param amount - Swirl strength (default: 4.0)
 	 * @param centerX - Center X (default: 0.5)
 	 * @param centerY - Center Y (default: 0.5)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(4, 0.1)
+	 *     .swirl(3, 0.5, 0.5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	swirl(
 		amount?: SynthParameterValue,
@@ -550,6 +1019,24 @@ export interface ISynthSource {
 	 * Mirror coordinates across X and/or Y axes.
 	 * @param mirrorX - Mirror X (0-1, default: 1.0)
 	 * @param mirrorY - Mirror Y (0-1, default: 1.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(8, 0.1, 1.2)
+	 *     .mirror(1, 0)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	mirror(mirrorX?: SynthParameterValue, mirrorY?: SynthParameterValue): this;
 
@@ -559,6 +1046,24 @@ export interface ISynthSource {
 	 * @param y - Y shear amount (default: 0.0)
 	 * @param centerX - Center X (default: 0.5)
 	 * @param centerY - Center Y (default: 0.5)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(4, 0.3)
+	 *     .shear(0.2, -0.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	shear(
 		x?: SynthParameterValue,
@@ -572,6 +1077,24 @@ export interface ISynthSource {
 	 * @param amount - Distortion amount (default: 0.5)
 	 * @param centerX - Center X (default: 0.5)
 	 * @param centerY - Center Y (default: 0.5)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   gradient(0.2)
+	 *     .barrel(0.6)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	barrel(
 		amount?: SynthParameterValue,
@@ -584,6 +1107,24 @@ export interface ISynthSource {
 	 * @param amount - Distortion amount (default: 0.5)
 	 * @param centerX - Center X (default: 0.5)
 	 * @param centerY - Center Y (default: 0.5)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   gradient(0.2)
+	 *     .pinch(0.6)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	pinch(
 		amount?: SynthParameterValue,
@@ -596,6 +1137,24 @@ export interface ISynthSource {
 	 * @param amount - Distortion amount (default: 1.0)
 	 * @param centerX - Center X (default: 0.5)
 	 * @param centerY - Center Y (default: 0.5)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(8, 0.1, 1.2)
+	 *     .fisheye(0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	fisheye(
 		amount?: SynthParameterValue,
@@ -608,11 +1167,21 @@ export interface ISynthSource {
 	 * @param amount - Brightness adjustment amount (default: 0.4)
 	 *
 	 * @example
-	 * ```typescript
-	 * osc(1)
-	 *   .charColor(
-	 *     osc(20, 0, 2).brightness(() => Math.sin(t.secs()))
-	 *   )
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(8, 0.1, 1.2)
+	 *     .brightness(0.2)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	brightness(amount?: SynthParameterValue): this;
@@ -622,11 +1191,21 @@ export interface ISynthSource {
 	 * @param amount - Contrast amount (default: 1.6)
 	 *
 	 * @example
-	 * ```typescript
-	 * osc(1)
-	 *   .charColor(
-	 *     osc(20).contrast((ctx) => Math.sin(ctx.time) * 5)
-	 *   )
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(8, 0.1, 1.2)
+	 *     .contrast(1.6)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	contrast(amount?: SynthParameterValue): this;
@@ -636,10 +1215,21 @@ export interface ISynthSource {
 	 * @param amount - Inversion amount (default: 1.0)
 	 *
 	 * @example
-	 * ```typescript
-	 *  solid(0.2, 0, 0, 1)
-	 *     .charColor(solid(1, 1, 1).invert([0, 1]))
-	 *     .cellColor(solid(1, 1, 1).invert([1, 0]))
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(4, 0.35)
+	 *     .invert(1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	invert(amount?: SynthParameterValue): this;
@@ -649,12 +1239,21 @@ export interface ISynthSource {
 	 * @param amount - Saturation amount (default: 2.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Animate saturation
-	 * osc(10, 0, 1)
-	 *   .charColor(
-	 *     osc(10, 0, 1).saturate((ctx) => Math.sin(ctx.time) * 10)
-	 *   );
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .saturate(2.5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	saturate(amount?: SynthParameterValue): this;
@@ -664,11 +1263,21 @@ export interface ISynthSource {
 	 * @param hue - Hue shift amount (default: 0.4)
 	 *
 	 * @example
-	 * ```typescript
-	 * osc(1)
-	 *   .charColor(
-	 *     osc(30, 0.1, 1).hue((ctx) => Math.sin(ctx.time))
-	 *   )
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .hue(0.3)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	hue(hue?: SynthParameterValue): this;
@@ -678,9 +1287,21 @@ export interface ISynthSource {
 	 * @param amount - Effect amount (default: 0.005)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Create color cycle effect on oscillator
-	 * noise(4).colorama(0.3)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(4, 0.1)
+	 *     .colorama(0.2)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	colorama(amount?: SynthParameterValue): this;
@@ -691,13 +1312,21 @@ export interface ISynthSource {
 	 * @param gamma - Gamma correction (default: 0.6)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Posterize gradient with array modulation
-	 * gradient(0, 16)
-	 *   .rotate(1.57)
-	 *   .charColor(
-	 *     gradient(0).posterize([1, 5, 15, 30], 0.5)
-	 *   );
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   gradient(0.2)
+	 *     .posterize(4, 0.7)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	posterize(bins?: SynthParameterValue, gamma?: SynthParameterValue): this;
@@ -708,9 +1337,21 @@ export interface ISynthSource {
 	 * @param tolerance - Tolerance range (default: 0.1)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Apply threshold to oscillator
-	 * osc(10,0,1).luma(0.5,0.1)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(10, 0.1, 1.2)
+	 *     .luma(0.5, 0.2)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	luma(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
@@ -719,12 +1360,48 @@ export interface ISynthSource {
 	 * Apply hard threshold.
 	 * @param threshold - Threshold value (default: 0.5)
 	 * @param tolerance - Tolerance range (default: 0.04)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(6, 0.1)
+	 *     .thresh(0.4, 0.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	thresh(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
 
 	/**
 	 * Multiply all channels by a scalar value (grayscale).
 	 * @param gray - Scalar multiplier
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(8, 0.1, 1.2)
+	 *     .color(0.6)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	color(gray: SynthParameterValue): this;
 	/**
@@ -739,12 +1416,21 @@ export interface ISynthSource {
 	 * @param a - Alpha channel multiplier (default: 1.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Create a blue oscillator
-	 * osc(10).color(0, 0.5, 1.0)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Colorize noise with a red tint
-	 * noise(5).color(1, 0.2, 0.2)
+	 * t.layers.base.synth(
+	 *   osc(10, 0.1, 1.2)
+	 *     .color(0.2, 0.6, 1.0)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	color(
@@ -760,12 +1446,22 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Extract red channel as grayscale
-	 * voronoi(5).hue(0.4).r()
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Convert red intensity to character indices
-	 * char(osc(10).hue(0.5).r())
+	 * t.layers.base.synth(
+	 *   osc(8, 0.1, 1.2)
+	 *     .hue(0.4)
+	 *     .r(1.2, 0.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	r(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
@@ -776,8 +1472,22 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * osc(4,0.1,1.5).layer(gradient().g())
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   gradient(0.2)
+	 *     .g(1.2, 0.1)
+	 *     .kaleid(5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	g(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
@@ -788,8 +1498,22 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * osc(8,0.1,1.5).layer(gradient().colorama(1).b())
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   gradient(0.2)
+	 *     .colorama(0.2)
+	 *     .b(1.2, 0.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	b(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
@@ -800,6 +1524,24 @@ export interface ISynthSource {
 	 * @param g - Green channel shift (default: 0.0)
 	 * @param b - Blue channel shift (default: 0.0)
 	 * @param a - Alpha channel shift (default: 0.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(8, 0.1, 1.2)
+	 *     .shift(0.2, -0.1, 0.1, 0)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	shift(
 		r?: SynthParameterValue,
@@ -813,9 +1555,21 @@ export interface ISynthSource {
 	 * @param amount - Gamma value (default: 1.0, < 1.0 brightens, > 1.0 darkens)
 	 *
 	 * @example
-	 * ```typescript
-	 * osc(1)
-	 *   .charColor(osc(5).gamma([1.0, 1.5, 2.0].smooth(4)))
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(8, 0.1, 1.2)
+	 *     .gamma(1.4)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	gamma(amount?: SynthParameterValue): this;
@@ -829,14 +1583,21 @@ export interface ISynthSource {
 	 * @param gamma - Gamma correction (default: 1.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Expand tonal range from 0.2-0.8 to 0-1
-	 * noise(10)
-	 *   .charColor(noise(5).levels(0.2, 0.8, 0.0, 1.0, 1.0))
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
 	 *
-	 * // Compress highlights, boost shadows
-	 * voronoi(8)
-	 *   .charColor(voronoi(5).levels(0.0, 1.0, 0.2, 0.9, 0.8))
+	 * t.layers.base.synth(
+	 *   noise(8, 0.1)
+	 *     .levels(0.1, 0.9, 0.0, 1.0, 1.2)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	levels(
@@ -853,8 +1614,22 @@ export interface ISynthSource {
 	 * @param max - Maximum value (default: 1.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * osc(5).add(osc(8), 0.8).add(osc(12), 0.6).clamp(0.2, 0.8)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .add(osc(12, 0.1, 0.5), 0.6)
+	 *     .clamp(0.2, 0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	clamp(min?: SynthParameterValue, max?: SynthParameterValue): this;
@@ -868,9 +1643,22 @@ export interface ISynthSource {
 	 * @param value - Seed value (any number)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Same seed = same pattern every time
-	 * noise(10).seed(42).charMap('@#%*+=-:. ')
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(10, 0.1)
+	 *     .seed(42)
+	 *     .charMap('@#%*+=-:. ')
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	seed(value: SynthParameterValue): this;
@@ -881,11 +1669,21 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 0.5)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Add two shapes with animated blend amount
-	 * shape(3)
-	 *   .scale(0.5)
-	 *   .add(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(3, 0.3)
+	 *     .add(shape(4, 0.25).rotate(0.3), 0.5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	add(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
@@ -896,18 +1694,16 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 0.5)
 	 *
 	 * @example
-	 * ```typescript
+	 * ```ts
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
-	 *   fontSize: 8,
 	 *   plugins: [SynthPlugin]
 	 * });
 	 *
-	 * // Subtract a smaller circle from a larger one to create a ring
 	 * t.layers.base.synth(
 	 *   shape(100, 0.5)
-	 *     .sub(shape(100, 0.3))
+	 *     .sub(shape(100, 0.3), 1)
 	 * );
 	 *
 	 * t.windowResized(() => {
@@ -923,18 +1719,16 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 0.5)
 	 *
 	 * @example
-	 * ```typescript
+	 * ```ts
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
-	 *   fontSize: 8,
 	 *   plugins: [SynthPlugin]
 	 * });
 	 *
-	 * // Multiply noise with a shape to create a textured polygon
 	 * t.layers.base.synth(
-	 *   shape(3, 0.5)
-	 *     .mult(noise(10, 0.1))
+	 *   shape(4, 0.4)
+	 *     .mult(noise(10, 0.1), 0.8)
 	 *     .color(1, 0.5, 0.2)
 	 * );
 	 *
@@ -951,11 +1745,21 @@ export interface ISynthSource {
 	 * @param amount - Blend amount (default: 0.5)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Blend two shapes
-	 * shape(3)
-	 *   .scale(0.5)
-	 *   .blend(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(3, 0.3)
+	 *     .blend(shape(4, 0.4), 0.5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	blend(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
@@ -965,8 +1769,21 @@ export interface ISynthSource {
 	 * @param source - Source to compare
 	 *
 	 * @example
-	 * ```typescript
-	 * osc(1, 0.1, 2).diff(osc(1, 0.5, 5))
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .diff(osc(12, 0.2, 0.4))
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	diff(source: ISynthSource | SynthParameterValue): this;
@@ -976,10 +1793,21 @@ export interface ISynthSource {
 	 * @param source - Source to layer
 	 *
 	 * @example
-	 * ```typescript
-	 *   osc(1)
-	 *   .charColor(osc(30).layer(osc(15).rotate(1).luma()))
-	 *   .cellColor(osc(30).layer(osc(15).rotate(1).luma()).invert())
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .layer(osc(12, 0.2, 0.4).rotate(0.5), 0.5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	layer(source: ISynthSource | SynthParameterValue): this;
@@ -989,9 +1817,21 @@ export interface ISynthSource {
 	 * @param source - Source to use as mask
 	 *
 	 * @example
-	 * ```typescript
-	 * // Mask gradient with voronoi pattern
-	 * gradient(5).mask(voronoi()).invert([0, 1])
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   gradient(0.2)
+	 *     .mask(voronoi(6, 0.4, 0.2))
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	mask(source: ISynthSource | SynthParameterValue): this;
@@ -1000,6 +1840,24 @@ export interface ISynthSource {
 	 * Screen blend with another source.
 	 * @param source - Source to screen
 	 * @param amount - Blend amount (default: 1.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .screen(osc(12, 0.2, 0.4), 0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	screen(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -1007,6 +1865,24 @@ export interface ISynthSource {
 	 * Overlay blend with another source.
 	 * @param source - Source to overlay
 	 * @param amount - Blend amount (default: 1.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .overlay(osc(12, 0.2, 0.4), 0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	overlay(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -1014,6 +1890,24 @@ export interface ISynthSource {
 	 * Soft light blend with another source.
 	 * @param source - Source to softlight
 	 * @param amount - Blend amount (default: 1.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .softlight(osc(12, 0.2, 0.4), 0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	softlight(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -1021,6 +1915,24 @@ export interface ISynthSource {
 	 * Hard light blend with another source.
 	 * @param source - Source to hardlight
 	 * @param amount - Blend amount (default: 1.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .hardlight(osc(12, 0.2, 0.4), 0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	hardlight(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -1028,6 +1940,24 @@ export interface ISynthSource {
 	 * Color dodge blend with another source.
 	 * @param source - Source to dodge
 	 * @param amount - Blend amount (default: 1.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .dodge(osc(12, 0.2, 0.4), 0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	dodge(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -1035,6 +1965,24 @@ export interface ISynthSource {
 	 * Color burn blend with another source.
 	 * @param source - Source to burn
 	 * @param amount - Blend amount (default: 1.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .burn(osc(12, 0.2, 0.4), 0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	burn(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -1042,6 +1990,24 @@ export interface ISynthSource {
 	 * Lighten blend with another source.
 	 * @param source - Source to lighten
 	 * @param amount - Blend amount (default: 1.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .lighten(osc(12, 0.2, 0.4), 0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	lighten(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -1049,6 +2015,24 @@ export interface ISynthSource {
 	 * Darken blend with another source.
 	 * @param source - Source to darken
 	 * @param amount - Blend amount (default: 1.0)
+	 *
+	 * @example
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .darken(osc(12, 0.2, 0.4), 0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
+	 * ```
 	 */
 	darken(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -1058,9 +2042,21 @@ export interface ISynthSource {
 	 * @param amount - Modulation amount (default: 0.1)
 	 *
 	 * @example
-	 * ```typescript
-	 * osc(3, 0, 2)
-	 *     .modulate(noise().add(gradient(), -1), 1)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .modulate(noise(3, 0.1), 0.2)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	modulate(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
@@ -1072,9 +2068,21 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 1.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Modulate scale of shape with oscillator
-	 * shape(3).modulateScale(osc(10), 10, 0)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(4, 0.35)
+	 *     .modulateScale(osc(6, 0.1, 1.2), 1.5, 0.2)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	modulateScale(
@@ -1090,9 +2098,21 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * // Modulate rotation of shape with noise
-	 * shape(3).modulateRotate(noise(2), 2, 0)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(4, 0.35)
+	 *     .modulateRotate(noise(2, 0.1), 0.5, 0)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	modulateRotate(
@@ -1108,8 +2128,21 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 3.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * noise(3).modulatePixelate(noise(1, 0).pixelate(8, 8), 1024, 8)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   noise(4, 0.1)
+	 *     .modulatePixelate(osc(8, 0.1, 1.2), 20, 5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	modulatePixelate(
@@ -1124,9 +2157,21 @@ export interface ISynthSource {
 	 * @param nSides - Number of sides (default: 4.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * osc(2, 0.1, 2)
-	 *     .modulateKaleid(osc(16).kaleid(999), 1)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .modulateKaleid(osc(12, 0.2, 0.4), 7)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	modulateKaleid(source: ISynthSource | SynthParameterValue, nSides?: SynthParameterValue): this;
@@ -1138,8 +2183,21 @@ export interface ISynthSource {
 	 * @param speed - Scroll speed (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * osc(10).modulateScrollX(osc(10), 0.5, 0)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .modulateScrollX(noise(3, 0.1), 0.5, 0.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	modulateScrollX(
@@ -1155,8 +2213,21 @@ export interface ISynthSource {
 	 * @param speed - Scroll speed (default: 0.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * osc(10).modulateScrollY(osc(10), 0.5, 0)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   osc(6, 0.1, 1.2)
+	 *     .modulateScrollY(noise(3, 0.1), 0.5, 0.1)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	modulateScrollY(
@@ -1174,8 +2245,21 @@ export interface ISynthSource {
 	 * @param offsetY - Y offset (default: 0.5)
 	 *
 	 * @example
-	 * ```typescript
-	 * shape(4).modulateRepeat(noise(3), 3, 3, 0.5, 0.5)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(4, 0.25)
+	 *     .modulateRepeat(osc(6, 0.1, 1.2), 3, 3, 0.2, 0.2)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	modulateRepeat(
@@ -1193,8 +2277,21 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 0.5)
 	 *
 	 * @example
-	 * ```typescript
-	 * shape(4).modulateRepeatX(noise(3), 3, 0.5)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(4, 0.25)
+	 *     .modulateRepeatX(noise(3, 0.1), 3, 0.5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	modulateRepeatX(
@@ -1210,8 +2307,21 @@ export interface ISynthSource {
 	 * @param offset - Offset amount (default: 0.5)
 	 *
 	 * @example
-	 * ```typescript
-	 * shape(4).modulateRepeatY(noise(3), 3, 0.5)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   shape(4, 0.25)
+	 *     .modulateRepeatY(noise(3, 0.1), 3, 0.5)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	modulateRepeatY(
@@ -1226,8 +2336,21 @@ export interface ISynthSource {
 	 * @param amount - Modulation amount (default: 1.0)
 	 *
 	 * @example
-	 * ```typescript
-	 * src().modulateHue(src().scale(1.01), 1.0)
+	 * ```ts
+	 * const t = textmode.create({
+	 *   width: window.innerWidth,
+	 *   height: window.innerHeight,
+	 *   plugins: [SynthPlugin]
+	 * });
+	 *
+	 * t.layers.base.synth(
+	 *   src()
+	 *     .modulateHue(src().scale(1.01), 0.8)
+	 * );
+	 *
+	 * t.windowResized(() => {
+	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+	 * });
 	 * ```
 	 */
 	modulateHue(source: ISynthSource | SynthParameterValue, amount?: SynthParameterValue): this;

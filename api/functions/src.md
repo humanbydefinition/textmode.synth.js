@@ -43,40 +43,20 @@ A new SynthSource that samples the specified source or self
 
 ## Example
 
-```typescript
+```ts
 const t = textmode.create({
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
   plugins: [SynthPlugin]
 });
 
-// Classic hydra-style feedback loop with noise modulation
 t.layers.base.synth(
-  src().modulate(noise(3), 0.005).blend(shape(4), 0.01)
+  src()
+    .scale(1.01)
+    .blend(osc(6, 0.1, 1.2), 0.1)
 );
 
-// Cross-layer sampling (hydra-style o0, o1, etc.)
-const layer1 = t.layers.add();
-layer1.synth(noise(10).mult(osc(20)));
-t.layers.base.synth(src(layer1).invert());
-
-// TextmodeImage/Video sampling
-let img;
-t.setup(async () => {
-  img = await t.loadImage('https://example.com/image.jpg');
-});
-t.layers.base.synth(
-  char(src(img))
-    .charColor(src(img))
-    .cellColor(src(img).invert())
-);
-
-// Lazy evaluation (allows global definition before load)
-let video;
-// This works even if video is currently undefined
-t.layers.base.synth(src(() => video));
-
-t.setup(async () => {
-  video = await t.loadVideo('video.mp4');
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
 ```

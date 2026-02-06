@@ -30,11 +30,21 @@ A new SynthSource configured with character color
 
 ### Example
 
-```typescript
-// Use a pattern source
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
 t.layers.base.synth(
-  charColor(osc(10, 0.1))
+  charColor(osc(10, 0.1, 1.2))
+    .char(noise(8))
 );
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 ## Call Signature
@@ -66,11 +76,21 @@ A new SynthSource configured with character color
 
 ### Example
 
-```typescript
-// Use a solid color
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
 t.layers.base.synth(
-  charColor(1, 0, 0).char(noise(10))
+  charColor(1, 0.2, 0.1, 1)
+    .char(noise(10))
 );
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 ## Call Signature
@@ -90,3 +110,22 @@ Create a synth source with character foreground color defined using a grayscale 
 ### Returns
 
 [`SynthSource`](../classes/SynthSource.md)
+
+### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  charColor(0.9)
+    .char(noise(6))
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```

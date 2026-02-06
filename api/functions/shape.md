@@ -25,20 +25,19 @@ Generate geometric shapes (polygons).
 
 ## Example
 
-```typescript
+```ts
 const t = textmode.create({
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
   plugins: [SynthPlugin]
 });
 
-// Triangle
 t.layers.base.synth(
-  shape(3)
+  shape(6, 0.35, 0.02)
+    .rotate(() => t.secs)
 );
 
-// High-sided polygon (ellipse-like)
-t.layers.base.synth(
-  shape(100)
-);
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```

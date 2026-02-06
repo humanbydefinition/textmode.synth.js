@@ -29,11 +29,21 @@ A new SynthSource configured with both color sources
 
 ### Example
 
-```typescript
-// Use same pattern for both foreground and background
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
 t.layers.base.synth(
-  paint(osc(10, 0.1))
+  paint(osc(10, 0.1, 1.2).kaleid(4))
+    .char(noise(6))
 );
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 ## Call Signature
@@ -65,11 +75,21 @@ A new SynthSource configured with both color sources
 
 ### Example
 
-```typescript
-// Use solid color for everything
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
 t.layers.base.synth(
-  paint(1, 1, 1)
+  paint(0.9, 0.8, 0.7)
+    .char(osc(6, 0.1, 0.5))
 );
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 ## Call Signature
@@ -89,3 +109,22 @@ Create a synth source with both character and cell colors defined using a graysc
 ### Returns
 
 [`SynthSource`](../classes/SynthSource.md)
+
+### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  paint(0.3)
+    .char(noise(7))
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```

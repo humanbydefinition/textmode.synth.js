@@ -25,21 +25,20 @@ Generate oscillating patterns using sine waves.
 
 ## Example
 
-```typescript
+```ts
 const t = textmode.create({
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
   plugins: [SynthPlugin]
 });
 
-// Basic oscillating color pattern
 t.layers.base.synth(
-  osc(1, 0.1)
-    .cellColor(osc(10, 0.1))
+  osc(8, 0.1, 1.2)
+    .kaleid(5)
+    .color(0.9, 0.2, 1.1)
 );
 
-// Animated frequency using array modulation
-t.layers.base.synth(
-  osc([1, 10, 50, 100].fast(2), 0.001)
-);
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```

@@ -14,16 +14,19 @@ Available easing functions: `'linear'`, `'easeInQuad'`, `'easeOutQuad'`, `'easeI
 
 ## Example
 
-```typescript
+```ts
 const t = textmode.create({
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
   plugins: [SynthPlugin]
 });
 
-// Rotating shape with eased animation
 t.layers.base.synth(
   shape(4)
-    .rotate([-3.14, 3.14].ease('easeInOutCubic'))
+    .rotate([-1.5, 1.5].ease('easeInOutCubic'))
 );
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```

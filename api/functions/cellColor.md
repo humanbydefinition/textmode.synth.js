@@ -30,11 +30,21 @@ A new SynthSource configured with cell color
 
 ### Example
 
-```typescript
-// Use a pattern source
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
 t.layers.base.synth(
-  cellColor(osc(5).invert())
+  cellColor(osc(6, 0.1, 1.2).invert())
+    .char(noise(6))
 );
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 ## Call Signature
@@ -66,11 +76,21 @@ A new SynthSource configured with cell color
 
 ### Example
 
-```typescript
-// Use a solid color
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
 t.layers.base.synth(
-  cellColor(0, 0, 0, 0.5).char(noise(10))
+  cellColor(0.05, 0.08, 0.1, 0.8)
+    .char(noise(10))
 );
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 ## Call Signature
@@ -90,3 +110,22 @@ Create a synth source with cell background color defined using a grayscale value
 ### Returns
 
 [`SynthSource`](../classes/SynthSource.md)
+
+### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  cellColor(0.2)
+    .char(osc(6, 0.1, 1.2))
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```

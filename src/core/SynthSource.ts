@@ -34,15 +34,24 @@ export interface SynthSourceCreateOptions {
  *
  * @example
  * ```ts
- * // Create a synth chain with procedural characters and colors
+ * const t = textmode.create({
+ *   width: window.innerWidth,
+ *   height: window.innerHeight,
+ *   plugins: [SynthPlugin]
+ * });
+ *
  * const synth = noise(10)
- *   .rotate(0.1)
+ *   .rotate(0.2)
  *   .scroll(0.1, 0)
- *
- *   .charColor(osc(5).kaleid(4))
- *   .cellColor(osc(5).kaleid(4).invert())
- *
+ *   .charColor(osc(5, 0.1, 1.2).kaleid(4))
+ *   .cellColor(osc(5, 0.1, 1.2).kaleid(4).invert())
  *   .charMap('@#%*+=-:. ');
+ *
+ * t.layers.base.synth(synth);
+ *
+ * t.windowResized(() => {
+ *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+ * });
  * ```
  */
 export class SynthSource {

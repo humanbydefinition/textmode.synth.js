@@ -18,6 +18,25 @@ declare module 'textmode.js/layering' {
 		 * directly to the layer's draw framebuffer before the draw callback runs.
 		 *
 		 * @param source A SynthSource chain or a factory function returning one
+		 *
+		 * @example
+		 * ```ts
+		 * const t = textmode.create({
+		 *   width: window.innerWidth,
+		 *   height: window.innerHeight,
+		 *   plugins: [SynthPlugin]
+		 * });
+		 *
+		 * t.layers.base.synth(
+		 *   osc(8, 0.1, 1.2)
+		 *     .kaleid(5)
+		 *     .color(0.9, 0.2, 1.1)
+		 * );
+		 *
+		 * t.windowResized(() => {
+		 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+		 * });
+		 * ```
 		 */
 		synth(source: SynthSource | (() => SynthSource)): void;
 
@@ -29,6 +48,27 @@ declare module 'textmode.js/layering' {
 		 * this method, the layer will no longer render synth content.
 		 *
 		 * Use this to reset a layer's synth state without removing the layer itself.
+		 *
+		 * @example
+		 * ```ts
+		 * const t = textmode.create({
+		 *   width: window.innerWidth,
+		 *   height: window.innerHeight,
+		 *   plugins: [SynthPlugin]
+		 * });
+		 *
+		 * t.layers.base.synth(
+		 *   noise(8, 0.1)
+		 *     .charMap('@#%*+=-:. ')
+		 * );
+		 *
+		 * // Later, remove the synth output.
+		 * t.layers.base.clearSynth();
+		 *
+		 * t.windowResized(() => {
+		 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+		 * });
+		 * ```
 		 */
 		clearSynth(): void;
 
@@ -40,6 +80,26 @@ declare module 'textmode.js/layering' {
 		 * different speeds.
 		 *
 		 * @param value BPM value (beats per minute) for this layer
+		 *
+		 * @example
+		 * ```ts
+		 * const t = textmode.create({
+		 *   width: window.innerWidth,
+		 *   height: window.innerHeight,
+		 *   plugins: [SynthPlugin]
+		 * });
+		 *
+		 * t.layers.base.bpm(90);
+		 *
+		 * t.layers.base.synth(
+		 *   osc([4, 8, 12].fast(2), 0.1, 1.2)
+		 *     .kaleid(5)
+		 * );
+		 *
+		 * t.windowResized(() => {
+		 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+		 * });
+		 * ```
 		 */
 		bpm(value: number): void;
 
@@ -66,6 +126,26 @@ declare module 'textmode.js' {
 		 *
 		 * @param value - BPM value (beats per minute)
 		 * @returns The BPM value that was set (for chaining)
+		 *
+		 * @example
+		 * ```ts
+		 * const t = textmode.create({
+		 *   width: window.innerWidth,
+		 *   height: window.innerHeight,
+		 *   plugins: [SynthPlugin]
+		 * });
+		 *
+		 * t.bpm(120);
+		 *
+		 * t.layers.base.synth(
+		 *   osc([4, 8, 12].fast(2), 0.1, 1.2)
+		 *     .kaleid(5)
+		 * );
+		 *
+		 * t.windowResized(() => {
+		 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+		 * });
+		 * ```
 		 */
 		bpm(value: number): number;
 
@@ -78,6 +158,26 @@ declare module 'textmode.js' {
 		 *
 		 * @param value - Seed value (any number) or null to disable
 		 * @returns The seed value that was set
+		 *
+		 * @example
+		 * ```ts
+		 * const t = textmode.create({
+		 *   width: window.innerWidth,
+		 *   height: window.innerHeight,
+		 *   plugins: [SynthPlugin]
+		 * });
+		 *
+		 * t.seed(42);
+		 *
+		 * t.layers.base.synth(
+		 *   noise(10, 0.1)
+		 *     .charMap('@#%*+=-:. ')
+		 * );
+		 *
+		 * t.windowResized(() => {
+		 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+		 * });
+		 * ```
 		 */
 		seed(value: number | null): number | null;
 	}

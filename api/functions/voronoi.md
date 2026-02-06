@@ -25,15 +25,19 @@ Generate voronoi patterns.
 
 ## Example
 
-```typescript
+```ts
 const t = textmode.create({
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
   plugins: [SynthPlugin]
 });
 
-// Animated Voronoi pattern
 t.layers.base.synth(
-  voronoi(5, 0.3, 0.3)
+  voronoi(6, 0.4, 0.2)
+    .color(0.8, 0.4, 1.2)
 );
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```

@@ -11,15 +11,24 @@ transform to the chain, which is later compiled into a GLSL shader.
 ## Example
 
 ```ts
-// Create a synth chain with procedural characters and colors
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
 const synth = noise(10)
-  .rotate(0.1)
+  .rotate(0.2)
   .scroll(0.1, 0)
-
-  .charColor(osc(5).kaleid(4))
-  .cellColor(osc(5).kaleid(4).invert())
-
+  .charColor(osc(5, 0.1, 1.2).kaleid(4))
+  .cellColor(osc(5, 0.1, 1.2).kaleid(4).invert())
   .charMap('@#%*+=-:. ');
+
+t.layers.base.synth(synth);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 ## Extends
@@ -51,6 +60,26 @@ Generate oscillating patterns using sine waves.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(8, 0.1, 1.2)
+    .kaleid(5)
+    .color(0.9, 0.2, 1.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -77,6 +106,25 @@ Generate Perlin noise patterns.
 #### Returns
 
 `this`
+
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  noise(10, 0.1)
+    .color(0.2, 0.6, 1.0)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 #### Inherited from
 
@@ -110,6 +158,25 @@ Generate plasma-like sine field patterns.
 #### Returns
 
 `this`
+
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  plasma(8, 0.6, 0.2, 1.3)
+    .kaleid(4)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 #### Inherited from
 
@@ -148,6 +215,25 @@ Generate moire interference patterns.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  moire(14, 15, 0.2, 1.2, 0.2, 0.1)
+    .color(0.7, 0.5, 1.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -179,6 +265,25 @@ Generate voronoi patterns.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  voronoi(6, 0.4, 0.2)
+    .color(0.8, 0.4, 1.2)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -207,8 +312,21 @@ Generate a rotating radial gradient.
 
 #### Example
 
-```typescript
-gradient([1,2,4])
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  gradient(0.2)
+    .kaleid(5)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -242,6 +360,25 @@ Generate geometric shapes (polygons).
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(6, 0.35, 0.02)
+    .rotate(() => t.secs)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -269,6 +406,25 @@ Generate a solid grayscale color.
 ##### Returns
 
 `this`
+
+##### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  solid(0.4)
+    .char(osc(6, 0.1, 1.2))
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 ##### Inherited from
 
@@ -300,6 +456,25 @@ Generate a solid color.
 ##### Returns
 
 `this`
+
+##### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  solid(0.1, 0.2, 0.5, 1)
+    .char(noise(8))
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 ##### Inherited from
 
@@ -345,17 +520,22 @@ Equivalent to hydra's `src(o0)`.
 
 #### Example
 
-```typescript
-// Classic hydra-style feedback loop with noise modulation
-src().modulate(noise(3), 0.005).blend(shape(4), 0.01)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
 
-// Feedback with color shift
-src().hue(0.01).scale(1.01).blend(osc(10), 0.1)
+t.layers.base.synth(
+  src()
+    .scale(1.01)
+    .blend(osc(6, 0.1, 1.2), 0.1)
+);
 
-// Context-aware: src() samples the appropriate texture automatically
-char(noise(10).diff(src()))           // src() → character feedback
-  .charColor(osc(5).blend(src(), 0.5)) // src() → primary color feedback
-  .cellColor(voronoi().diff(src()))    // src() → cell color feedback
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -387,11 +567,22 @@ Rotate coordinates.
 
 #### Example
 
-```typescript
-// Rotate shape continuously
-osc(50, 0, 0)
-  .rotate((ctx) => ctx.time % 360)
-  .charColor(osc(50).rotate((ctx) => ctx.time % 360));
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(8, 0.1, 1.2)
+    .rotate(0.4, 0.1)
+    .kaleid(5)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -431,9 +622,21 @@ Scale coordinates.
 
 #### Example
 
-```typescript
-// Scale a triangle shape
-shape(3).scale(1.5, 1, 1);
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(4, 0.35)
+    .scale(1.6, 1.2, 0.8)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -471,9 +674,21 @@ Scroll coordinates in both X and Y directions.
 
 #### Example
 
-```typescript
-// Scroll a shape diagonally
-shape(3).scroll(0.1, -0.3);
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  noise(6, 0.1)
+    .scroll(0.2, -0.1, 0.05, 0.02)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -505,9 +720,21 @@ Scroll coordinates in X direction.
 
 #### Example
 
-```typescript
-// Scroll noise horizontally
-noise(10).scrollX(0.5, 0.1)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(8, 0.1, 1.2)
+    .scrollX(0.3, 0.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -539,9 +766,22 @@ Scroll coordinates in Y direction.
 
 #### Example
 
-```typescript
-// Scroll noise vertically
-noise(10).scrollY(0.5, 0.1)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(8, 0.1, 1.2)
+    .rotate(0.5)
+    .scrollY(-0.3, 0.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -573,11 +813,22 @@ Pixelate the output.
 
 #### Example
 
-```typescript
-// Pixelate noise pattern
-noise(1, 0.05)
-  .pixelate(20, 20)
-  .charColor(noise().pixelate(20, 20));
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  noise(8, 0.1)
+    .pixelate(12, 8)
+    .color(0.9, 0.6, 0.2)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -615,11 +866,21 @@ Repeat coordinates in both X and Y directions.
 
 #### Example
 
-```typescript
-// Repeat a shape in a 3x3 grid
-shape(3)
-  .repeat(3, 3, 0, 0)
-  .charColor(shape().repeat(3, 3, 0, 0));
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(4, 0.25)
+    .repeat(4, 3, 0.1, 0.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -651,9 +912,21 @@ Repeat coordinates in X direction.
 
 #### Example
 
-```typescript
-// Repeat pattern horizontally 5 times
-shape(4).repeatX(5, 0)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(4, 0.25)
+    .repeatX(6, 0.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -685,9 +958,21 @@ Repeat coordinates in Y direction.
 
 #### Example
 
-```typescript
-// Repeat pattern vertically 5 times
-shape(4).repeatY(5, 0)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(4, 0.25)
+    .repeatY(6, 0.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -718,11 +1003,22 @@ Apply kaleidoscope effect.
 
 #### Example
 
-```typescript
-// Create a 50-sided kaleidoscope pattern
-osc(25, -0.1, 0.5)
-  .kaleid(50)
-  .charColor(osc(25, -0.1, 0.5).kaleid(50));
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .kaleid(7)
+    .color(0.9, 0.2, 1.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -751,6 +1047,26 @@ Convert coordinates to polar space.
 #### Returns
 
 `this`
+
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  gradient(0.2)
+    .polar(0.2, 1.2)
+    .kaleid(5)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 #### Inherited from
 
@@ -785,6 +1101,25 @@ Twirl distortion with radial falloff.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(5, 0.35)
+    .twirl(1.5, 0.4)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -816,6 +1151,25 @@ Swirl distortion around a center.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  noise(4, 0.1)
+    .swirl(3, 0.5, 0.5)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -842,6 +1196,25 @@ Mirror coordinates across X and/or Y axes.
 #### Returns
 
 `this`
+
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(8, 0.1, 1.2)
+    .mirror(1, 0)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 #### Inherited from
 
@@ -876,6 +1249,25 @@ Shear coordinates along X and Y axes.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(4, 0.3)
+    .shear(0.2, -0.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -906,6 +1298,25 @@ Barrel distortion (bulge outward).
 #### Returns
 
 `this`
+
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  gradient(0.2)
+    .barrel(0.6)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 #### Inherited from
 
@@ -938,6 +1349,25 @@ Pinch distortion (pull inward).
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  gradient(0.2)
+    .pinch(0.6)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -969,6 +1399,25 @@ Fisheye lens distortion.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(8, 0.1, 1.2)
+    .fisheye(0.8)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -997,11 +1446,21 @@ Adjust brightness.
 
 #### Example
 
-```typescript
-osc(1)
-  .charColor(
-    osc(20, 0, 2).brightness(() => Math.sin(t.secs()))
-  )
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(8, 0.1, 1.2)
+    .brightness(0.2)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1032,11 +1491,21 @@ Adjust contrast.
 
 #### Example
 
-```typescript
-osc(1)
-  .charColor(
-    osc(20).contrast((ctx) => Math.sin(ctx.time) * 5)
-  )
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(8, 0.1, 1.2)
+    .contrast(1.6)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1067,10 +1536,21 @@ Invert colors.
 
 #### Example
 
-```typescript
- solid(0.2, 0, 0, 1)
-    .charColor(solid(1, 1, 1).invert([0, 1]))
-    .cellColor(solid(1, 1, 1).invert([1, 0]))
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(4, 0.35)
+    .invert(1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1101,12 +1581,21 @@ Adjust color saturation.
 
 #### Example
 
-```typescript
-// Animate saturation
-osc(10, 0, 1)
-  .charColor(
-    osc(10, 0, 1).saturate((ctx) => Math.sin(ctx.time) * 10)
-  );
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .saturate(2.5)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1137,11 +1626,21 @@ Shift hue.
 
 #### Example
 
-```typescript
-osc(1)
-  .charColor(
-    osc(30, 0.1, 1).hue((ctx) => Math.sin(ctx.time))
-  )
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .hue(0.3)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1172,9 +1671,21 @@ Apply colorama effect (hue rotation based on luminance).
 
 #### Example
 
-```typescript
-// Create color cycle effect on oscillator
-noise(4).colorama(0.3)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  noise(4, 0.1)
+    .colorama(0.2)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1206,13 +1717,21 @@ Posterize colors to limited palette.
 
 #### Example
 
-```typescript
-// Posterize gradient with array modulation
-gradient(0, 16)
-  .rotate(1.57)
-  .charColor(
-    gradient(0).posterize([1, 5, 15, 30], 0.5)
-  );
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  gradient(0.2)
+    .posterize(4, 0.7)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1244,9 +1763,21 @@ Apply threshold based on luminance.
 
 #### Example
 
-```typescript
-// Apply threshold to oscillator
-osc(10,0,1).luma(0.5,0.1)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(10, 0.1, 1.2)
+    .luma(0.5, 0.2)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1276,6 +1807,25 @@ Apply hard threshold.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  noise(6, 0.1)
+    .thresh(0.4, 0.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -1303,6 +1853,25 @@ Multiply all channels by a scalar value (grayscale).
 ##### Returns
 
 `this`
+
+##### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(8, 0.1, 1.2)
+    .color(0.6)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 ##### Inherited from
 
@@ -1340,12 +1909,21 @@ This is the recommended way to add color to grayscale sources like `osc()`,
 
 ##### Example
 
-```typescript
-// Create a blue oscillator
-osc(10).color(0, 0.5, 1.0)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
 
-// Colorize noise with a red tint
-noise(5).color(1, 0.2, 0.2)
+t.layers.base.synth(
+  osc(10, 0.1, 1.2)
+    .color(0.2, 0.6, 1.0)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 ##### Inherited from
@@ -1377,12 +1955,22 @@ Extract the red channel as a grayscale value.
 
 #### Example
 
-```typescript
-// Extract red channel as grayscale
-voronoi(5).hue(0.4).r()
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
 
-// Convert red intensity to character indices
-char(osc(10).hue(0.5).r())
+t.layers.base.synth(
+  osc(8, 0.1, 1.2)
+    .hue(0.4)
+    .r(1.2, 0.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1414,8 +2002,22 @@ Extract the green channel as a grayscale value.
 
 #### Example
 
-```typescript
-osc(4,0.1,1.5).layer(gradient().g())
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  gradient(0.2)
+    .g(1.2, 0.1)
+    .kaleid(5)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1447,8 +2049,22 @@ Extract the blue channel as a grayscale value.
 
 #### Example
 
-```typescript
-osc(8,0.1,1.5).layer(gradient().colorama(1).b())
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  gradient(0.2)
+    .colorama(0.2)
+    .b(1.2, 0.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1484,6 +2100,25 @@ Shift color channels by adding offset values.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(8, 0.1, 1.2)
+    .shift(0.2, -0.1, 0.1, 0)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -1512,9 +2147,21 @@ Apply gamma correction for nonlinear brightness control.
 
 #### Example
 
-```typescript
-osc(1)
-  .charColor(osc(5).gamma([1.0, 1.5, 2.0].smooth(4)))
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(8, 0.1, 1.2)
+    .gamma(1.4)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1554,14 +2201,21 @@ Adjust input/output levels and gamma for precise tonal control.
 
 #### Example
 
-```typescript
-// Expand tonal range from 0.2-0.8 to 0-1
-noise(10)
-  .charColor(noise(5).levels(0.2, 0.8, 0.0, 1.0, 1.0))
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
 
-// Compress highlights, boost shadows
-voronoi(8)
-  .charColor(voronoi(5).levels(0.0, 1.0, 0.2, 0.9, 0.8))
+t.layers.base.synth(
+  noise(8, 0.1)
+    .levels(0.1, 0.9, 0.0, 1.0, 1.2)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1593,8 +2247,22 @@ Clamp color values to a specified range for stability.
 
 #### Example
 
-```typescript
-osc(5).add(osc(8), 0.8).add(osc(12), 0.6).clamp(0.2, 0.8)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .add(osc(12, 0.1, 0.5), 0.6)
+    .clamp(0.2, 0.8)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1628,9 +2296,22 @@ reproducible patterns. Different seeds produce different patterns.
 
 #### Example
 
-```typescript
-// Same seed = same pattern every time
-noise(10).seed(42).charMap('@#%*+=-:. ')
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  noise(10, 0.1)
+    .seed(42)
+    .charMap('@#%*+=-:. ')
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1662,11 +2343,21 @@ Add another source.
 
 #### Example
 
-```typescript
-// Add two shapes with animated blend amount
-shape(3)
-  .scale(0.5)
-  .add(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(3, 0.3)
+    .add(shape(4, 0.25).rotate(0.3), 0.5)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1698,18 +2389,16 @@ Subtract another source.
 
 #### Example
 
-```typescript
+```ts
 const t = textmode.create({
   width: window.innerWidth,
   height: window.innerHeight,
-  fontSize: 8,
   plugins: [SynthPlugin]
 });
 
-// Subtract a smaller circle from a larger one to create a ring
 t.layers.base.synth(
   shape(100, 0.5)
-    .sub(shape(100, 0.3))
+    .sub(shape(100, 0.3), 1)
 );
 
 t.windowResized(() => {
@@ -1746,18 +2435,16 @@ Multiply with another source.
 
 #### Example
 
-```typescript
+```ts
 const t = textmode.create({
   width: window.innerWidth,
   height: window.innerHeight,
-  fontSize: 8,
   plugins: [SynthPlugin]
 });
 
-// Multiply noise with a shape to create a textured polygon
 t.layers.base.synth(
-  shape(3, 0.5)
-    .mult(noise(10, 0.1))
+  shape(4, 0.4)
+    .mult(noise(10, 0.1), 0.8)
     .color(1, 0.5, 0.2)
 );
 
@@ -1795,11 +2482,21 @@ Blend with another source.
 
 #### Example
 
-```typescript
-// Blend two shapes
-shape(3)
-  .scale(0.5)
-  .blend(shape(4).scale(2), [0, 0.25, 0.5, 0.75, 1])
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(3, 0.3)
+    .blend(shape(4, 0.4), 0.5)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1830,8 +2527,21 @@ Difference with another source.
 
 #### Example
 
-```typescript
-osc(1, 0.1, 2).diff(osc(1, 0.5, 5))
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .diff(osc(12, 0.2, 0.4))
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1862,10 +2572,21 @@ Layer another source on top.
 
 #### Example
 
-```typescript
-  osc(1)
-  .charColor(osc(30).layer(osc(15).rotate(1).luma()))
-  .cellColor(osc(30).layer(osc(15).rotate(1).luma()).invert())
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .layer(osc(12, 0.2, 0.4).rotate(0.5), 0.5)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1896,9 +2617,21 @@ Mask using another source.
 
 #### Example
 
-```typescript
-// Mask gradient with voronoi pattern
-gradient(5).mask(voronoi()).invert([0, 1])
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  gradient(0.2)
+    .mask(voronoi(6, 0.4, 0.2))
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -1928,6 +2661,25 @@ Screen blend with another source.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .screen(osc(12, 0.2, 0.4), 0.8)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -1954,6 +2706,25 @@ Overlay blend with another source.
 #### Returns
 
 `this`
+
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .overlay(osc(12, 0.2, 0.4), 0.8)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 #### Inherited from
 
@@ -1982,6 +2753,25 @@ Soft light blend with another source.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .softlight(osc(12, 0.2, 0.4), 0.8)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -2008,6 +2798,25 @@ Hard light blend with another source.
 #### Returns
 
 `this`
+
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .hardlight(osc(12, 0.2, 0.4), 0.8)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 #### Inherited from
 
@@ -2036,6 +2845,25 @@ Color dodge blend with another source.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .dodge(osc(12, 0.2, 0.4), 0.8)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -2062,6 +2890,25 @@ Color burn blend with another source.
 #### Returns
 
 `this`
+
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .burn(osc(12, 0.2, 0.4), 0.8)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 #### Inherited from
 
@@ -2090,6 +2937,25 @@ Lighten blend with another source.
 
 `this`
 
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .lighten(osc(12, 0.2, 0.4), 0.8)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
+
 #### Inherited from
 
 ```ts
@@ -2116,6 +2982,25 @@ Darken blend with another source.
 #### Returns
 
 `this`
+
+#### Example
+
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .darken(osc(12, 0.2, 0.4), 0.8)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
+```
 
 #### Inherited from
 
@@ -2146,9 +3031,21 @@ Modulate coordinates using another source.
 
 #### Example
 
-```typescript
-osc(3, 0, 2)
-    .modulate(noise().add(gradient(), -1), 1)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .modulate(noise(3, 0.1), 0.2)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -2184,9 +3081,21 @@ Modulate scale using another source.
 
 #### Example
 
-```typescript
-// Modulate scale of shape with oscillator
-shape(3).modulateScale(osc(10), 10, 0)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(4, 0.35)
+    .modulateScale(osc(6, 0.1, 1.2), 1.5, 0.2)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -2222,9 +3131,21 @@ Modulate rotation using another source.
 
 #### Example
 
-```typescript
-// Modulate rotation of shape with noise
-shape(3).modulateRotate(noise(2), 2, 0)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(4, 0.35)
+    .modulateRotate(noise(2, 0.1), 0.5, 0)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -2260,8 +3181,21 @@ Modulate pixelation using another source.
 
 #### Example
 
-```typescript
-noise(3).modulatePixelate(noise(1, 0).pixelate(8, 8), 1024, 8)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  noise(4, 0.1)
+    .modulatePixelate(osc(8, 0.1, 1.2), 20, 5)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -2293,9 +3227,21 @@ Modulate kaleidoscope using another source.
 
 #### Example
 
-```typescript
-osc(2, 0.1, 2)
-    .modulateKaleid(osc(16).kaleid(999), 1)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .modulateKaleid(osc(12, 0.2, 0.4), 7)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -2331,8 +3277,21 @@ Modulate X scroll using another source.
 
 #### Example
 
-```typescript
-osc(10).modulateScrollX(osc(10), 0.5, 0)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .modulateScrollX(noise(3, 0.1), 0.5, 0.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -2368,8 +3327,21 @@ Modulate Y scroll using another source.
 
 #### Example
 
-```typescript
-osc(10).modulateScrollY(osc(10), 0.5, 0)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  osc(6, 0.1, 1.2)
+    .modulateScrollY(noise(3, 0.1), 0.5, 0.1)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -2409,8 +3381,21 @@ Modulate repeat pattern with another source.
 
 #### Example
 
-```typescript
-shape(4).modulateRepeat(noise(3), 3, 3, 0.5, 0.5)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(4, 0.25)
+    .modulateRepeat(osc(6, 0.1, 1.2), 3, 3, 0.2, 0.2)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -2446,8 +3431,21 @@ Modulate X repeat with another source.
 
 #### Example
 
-```typescript
-shape(4).modulateRepeatX(noise(3), 3, 0.5)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(4, 0.25)
+    .modulateRepeatX(noise(3, 0.1), 3, 0.5)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -2483,8 +3481,21 @@ Modulate Y repeat with another source.
 
 #### Example
 
-```typescript
-shape(4).modulateRepeatY(noise(3), 3, 0.5)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  shape(4, 0.25)
+    .modulateRepeatY(noise(3, 0.1), 3, 0.5)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from
@@ -2516,8 +3527,21 @@ Modulate coordinates based on hue differences.
 
 #### Example
 
-```typescript
-src().modulateHue(src().scale(1.01), 1.0)
+```ts
+const t = textmode.create({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  plugins: [SynthPlugin]
+});
+
+t.layers.base.synth(
+  src()
+    .modulateHue(src().scale(1.01), 0.8)
+);
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
 
 #### Inherited from

@@ -18,17 +18,22 @@ import type { LayerSynthState } from '../core/types';
  * Install this plugin to enable `.synth()` on TextmodeLayer instances.
  *
  * @example
- * ```typescript
- * import { textmode } from 'textmode.js'; // es module imports
- * import { SynthPlugin, noise, osc } from 'textmode.synth.js';
- *
- * const t = textmode.create({ plugins: [SynthPlugin] });
+ * ```ts
+ * const t = textmode.create({
+ *   width: window.innerWidth,
+ *   height: window.innerHeight,
+ *   plugins: [SynthPlugin]
+ * });
  *
  * t.layers.base.synth(
  *   noise(10)
  *     .charMap('@#%*+=-:. ')
- *     .charColor(osc(5).kaleid(4))
+ *     .charColor(osc(5, 0.1, 1.2).kaleid(4))
  * );
+ *
+ * t.windowResized(() => {
+ *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+ * });
  * ```
  */
 export const SynthPlugin: TextmodePlugin = {

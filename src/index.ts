@@ -7,27 +7,24 @@
  *
  * @example
  * ```ts
- * // Create textmode instance with SynthPlugin
  * const t = textmode.create({
- *   width: 800,
- *   height: 600,
- *   fontSize: 16,
+ *   width: window.innerWidth,
+ *   height: window.innerHeight,
  *   plugins: [SynthPlugin]
  * });
  *
- * // Create a synth chain with procedural characters and colors
- * const synth = noise(10)
- *   .rotate(0.1)
- *   .scroll(0.1, 0)
- *
- *   .charColor(osc(5).kaleid(4))
- *   .cellColor(osc(5).kaleid(4).invert())
- *
+ * const synth = noise(8)
+ *   .rotate(0.2)
+ *   .kaleid(5)
+ *   .charColor(osc(6, 0.1, 1.2))
+ *   .cellColor(osc(6, 0.1, 1.2).invert())
  *   .charMap('@#%*+=-:. ');
  *
- *
- * // Apply synth to the base layer
  * t.layers.base.synth(synth);
+ *
+ * t.windowResized(() => {
+ *   t.resizeCanvas(window.innerWidth, window.innerHeight);
+ * });
  * ```
  *
  * @packageDocumentation

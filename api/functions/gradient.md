@@ -20,15 +20,19 @@ Generate a rotating radial gradient.
 
 ## Example
 
-```typescript
+```ts
 const t = textmode.create({
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
   plugins: [SynthPlugin]
 });
 
-// Animated gradient with array modulation
 t.layers.base.synth(
-  gradient([1, 2, 4])
+  gradient(0.2)
+    .kaleid(5)
 );
+
+t.windowResized(() => {
+  t.resizeCanvas(window.innerWidth, window.innerHeight);
+});
 ```
