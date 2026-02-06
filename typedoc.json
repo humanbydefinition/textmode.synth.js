@@ -2,7 +2,7 @@
     "entryPoints": [
         "src/index.ts",
     ],
-    "out": "api",
+    "out": "api/textmode.synth.js",
     "readme": "none",
     "excludePrivate": true,
     "excludeProtected": true,
