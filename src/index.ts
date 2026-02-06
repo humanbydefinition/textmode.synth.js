@@ -6,7 +6,7 @@
  * and visual effects through method chaining.
  *
  * @example
- * ```typescript
+ * ```javascript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,

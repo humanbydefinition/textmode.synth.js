@@ -18,7 +18,7 @@ import type { LayerSynthState } from '../core/types';
  * Install this plugin to enable `.synth()` on TextmodeLayer instances.
  *
  * @example
- * ```typescript
+ * ```javascript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,

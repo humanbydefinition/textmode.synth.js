@@ -37,7 +37,7 @@ export const EASING_FUNCTIONS = {
  * `'easeInOutQuart'`, `'easeInQuint'`, `'easeOutQuint'`, `'easeInOutQuint'`, `'sin'`
  *
  * @example
- * ```typescript
+ * ```javascript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -64,7 +64,7 @@ export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => num
  * manually tracking time or state.
  *
  * @example
- * ```typescript
+ * ```javascript
  * const t = textmode.create({
  *   width: window.innerWidth,
  *   height: window.innerHeight,
@@ -101,7 +101,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * ```typescript
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -131,7 +131,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * ```typescript
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -166,7 +166,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * ```typescript
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -199,7 +199,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * ```typescript
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
@@ -235,7 +235,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns A new ModulatedArray with remapped values
 	 *
 	 * @example
-	 * ```typescript
+	 * ```javascript
 	 * const t = textmode.create({
 	 *   width: window.innerWidth,
 	 *   height: window.innerHeight,
