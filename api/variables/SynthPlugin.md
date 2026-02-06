@@ -1,6 +1,6 @@
 ---
 title: SynthPlugin
-description: The `textmode.synth.js` plugin to install.
+description: The textmode.synth.js plugin to install.
 category: Variables
 api: true
 kind: Variable

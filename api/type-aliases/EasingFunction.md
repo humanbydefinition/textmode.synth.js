@@ -1,6 +1,6 @@
 ---
 title: EasingFunction
-description: Easing functions from https://gist.github.com/gre/1650294
+description: Easing functions from
 category: Type Aliases
 api: true
 kind: TypeAlias
