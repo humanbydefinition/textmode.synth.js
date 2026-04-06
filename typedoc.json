@@ -41,7 +41,6 @@
     ],
     "preserveFrontmatterCommentTags": false,
     "frontmatterNamingConvention": "camelCase",
-    "router": "flattened-namespaces",
     "indexFormat": "table",
     "parametersFormat": "table",
     "interfacePropertiesFormat": "table",
