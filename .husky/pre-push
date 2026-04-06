@@ -1,0 +1,6 @@
+branch="$(git rev-parse --abbrev-ref HEAD)"
+
+if [ "$branch" = "main" ] || [ "$branch" = "beta" ]; then
+  echo "Direct pushes to '$branch' are not allowed. Merge from dev → beta → main instead."
+  exit 1
+fi
