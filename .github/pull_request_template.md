@@ -4,7 +4,7 @@ Describe the intent of this PR and the user-facing or internal outcome.
 
 ## Changes
 
-- 
+- Describe the main changes
 
 ## Validation
 
