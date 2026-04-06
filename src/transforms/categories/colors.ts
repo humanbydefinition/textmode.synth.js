@@ -5,11 +5,7 @@
  * brightness, contrast, saturation, hue shifting, and color manipulation.
  */
 
-import {
-	defineTransform,
-	type TransformDefinition,
-	type TransformInput,
-} from '../TransformDefinition';
+import { defineTransform, type TransformDefinition, type TransformInput } from '../TransformDefinition';
 import { TT_COLOR } from '../../core/constants';
 import type { SynthParameterValue } from '../../core/types';
 
@@ -374,12 +370,7 @@ declare module '../../core/SynthSource' {
 		 * @example
 		 * {@includeCode ../../examples/Colors/color2/sketch.js}
 		 */
-		color(
-			r?: SynthParameterValue,
-			g?: SynthParameterValue,
-			b?: SynthParameterValue,
-			a?: SynthParameterValue
-		): this;
+		color(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 
 		/**
 		 * Extract the red channel as a grayscale value.
@@ -421,12 +412,7 @@ declare module '../../core/SynthSource' {
 		 * @example
 		 * {@includeCode ../../examples/Colors/shift/sketch.js}
 		 */
-		shift(
-			r?: SynthParameterValue,
-			g?: SynthParameterValue,
-			b?: SynthParameterValue,
-			a?: SynthParameterValue
-		): this;
+		shift(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 
 		/**
 		 * Apply gamma correction for nonlinear brightness control.

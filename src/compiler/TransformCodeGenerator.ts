@@ -68,11 +68,7 @@ export class TransformCodeGenerator {
 	): string {
 		// Handle srcTexture for TextmodeSource (images/videos)
 		if (name === 'srcTexture' && textmodeSourceRef && getTextmodeSourceUniform) {
-			return this._generateTextmodeSourceFunction(
-				textmodeSourceRef,
-				currentTarget,
-				getTextmodeSourceUniform
-			);
+			return this._generateTextmodeSourceFunction(textmodeSourceRef, currentTarget, getTextmodeSourceUniform);
 		}
 
 		if (name !== 'src') {

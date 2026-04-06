@@ -28,25 +28,15 @@ export class UniformManager {
 	/**
 	 * Process an argument and return its GLSL representation.
 	 */
-	public processArgument(
-		value: SynthParameterValue,
-		input: TransformInput,
-		prefix: string
-	): ProcessedArgument {
+	public processArgument(value: SynthParameterValue, input: TransformInput, prefix: string): ProcessedArgument {
 		// Modulated array - create uniform
 		if (isModulatedArray(value)) {
-			return this._createDynamicUniform(input, prefix, (ctx) =>
-				getArrayValue(value as ModulatedArray, ctx)
-			);
+			return this._createDynamicUniform(input, prefix, (ctx) => getArrayValue(value as ModulatedArray, ctx));
 		}
 
 		// Dynamic function value - create uniform
 		if (typeof value === 'function') {
-			return this._createDynamicUniform(
-				input,
-				prefix,
-				value as (ctx: SynthContext) => number | number[]
-			);
+			return this._createDynamicUniform(input, prefix, value as (ctx: SynthContext) => number | number[]);
 		}
 
 		// Static number value
@@ -79,11 +69,7 @@ export class UniformManager {
 			isDynamic: true,
 		};
 
-		const updater = createDynamicUpdater(
-			updaterFn,
-			uniformName,
-			uniform.value as number | number[]
-		);
+		const updater = createDynamicUpdater(updaterFn, uniformName, uniform.value as number | number[]);
 
 		this._uniforms.set(uniformName, uniform);
 		this._dynamicUpdaters.set(uniformName, updater);

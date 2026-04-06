@@ -59,21 +59,7 @@ import {
 	src,
 	voronoi,
 } from './api';
-export {
-	cellColor,
-	char,
-	charColor,
-	gradient,
-	moire,
-	noise,
-	osc,
-	paint,
-	plasma,
-	shape,
-	solid,
-	src,
-	voronoi,
-};
+export { cellColor, char, charColor, gradient, moire, noise, osc, paint, plasma, shape, solid, src, voronoi };
 
 export type { ModulatedArray, EasingFunction } from './utils/ArrayUtils';
 

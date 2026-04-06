@@ -17,15 +17,13 @@ export const EASING_FUNCTIONS = {
 	easeInOutQuad: (t: number) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
 	easeInCubic: (t: number) => t * t * t,
 	easeOutCubic: (t: number) => --t * t * t + 1,
-	easeInOutCubic: (t: number) =>
-		t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1,
+	easeInOutCubic: (t: number) => (t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1),
 	easeInQuart: (t: number) => t * t * t * t,
 	easeOutQuart: (t: number) => 1 - --t * t * t * t,
 	easeInOutQuart: (t: number) => (t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t),
 	easeInQuint: (t: number) => t * t * t * t * t,
 	easeOutQuint: (t: number) => 1 + --t * t * t * t * t,
-	easeInOutQuint: (t: number) =>
-		t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t,
+	easeInOutQuint: (t: number) => (t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t),
 	sin: (t: number) => (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2,
 };
 
@@ -221,9 +219,7 @@ export function initArrayUtils(): void {
 		value: function (this: ModulatedArray, low = 0, high = 1): ModulatedArray {
 			const lowest = Math.min(...this);
 			const highest = Math.max(...this);
-			const newArr = this.map((num) =>
-				map(num, lowest, highest, low, high)
-			) as ModulatedArray;
+			const newArr = this.map((num) => map(num, lowest, highest, low, high)) as ModulatedArray;
 			newArr._speed = this._speed;
 			newArr._smooth = this._smooth;
 			newArr._ease = this._ease;

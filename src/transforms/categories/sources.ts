@@ -222,11 +222,7 @@ declare module '../../core/SynthSource' {
 		 * @example
 		 * {@includeCode ../../examples/Sources/osc/sketch.js}
 		 */
-		osc(
-			frequency?: SynthParameterValue,
-			sync?: SynthParameterValue,
-			offset?: SynthParameterValue
-		): this;
+		osc(frequency?: SynthParameterValue, sync?: SynthParameterValue, offset?: SynthParameterValue): this;
 
 		/**
 		 * Generate Perlin noise patterns.
@@ -285,11 +281,7 @@ declare module '../../core/SynthSource' {
 		 * @example
 		 * {@includeCode ../../examples/Sources/voronoi/sketch.js}
 		 */
-		voronoi(
-			scale?: SynthParameterValue,
-			speed?: SynthParameterValue,
-			blending?: SynthParameterValue
-		): this;
+		voronoi(scale?: SynthParameterValue, speed?: SynthParameterValue, blending?: SynthParameterValue): this;
 
 		/**
 		 * Generate a rotating radial gradient.
@@ -309,11 +301,7 @@ declare module '../../core/SynthSource' {
 		 * @example
 		 * {@includeCode ../../examples/Sources/shape/sketch.js}
 		 */
-		shape(
-			sides?: SynthParameterValue,
-			radius?: SynthParameterValue,
-			smoothing?: SynthParameterValue
-		): this;
+		shape(sides?: SynthParameterValue, radius?: SynthParameterValue, smoothing?: SynthParameterValue): this;
 
 		/**
 		 * Generate a solid grayscale color.
@@ -333,12 +321,7 @@ declare module '../../core/SynthSource' {
 		 * @example
 		 * {@includeCode ../../examples/Sources/solid2/sketch.js}
 		 */
-		solid(
-			r?: SynthParameterValue,
-			g?: SynthParameterValue,
-			b?: SynthParameterValue,
-			a?: SynthParameterValue
-		): this;
+		solid(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 
 		/**
 		 * Sample the previous frame for feedback effects.

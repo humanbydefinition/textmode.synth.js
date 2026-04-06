@@ -1,9 +1,4 @@
-import type {
-	SynthParameterValue,
-	CharacterMapping,
-	ExternalLayerReference,
-	TextmodeSourceReference,
-} from './types';
+import type { SynthParameterValue, CharacterMapping, ExternalLayerReference, TextmodeSourceReference } from './types';
 import { SynthChain, type TransformRecord } from './SynthChain';
 
 /**
@@ -108,11 +103,7 @@ export class SynthSource {
 	 * Add a combine transform that references another source.
 	 * @ignore
 	 */
-	public addCombineTransform(
-		name: string,
-		source: SynthSource,
-		userArgs: SynthParameterValue[]
-	): this {
+	public addCombineTransform(name: string, source: SynthSource, userArgs: SynthParameterValue[]): this {
 		const index = this._chain.length;
 		this._nestedSources.set(index, source);
 		return this.addTransform(name, userArgs);
@@ -209,12 +200,7 @@ export class SynthSource {
 	 * @example
 	 * {@includeCode ../../examples/Chain/charColor2/sketch.js}
 	 */
-	charColor(
-		r: SynthParameterValue,
-		g?: SynthParameterValue,
-		b?: SynthParameterValue,
-		a?: SynthParameterValue
-	): this;
+	charColor(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 	/**
 	 * Set the character foreground color using a grayscale value.
 	 * @param gray - Grayscale value (0-1)
@@ -271,12 +257,7 @@ export class SynthSource {
 	 * @example
 	 * {@includeCode ../../examples/Chain/cellColor2/sketch.js}
 	 */
-	cellColor(
-		r: SynthParameterValue,
-		g?: SynthParameterValue,
-		b?: SynthParameterValue,
-		a?: SynthParameterValue
-	): this;
+	cellColor(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 	/**
 	 * Set the cell background color using a grayscale value.
 	 * @param gray - Grayscale value (0-1)
@@ -322,12 +303,7 @@ export class SynthSource {
 	 * @example
 	 * {@includeCode ../../examples/Chain/paint2/sketch.js}
 	 */
-	paint(
-		r: SynthParameterValue,
-		g?: SynthParameterValue,
-		b?: SynthParameterValue,
-		a?: SynthParameterValue
-	): this;
+	paint(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 	/**
 	 * Set both character foreground and cell background color using a grayscale value.
 	 * @param gray - Grayscale value (0-1)

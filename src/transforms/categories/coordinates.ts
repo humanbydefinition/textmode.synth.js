@@ -499,11 +499,7 @@ declare module '../../core/SynthSource' {
 		 * @example
 		 * {@includeCode ../../examples/Coordinates/swirl/sketch.js}
 		 */
-		swirl(
-			amount?: SynthParameterValue,
-			centerX?: SynthParameterValue,
-			centerY?: SynthParameterValue
-		): this;
+		swirl(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
 
 		/**
 		 * Mirror coordinates across X and/or Y axes.
@@ -541,11 +537,7 @@ declare module '../../core/SynthSource' {
 		 * @example
 		 * {@includeCode ../../examples/Coordinates/barrel/sketch.js}
 		 */
-		barrel(
-			amount?: SynthParameterValue,
-			centerX?: SynthParameterValue,
-			centerY?: SynthParameterValue
-		): this;
+		barrel(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
 
 		/**
 		 * Pinch distortion (pull inward).
@@ -556,11 +548,7 @@ declare module '../../core/SynthSource' {
 		 * @example
 		 * {@includeCode ../../examples/Coordinates/pinch/sketch.js}
 		 */
-		pinch(
-			amount?: SynthParameterValue,
-			centerX?: SynthParameterValue,
-			centerY?: SynthParameterValue
-		): this;
+		pinch(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
 
 		/**
 		 * Fisheye lens distortion.
@@ -571,10 +559,6 @@ declare module '../../core/SynthSource' {
 		 * @example
 		 * {@includeCode ../../examples/Coordinates/fisheye/sketch.js}
 		 */
-		fisheye(
-			amount?: SynthParameterValue,
-			centerX?: SynthParameterValue,
-			centerY?: SynthParameterValue
-		): this;
+		fisheye(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
 	}
 }

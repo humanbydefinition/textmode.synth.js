@@ -243,10 +243,7 @@ declare module '../../core/SynthSource' {
 		 * @example
 		 * {@includeCode ../../examples/Modulations/modulateKaleid/sketch.js}
 		 */
-		modulateKaleid(
-			source: SynthSource | SynthParameterValue,
-			nSides?: SynthParameterValue
-		): this;
+		modulateKaleid(source: SynthSource | SynthParameterValue, nSides?: SynthParameterValue): this;
 
 		/**
 		 * Modulate X scroll using another source.
