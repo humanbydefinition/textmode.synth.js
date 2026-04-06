@@ -22,7 +22,7 @@ It features IntelliSense & auto-completion, documentation on hover, curated exam
 
 ## Prerequisites
 
-- **textmode.js v0.8.5+** - This library depends on the core `textmode.js` package v0.8.5 or higher.
+- **textmode.js v0.9.1+** - This library depends on the core `textmode.js` package v0.9.1 or higher.
 
 ## Installation
 
