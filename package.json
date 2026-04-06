@@ -53,6 +53,7 @@
     "eslint-plugin-jsdoc": "^62.4.1",
     "husky": "^9.1.7",
     "jsdom": "^27.4.0",
+    "lint-staged": "^16.4.0",
     "markdownlint-cli2": "^0.20.0",
     "prettier": "^3.7.4",
     "size-limit": "^12.0.0",
@@ -110,6 +111,9 @@
     "url": "https://github.com/humanbydefinition/textmode.synth.js/issues"
   },
   "homepage": "https://code.textmode.art",
+  "lint-staged": {
+    "src/**/*.{ts,js}": "prettier --write"
+  },
   "files": [
     "dist"
   ]
