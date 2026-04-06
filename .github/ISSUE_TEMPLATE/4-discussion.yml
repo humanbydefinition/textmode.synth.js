@@ -1,0 +1,19 @@
+name: Discussion
+description: Start a broader discussion about the textmode.synth.js library.
+title: "[Discussion]: "
+labels: [Discussion]
+body:
+  - type: textarea
+    id: topic
+    attributes:
+      label: Topic or decision to discuss
+      description: What API direction, transform semantics, compiler behavior, docs strategy, or release decision do you want to discuss?
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: Include examples, prior discussion, tradeoffs, constraints, or specific questions that would make the discussion actionable.
+    validations:
+      required: false

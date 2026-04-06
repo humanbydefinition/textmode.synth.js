@@ -1,0 +1,101 @@
+name: Bug Report
+description: Report broken or incorrect behavior in textmode.synth.js.
+title: "[Bug]: "
+labels: [Bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for issues in the `textmode.synth.js` add-on library.
+
+        If the problem is in the core `textmode.js` engine, editor UI, fonts, or non-synth rendering APIs, please open it in the core repository instead.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I searched existing issues and did not find an obvious duplicate.
+          required: true
+        - label: I reproduced this with a minimal `textmode.synth.js` sketch, snippet, or shared playground link.
+          required: true
+  - type: checkboxes
+    id: area
+    attributes:
+      label: Most relevant area
+      description: You may select more than one.
+      options:
+        - label: Public API / chain composition
+        - label: Source generators / transforms
+        - label: GLSL compiler / uniforms
+        - label: Layer integration / plugin lifecycle
+        - label: Feedback / src() / external layers
+        - label: Performance / render loop
+        - label: TypeScript types / packaging
+        - label: Documentation / examples / playground
+        - label: Other
+  - type: input
+    id: synth-version
+    attributes:
+      label: textmode.synth.js version
+      description: Example: 1.5.1
+      placeholder: 1.5.1
+    validations:
+      required: true
+  - type: input
+    id: textmode-version
+    attributes:
+      label: textmode.js version
+      description: Include the installed peer dependency version.
+      placeholder: 0.9.1
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Browser/runtime, GPU, bundler, and OS
+      description: Include browser/version or runtime, operating system, GPU if relevant, and how you load the library.
+      placeholder: Chrome 135, macOS 15.4, Apple M3 GPU, npm + Vite, ESM import
+    validations:
+      required: true
+  - type: input
+    id: setup
+    attributes:
+      label: Integration setup
+      description: Note whether you are using `SynthPlugin`, direct `.synth()` calls, TypeScript, UMD, the playground, or another setup detail that matters.
+      placeholder: SynthPlugin on a base layer in a TypeScript + Vite app
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Include a minimal repro. A shared `synth.textmode.art` or `editor.textmode.art` sketch, or a reduced code snippet, is ideal. Add console errors if present.
+      value: |
+        1.
+        2.
+        3.
+
+        Minimal repro:
+
+        ```js
+        // Paste the smallest example that still reproduces the issue.
+        ```
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional context
+      description: Screenshots, recordings, GPU details, stack traces, shader errors, related issues, or links to a repro.
+    validations:
+      required: false

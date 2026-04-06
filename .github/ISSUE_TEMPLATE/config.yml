@@ -1,0 +1,14 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://code.textmode.art/api/textmode.synth.js/
+    about: Start with the synth-specific API reference, guides, and examples before opening a usage question.
+  - name: Synth Playground
+    url: https://synth.textmode.art
+    about: Reproduce synth-chain, transform, and shader issues in a minimal sketch you can share.
+  - name: textmode.js Core Repository
+    url: https://github.com/humanbydefinition/textmode.js/issues
+    about: File issues there for textmode.js problems.
+  - name: Discord
+    url: https://discord.gg/sjrw8QXNks
+    about: Ask usage questions, sanity-check ideas, or discuss library behavior before filing an issue.
