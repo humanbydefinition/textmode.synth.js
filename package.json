@@ -21,6 +21,8 @@
   "scripts": {
     "dev": "vite --port 5174 --host",
     "build": "vite build && tsc",
+    "check:api-docs": "node ./scripts/check-public-api-docs.mjs",
+    "check:api-docs:accessors": "node ./scripts/check-public-api-docs.mjs --include-accessors",
     "preview": "vite preview",
     "build:docs": "typedoc",
     "test": "vitest",
