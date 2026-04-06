@@ -7,6 +7,7 @@
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
 import { TT_COMBINE_COORD } from '../../core/constants';
+import type { SynthParameterValue } from '../../core/types';
 
 function createModulateScrollTransform(axis: 'x' | 'y'): TransformDefinition {
 	const name = axis === 'x' ? 'modulateScrollX' : 'modulateScrollY';
@@ -174,3 +175,166 @@ export const COMBINE_COORD_TRANSFORMS: TransformDefinition[] = [
 	modulateRepeatY,
 	modulateHue,
 ];
+
+// ── Type Declarations ──────────────────────────────────────────────────────────
+
+declare module '../../core/SynthSource' {
+	interface SynthSource {
+		/**
+		 * Modulate coordinates using another source.
+		 * @param source - Modulation source
+		 * @param amount - Modulation amount (default: 0.1)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Modulations/modulate/sketch.js}
+		 */
+		modulate(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+		/**
+		 * Modulate scale using another source.
+		 * @param source - Modulation source
+		 * @param multiple - Scale multiplier (default: 1.0)
+		 * @param offset - Offset amount (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Modulations/modulateScale/sketch.js}
+		 */
+		modulateScale(
+			source: SynthSource | SynthParameterValue,
+			multiple?: SynthParameterValue,
+			offset?: SynthParameterValue
+		): this;
+
+		/**
+		 * Modulate rotation using another source.
+		 * @param source - Modulation source
+		 * @param multiple - Rotation multiplier (default: 1.0)
+		 * @param offset - Offset amount (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Modulations/modulateRotate/sketch.js}
+		 */
+		modulateRotate(
+			source: SynthSource | SynthParameterValue,
+			multiple?: SynthParameterValue,
+			offset?: SynthParameterValue
+		): this;
+
+		/**
+		 * Modulate pixelation using another source.
+		 * @param source - Modulation source
+		 * @param multiple - Pixelation multiplier (default: 10.0)
+		 * @param offset - Offset amount (default: 3.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Modulations/modulatePixelate/sketch.js}
+		 */
+		modulatePixelate(
+			source: SynthSource | SynthParameterValue,
+			multiple?: SynthParameterValue,
+			offset?: SynthParameterValue
+		): this;
+
+		/**
+		 * Modulate kaleidoscope using another source.
+		 * @param source - Modulation source
+		 * @param nSides - Number of sides (default: 4.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Modulations/modulateKaleid/sketch.js}
+		 */
+		modulateKaleid(
+			source: SynthSource | SynthParameterValue,
+			nSides?: SynthParameterValue
+		): this;
+
+		/**
+		 * Modulate X scroll using another source.
+		 * @param source - Modulation source
+		 * @param scrollX - X scroll amount (default: 0.5)
+		 * @param speed - Scroll speed (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Modulations/modulateScrollX/sketch.js}
+		 */
+		modulateScrollX(
+			source: SynthSource | SynthParameterValue,
+			scrollX?: SynthParameterValue,
+			speed?: SynthParameterValue
+		): this;
+
+		/**
+		 * Modulate Y scroll using another source.
+		 * @param source - Modulation source
+		 * @param scrollY - Y scroll amount (default: 0.5)
+		 * @param speed - Scroll speed (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Modulations/modulateScrollY/sketch.js}
+		 */
+		modulateScrollY(
+			source: SynthSource | SynthParameterValue,
+			scrollY?: SynthParameterValue,
+			speed?: SynthParameterValue
+		): this;
+
+		/**
+		 * Modulate repeat pattern with another source.
+		 * @param source - Modulation source
+		 * @param repeatX - X repetitions (default: 3.0)
+		 * @param repeatY - Y repetitions (default: 3.0)
+		 * @param offsetX - X offset (default: 0.5)
+		 * @param offsetY - Y offset (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Modulations/modulateRepeat/sketch.js}
+		 */
+		modulateRepeat(
+			source: SynthSource | SynthParameterValue,
+			repeatX?: SynthParameterValue,
+			repeatY?: SynthParameterValue,
+			offsetX?: SynthParameterValue,
+			offsetY?: SynthParameterValue
+		): this;
+
+		/**
+		 * Modulate X repeat with another source.
+		 * @param source - Modulation source
+		 * @param reps - Number of repetitions (default: 3.0)
+		 * @param offset - Offset amount (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Modulations/modulateRepeatX/sketch.js}
+		 */
+		modulateRepeatX(
+			source: SynthSource | SynthParameterValue,
+			reps?: SynthParameterValue,
+			offset?: SynthParameterValue
+		): this;
+
+		/**
+		 * Modulate Y repeat with another source.
+		 * @param source - Modulation source
+		 * @param reps - Number of repetitions (default: 3.0)
+		 * @param offset - Offset amount (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Modulations/modulateRepeatY/sketch.js}
+		 */
+		modulateRepeatY(
+			source: SynthSource | SynthParameterValue,
+			reps?: SynthParameterValue,
+			offset?: SynthParameterValue
+		): this;
+
+		/**
+		 * Modulate coordinates based on hue differences.
+		 * @param source - Modulation source
+		 * @param amount - Modulation amount (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Modulations/modulateHue/sketch.js}
+		 */
+		modulateHue(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+	}
+}

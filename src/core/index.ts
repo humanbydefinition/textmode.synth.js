@@ -12,6 +12,3 @@ export * from './types';
 // Classes
 export { SynthChain, type TransformRecord } from './SynthChain';
 export { SynthSource } from './SynthSource';
-
-// Interfaces (for documentation)
-export type { ISynthSource } from './ISynthSource';
