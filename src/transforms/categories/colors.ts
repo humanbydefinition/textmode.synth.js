@@ -5,12 +5,9 @@
  * brightness, contrast, saturation, hue shifting, and color manipulation.
  */
 
-import {
-	defineTransform,
-	type TransformDefinition,
-	type TransformInput,
-} from '../TransformDefinition';
+import { defineTransform, type TransformDefinition, type TransformInput } from '../TransformDefinition';
 import { TT_COLOR } from '../../core/constants';
+import type { SynthParameterValue } from '../../core/types';
 
 const CHANNEL_INPUTS: TransformInput[] = [
 	{ name: 'scale', type: 'float', default: 1.0 },
@@ -262,3 +259,210 @@ export const COLOR_TRANSFORMS: TransformDefinition[] = [
 	clamp,
 	seed,
 ];
+
+// ── Type Declarations ──────────────────────────────────────────────────────────
+
+declare module '../../core/SynthSource' {
+	interface SynthSource {
+		/**
+		 * Adjust brightness.
+		 * @param amount - Brightness adjustment amount (default: 0.4)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/brightness/sketch.js}
+		 */
+		brightness(amount?: SynthParameterValue): this;
+
+		/**
+		 * Adjust contrast.
+		 * @param amount - Contrast amount (default: 1.6)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/contrast/sketch.js}
+		 */
+		contrast(amount?: SynthParameterValue): this;
+
+		/**
+		 * Invert colors.
+		 * @param amount - Inversion amount (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/invert/sketch.js}
+		 */
+		invert(amount?: SynthParameterValue): this;
+
+		/**
+		 * Adjust color saturation.
+		 * @param amount - Saturation amount (default: 2.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/saturate/sketch.js}
+		 */
+		saturate(amount?: SynthParameterValue): this;
+
+		/**
+		 * Shift hue.
+		 * @param hue - Hue shift amount (default: 0.4)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/hue/sketch.js}
+		 */
+		hue(hue?: SynthParameterValue): this;
+
+		/**
+		 * Apply colorama effect (hue rotation based on luminance).
+		 * @param amount - Effect amount (default: 0.005)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/colorama/sketch.js}
+		 */
+		colorama(amount?: SynthParameterValue): this;
+
+		/**
+		 * Posterize colors to limited palette.
+		 * @param bins - Number of color bins (default: 3.0)
+		 * @param gamma - Gamma correction (default: 0.6)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/posterize/sketch.js}
+		 */
+		posterize(bins?: SynthParameterValue, gamma?: SynthParameterValue): this;
+
+		/**
+		 * Apply threshold based on luminance.
+		 * @param threshold - Threshold value (default: 0.5)
+		 * @param tolerance - Tolerance range (default: 0.1)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/luma/sketch.js}
+		 */
+		luma(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
+
+		/**
+		 * Apply hard threshold.
+		 * @param threshold - Threshold value (default: 0.5)
+		 * @param tolerance - Tolerance range (default: 0.04)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/thresh/sketch.js}
+		 */
+		thresh(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
+
+		/**
+		 * Multiply all channels by a scalar value (grayscale).
+		 * @param gray - Scalar multiplier
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/color/sketch.js}
+		 */
+		color(gray: SynthParameterValue): this;
+		/**
+		 * Colorize a grayscale source or multiply an existing color source.
+		 *
+		 * This is the recommended way to add color to grayscale sources like `osc()`,
+		 * `noise()`, or `voronoi()`.
+		 *
+		 * @param r - Red channel multiplier (default: 1.0)
+		 * @param g - Green channel multiplier (default: 1.0)
+		 * @param b - Blue channel multiplier (default: 1.0)
+		 * @param a - Alpha channel multiplier (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/color2/sketch.js}
+		 */
+		color(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
+
+		/**
+		 * Extract the red channel as a grayscale value.
+		 * @param scale - Scale multiplier (default: 1.0)
+		 * @param offset - Offset amount (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/r/sketch.js}
+		 */
+		r(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
+
+		/**
+		 * Extract the green channel as a grayscale value.
+		 * @param scale - Scale multiplier (default: 1.0)
+		 * @param offset - Offset amount (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/g/sketch.js}
+		 */
+		g(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
+
+		/**
+		 * Extract the blue channel as a grayscale value.
+		 * @param scale - Scale multiplier (default: 1.0)
+		 * @param offset - Offset amount (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/b/sketch.js}
+		 */
+		b(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
+
+		/**
+		 * Shift color channels by adding offset values.
+		 * @param r - Red channel shift (default: 0.5)
+		 * @param g - Green channel shift (default: 0.0)
+		 * @param b - Blue channel shift (default: 0.0)
+		 * @param a - Alpha channel shift (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/shift/sketch.js}
+		 */
+		shift(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
+
+		/**
+		 * Apply gamma correction for nonlinear brightness control.
+		 * @param amount - Gamma value (default: 1.0, < 1.0 brightens, > 1.0 darkens)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/gamma/sketch.js}
+		 */
+		gamma(amount?: SynthParameterValue): this;
+
+		/**
+		 * Adjust input/output levels and gamma for precise tonal control.
+		 * @param inMin - Input minimum (default: 0.0)
+		 * @param inMax - Input maximum (default: 1.0)
+		 * @param outMin - Output minimum (default: 0.0)
+		 * @param outMax - Output maximum (default: 1.0)
+		 * @param gamma - Gamma correction (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/levels/sketch.js}
+		 */
+		levels(
+			inMin?: SynthParameterValue,
+			inMax?: SynthParameterValue,
+			outMin?: SynthParameterValue,
+			outMax?: SynthParameterValue,
+			gamma?: SynthParameterValue
+		): this;
+
+		/**
+		 * Clamp color values to a specified range for stability.
+		 * @param min - Minimum value (default: 0.0)
+		 * @param max - Maximum value (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/clamp/sketch.js}
+		 */
+		clamp(min?: SynthParameterValue, max?: SynthParameterValue): this;
+
+		/**
+		 * Set a seed for deterministic randomness in this source chain.
+		 *
+		 * When set, noise-based functions (noise, voronoi) will produce
+		 * reproducible patterns. Different seeds produce different patterns.
+		 *
+		 * @param value - Seed value (any number)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Colors/seed/sketch.js}
+		 */
+		seed(value: SynthParameterValue): this;
+	}
+}

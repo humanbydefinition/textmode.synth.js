@@ -7,6 +7,7 @@
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
 import { TT_COMBINE } from '../../core/constants';
+import type { SynthParameterValue } from '../../core/types';
 
 const GLSL_MIX_RESULT = `
 	vec3 outRgb = mix(_c0.rgb, result, amount);
@@ -199,3 +200,156 @@ export const COMBINE_TRANSFORMS: TransformDefinition[] = [
 	lighten,
 	darken,
 ];
+
+// ── Type Declarations ──────────────────────────────────────────────────────────
+
+declare module '../../core/SynthSource' {
+	interface SynthSource {
+		/**
+		 * Add another source.
+		 * @param source - Source to add
+		 * @param amount - Blend amount (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/add/sketch.js}
+		 */
+		add(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+		/**
+		 * Subtract another source.
+		 * @param source - Source to subtract
+		 * @param amount - Blend amount (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/sub/sketch.js}
+		 */
+		sub(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+		/**
+		 * Multiply with another source.
+		 * @param source - Source to multiply
+		 * @param amount - Blend amount (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/mult/sketch.js}
+		 */
+		mult(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+		/**
+		 * Blend with another source.
+		 * @param source - Source to blend
+		 * @param amount - Blend amount (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/blend/sketch.js}
+		 */
+		blend(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+		/**
+		 * Difference with another source.
+		 * @param source - Source to compare
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/diff/sketch.js}
+		 */
+		diff(source: SynthSource | SynthParameterValue): this;
+
+		/**
+		 * Layer another source on top.
+		 * @param source - Source to layer
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/layer/sketch.js}
+		 */
+		layer(source: SynthSource | SynthParameterValue): this;
+
+		/**
+		 * Mask using another source.
+		 * @param source - Source to use as mask
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/mask/sketch.js}
+		 */
+		mask(source: SynthSource | SynthParameterValue): this;
+
+		/**
+		 * Screen blend with another source.
+		 * @param source - Source to screen
+		 * @param amount - Blend amount (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/screen/sketch.js}
+		 */
+		screen(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+		/**
+		 * Overlay blend with another source.
+		 * @param source - Source to overlay
+		 * @param amount - Blend amount (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/overlay/sketch.js}
+		 */
+		overlay(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+		/**
+		 * Soft light blend with another source.
+		 * @param source - Source to softlight
+		 * @param amount - Blend amount (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/softlight/sketch.js}
+		 */
+		softlight(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+		/**
+		 * Hard light blend with another source.
+		 * @param source - Source to hardlight
+		 * @param amount - Blend amount (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/hardlight/sketch.js}
+		 */
+		hardlight(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+		/**
+		 * Color dodge blend with another source.
+		 * @param source - Source to dodge
+		 * @param amount - Blend amount (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/dodge/sketch.js}
+		 */
+		dodge(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+		/**
+		 * Color burn blend with another source.
+		 * @param source - Source to burn
+		 * @param amount - Blend amount (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/burn/sketch.js}
+		 */
+		burn(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+		/**
+		 * Lighten blend with another source.
+		 * @param source - Source to lighten
+		 * @param amount - Blend amount (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/lighten/sketch.js}
+		 */
+		lighten(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+
+		/**
+		 * Darken blend with another source.
+		 * @param source - Source to darken
+		 * @param amount - Blend amount (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Combines/darken/sketch.js}
+		 */
+		darken(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
+	}
+}

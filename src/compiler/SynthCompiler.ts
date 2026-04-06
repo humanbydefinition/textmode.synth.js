@@ -77,13 +77,7 @@ class SynthCompiler {
 		this._reset();
 
 		// Compile the main chain (default color white for visibility)
-		const chainResult = this._compileChain(
-			source,
-			'main',
-			'vec4(1.0, 1.0, 1.0, 1.0)',
-			'v_uv',
-			'main'
-		);
+		const chainResult = this._compileChain(source, 'main', 'vec4(1.0, 1.0, 1.0, 1.0)', 'v_uv', 'main');
 
 		// Compile character source if using char() function
 		let charVar: string | undefined = chainResult.charVar;
@@ -118,11 +112,7 @@ class SynthCompiler {
 		}
 
 		// Generate character output
-		const charOutputCode = generateCharacterOutputCode(
-			!!charVar,
-			charVar ?? 'vec4(0.0)',
-			chainResult.colorVar
-		);
+		const charOutputCode = generateCharacterOutputCode(!!charVar, charVar ?? 'vec4(0.0)', chainResult.colorVar);
 
 		// Get feedback usage from tracker
 		const feedbackUsage = this._feedbackTracker.getUsage();
@@ -179,21 +169,13 @@ class SynthCompiler {
 	private _compileCharSource(source: SynthSource): string {
 		this._usesCharSource = true;
 
-		const charChain = this._compileChain(
-			source.charSource!,
-			'charSrc',
-			'vec4(1.0, 1.0, 1.0, 1.0)',
-			'v_uv',
-			'char'
-		);
+		const charChain = this._compileChain(source.charSource!, 'charSrc', 'vec4(1.0, 1.0, 1.0, 1.0)', 'v_uv', 'char');
 
 		const charVar = `charFromSource_${this._varCounter++}`;
 
 		// Use uniform for char count - set at render time based on charMap or font
 		this._mainCode.push(`\t// Convert charSource color to character index`);
-		this._mainCode.push(
-			`\tfloat charLum_${charVar} = clamp(_luminance(${charChain.colorVar}.rgb), 0.0, 1.0);`
-		);
+		this._mainCode.push(`\tfloat charLum_${charVar} = clamp(_luminance(${charChain.colorVar}.rgb), 0.0, 1.0);`);
 		this._mainCode.push(`\tfloat charCount_${charVar} = max(u_charSourceCount, 1.0);`);
 		this._mainCode.push(
 			`\tint charIdx_${charVar} = int(min(charLum_${charVar} * charCount_${charVar}, charCount_${charVar} - 1.0));`
@@ -271,11 +253,7 @@ class SynthCompiler {
 			this._glslFunctions.add(glslFunc);
 
 			// Process arguments
-			const args = this._processArguments(
-				record.userArgs,
-				def.inputs,
-				`${prefix}_${i}_${record.name}`
-			);
+			const args = this._processArguments(record.userArgs, def.inputs, `${prefix}_${i}_${record.name}`);
 
 			// Handle nested sources for combine operations
 			const nestedSource = source.nestedSources.get(i);
@@ -393,11 +371,7 @@ class SynthCompiler {
 			const input = inputs[i];
 			const arg = userArgs[i] ?? input.default;
 
-			const processed = this._uniformManager.processArgument(
-				arg as never,
-				input as never,
-				prefix
-			);
+			const processed = this._uniformManager.processArgument(arg as never, input as never, prefix);
 			result.push(processed.glslValue);
 		}
 

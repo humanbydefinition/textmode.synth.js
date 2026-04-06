@@ -1,0 +1,68 @@
+name: Existing Feature Enhancement
+description: Suggest an improvement to an existing textmode.synth.js feature.
+title: "[Enhancement]: "
+labels: [Enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form when an existing `textmode.synth.js` API, transform, compiler behavior, or example should work better.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I searched existing issues and did not find an obvious duplicate.
+          required: true
+        - label: This is about improving an existing library feature, not requesting an entirely new capability.
+          required: true
+  - type: checkboxes
+    id: area
+    attributes:
+      label: Most relevant area
+      description: You may select more than one.
+      options:
+        - label: Public API / chain composition
+        - label: Source generators / transforms
+        - label: GLSL compiler / uniforms
+        - label: Layer integration / plugin lifecycle
+        - label: Feedback / src() / external layers
+        - label: Performance / render loop
+        - label: TypeScript types / packaging
+        - label: Documentation / examples / playground
+        - label: Other
+  - type: input
+    id: target
+    attributes:
+      label: Existing feature, API, or transform
+      description: Name the method, source, example, compiler behavior, or plugin hook you want improved.
+      placeholder: kaleid(), modulateScale(), charMap(), src(), UniformManager, playground examples
+    validations:
+      required: true
+  - type: textarea
+    id: current
+    attributes:
+      label: Current behavior
+      description: Describe the existing feature and what is limiting about it today.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed enhancement
+    validations:
+      required: true
+  - type: textarea
+    id: impact
+    attributes:
+      label: Creative, ergonomic, or maintenance impact
+      description: Explain how this improves live coding, shader authoring, textmode integration, docs, or contributor ergonomics.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives, compatibility, or performance concerns
+      description: Include workarounds, competing API shapes, breaking-change risks, hot-path concerns, or reasons to avoid the change.
+    validations:
+      required: false

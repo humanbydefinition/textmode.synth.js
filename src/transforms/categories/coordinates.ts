@@ -7,6 +7,7 @@
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
 import { TT_COORD } from '../../core/constants';
+import type { SynthParameterValue } from '../../core/types';
 
 function createScrollTransform(axis: 'x' | 'y'): TransformDefinition {
 	const name = axis === 'x' ? 'scrollX' : 'scrollY';
@@ -335,3 +336,229 @@ export const COORD_TRANSFORMS: TransformDefinition[] = [
 	pinch,
 	fisheye,
 ];
+
+// ── Type Declarations ──────────────────────────────────────────────────────────
+
+declare module '../../core/SynthSource' {
+	interface SynthSource {
+		/**
+		 * Rotate coordinates.
+		 * @param angle - Rotation angle in radians (default: 10.0)
+		 * @param speed - Rotation speed multiplier (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/rotate/sketch.js}
+		 */
+		rotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this;
+
+		/**
+		 * Scale coordinates.
+		 * @param amount - Scale amount (default: 1.5)
+		 * @param xMult - X axis multiplier (default: 1.0)
+		 * @param yMult - Y axis multiplier (default: 1.0)
+		 * @param offsetX - X offset (default: 0.5)
+		 * @param offsetY - Y offset (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/scale/sketch.js}
+		 */
+		scale(
+			amount?: SynthParameterValue,
+			xMult?: SynthParameterValue,
+			yMult?: SynthParameterValue,
+			offsetX?: SynthParameterValue,
+			offsetY?: SynthParameterValue
+		): this;
+
+		/**
+		 * Scroll coordinates in both X and Y directions.
+		 * @param scrollX - X scroll amount (default: 0.5)
+		 * @param scrollY - Y scroll amount (default: 0.5)
+		 * @param speedX - X scroll speed (default: 0.0)
+		 * @param speedY - Y scroll speed (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/scroll/sketch.js}
+		 */
+		scroll(
+			scrollX?: SynthParameterValue,
+			scrollY?: SynthParameterValue,
+			speedX?: SynthParameterValue,
+			speedY?: SynthParameterValue
+		): this;
+
+		/**
+		 * Scroll coordinates in X direction.
+		 * @param scrollX - X scroll amount (default: 0.5)
+		 * @param speed - Scroll speed (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/scrollX/sketch.js}
+		 */
+		scrollX(scrollX?: SynthParameterValue, speed?: SynthParameterValue): this;
+
+		/**
+		 * Scroll coordinates in Y direction.
+		 * @param scrollY - Y scroll amount (default: 0.5)
+		 * @param speed - Scroll speed (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/scrollY/sketch.js}
+		 */
+		scrollY(scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
+
+		/**
+		 * Pixelate the output.
+		 * @param pixelX - Pixel size in X (default: 20.0)
+		 * @param pixelY - Pixel size in Y (default: 20.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/pixelate/sketch.js}
+		 */
+		pixelate(pixelX?: SynthParameterValue, pixelY?: SynthParameterValue): this;
+
+		/**
+		 * Repeat coordinates in both X and Y directions.
+		 * @param repeatX - Number of X repetitions (default: 3.0)
+		 * @param repeatY - Number of Y repetitions (default: 3.0)
+		 * @param offsetX - X offset between repetitions (default: 0.0)
+		 * @param offsetY - Y offset between repetitions (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/repeat/sketch.js}
+		 */
+		repeat(
+			repeatX?: SynthParameterValue,
+			repeatY?: SynthParameterValue,
+			offsetX?: SynthParameterValue,
+			offsetY?: SynthParameterValue
+		): this;
+
+		/**
+		 * Repeat coordinates in X direction.
+		 * @param reps - Number of repetitions (default: 3.0)
+		 * @param offset - Offset between repetitions (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/repeatX/sketch.js}
+		 */
+		repeatX(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
+
+		/**
+		 * Repeat coordinates in Y direction.
+		 * @param reps - Number of repetitions (default: 3.0)
+		 * @param offset - Offset between repetitions (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/repeatY/sketch.js}
+		 */
+		repeatY(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
+
+		/**
+		 * Apply kaleidoscope effect.
+		 * @param nSides - Number of kaleidoscope sides (default: 4.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/kaleid/sketch.js}
+		 */
+		kaleid(nSides?: SynthParameterValue): this;
+
+		/**
+		 * Convert coordinates to polar space.
+		 * @param angle - Angle offset in radians (default: 0.0)
+		 * @param radius - Radius multiplier (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/polar/sketch.js}
+		 */
+		polar(angle?: SynthParameterValue, radius?: SynthParameterValue): this;
+
+		/**
+		 * Twirl distortion with radial falloff.
+		 * @param amount - Twirl strength (default: 2.0)
+		 * @param radius - Effect radius (default: 0.5)
+		 * @param centerX - Center X (default: 0.5)
+		 * @param centerY - Center Y (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/twirl/sketch.js}
+		 */
+		twirl(
+			amount?: SynthParameterValue,
+			radius?: SynthParameterValue,
+			centerX?: SynthParameterValue,
+			centerY?: SynthParameterValue
+		): this;
+
+		/**
+		 * Swirl distortion around a center.
+		 * @param amount - Swirl strength (default: 4.0)
+		 * @param centerX - Center X (default: 0.5)
+		 * @param centerY - Center Y (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/swirl/sketch.js}
+		 */
+		swirl(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
+
+		/**
+		 * Mirror coordinates across X and/or Y axes.
+		 * @param mirrorX - Mirror X (0-1, default: 1.0)
+		 * @param mirrorY - Mirror Y (0-1, default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/mirror/sketch.js}
+		 */
+		mirror(mirrorX?: SynthParameterValue, mirrorY?: SynthParameterValue): this;
+
+		/**
+		 * Shear coordinates along X and Y axes.
+		 * @param x - X shear amount (default: 0.0)
+		 * @param y - Y shear amount (default: 0.0)
+		 * @param centerX - Center X (default: 0.5)
+		 * @param centerY - Center Y (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/shear/sketch.js}
+		 */
+		shear(
+			x?: SynthParameterValue,
+			y?: SynthParameterValue,
+			centerX?: SynthParameterValue,
+			centerY?: SynthParameterValue
+		): this;
+
+		/**
+		 * Barrel distortion (bulge outward).
+		 * @param amount - Distortion amount (default: 0.5)
+		 * @param centerX - Center X (default: 0.5)
+		 * @param centerY - Center Y (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/barrel/sketch.js}
+		 */
+		barrel(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
+
+		/**
+		 * Pinch distortion (pull inward).
+		 * @param amount - Distortion amount (default: 0.5)
+		 * @param centerX - Center X (default: 0.5)
+		 * @param centerY - Center Y (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/pinch/sketch.js}
+		 */
+		pinch(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
+
+		/**
+		 * Fisheye lens distortion.
+		 * @param amount - Distortion amount (default: 1.0)
+		 * @param centerX - Center X (default: 0.5)
+		 * @param centerY - Center Y (default: 0.5)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Coordinates/fisheye/sketch.js}
+		 */
+		fisheye(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
+	}
+}

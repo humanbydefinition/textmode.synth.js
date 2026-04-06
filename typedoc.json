@@ -4,12 +4,16 @@
     ],
     "out": "api/textmode.synth.js",
     "readme": "none",
+    "excludeInternal": true,
     "excludePrivate": true,
     "excludeProtected": true,
     "excludeExternals": false,
     "includeVersion": false,
     "disableSources": true,
     "useCodeBlocks": true,
+    "jsDocCompatibility": {
+        "exampleTag": false
+    },
     "tsconfig": "tsconfig.json",
     "exclude": [
         "**/node_modules/**"
@@ -22,7 +26,18 @@
         "typedoc-plugin-markdown",
         "typedoc-plugin-frontmatter",
         "typedoc-vitepress-theme",
+        "./typedoc-plugins/accessor-signature-order.js",
+        "./typedoc-plugins/example-author.js",
         "./typedoc-plugins/custom-frontmatter.js"
+    ],
+    "frontmatterGlobals": {
+        "layout": "doc",
+        "editLink": true
+    },
+    "frontmatterCommentTags": [
+        "author",
+        "since",
+        "deprecated"
     ],
     "preserveFrontmatterCommentTags": false,
     "frontmatterNamingConvention": "camelCase",
@@ -32,5 +47,5 @@
     "enumMembersFormat": "table",
     "propertyMembersFormat": "table",
     "typeDeclarationFormat": "table",
-    "cleanOutputDir": true,
+    "cleanOutputDir": true
 }

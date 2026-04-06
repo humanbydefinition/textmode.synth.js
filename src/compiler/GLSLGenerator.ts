@@ -225,26 +225,18 @@ export function generateFragmentShader(options: ShaderGenerationOptions): string
 	if (externalLayers) {
 		for (const [, info] of externalLayers) {
 			if (info.usesChar) {
-				externalLayerDecls.push(
-					`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.char};`
-				);
+				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.char};`);
 			}
 			if (info.usesCharColor) {
-				externalLayerDecls.push(
-					`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.charColor};`
-				);
+				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.charColor};`);
 			}
 			if (info.usesCellColor) {
-				externalLayerDecls.push(
-					`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.cellColor};`
-				);
+				externalLayerDecls.push(`uniform sampler2D ${info.uniformPrefix}${CHANNEL_SUFFIXES.cellColor};`);
 			}
 		}
 	}
 	const externalLayerDecl =
-		externalLayerDecls.length > 0
-			? `// External layer samplers\n${externalLayerDecls.join('\n')}`
-			: '';
+		externalLayerDecls.length > 0 ? `// External layer samplers\n${externalLayerDecls.join('\n')}` : '';
 
 	// TextmodeSource sampler declarations
 	const textmodeSourceDecls: string[] = [];
@@ -309,11 +301,7 @@ ${charMapCode}
 /**
  * Generate character output code based on chain result.
  */
-export function generateCharacterOutputCode(
-	hasCharVar: boolean,
-	charVar: string,
-	colorVar: string
-): string {
+export function generateCharacterOutputCode(hasCharVar: boolean, charVar: string, colorVar: string): string {
 	if (hasCharVar) {
 		return `
 	// Character output from generator

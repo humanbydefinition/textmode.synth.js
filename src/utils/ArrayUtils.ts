@@ -17,15 +17,13 @@ export const EASING_FUNCTIONS = {
 	easeInOutQuad: (t: number) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t),
 	easeInCubic: (t: number) => t * t * t,
 	easeOutCubic: (t: number) => --t * t * t + 1,
-	easeInOutCubic: (t: number) =>
-		t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1,
+	easeInOutCubic: (t: number) => (t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1),
 	easeInQuart: (t: number) => t * t * t * t,
 	easeOutQuart: (t: number) => 1 - --t * t * t * t,
 	easeInOutQuart: (t: number) => (t < 0.5 ? 8 * t * t * t * t : 1 - 8 * --t * t * t * t),
 	easeInQuint: (t: number) => t * t * t * t * t,
 	easeOutQuint: (t: number) => 1 + --t * t * t * t * t,
-	easeInOutQuint: (t: number) =>
-		t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t,
+	easeInOutQuint: (t: number) => (t < 0.5 ? 16 * t * t * t * t * t : 1 + 16 * --t * t * t * t * t),
 	sin: (t: number) => (1 + Math.sin(Math.PI * t - Math.PI / 2)) / 2,
 };
 
@@ -37,22 +35,7 @@ export const EASING_FUNCTIONS = {
  * `'easeInOutQuart'`, `'easeInQuint'`, `'easeOutQuint'`, `'easeInOutQuint'`, `'sin'`
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   shape(4)
- *     .rotate([-1.5, 1.5].ease('easeInOutCubic'))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Arrays/easingFunction/sketch.js}
  */
 export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => number);
 
@@ -64,22 +47,7 @@ export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => num
  * manually tracking time or state.
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   osc([4, 8, 12].fast(1.5), 0.1, 1.2)
- *     .kaleid(5)
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Arrays/arrays/sketch.js}
  */
 export interface ModulatedArray extends Array<number> {
 	/** Speed multiplier for array cycling @ignore */
@@ -101,22 +69,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * ```javascript
-	 * const t = textmode.create({
-	 *   width: window.innerWidth,
-	 *   height: window.innerHeight,
-	 *   plugins: [SynthPlugin]
-	 * });
-	 *
-	 * t.layers.base.synth(
-	 *   osc([4, 8, 12].fast(2), 0.1, 1.2)
-	 *     .kaleid(5)
-	 * );
-	 *
-	 * t.windowResized(() => {
-	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
-	 * });
-	 * ```
+	 * {@includeCode ../../examples/Arrays/fast/sketch.js}
 	 */
 	fast(speed: number): this;
 
@@ -131,22 +84,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * ```javascript
-	 * const t = textmode.create({
-	 *   width: window.innerWidth,
-	 *   height: window.innerHeight,
-	 *   plugins: [SynthPlugin]
-	 * });
-	 *
-	 * t.layers.base.synth(
-	 *   shape(5, 0.4)
-	 *     .scale([0.6, 1.2].smooth(0.8))
-	 * );
-	 *
-	 * t.windowResized(() => {
-	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
-	 * });
-	 * ```
+	 * {@includeCode ../../examples/Arrays/smooth/sketch.js}
 	 */
 	smooth(amount?: number): this;
 
@@ -166,22 +104,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * ```javascript
-	 * const t = textmode.create({
-	 *   width: window.innerWidth,
-	 *   height: window.innerHeight,
-	 *   plugins: [SynthPlugin]
-	 * });
-	 *
-	 * t.layers.base.synth(
-	 *   shape(4)
-	 *     .rotate([-1.5, 1.5].ease('sin'))
-	 * );
-	 *
-	 * t.windowResized(() => {
-	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
-	 * });
-	 * ```
+	 * {@includeCode ../../examples/Arrays/ease/sketch.js}
 	 */
 	ease(ease: EasingFunction): this;
 
@@ -199,24 +122,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * ```javascript
-	 * const t = textmode.create({
-	 *   width: window.innerWidth,
-	 *   height: window.innerHeight,
-	 *   plugins: [SynthPlugin]
-	 * });
-	 *
-	 * const base = [6, 12, 18].fast(1.5);
-	 *
-	 * t.layers.base.synth(
-	 *   osc(base, 0.1, 1.2)
-	 *     .layer(osc(base.offset(0.5), 0.1, 1.2), 0.5)
-	 * );
-	 *
-	 * t.windowResized(() => {
-	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
-	 * });
-	 * ```
+	 * {@includeCode ../../examples/Arrays/offset/sketch.js}
 	 */
 	offset(offset: number): this;
 
@@ -235,22 +141,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns A new ModulatedArray with remapped values
 	 *
 	 * @example
-	 * ```javascript
-	 * const t = textmode.create({
-	 *   width: window.innerWidth,
-	 *   height: window.innerHeight,
-	 *   plugins: [SynthPlugin]
-	 * });
-	 *
-	 * t.layers.base.synth(
-	 *   shape(6)
-	 *     .scale([2, 6].fit(0.5, 1.5))
-	 * );
-	 *
-	 * t.windowResized(() => {
-	 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
-	 * });
-	 * ```
+	 * {@includeCode ../../examples/Arrays/fit/sketch.js}
 	 */
 	fit(low: number, high: number): ModulatedArray;
 }
@@ -328,9 +219,7 @@ export function initArrayUtils(): void {
 		value: function (this: ModulatedArray, low = 0, high = 1): ModulatedArray {
 			const lowest = Math.min(...this);
 			const highest = Math.max(...this);
-			const newArr = this.map((num) =>
-				map(num, lowest, highest, low, high)
-			) as ModulatedArray;
+			const newArr = this.map((num) => map(num, lowest, highest, low, high)) as ModulatedArray;
 			newArr._speed = this._speed;
 			newArr._smooth = this._smooth;
 			newArr._ease = this._ease;

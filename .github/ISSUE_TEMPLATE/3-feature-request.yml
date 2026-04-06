@@ -1,0 +1,68 @@
+name: New Feature Request
+description: Request a new capability for textmode.synth.js.
+title: "[Feature]: "
+labels: [Feature Request]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form for new synthesis capabilities in the `textmode.synth.js` library itself.
+
+        This is the right place for new sources, transforms, modulation patterns, API surface, compiler support, or library-focused tooling. It is not the right place for core `textmode.js` editor or engine requests.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-flight checks
+      options:
+        - label: I searched existing issues and did not find an obvious duplicate.
+          required: true
+        - label: This request is specific to textmode.synth.js rather than the core textmode.js project.
+          required: true
+  - type: checkboxes
+    id: area
+    attributes:
+      label: Most relevant area
+      description: You may select more than one.
+      options:
+        - label: New source generator
+        - label: New transform / modulation primitive
+        - label: Compiler / GLSL capability
+        - label: Layer integration / plugin lifecycle
+        - label: Feedback / src() / external layers
+        - label: TypeScript types / packaging
+        - label: Documentation / examples / playground
+        - label: Contributor tooling / testing
+        - label: Other
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to solve
+      description: What are you unable to do today with the current library?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed feature or API shape
+      description: Describe the new source, transform, method signature, compiler behavior, or workflow you want.
+    validations:
+      required: true
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Example sketch or target workflow
+      description: Show the kind of code you want to write, even if the API is only approximate.
+      value: |
+        ```js
+        // Example:
+        // osc(10).myNewTransform(...).colorama(0.2)
+        ```
+    validations:
+      required: true
+  - type: textarea
+    id: examples
+    attributes:
+      label: Prior art, constraints, or implementation notes
+      description: Similar APIs in hydra-synth, shaders, creative-coding tools, or anything about compatibility, performance, or edge cases.
+    validations:
+      required: false

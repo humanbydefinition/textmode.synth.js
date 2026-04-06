@@ -7,6 +7,7 @@
 
 import { defineTransform, type TransformDefinition } from '../TransformDefinition';
 import { CHANNEL_SAMPLERS, TT_SRC } from '../../core/constants';
+import type { SynthParameterValue } from '../../core/types';
 
 export const osc = defineTransform({
 	name: 'osc',
@@ -207,3 +208,140 @@ export const SOURCE_TRANSFORMS: TransformDefinition[] = [
 	src,
 	srcTexture,
 ];
+
+// ── Type Declarations ──────────────────────────────────────────────────────────
+
+declare module '../../core/SynthSource' {
+	interface SynthSource {
+		/**
+		 * Generate oscillating patterns using sine waves.
+		 * @param frequency - Frequency of the oscillation (default: 60.0)
+		 * @param sync - Synchronization offset (default: 0.1)
+		 * @param offset - Phase offset (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Sources/osc/sketch.js}
+		 */
+		osc(frequency?: SynthParameterValue, sync?: SynthParameterValue, offset?: SynthParameterValue): this;
+
+		/**
+		 * Generate Perlin noise patterns.
+		 * @param scale - Scale of the noise pattern (default: 10.0)
+		 * @param speed - Animation speed (default: 0.1)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Sources/noise/sketch.js}
+		 */
+		noise(scale?: SynthParameterValue, speed?: SynthParameterValue): this;
+
+		/**
+		 * Generate plasma-like sine field patterns.
+		 * @param scale - Spatial scale of the plasma (default: 10.0)
+		 * @param speed - Animation speed (default: 0.5)
+		 * @param phase - Phase offset (default: 0.0)
+		 * @param contrast - Contrast adjustment (default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Sources/plasma/sketch.js}
+		 */
+		plasma(
+			scale?: SynthParameterValue,
+			speed?: SynthParameterValue,
+			phase?: SynthParameterValue,
+			contrast?: SynthParameterValue
+		): this;
+
+		/**
+		 * Generate moire interference patterns.
+		 * @param freqA - Frequency of first grating (default: 20.0)
+		 * @param freqB - Frequency of second grating (default: 21.0)
+		 * @param angleA - Angle of first grating in radians (default: 0.0)
+		 * @param angleB - Angle of second grating in radians (default: 1.5708)
+		 * @param speed - Animation speed (default: 0.1)
+		 * @param phase - Phase offset (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Sources/moire/sketch.js}
+		 */
+		moire(
+			freqA?: SynthParameterValue,
+			freqB?: SynthParameterValue,
+			angleA?: SynthParameterValue,
+			angleB?: SynthParameterValue,
+			speed?: SynthParameterValue,
+			phase?: SynthParameterValue
+		): this;
+
+		/**
+		 * Generate voronoi patterns.
+		 * @param scale - Scale of voronoi cells (default: 5.0)
+		 * @param speed - Animation speed (default: 0.3)
+		 * @param blending - Blending between cell regions (default: 0.3)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Sources/voronoi/sketch.js}
+		 */
+		voronoi(scale?: SynthParameterValue, speed?: SynthParameterValue, blending?: SynthParameterValue): this;
+
+		/**
+		 * Generate a rotating radial gradient.
+		 * @param speed - Rotation speed (default: 0.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Sources/gradient/sketch.js}
+		 */
+		gradient(speed?: SynthParameterValue): this;
+
+		/**
+		 * Generate geometric shapes (polygons).
+		 * @param sides - Number of sides (default: 3)
+		 * @param radius - Radius of the shape (default: 0.3)
+		 * @param smoothing - Edge smoothing amount (default: 0.01)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Sources/shape/sketch.js}
+		 */
+		shape(sides?: SynthParameterValue, radius?: SynthParameterValue, smoothing?: SynthParameterValue): this;
+
+		/**
+		 * Generate a solid grayscale color.
+		 * @param gray - Grayscale value (0-1)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Sources/solid/sketch.js}
+		 */
+		solid(gray: SynthParameterValue): this;
+		/**
+		 * Generate a solid color.
+		 * @param r - Red channel (0-1, default: 0.0)
+		 * @param g - Green channel (0-1, default: 0.0)
+		 * @param b - Blue channel (0-1, default: 0.0)
+		 * @param a - Alpha channel (0-1, default: 1.0)
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Sources/solid2/sketch.js}
+		 */
+		solid(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
+
+		/**
+		 * Sample the previous frame for feedback effects.
+		 *
+		 * `src()` samples the current layer's previous frame.
+		 * The sampled texture is context-aware based on where it's used in the synth chain:
+		 *
+		 * - Inside `char(...)` → samples previous frame's character data
+		 * - Inside `charColor(...)` → samples previous frame's primary color (character foreground)
+		 * - Inside `cellColor(...)` → samples previous frame's cell color (character background)
+		 * - Outside all three → samples previous frame's primary color
+		 *
+		 * This is the core of feedback loops - enabling effects like trails, motion blur,
+		 * and recursive patterns. Equivalent to hydra's `src(o0)` (self-reference).
+		 *
+		 * To sample from another layer, use the top-level `src(layer)` function instead.
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Sources/src/sketch.js}
+		 */
+		src(): this;
+	}
+}

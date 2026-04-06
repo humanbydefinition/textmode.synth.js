@@ -20,23 +20,7 @@ declare module 'textmode.js/layering' {
 		 * @param source A SynthSource chain or a factory function returning one
 		 *
 		 * @example
-		 * ```javascript
-		 * const t = textmode.create({
-		 *   width: window.innerWidth,
-		 *   height: window.innerHeight,
-		 *   plugins: [SynthPlugin]
-		 * });
-		 *
-		 * t.layers.base.synth(
-		 *   osc(8, 0.1, 1.2)
-		 *     .kaleid(5)
-		 *     .color(0.9, 0.2, 1.1)
-		 * );
-		 *
-		 * t.windowResized(() => {
-		 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
-		 * });
-		 * ```
+		 * {@includeCode ../../examples/Extensions/synth/sketch.js}
 		 */
 		synth(source: SynthSource | (() => SynthSource)): void;
 
@@ -50,25 +34,7 @@ declare module 'textmode.js/layering' {
 		 * Use this to reset a layer's synth state without removing the layer itself.
 		 *
 		 * @example
-		 * ```javascript
-		 * const t = textmode.create({
-		 *   width: window.innerWidth,
-		 *   height: window.innerHeight,
-		 *   plugins: [SynthPlugin]
-		 * });
-		 *
-		 * t.layers.base.synth(
-		 *   noise(8, 0.1)
-		 *     .charMap('@#%*+=-:. ')
-		 * );
-		 *
-		 * // Later, remove the synth output.
-		 * t.layers.base.clearSynth();
-		 *
-		 * t.windowResized(() => {
-		 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
-		 * });
-		 * ```
+		 * {@includeCode ../../examples/Extensions/clearSynth/sketch.js}
 		 */
 		clearSynth(): void;
 
@@ -82,24 +48,7 @@ declare module 'textmode.js/layering' {
 		 * @param value BPM value (beats per minute) for this layer
 		 *
 		 * @example
-		 * ```javascript
-		 * const t = textmode.create({
-		 *   width: window.innerWidth,
-		 *   height: window.innerHeight,
-		 *   plugins: [SynthPlugin]
-		 * });
-		 *
-		 * t.layers.base.bpm(90);
-		 *
-		 * t.layers.base.synth(
-		 *   osc([4, 8, 12].fast(2), 0.1, 1.2)
-		 *     .kaleid(5)
-		 * );
-		 *
-		 * t.windowResized(() => {
-		 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
-		 * });
-		 * ```
+		 * {@includeCode ../../examples/Extensions/layerBpm/sketch.js}
 		 */
 		bpm(value: number): void;
 
@@ -128,24 +77,7 @@ declare module 'textmode.js' {
 		 * @returns The BPM value that was set (for chaining)
 		 *
 		 * @example
-		 * ```javascript
-		 * const t = textmode.create({
-		 *   width: window.innerWidth,
-		 *   height: window.innerHeight,
-		 *   plugins: [SynthPlugin]
-		 * });
-		 *
-		 * t.bpm(120);
-		 *
-		 * t.layers.base.synth(
-		 *   osc([4, 8, 12].fast(2), 0.1, 1.2)
-		 *     .kaleid(5)
-		 * );
-		 *
-		 * t.windowResized(() => {
-		 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
-		 * });
-		 * ```
+		 * {@includeCode ../../examples/Extensions/bpm/sketch.js}
 		 */
 		bpm(value: number): number;
 
@@ -160,24 +92,7 @@ declare module 'textmode.js' {
 		 * @returns The seed value that was set
 		 *
 		 * @example
-		 * ```javascript
-		 * const t = textmode.create({
-		 *   width: window.innerWidth,
-		 *   height: window.innerHeight,
-		 *   plugins: [SynthPlugin]
-		 * });
-		 *
-		 * t.seed(42);
-		 *
-		 * t.layers.base.synth(
-		 *   noise(10, 0.1)
-		 *     .charMap('@#%*+=-:. ')
-		 * );
-		 *
-		 * t.windowResized(() => {
-		 *   t.resizeCanvas(window.innerWidth, window.innerHeight);
-		 * });
-		 * ```
+		 * {@includeCode ../../examples/Extensions/seed/sketch.js}
 		 */
 		seed(value: number | null): number | null;
 	}

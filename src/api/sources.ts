@@ -23,22 +23,7 @@ import { TextmodeSource } from 'textmode.js/loadables';
  * @returns A new SynthSource configured with cell color
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   cellColor(osc(6, 0.1, 1.2).invert())
- *     .char(noise(6))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Composition/cellColor/sketch.js}
  */
 export function cellColor(source: SynthSource): SynthSource;
 /**
@@ -51,22 +36,7 @@ export function cellColor(source: SynthSource): SynthSource;
  * @returns A new SynthSource configured with cell color
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   cellColor(0.05, 0.08, 0.1, 0.8)
- *     .char(noise(10))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Composition/cellColor2/sketch.js}
  */
 export function cellColor(
     r: SynthParameterValue,
@@ -80,22 +50,7 @@ export function cellColor(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   cellColor(0.2)
- *     .char(osc(6, 0.1, 1.2))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Composition/cellColor3/sketch.js}
  */
 export function cellColor(gray: SynthParameterValue): SynthSource;
 
@@ -118,23 +73,7 @@ export function cellColor(
  * @returns A new SynthSource configured for character generation
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   char(osc(6, 0.1, 1.2))
- *     .charMap('@#%*+=-:. ')
- *     .charColor(osc(12, 0.05, 0.2))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Composition/char/sketch.js}
  */
 export const char = (source: SynthSource): SynthSource => {
     return new SynthSource({ charSource: source });
@@ -153,22 +92,7 @@ export const char = (source: SynthSource): SynthSource => {
  * @returns A new SynthSource configured with character color
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   charColor(osc(10, 0.1, 1.2))
- *     .char(noise(8))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Composition/charColor/sketch.js}
  */
 export function charColor(source: SynthSource): SynthSource;
 /**
@@ -181,22 +105,7 @@ export function charColor(source: SynthSource): SynthSource;
  * @returns A new SynthSource configured with character color
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   charColor(1, 0.2, 0.1, 1)
- *     .char(noise(10))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Composition/charColor2/sketch.js}
  */
 export function charColor(
     r: SynthParameterValue,
@@ -210,22 +119,7 @@ export function charColor(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   charColor(0.9)
- *     .char(noise(6))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Composition/charColor3/sketch.js}
  */
 export function charColor(gray: SynthParameterValue): SynthSource;
 
@@ -243,22 +137,7 @@ export function charColor(
  * @param speed - Rotation speed (default: 0.0)
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   gradient(0.2)
- *     .kaleid(5)
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Sources/gradient/sketch.js}
  */
 export function gradient(
     speed?: number | number[] | ((ctx: SynthContext) => number)
@@ -272,22 +151,7 @@ export function gradient(
  * @param offset - Offset in noise space (default: 0.1)
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   noise(10, 0.1)
- *     .color(0.2, 0.6, 1.0)
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Sources/noise/sketch.js}
  */
 export function noise(
     scale?: number | number[] | ((ctx: SynthContext) => number),
@@ -304,22 +168,7 @@ export function noise(
  * @param contrast - Contrast adjustment (default: 1.0)
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   plasma(8, 0.6, 0.2, 1.4)
- *     .kaleid(4)
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Sources/plasma/sketch.js}
  */
 export function plasma(
     scale?: number | number[] | ((ctx: SynthContext) => number),
@@ -345,22 +194,7 @@ export function plasma(
  * @param phase - Phase offset (default: 0.0)
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   moire(14, 15, 0.2, 1.2, 0.2, 0.1)
- *     .color(0.7, 0.5, 1.1)
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Sources/moire/sketch.js}
  */
 export function moire(
     freqA?: number | number[] | ((ctx: SynthContext) => number),
@@ -387,23 +221,7 @@ export function moire(
  * @param offset - Phase offset (default: 0.0)
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   osc(8, 0.1, 1.2)
- *     .kaleid(5)
- *     .color(0.9, 0.2, 1.1)
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Sources/osc/sketch.js}
  */
 export function osc(
     frequency?: number | number[] | ((ctx: SynthContext) => number),
@@ -425,22 +243,7 @@ export function osc(
  * @returns A new SynthSource configured with both color sources
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   paint(osc(10, 0.1, 1.2).kaleid(4))
- *     .char(noise(6))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Composition/paint/sketch.js}
  */
 export function paint(source: SynthSource): SynthSource;
 /**
@@ -453,22 +256,7 @@ export function paint(source: SynthSource): SynthSource;
  * @returns A new SynthSource configured with both color sources
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   paint(0.9, 0.8, 0.7)
- *     .char(osc(6, 0.1, 0.5))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Composition/paint2/sketch.js}
  */
 export function paint(
     r: SynthParameterValue,
@@ -482,22 +270,7 @@ export function paint(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   paint(0.3)
- *     .char(noise(7))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Composition/paint3/sketch.js}
  */
 export function paint(gray: SynthParameterValue): SynthSource;
 
@@ -521,22 +294,7 @@ export function paint(
  * @param smoothing - Edge smoothing amount (default: 0.01)
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   shape(6, 0.35, 0.02)
- *     .rotate(() => t.secs)
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Sources/shape/sketch.js}
  */
 export function shape(
     sides?: number | number[] | ((ctx: SynthContext) => number),
@@ -551,22 +309,7 @@ export function shape(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   solid(0.4)
- *     .char(osc(6, 0.1, 1.2))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Sources/solid/sketch.js}
  */
 export function solid(gray: SynthParameterValue): SynthSource;
 
@@ -578,22 +321,7 @@ export function solid(gray: SynthParameterValue): SynthSource;
  * @param a - Alpha channel (0-1, default: 1.0)
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   solid(0.1, 0.2, 0.5, 1)
- *     .char(noise(8))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Sources/solid2/sketch.js}
  */
 export function solid(
     r?: SynthParameterValue,
@@ -645,23 +373,7 @@ export function solid(
  * @returns A new SynthSource that samples the specified source or self
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   src()
- *     .scale(1.01)
- *     .blend(osc(6, 0.1, 1.2), 0.1)
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Sources/src/sketch.js}
  */
 export const src = (
     source?:
@@ -744,22 +456,7 @@ function isTextmodeLayerObject(source: unknown): source is TextmodeLayer {
  * @param blending - Blending between cell regions (default: 0.3)
  *
  * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.layers.base.synth(
- *   voronoi(6, 0.4, 0.2)
- *     .color(0.8, 0.4, 1.2)
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * {@includeCode ../../examples/Sources/voronoi/sketch.js}
  */
 export function voronoi(
     scale?: number | number[] | ((ctx: SynthContext) => number),

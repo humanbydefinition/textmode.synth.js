@@ -1,15 +1,5 @@
-import type {
-	SynthParameterValue,
-	CharacterMapping,
-	ExternalLayerReference,
-	TextmodeSourceReference,
-} from './types';
+import type { SynthParameterValue, CharacterMapping, ExternalLayerReference, TextmodeSourceReference } from './types';
 import { SynthChain, type TransformRecord } from './SynthChain';
-import type { ISynthSource } from './ISynthSource';
-
-// Declaration merging: TypeScript knows SynthSource has all ISynthSource methods
-// The actual method implementations are injected at runtime by TransformFactory
-export interface SynthSource extends ISynthSource {}
 
 /**
  * Options for creating a new SynthSource.
@@ -113,11 +103,7 @@ export class SynthSource {
 	 * Add a combine transform that references another source.
 	 * @ignore
 	 */
-	public addCombineTransform(
-		name: string,
-		source: SynthSource,
-		userArgs: SynthParameterValue[]
-	): this {
+	public addCombineTransform(name: string, source: SynthSource, userArgs: SynthParameterValue[]): this {
 		const index = this._chain.length;
 		this._nestedSources.set(index, source);
 		return this.addTransform(name, userArgs);
@@ -145,6 +131,16 @@ export class SynthSource {
 		return this.addTransform('srcTexture', []);
 	}
 
+	/**
+	 * Map character indices to a specific character set.
+	 * This is the primary textmode-native way to define which characters to use.
+	 *
+	 * @param chars A string of characters to map indices to
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * {@includeCode ../../examples/Chain/charMap/sketch.js}
+	 */
 	public charMap(chars: string): this {
 		if (chars.length === 0) {
 			this._charMapping = undefined;
@@ -164,7 +160,7 @@ export class SynthSource {
 	}
 
 	private _ensureSource(
-		rOrSource: SynthParameterValue | ISynthSource,
+		rOrSource: SynthParameterValue | SynthSource,
 		g?: SynthParameterValue,
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
@@ -182,8 +178,39 @@ export class SynthSource {
 		return source;
 	}
 
+	/**
+	 * Set the character foreground color using a color source chain.
+	 *
+	 * @param source A SynthSource producing color values, or RGBA values
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * {@includeCode ../../examples/Chain/charColor/sketch.js}
+	 */
+	charColor(source: SynthSource): this;
+	/**
+	 * Set the character foreground color using RGBA values.
+	 *
+	 * @param r - Red channel (0-1) or value
+	 * @param g - Green channel (0-1) or value
+	 * @param b - Blue channel (0-1) or value
+	 * @param a - Alpha channel (0-1) or value
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * {@includeCode ../../examples/Chain/charColor2/sketch.js}
+	 */
+	charColor(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
+	/**
+	 * Set the character foreground color using a grayscale value.
+	 * @param gray - Grayscale value (0-1)
+	 *
+	 * @example
+	 * {@includeCode ../../examples/Chain/charColor3/sketch.js}
+	 */
+	charColor(gray: SynthParameterValue): this;
 	public charColor(
-		rOrSource: SynthParameterValue | ISynthSource,
+		rOrSource: SynthParameterValue | SynthSource,
 		g?: SynthParameterValue,
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
@@ -192,13 +219,55 @@ export class SynthSource {
 		return this;
 	}
 
+	/**
+	 * Set the character indices using a character source chain.
+	 * The number of characters is determined by `charMap()` if defined,
+	 * otherwise falls back to the total characters in the layer's font.
+	 *
+	 * @param source A synth source producing character indices
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * {@includeCode ../../examples/Chain/char/sketch.js}
+	 */
 	public char(source: SynthSource): this {
 		this._charSource = source;
 		return this;
 	}
 
+	/**
+	 * Set the cell background colors using a color source chain.
+	 *
+	 * @param source A SynthSource producing color values, or RGBA values
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * {@includeCode ../../examples/Chain/cellColor/sketch.js}
+	 */
+	cellColor(source: SynthSource): this;
+	/**
+	 * Set the cell background color using RGBA values.
+	 *
+	 * @param r - Red channel (0-1) or value
+	 * @param g - Green channel (0-1) or value
+	 * @param b - Blue channel (0-1) or value
+	 * @param a - Alpha channel (0-1) or value
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * {@includeCode ../../examples/Chain/cellColor2/sketch.js}
+	 */
+	cellColor(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
+	/**
+	 * Set the cell background color using a grayscale value.
+	 * @param gray - Grayscale value (0-1)
+	 *
+	 * @example
+	 * {@includeCode ../../examples/Chain/cellColor3/sketch.js}
+	 */
+	cellColor(gray: SynthParameterValue): this;
 	public cellColor(
-		rOrSource: SynthParameterValue | ISynthSource,
+		rOrSource: SynthParameterValue | SynthSource,
 		g?: SynthParameterValue,
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
@@ -207,8 +276,44 @@ export class SynthSource {
 		return this;
 	}
 
+	/**
+	 * Set both character foreground and cell background color using the same source chain.
+	 * This is a convenience method that combines `.charColor()` and `.cellColor()` in one call.
+	 *
+	 * After calling `paint()`, you can still override the cell color separately using `.cellColor()`.
+	 *
+	 * Otherwise useful for pixel art styles where both colors are the same, making the characters redundant.
+	 *
+	 * @param source A SynthSource producing color values
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * {@includeCode ../../examples/Chain/paint/sketch.js}
+	 */
+	paint(source: SynthSource): this;
+	/**
+	 * Set both character foreground and cell background color using RGBA values.
+	 *
+	 * @param r - Red channel (0-1) or value
+	 * @param g - Green channel (0-1) or value
+	 * @param b - Blue channel (0-1) or value
+	 * @param a - Alpha channel (0-1) or value
+	 * @returns The SynthSource for chaining
+	 *
+	 * @example
+	 * {@includeCode ../../examples/Chain/paint2/sketch.js}
+	 */
+	paint(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
+	/**
+	 * Set both character foreground and cell background color using a grayscale value.
+	 * @param gray - Grayscale value (0-1)
+	 *
+	 * @example
+	 * {@includeCode ../../examples/Chain/paint3/sketch.js}
+	 */
+	paint(gray: SynthParameterValue): this;
 	public paint(
-		rOrSource: SynthParameterValue | ISynthSource,
+		rOrSource: SynthParameterValue | SynthSource,
 		g?: SynthParameterValue,
 		b?: SynthParameterValue,
 		a?: SynthParameterValue
@@ -219,6 +324,16 @@ export class SynthSource {
 		return this;
 	}
 
+	/**
+	 * Create a deep clone of this SynthSource.
+	 * Useful when you want to create a modified version of an existing chain
+	 * without affecting the original.
+	 *
+	 * @returns A new SynthSource with the same transform chain
+	 *
+	 * @example
+	 * {@includeCode ../../examples/Chain/clone/sketch.js}
+	 */
 	public clone(): SynthSource {
 		// Clone nested sources
 		const clonedNestedSources = new Map<number, SynthSource>();

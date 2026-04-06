@@ -69,11 +69,7 @@ export function getGlobalErrorCallback(): DynamicErrorCallback | null {
 /**
  * Invoke the appropriate error callback.
  */
-function invokeErrorCallback(
-	error: unknown,
-	uniformName: string,
-	localCallback?: DynamicErrorCallback
-): void {
+function invokeErrorCallback(error: unknown, uniformName: string, localCallback?: DynamicErrorCallback): void {
 	const callback = localCallback ?? globalErrorCallback;
 	if (callback) {
 		try {

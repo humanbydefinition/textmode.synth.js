@@ -57,11 +57,7 @@ class TransformFactory {
 
 		// Handle combine and combineCoord types specially (they take a source as first arg)
 		if (COMBINE_TYPES.has(type)) {
-			proto[name] = function (
-				this: SynthSource,
-				source: unknown,
-				...args: SynthParameterValue[]
-			) {
+			proto[name] = function (this: SynthSource, source: unknown, ...args: SynthParameterValue[]) {
 				let actualSource = source;
 
 				// If source is a primitive (not a SynthSource), wrap it in a solid() source
@@ -71,18 +67,13 @@ class TransformFactory {
 					// If source is a number, replicate it to RGB (grayscale/scalar).
 					// Otherwise pass as first argument.
 					const val = source as SynthParameterValue;
-					const solidArgs =
-						typeof val === 'number' ? [val, val, val, null] : [val, null, null, null];
+					const solidArgs = typeof val === 'number' ? [val, val, val, null] : [val, null, null, null];
 
 					wrapper.addTransform('solid', solidArgs);
 					actualSource = wrapper;
 				}
 
-				return this.addCombineTransform(
-					name,
-					actualSource as SynthSource,
-					resolveArgs(inputs, args)
-				);
+				return this.addCombineTransform(name, actualSource as SynthSource, resolveArgs(inputs, args));
 			};
 		} else {
 			// Standard transform - just takes parameter values
@@ -99,11 +90,7 @@ class TransformFactory {
 	 * e.g., solid(0.5) -> solid(0.5, 0.5, 0.5)
 	 */
 	private _expandColorArgs(name: string, args: SynthParameterValue[]): SynthParameterValue[] {
-		if (
-			(name === 'solid' || name === 'color') &&
-			args.length === 1 &&
-			typeof args[0] === 'number'
-		) {
+		if ((name === 'solid' || name === 'color') && args.length === 1 && typeof args[0] === 'number') {
 			const val = args[0];
 			// Use [val, val, val] and let defaults handle the rest (alpha)
 			return [val, val, val];
@@ -117,9 +104,7 @@ class TransformFactory {
 	 */
 	public generateStandaloneFunctions(): GeneratedFunctions {
 		if (!this._synthSourceClass) {
-			throw new Error(
-				'[TransformFactory] SynthSource class not set. Call setSynthSourceClass first.'
-			);
+			throw new Error('[TransformFactory] SynthSource class not set. Call setSynthSourceClass first.');
 		}
 
 		const functions: GeneratedFunctions = {};

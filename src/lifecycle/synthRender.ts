@@ -259,10 +259,7 @@ function applySynthUniforms(
 
 	// Character mapping uniforms
 	if (compiled.charMapping) {
-		const indices = state.characterResolver.resolve(
-			compiled.charMapping.chars,
-			layer.font as TextmodeFont
-		);
+		const indices = state.characterResolver.resolve(compiled.charMapping.chars, layer.font as TextmodeFont);
 		// Only update if mapping changed or shader changed
 		if (forceUpdate || indices !== state.lastCharMapIndices) {
 			textmodifier.setUniform('u_charMap', indices);
@@ -315,22 +312,13 @@ function applySynthUniforms(
 
 			if (extTextures) {
 				if (info.usesChar) {
-					textmodifier.setUniform(
-						`${info.uniformPrefix}${CHANNEL_SUFFIXES.char}`,
-						extTextures[0]
-					);
+					textmodifier.setUniform(`${info.uniformPrefix}${CHANNEL_SUFFIXES.char}`, extTextures[0]);
 				}
 				if (info.usesCharColor) {
-					textmodifier.setUniform(
-						`${info.uniformPrefix}${CHANNEL_SUFFIXES.charColor}`,
-						extTextures[1]
-					);
+					textmodifier.setUniform(`${info.uniformPrefix}${CHANNEL_SUFFIXES.charColor}`, extTextures[1]);
 				}
 				if (info.usesCellColor) {
-					textmodifier.setUniform(
-						`${info.uniformPrefix}${CHANNEL_SUFFIXES.cellColor}`,
-						extTextures[2]
-					);
+					textmodifier.setUniform(`${info.uniformPrefix}${CHANNEL_SUFFIXES.cellColor}`, extTextures[2]);
 				}
 			}
 		}
