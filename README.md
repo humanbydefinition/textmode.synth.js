@@ -6,13 +6,13 @@ Create procedural ASCII/text animations with a `hydra`-inspired, chainable visua
 
 ## Features
 
-- 🎨 **Procedural generation** - Oscillators, noise, voronoi, and more
-- 🔗 **Method chaining** - Hydra-style fluent API for complex visuals
-- 🎯 **Three-texture system** - Independent control over characters, foreground, and background
-- ⚡ **WebGL powered** - Compiled to optimized GLSL shaders
-- 🔄 **Feedback loops** - Trails, motion blur, and recursive patterns
-- 📦 **Compositional API** - Start from any aspect and build organically
-- 📚 **Extensible** - Add your own sources, transforms, and more
+- **Procedural generation** - Oscillators, noise, voronoi, and more
+- **Method chaining** - Hydra-style fluent API for complex visuals
+- **Three-texture system** - Independent control over characters, foreground, and background
+- **WebGL powered** - Compiled to optimized GLSL shaders
+- **Feedback loops** - Trails, motion blur, and recursive patterns
+- **Compositional API** - Start from any aspect and build organically
+- **Extensible** - Add your own sources, transforms, and more
 
 ## Try it online first
 
