@@ -46,6 +46,16 @@
     [
       "@semantic-release/github",
       {
+        "assets": [
+          {
+            "path": "dist/textmode.synth.esm.js",
+            "label": "ESM bundle"
+          },
+          {
+            "path": "dist/textmode.synth.umd.js",
+            "label": "UMD bundle"
+          }
+        ],
         "successComment": false,
         "failComment": false,
         "releasedLabels": false
