@@ -220,7 +220,7 @@ declare module '../../core/SynthSource' {
 		 * @param offset - Phase offset (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Sources/osc/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/osc/sketch.js}
 		 */
 		osc(frequency?: SynthParameterValue, sync?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -230,7 +230,7 @@ declare module '../../core/SynthSource' {
 		 * @param speed - Animation speed (default: 0.1)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Sources/noise/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/noise/sketch.js}
 		 */
 		noise(scale?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -242,7 +242,7 @@ declare module '../../core/SynthSource' {
 		 * @param contrast - Contrast adjustment (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Sources/plasma/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/plasma/sketch.js}
 		 */
 		plasma(
 			scale?: SynthParameterValue,
@@ -261,7 +261,7 @@ declare module '../../core/SynthSource' {
 		 * @param phase - Phase offset (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Sources/moire/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/moire/sketch.js}
 		 */
 		moire(
 			freqA?: SynthParameterValue,
@@ -279,7 +279,7 @@ declare module '../../core/SynthSource' {
 		 * @param blending - Blending between cell regions (default: 0.3)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Sources/voronoi/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/voronoi/sketch.js}
 		 */
 		voronoi(scale?: SynthParameterValue, speed?: SynthParameterValue, blending?: SynthParameterValue): this;
 
@@ -288,7 +288,7 @@ declare module '../../core/SynthSource' {
 		 * @param speed - Rotation speed (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Sources/gradient/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/gradient/sketch.js}
 		 */
 		gradient(speed?: SynthParameterValue): this;
 
@@ -299,7 +299,7 @@ declare module '../../core/SynthSource' {
 		 * @param smoothing - Edge smoothing amount (default: 0.01)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Sources/shape/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/shape/sketch.js}
 		 */
 		shape(sides?: SynthParameterValue, radius?: SynthParameterValue, smoothing?: SynthParameterValue): this;
 
@@ -308,7 +308,7 @@ declare module '../../core/SynthSource' {
 		 * @param gray - Grayscale value (0-1)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Sources/solid/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/solid/sketch.js}
 		 */
 		solid(gray: SynthParameterValue): this;
 		/**
@@ -319,7 +319,7 @@ declare module '../../core/SynthSource' {
 		 * @param a - Alpha channel (0-1, default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Sources/solid2/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/solid2/sketch.js}
 		 */
 		solid(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 
@@ -340,7 +340,7 @@ declare module '../../core/SynthSource' {
 		 * To sample from another layer, use the top-level `src(layer)` function instead.
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Sources/src/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/src/sketch.js}
 		 */
 		src(): this;
 	}

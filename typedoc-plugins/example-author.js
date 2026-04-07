@@ -2,7 +2,7 @@ import { MarkdownPageEvent } from 'typedoc-plugin-markdown';
 
 const EXAMPLE_CODE_FENCE_PATTERN = /```([^\n]*)\n([\s\S]*?)```/g;
 const LEADING_METADATA_BLOCK_PATTERN = /^\s*\/\*\*([\s\S]*?)\*\/\s*\n?/;
-const EXAMPLE_SOURCE_BASE_URL = 'https://github.com/humanbydefinition/textmode.js/blob/main';
+const EXAMPLE_SOURCE_BASE_URL = 'https://github.com/humanbydefinition/textmode.synth.js/blob/main';
 const SUPPORTED_EXAMPLE_LANGUAGES = new Set(['js', 'jsx', 'ts', 'tsx', 'javascript', 'typescript']);
 const SUPPORTED_METADATA_TAGS = new Set([
 	'title',
