@@ -3,6 +3,7 @@ import { MarkdownPageEvent } from 'typedoc-plugin-markdown';
 const EXAMPLE_CODE_FENCE_PATTERN = /```([^\n]*)\n([\s\S]*?)```/g;
 const LEADING_METADATA_BLOCK_PATTERN = /^\s*\/\*\*([\s\S]*?)\*\/\s*\n?/;
 const EXAMPLE_SOURCE_BASE_URL = 'https://github.com/humanbydefinition/textmode.synth.js/blob/main';
+const LEADERBOARD_PATH = '/docs/leaderboard';
 const SUPPORTED_EXAMPLE_LANGUAGES = new Set(['js', 'jsx', 'ts', 'tsx', 'javascript', 'typescript']);
 const SUPPORTED_METADATA_TAGS = new Set([
 	'title',
@@ -236,7 +237,6 @@ function inferExampleSourceUrl(title) {
 }
 
 function buildExampleMetadataHtml(metadata) {
-	const leaderboardUrl = 'https://code.textmode.art/docs/leaderboard';
 	const explicitGithubHandle = getGithubHandle(metadata.github);
 	const fallbackGithubHandle =
 		!explicitGithubHandle && isLikelyGithubHandle(metadata.author) ? metadata.author.replace(/^@/, '') : null;
@@ -264,7 +264,7 @@ function buildExampleMetadataHtml(metadata) {
 			? `    <span style="font-size:0.95em;line-height:1.4;color:rgba(160,160,170,0.95);">↗ <a href="${escapeHtml(exampleSourceUrl)}" target="_blank" rel="noopener noreferrer">View sketch on GitHub</a></span>`
 			: '';
 	const codexNoteHtml = isCodexExample
-		? `    <span style="font-size:0.95em;line-height:1.4;color:rgba(160,160,170,0.95);">Replace it with your own sketch, claim the credit, and climb the <a href="${leaderboardUrl}" target="_blank" rel="noopener noreferrer">leaderboard</a>.</span>`
+		? `    <span style="font-size:0.95em;line-height:1.4;color:rgba(160,160,170,0.95);">Replace it with your own sketch, claim the credit, and climb the <a href="${LEADERBOARD_PATH}">leaderboard</a>.</span>`
 		: '';
 
 	const secondaryHtml = secondaryParts.length
