@@ -347,7 +347,7 @@ declare module '../../core/SynthSource' {
 		 * @param speed - Rotation speed multiplier (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/rotate/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/rotate/sketch.js}
 		 */
 		rotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -360,7 +360,7 @@ declare module '../../core/SynthSource' {
 		 * @param offsetY - Y offset (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/scale/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/scale/sketch.js}
 		 */
 		scale(
 			amount?: SynthParameterValue,
@@ -378,7 +378,7 @@ declare module '../../core/SynthSource' {
 		 * @param speedY - Y scroll speed (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/scroll/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/scroll/sketch.js}
 		 */
 		scroll(
 			scrollX?: SynthParameterValue,
@@ -393,7 +393,7 @@ declare module '../../core/SynthSource' {
 		 * @param speed - Scroll speed (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/scrollX/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/scrollX/sketch.js}
 		 */
 		scrollX(scrollX?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -403,7 +403,7 @@ declare module '../../core/SynthSource' {
 		 * @param speed - Scroll speed (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/scrollY/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/scrollY/sketch.js}
 		 */
 		scrollY(scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -413,7 +413,7 @@ declare module '../../core/SynthSource' {
 		 * @param pixelY - Pixel size in Y (default: 20.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/pixelate/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/pixelate/sketch.js}
 		 */
 		pixelate(pixelX?: SynthParameterValue, pixelY?: SynthParameterValue): this;
 
@@ -425,7 +425,7 @@ declare module '../../core/SynthSource' {
 		 * @param offsetY - Y offset between repetitions (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/repeat/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/repeat/sketch.js}
 		 */
 		repeat(
 			repeatX?: SynthParameterValue,
@@ -440,7 +440,7 @@ declare module '../../core/SynthSource' {
 		 * @param offset - Offset between repetitions (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/repeatX/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/repeatX/sketch.js}
 		 */
 		repeatX(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -450,7 +450,7 @@ declare module '../../core/SynthSource' {
 		 * @param offset - Offset between repetitions (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/repeatY/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/repeatY/sketch.js}
 		 */
 		repeatY(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -459,7 +459,7 @@ declare module '../../core/SynthSource' {
 		 * @param nSides - Number of kaleidoscope sides (default: 4.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/kaleid/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/kaleid/sketch.js}
 		 */
 		kaleid(nSides?: SynthParameterValue): this;
 
@@ -469,7 +469,7 @@ declare module '../../core/SynthSource' {
 		 * @param radius - Radius multiplier (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/polar/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/polar/sketch.js}
 		 */
 		polar(angle?: SynthParameterValue, radius?: SynthParameterValue): this;
 
@@ -481,7 +481,7 @@ declare module '../../core/SynthSource' {
 		 * @param centerY - Center Y (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/twirl/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/twirl/sketch.js}
 		 */
 		twirl(
 			amount?: SynthParameterValue,
@@ -497,7 +497,7 @@ declare module '../../core/SynthSource' {
 		 * @param centerY - Center Y (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/swirl/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/swirl/sketch.js}
 		 */
 		swirl(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
 
@@ -507,7 +507,7 @@ declare module '../../core/SynthSource' {
 		 * @param mirrorY - Mirror Y (0-1, default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/mirror/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/mirror/sketch.js}
 		 */
 		mirror(mirrorX?: SynthParameterValue, mirrorY?: SynthParameterValue): this;
 
@@ -519,7 +519,7 @@ declare module '../../core/SynthSource' {
 		 * @param centerY - Center Y (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/shear/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/shear/sketch.js}
 		 */
 		shear(
 			x?: SynthParameterValue,
@@ -535,7 +535,7 @@ declare module '../../core/SynthSource' {
 		 * @param centerY - Center Y (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/barrel/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/barrel/sketch.js}
 		 */
 		barrel(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
 
@@ -546,7 +546,7 @@ declare module '../../core/SynthSource' {
 		 * @param centerY - Center Y (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/pinch/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/pinch/sketch.js}
 		 */
 		pinch(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
 
@@ -557,7 +557,7 @@ declare module '../../core/SynthSource' {
 		 * @param centerY - Center Y (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Coordinates/fisheye/sketch.js}
+		 * {@includeCode ../../../examples/Coordinates/fisheye/sketch.js}
 		 */
 		fisheye(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
 	}

@@ -186,7 +186,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Modulation amount (default: 0.1)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Modulations/modulate/sketch.js}
+		 * {@includeCode ../../../examples/Modulations/modulate/sketch.js}
 		 */
 		modulate(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -197,7 +197,7 @@ declare module '../../core/SynthSource' {
 		 * @param offset - Offset amount (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Modulations/modulateScale/sketch.js}
+		 * {@includeCode ../../../examples/Modulations/modulateScale/sketch.js}
 		 */
 		modulateScale(
 			source: SynthSource | SynthParameterValue,
@@ -212,7 +212,7 @@ declare module '../../core/SynthSource' {
 		 * @param offset - Offset amount (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Modulations/modulateRotate/sketch.js}
+		 * {@includeCode ../../../examples/Modulations/modulateRotate/sketch.js}
 		 */
 		modulateRotate(
 			source: SynthSource | SynthParameterValue,
@@ -227,7 +227,7 @@ declare module '../../core/SynthSource' {
 		 * @param offset - Offset amount (default: 3.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Modulations/modulatePixelate/sketch.js}
+		 * {@includeCode ../../../examples/Modulations/modulatePixelate/sketch.js}
 		 */
 		modulatePixelate(
 			source: SynthSource | SynthParameterValue,
@@ -241,7 +241,7 @@ declare module '../../core/SynthSource' {
 		 * @param nSides - Number of sides (default: 4.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Modulations/modulateKaleid/sketch.js}
+		 * {@includeCode ../../../examples/Modulations/modulateKaleid/sketch.js}
 		 */
 		modulateKaleid(source: SynthSource | SynthParameterValue, nSides?: SynthParameterValue): this;
 
@@ -252,7 +252,7 @@ declare module '../../core/SynthSource' {
 		 * @param speed - Scroll speed (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Modulations/modulateScrollX/sketch.js}
+		 * {@includeCode ../../../examples/Modulations/modulateScrollX/sketch.js}
 		 */
 		modulateScrollX(
 			source: SynthSource | SynthParameterValue,
@@ -267,7 +267,7 @@ declare module '../../core/SynthSource' {
 		 * @param speed - Scroll speed (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Modulations/modulateScrollY/sketch.js}
+		 * {@includeCode ../../../examples/Modulations/modulateScrollY/sketch.js}
 		 */
 		modulateScrollY(
 			source: SynthSource | SynthParameterValue,
@@ -284,7 +284,7 @@ declare module '../../core/SynthSource' {
 		 * @param offsetY - Y offset (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Modulations/modulateRepeat/sketch.js}
+		 * {@includeCode ../../../examples/Modulations/modulateRepeat/sketch.js}
 		 */
 		modulateRepeat(
 			source: SynthSource | SynthParameterValue,
@@ -301,7 +301,7 @@ declare module '../../core/SynthSource' {
 		 * @param offset - Offset amount (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Modulations/modulateRepeatX/sketch.js}
+		 * {@includeCode ../../../examples/Modulations/modulateRepeatX/sketch.js}
 		 */
 		modulateRepeatX(
 			source: SynthSource | SynthParameterValue,
@@ -316,7 +316,7 @@ declare module '../../core/SynthSource' {
 		 * @param offset - Offset amount (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Modulations/modulateRepeatY/sketch.js}
+		 * {@includeCode ../../../examples/Modulations/modulateRepeatY/sketch.js}
 		 */
 		modulateRepeatY(
 			source: SynthSource | SynthParameterValue,
@@ -330,7 +330,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Modulation amount (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Modulations/modulateHue/sketch.js}
+		 * {@includeCode ../../../examples/Modulations/modulateHue/sketch.js}
 		 */
 		modulateHue(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 	}

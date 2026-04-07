@@ -6,13 +6,13 @@ Create procedural ASCII/text animations with a `hydra`-inspired, chainable visua
 
 ## Features
 
-- 🎨 **Procedural generation** - Oscillators, noise, voronoi, and more
-- 🔗 **Method chaining** - Hydra-style fluent API for complex visuals
-- 🎯 **Three-texture system** - Independent control over characters, foreground, and background
-- ⚡ **WebGL powered** - Compiled to optimized GLSL shaders
-- 🔄 **Feedback loops** - Trails, motion blur, and recursive patterns
-- 📦 **Compositional API** - Start from any aspect and build organically
-- 📚 **Extensible** - Add your own sources, transforms, and more
+- **Procedural generation** - Oscillators, noise, voronoi, and more
+- **Method chaining** - Hydra-style fluent API for complex visuals
+- **Three-texture system** - Independent control over characters, foreground, and background
+- **WebGL powered** - Compiled to optimized GLSL shaders
+- **Feedback loops** - Trails, motion blur, and recursive patterns
+- **Compositional API** - Start from any aspect and build organically
+- **Extensible** - Add your own sources, transforms, and more
 
 ## Try it online first
 
@@ -22,7 +22,7 @@ It features IntelliSense & auto-completion, documentation on hover, curated exam
 
 ## Prerequisites
 
-- **textmode.js v0.8.5+** - This library depends on the core `textmode.js` package v0.8.5 or higher.
+- **textmode.js v0.9.1+** - This library depends on the core `textmode.js` package v0.9.1 or higher.
 
 ## Installation
 
