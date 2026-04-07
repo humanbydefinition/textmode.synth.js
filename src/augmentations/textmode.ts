@@ -20,7 +20,7 @@ declare module 'textmode.js/layering' {
 		 * @param source A SynthSource chain or a factory function returning one
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Extensions/synth/sketch.js}
+		 * {@includeCode ../../examples/TextmodeLayer/synth/sketch.js}
 		 */
 		synth(source: SynthSource | (() => SynthSource)): void;
 
@@ -34,7 +34,7 @@ declare module 'textmode.js/layering' {
 		 * Use this to reset a layer's synth state without removing the layer itself.
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Extensions/clearSynth/sketch.js}
+		 * {@includeCode ../../examples/TextmodeLayer/clearSynth/sketch.js}
 		 */
 		clearSynth(): void;
 
@@ -48,7 +48,7 @@ declare module 'textmode.js/layering' {
 		 * @param value BPM value (beats per minute) for this layer
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Extensions/layerBpm/sketch.js}
+		 * {@includeCode ../../examples/TextmodeLayer/bpm/sketch.js}
 		 */
 		bpm(value: number): void;
 
@@ -77,7 +77,7 @@ declare module 'textmode.js' {
 		 * @returns The BPM value that was set (for chaining)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Extensions/bpm/sketch.js}
+		 * {@includeCode ../../examples/Textmodifier/bpm/sketch.js}
 		 */
 		bpm(value: number): number;
 
@@ -92,7 +92,7 @@ declare module 'textmode.js' {
 		 * @returns The seed value that was set
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Extensions/seed/sketch.js}
+		 * {@includeCode ../../examples/Textmodifier/seed/sketch.js}
 		 */
 		seed(value: number | null): number | null;
 	}

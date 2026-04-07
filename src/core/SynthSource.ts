@@ -139,7 +139,7 @@ export class SynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Chain/charMap/sketch.js}
+	 * {@includeCode ../../examples/SynthSource/charMap/sketch.js}
 	 */
 	public charMap(chars: string): this {
 		if (chars.length === 0) {
@@ -185,7 +185,7 @@ export class SynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Chain/charColor/sketch.js}
+	 * {@includeCode ../../examples/SynthSource/charColor/sketch.js}
 	 */
 	charColor(source: SynthSource): this;
 	/**
@@ -198,7 +198,7 @@ export class SynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Chain/charColor2/sketch.js}
+	 * {@includeCode ../../examples/SynthSource/charColor2/sketch.js}
 	 */
 	charColor(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 	/**
@@ -206,7 +206,7 @@ export class SynthSource {
 	 * @param gray - Grayscale value (0-1)
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Chain/charColor3/sketch.js}
+	 * {@includeCode ../../examples/SynthSource/charColor3/sketch.js}
 	 */
 	charColor(gray: SynthParameterValue): this;
 	public charColor(
@@ -228,7 +228,7 @@ export class SynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Chain/char/sketch.js}
+	 * {@includeCode ../../examples/SynthSource/char/sketch.js}
 	 */
 	public char(source: SynthSource): this {
 		this._charSource = source;
@@ -242,7 +242,7 @@ export class SynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Chain/cellColor/sketch.js}
+	 * {@includeCode ../../examples/SynthSource/cellColor/sketch.js}
 	 */
 	cellColor(source: SynthSource): this;
 	/**
@@ -255,7 +255,7 @@ export class SynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Chain/cellColor2/sketch.js}
+	 * {@includeCode ../../examples/SynthSource/cellColor2/sketch.js}
 	 */
 	cellColor(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 	/**
@@ -263,7 +263,7 @@ export class SynthSource {
 	 * @param gray - Grayscale value (0-1)
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Chain/cellColor3/sketch.js}
+	 * {@includeCode ../../examples/SynthSource/cellColor3/sketch.js}
 	 */
 	cellColor(gray: SynthParameterValue): this;
 	public cellColor(
@@ -288,7 +288,7 @@ export class SynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Chain/paint/sketch.js}
+	 * {@includeCode ../../examples/SynthSource/paint/sketch.js}
 	 */
 	paint(source: SynthSource): this;
 	/**
@@ -301,7 +301,7 @@ export class SynthSource {
 	 * @returns The SynthSource for chaining
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Chain/paint2/sketch.js}
+	 * {@includeCode ../../examples/SynthSource/paint2/sketch.js}
 	 */
 	paint(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 	/**
@@ -309,7 +309,7 @@ export class SynthSource {
 	 * @param gray - Grayscale value (0-1)
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Chain/paint3/sketch.js}
+	 * {@includeCode ../../examples/SynthSource/paint3/sketch.js}
 	 */
 	paint(gray: SynthParameterValue): this;
 	public paint(
@@ -332,7 +332,7 @@ export class SynthSource {
 	 * @returns A new SynthSource with the same transform chain
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Chain/clone/sketch.js}
+	 * {@includeCode ../../examples/SynthSource/clone/sketch.js}
 	 */
 	public clone(): SynthSource {
 		// Clone nested sources

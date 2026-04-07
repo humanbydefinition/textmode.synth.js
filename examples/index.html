@@ -234,8 +234,39 @@
 				},
 			];
 
+			function resolveExamplePath(groupName, entryName) {
+				switch (groupName) {
+					case 'Sources':
+					case 'Coordinates':
+					case 'Colors':
+					case 'Combines':
+					case 'Modulations':
+					case 'Chain':
+						return `SynthSource/${entryName}`;
+					case 'Composition': {
+						const compositionGroup = entryName.replace(/[0-9]+$/, '') || entryName;
+						return `${compositionGroup}/${entryName}`;
+					}
+					case 'Extensions':
+						if (entryName === 'synth' || entryName === 'clearSynth') {
+							return `TextmodeLayer/${entryName}`;
+						}
+						if (entryName === 'layerBpm') {
+							return 'TextmodeLayer/bpm';
+						}
+						return `Textmodifier/${entryName}`;
+					case 'Arrays':
+						if (entryName === 'easingFunction') {
+							return 'EasingFunction/easingFunction';
+						}
+						return `ModulatedArray/${entryName}`;
+					default:
+						return `${groupName}/${entryName}`;
+				}
+			}
+
 			function getExampleHref(groupName, entryName) {
-				return `./sketch.html?path=${encodeURIComponent(`${groupName}/${entryName}`)}`;
+				return `./sketch.html?path=${encodeURIComponent(resolveExamplePath(groupName, entryName))}`;
 			}
 
 			function render(groups) {

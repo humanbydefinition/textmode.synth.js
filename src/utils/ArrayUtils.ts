@@ -35,7 +35,7 @@ export const EASING_FUNCTIONS = {
  * `'easeInOutQuart'`, `'easeInQuint'`, `'easeOutQuint'`, `'easeInOutQuint'`, `'sin'`
  *
  * @example
- * {@includeCode ../../examples/Arrays/easingFunction/sketch.js}
+ * {@includeCode ../../examples/EasingFunction/easingFunction/sketch.js}
  */
 export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => number);
 
@@ -47,7 +47,7 @@ export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => num
  * manually tracking time or state.
  *
  * @example
- * {@includeCode ../../examples/Arrays/arrays/sketch.js}
+ * {@includeCode ../../examples/ModulatedArray/arrays/sketch.js}
  */
 export interface ModulatedArray extends Array<number> {
 	/** Speed multiplier for array cycling @ignore */
@@ -69,7 +69,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Arrays/fast/sketch.js}
+	 * {@includeCode ../../examples/ModulatedArray/fast/sketch.js}
 	 */
 	fast(speed: number): this;
 
@@ -84,7 +84,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Arrays/smooth/sketch.js}
+	 * {@includeCode ../../examples/ModulatedArray/smooth/sketch.js}
 	 */
 	smooth(amount?: number): this;
 
@@ -104,7 +104,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Arrays/ease/sketch.js}
+	 * {@includeCode ../../examples/ModulatedArray/ease/sketch.js}
 	 */
 	ease(ease: EasingFunction): this;
 
@@ -122,7 +122,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns The array for chaining
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Arrays/offset/sketch.js}
+	 * {@includeCode ../../examples/ModulatedArray/offset/sketch.js}
 	 */
 	offset(offset: number): this;
 
@@ -141,7 +141,7 @@ export interface ModulatedArray extends Array<number> {
 	 * @returns A new ModulatedArray with remapped values
 	 *
 	 * @example
-	 * {@includeCode ../../examples/Arrays/fit/sketch.js}
+	 * {@includeCode ../../examples/ModulatedArray/fit/sketch.js}
 	 */
 	fit(low: number, high: number): ModulatedArray;
 }

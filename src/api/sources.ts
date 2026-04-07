@@ -23,7 +23,7 @@ import { TextmodeSource } from 'textmode.js/loadables';
  * @returns A new SynthSource configured with cell color
  *
  * @example
- * {@includeCode ../../examples/Composition/cellColor/sketch.js}
+ * {@includeCode ../../examples/cellColor/cellColor/sketch.js}
  */
 export function cellColor(source: SynthSource): SynthSource;
 /**
@@ -36,7 +36,7 @@ export function cellColor(source: SynthSource): SynthSource;
  * @returns A new SynthSource configured with cell color
  *
  * @example
- * {@includeCode ../../examples/Composition/cellColor2/sketch.js}
+ * {@includeCode ../../examples/cellColor/cellColor2/sketch.js}
  */
 export function cellColor(
     r: SynthParameterValue,
@@ -50,7 +50,7 @@ export function cellColor(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * {@includeCode ../../examples/Composition/cellColor3/sketch.js}
+ * {@includeCode ../../examples/cellColor/cellColor3/sketch.js}
  */
 export function cellColor(gray: SynthParameterValue): SynthSource;
 
@@ -73,7 +73,7 @@ export function cellColor(
  * @returns A new SynthSource configured for character generation
  *
  * @example
- * {@includeCode ../../examples/Composition/char/sketch.js}
+ * {@includeCode ../../examples/char/char/sketch.js}
  */
 export const char = (source: SynthSource): SynthSource => {
     return new SynthSource({ charSource: source });
@@ -92,7 +92,7 @@ export const char = (source: SynthSource): SynthSource => {
  * @returns A new SynthSource configured with character color
  *
  * @example
- * {@includeCode ../../examples/Composition/charColor/sketch.js}
+ * {@includeCode ../../examples/charColor/charColor/sketch.js}
  */
 export function charColor(source: SynthSource): SynthSource;
 /**
@@ -105,7 +105,7 @@ export function charColor(source: SynthSource): SynthSource;
  * @returns A new SynthSource configured with character color
  *
  * @example
- * {@includeCode ../../examples/Composition/charColor2/sketch.js}
+ * {@includeCode ../../examples/charColor/charColor2/sketch.js}
  */
 export function charColor(
     r: SynthParameterValue,
@@ -119,7 +119,7 @@ export function charColor(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * {@includeCode ../../examples/Composition/charColor3/sketch.js}
+ * {@includeCode ../../examples/charColor/charColor3/sketch.js}
  */
 export function charColor(gray: SynthParameterValue): SynthSource;
 
@@ -137,7 +137,7 @@ export function charColor(
  * @param speed - Rotation speed (default: 0.0)
  *
  * @example
- * {@includeCode ../../examples/Sources/gradient/sketch.js}
+ * {@includeCode ../../examples/SynthSource/gradient/sketch.js}
  */
 export function gradient(
     speed?: number | number[] | ((ctx: SynthContext) => number)
@@ -151,7 +151,7 @@ export function gradient(
  * @param offset - Offset in noise space (default: 0.1)
  *
  * @example
- * {@includeCode ../../examples/Sources/noise/sketch.js}
+ * {@includeCode ../../examples/SynthSource/noise/sketch.js}
  */
 export function noise(
     scale?: number | number[] | ((ctx: SynthContext) => number),
@@ -168,7 +168,7 @@ export function noise(
  * @param contrast - Contrast adjustment (default: 1.0)
  *
  * @example
- * {@includeCode ../../examples/Sources/plasma/sketch.js}
+ * {@includeCode ../../examples/SynthSource/plasma/sketch.js}
  */
 export function plasma(
     scale?: number | number[] | ((ctx: SynthContext) => number),
@@ -194,7 +194,7 @@ export function plasma(
  * @param phase - Phase offset (default: 0.0)
  *
  * @example
- * {@includeCode ../../examples/Sources/moire/sketch.js}
+ * {@includeCode ../../examples/SynthSource/moire/sketch.js}
  */
 export function moire(
     freqA?: number | number[] | ((ctx: SynthContext) => number),
@@ -221,7 +221,7 @@ export function moire(
  * @param offset - Phase offset (default: 0.0)
  *
  * @example
- * {@includeCode ../../examples/Sources/osc/sketch.js}
+ * {@includeCode ../../examples/SynthSource/osc/sketch.js}
  */
 export function osc(
     frequency?: number | number[] | ((ctx: SynthContext) => number),
@@ -243,7 +243,7 @@ export function osc(
  * @returns A new SynthSource configured with both color sources
  *
  * @example
- * {@includeCode ../../examples/Composition/paint/sketch.js}
+ * {@includeCode ../../examples/paint/paint/sketch.js}
  */
 export function paint(source: SynthSource): SynthSource;
 /**
@@ -256,7 +256,7 @@ export function paint(source: SynthSource): SynthSource;
  * @returns A new SynthSource configured with both color sources
  *
  * @example
- * {@includeCode ../../examples/Composition/paint2/sketch.js}
+ * {@includeCode ../../examples/paint/paint2/sketch.js}
  */
 export function paint(
     r: SynthParameterValue,
@@ -270,7 +270,7 @@ export function paint(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * {@includeCode ../../examples/Composition/paint3/sketch.js}
+ * {@includeCode ../../examples/paint/paint3/sketch.js}
  */
 export function paint(gray: SynthParameterValue): SynthSource;
 
@@ -294,7 +294,7 @@ export function paint(
  * @param smoothing - Edge smoothing amount (default: 0.01)
  *
  * @example
- * {@includeCode ../../examples/Sources/shape/sketch.js}
+ * {@includeCode ../../examples/SynthSource/shape/sketch.js}
  */
 export function shape(
     sides?: number | number[] | ((ctx: SynthContext) => number),
@@ -309,7 +309,7 @@ export function shape(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * {@includeCode ../../examples/Sources/solid/sketch.js}
+ * {@includeCode ../../examples/SynthSource/solid/sketch.js}
  */
 export function solid(gray: SynthParameterValue): SynthSource;
 
@@ -321,7 +321,7 @@ export function solid(gray: SynthParameterValue): SynthSource;
  * @param a - Alpha channel (0-1, default: 1.0)
  *
  * @example
- * {@includeCode ../../examples/Sources/solid2/sketch.js}
+ * {@includeCode ../../examples/SynthSource/solid2/sketch.js}
  */
 export function solid(
     r?: SynthParameterValue,
@@ -373,7 +373,7 @@ export function solid(
  * @returns A new SynthSource that samples the specified source or self
  *
  * @example
- * {@includeCode ../../examples/Sources/src/sketch.js}
+ * {@includeCode ../../examples/SynthSource/src/sketch.js}
  */
 export const src = (
     source?:
@@ -456,7 +456,7 @@ function isTextmodeLayerObject(source: unknown): source is TextmodeLayer {
  * @param blending - Blending between cell regions (default: 0.3)
  *
  * @example
- * {@includeCode ../../examples/Sources/voronoi/sketch.js}
+ * {@includeCode ../../examples/SynthSource/voronoi/sketch.js}
  */
 export function voronoi(
     scale?: number | number[] | ((ctx: SynthContext) => number),

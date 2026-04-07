@@ -269,7 +269,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Brightness adjustment amount (default: 0.4)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/brightness/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/brightness/sketch.js}
 		 */
 		brightness(amount?: SynthParameterValue): this;
 
@@ -278,7 +278,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Contrast amount (default: 1.6)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/contrast/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/contrast/sketch.js}
 		 */
 		contrast(amount?: SynthParameterValue): this;
 
@@ -287,7 +287,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Inversion amount (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/invert/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/invert/sketch.js}
 		 */
 		invert(amount?: SynthParameterValue): this;
 
@@ -296,7 +296,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Saturation amount (default: 2.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/saturate/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/saturate/sketch.js}
 		 */
 		saturate(amount?: SynthParameterValue): this;
 
@@ -305,7 +305,7 @@ declare module '../../core/SynthSource' {
 		 * @param hue - Hue shift amount (default: 0.4)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/hue/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/hue/sketch.js}
 		 */
 		hue(hue?: SynthParameterValue): this;
 
@@ -314,7 +314,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Effect amount (default: 0.005)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/colorama/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/colorama/sketch.js}
 		 */
 		colorama(amount?: SynthParameterValue): this;
 
@@ -324,7 +324,7 @@ declare module '../../core/SynthSource' {
 		 * @param gamma - Gamma correction (default: 0.6)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/posterize/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/posterize/sketch.js}
 		 */
 		posterize(bins?: SynthParameterValue, gamma?: SynthParameterValue): this;
 
@@ -334,7 +334,7 @@ declare module '../../core/SynthSource' {
 		 * @param tolerance - Tolerance range (default: 0.1)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/luma/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/luma/sketch.js}
 		 */
 		luma(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
 
@@ -344,7 +344,7 @@ declare module '../../core/SynthSource' {
 		 * @param tolerance - Tolerance range (default: 0.04)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/thresh/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/thresh/sketch.js}
 		 */
 		thresh(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
 
@@ -353,7 +353,7 @@ declare module '../../core/SynthSource' {
 		 * @param gray - Scalar multiplier
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/color/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/color/sketch.js}
 		 */
 		color(gray: SynthParameterValue): this;
 		/**
@@ -368,7 +368,7 @@ declare module '../../core/SynthSource' {
 		 * @param a - Alpha channel multiplier (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/color2/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/color2/sketch.js}
 		 */
 		color(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 
@@ -378,7 +378,7 @@ declare module '../../core/SynthSource' {
 		 * @param offset - Offset amount (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/r/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/r/sketch.js}
 		 */
 		r(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -388,7 +388,7 @@ declare module '../../core/SynthSource' {
 		 * @param offset - Offset amount (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/g/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/g/sketch.js}
 		 */
 		g(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -398,7 +398,7 @@ declare module '../../core/SynthSource' {
 		 * @param offset - Offset amount (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/b/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/b/sketch.js}
 		 */
 		b(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -410,7 +410,7 @@ declare module '../../core/SynthSource' {
 		 * @param a - Alpha channel shift (default: 0.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/shift/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/shift/sketch.js}
 		 */
 		shift(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 
@@ -419,7 +419,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Gamma value (default: 1.0, < 1.0 brightens, > 1.0 darkens)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/gamma/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/gamma/sketch.js}
 		 */
 		gamma(amount?: SynthParameterValue): this;
 
@@ -432,7 +432,7 @@ declare module '../../core/SynthSource' {
 		 * @param gamma - Gamma correction (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/levels/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/levels/sketch.js}
 		 */
 		levels(
 			inMin?: SynthParameterValue,
@@ -448,7 +448,7 @@ declare module '../../core/SynthSource' {
 		 * @param max - Maximum value (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/clamp/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/clamp/sketch.js}
 		 */
 		clamp(min?: SynthParameterValue, max?: SynthParameterValue): this;
 
@@ -461,7 +461,7 @@ declare module '../../core/SynthSource' {
 		 * @param value - Seed value (any number)
 		 *
 		 * @example
-		 * {@includeCode ../../../examples/Colors/seed/sketch.js}
+		 * {@includeCode ../../../examples/SynthSource/seed/sketch.js}
 		 */
 		seed(value: SynthParameterValue): this;
 	}
