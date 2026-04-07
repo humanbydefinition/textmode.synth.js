@@ -211,7 +211,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Blend amount (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/add/sketch.js}
+		 * {@includeCode ../../../examples/Combines/add/sketch.js}
 		 */
 		add(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -221,7 +221,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Blend amount (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/sub/sketch.js}
+		 * {@includeCode ../../../examples/Combines/sub/sketch.js}
 		 */
 		sub(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -231,7 +231,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Blend amount (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/mult/sketch.js}
+		 * {@includeCode ../../../examples/Combines/mult/sketch.js}
 		 */
 		mult(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -241,7 +241,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Blend amount (default: 0.5)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/blend/sketch.js}
+		 * {@includeCode ../../../examples/Combines/blend/sketch.js}
 		 */
 		blend(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -250,7 +250,7 @@ declare module '../../core/SynthSource' {
 		 * @param source - Source to compare
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/diff/sketch.js}
+		 * {@includeCode ../../../examples/Combines/diff/sketch.js}
 		 */
 		diff(source: SynthSource | SynthParameterValue): this;
 
@@ -259,7 +259,7 @@ declare module '../../core/SynthSource' {
 		 * @param source - Source to layer
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/layer/sketch.js}
+		 * {@includeCode ../../../examples/Combines/layer/sketch.js}
 		 */
 		layer(source: SynthSource | SynthParameterValue): this;
 
@@ -268,7 +268,7 @@ declare module '../../core/SynthSource' {
 		 * @param source - Source to use as mask
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/mask/sketch.js}
+		 * {@includeCode ../../../examples/Combines/mask/sketch.js}
 		 */
 		mask(source: SynthSource | SynthParameterValue): this;
 
@@ -278,7 +278,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Blend amount (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/screen/sketch.js}
+		 * {@includeCode ../../../examples/Combines/screen/sketch.js}
 		 */
 		screen(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -288,7 +288,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Blend amount (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/overlay/sketch.js}
+		 * {@includeCode ../../../examples/Combines/overlay/sketch.js}
 		 */
 		overlay(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -298,7 +298,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Blend amount (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/softlight/sketch.js}
+		 * {@includeCode ../../../examples/Combines/softlight/sketch.js}
 		 */
 		softlight(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -308,7 +308,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Blend amount (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/hardlight/sketch.js}
+		 * {@includeCode ../../../examples/Combines/hardlight/sketch.js}
 		 */
 		hardlight(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -318,7 +318,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Blend amount (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/dodge/sketch.js}
+		 * {@includeCode ../../../examples/Combines/dodge/sketch.js}
 		 */
 		dodge(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -328,7 +328,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Blend amount (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/burn/sketch.js}
+		 * {@includeCode ../../../examples/Combines/burn/sketch.js}
 		 */
 		burn(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -338,7 +338,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Blend amount (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/lighten/sketch.js}
+		 * {@includeCode ../../../examples/Combines/lighten/sketch.js}
 		 */
 		lighten(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -348,7 +348,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Blend amount (default: 1.0)
 		 *
 		 * @example
-		 * {@includeCode ../../examples/Combines/darken/sketch.js}
+		 * {@includeCode ../../../examples/Combines/darken/sketch.js}
 		 */
 		darken(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 	}
