@@ -1,3 +1,8 @@
+/**
+ * @title SynthSource.contrast
+ * @author codex
+ */
+
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
