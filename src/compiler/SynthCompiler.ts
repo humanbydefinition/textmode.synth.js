@@ -188,7 +188,12 @@ class SynthCompiler {
 	/**
 	 * Compile a transform chain.
 	 *
-	 * @param target - The compilation target context (determines src() behavior)
+	 * @param source The SynthSource chain to compile
+	 * @param prefix Variable name prefix for this chain
+	 * @param defaultColor Default color value for the chain (used if no color source)
+	 * @param initialCoordExpr Initial coordinate expression (default 'v_uv')
+	 * @param target Compilation target for feedback tracking
+	 * @returns Variable names for coordinates, color, char, flags, and rotation
 	 */
 	private _compileChain(
 		source: SynthSource,
