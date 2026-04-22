@@ -73,7 +73,7 @@ export class SynthSource {
 	 * Create a new SynthSource.
 	 *
 	 * @param options Optional initialization options
-	 * @ignore Use generator functions like `osc()`, `noise()` instead
+	 * @ignore
 	 */
 	constructor(options?: SynthSourceCreateOptions) {
 		this._chain = options?.chain ?? SynthChain.empty();
