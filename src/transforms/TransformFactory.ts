@@ -77,9 +77,9 @@ class TransformFactory {
 			};
 		} else {
 			// Standard transform - just takes parameter values
-			const factory = this;
+			const expandColorArgs = this._expandColorArgs.bind(this);
 			proto[name] = function (this: SynthSource, ...args: SynthParameterValue[]) {
-				args = factory._expandColorArgs(name, args);
+				args = expandColorArgs(name, args);
 				return this.addTransform(name, resolveArgs(inputs, args));
 			};
 		}
