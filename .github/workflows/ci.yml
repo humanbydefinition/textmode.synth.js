@@ -1,82 +1,73 @@
 name: CI
 
 on:
-  pull_request:
-    branches: [main, master, beta]
-  push:
-    branches: [main, master, beta]
+    pull_request:
+        branches: [main, master, beta]
+    push:
+        branches: [main, master, beta]
 
 env:
-  CI_NODE_VERSION: 20
+    CI_NODE_VERSION: 20
 
 jobs:
-  test:
-    name: Test & Build
-    runs-on: ubuntu-latest
+    test:
+        name: Check
+        runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.CI_NODE_VERSION }}
-          cache: 'npm'
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.CI_NODE_VERSION }}
+                  cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Check formatting
-        run: npm run format:check
+            - name: Run checks
+              run: npm run check
 
-      - name: Lint Markdown
-        run: npm run lint:md
+    release:
+        name: Release
+        needs: test
+        runs-on: ubuntu-latest
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta')
 
-      - name: Run tests
-        run: npm run test:run
+        permissions:
+            contents: write
+            issues: write
+            pull-requests: write
+            id-token: write
 
-      - name: Build
-        run: npm run build
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+                  token: ${{ secrets.GITHUB_TOKEN }}
 
-  release:
-    name: Release
-    needs: test
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta')
-    
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-      id-token: write
+            - name: Fetch all tags
+              run: |
+                  git fetch origin '+refs/tags/*:refs/tags/*' --force --depth=1 # Fetch existing tags to avoid errors if they exist but aren't local
+                  git fetch --tags --force
+                  echo "Tags on this branch:"
+                  git tag --merged HEAD | grep -E '^v[0-9]' | sort -V | tail -10
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ env.CI_NODE_VERSION }}
+                  cache: 'npm'
 
-      - name: Fetch all tags
-        run: |
-          git fetch origin '+refs/tags/*:refs/tags/*' --force --depth=1 # Fetch existing tags to avoid errors if they exist but aren't local
-          git fetch --tags --force
-          echo "Tags on this branch:"
-          git tag --merged HEAD | grep -E '^v[0-9]' | sort -V | tail -10
+            - name: Install dependencies
+              run: npm ci
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.CI_NODE_VERSION }}
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          HUSKY: '0'
-        run: npx semantic-release
+            - name: Release
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+                  HUSKY: '0'
+              run: npx semantic-release
