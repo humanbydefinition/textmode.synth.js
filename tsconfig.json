@@ -4,23 +4,20 @@
 		"useDefineForClassFields": true,
 		"module": "ESNext",
 		"lib": ["ES2022", "DOM", "DOM.Iterable"],
-		"types": ["vite/client"],
-		"skipLibCheck": true,
+		"types": ["vite/client", "node"],
 
-		/* Bundler mode */
 		"moduleResolution": "bundler",
 		"allowImportingTsExtensions": true,
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"moduleDetection": "force",
 
-		/* Emit */
+		"rootDir": "./src",
 		"declaration": true,
 		"declarationMap": true,
 		"emitDeclarationOnly": true,
 		"outDir": "./dist/types",
 
-		/* Linting */
 		"strict": true,
 		"noUnusedLocals": true,
 		"noUnusedParameters": true,
