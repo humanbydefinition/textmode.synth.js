@@ -129,7 +129,9 @@ export class TransformCodeGenerator {
 	 * @param currentTarget - Current compilation target
 	 * @param nestedColorVar - Nested source color variable (for combine ops)
 	 * @param externalRef - External layer reference (if any)
+	 * @param textmodeSourceRef - TextmodeSource reference (if any)
 	 * @param getExternalPrefix - Function to get external layer prefix
+	 * @param getTextmodeSourceUniform - Function to get TextmodeSource uniform name
 	 * @returns The transform code result with updated variable names
 	 */
 	public generateTransformCode(
@@ -163,9 +165,9 @@ export class TransformCodeGenerator {
 		const buildArgs = (...baseArgs: string[]) => [...baseArgs, ...args].join(', ');
 
 		let newColorVar = colorVar;
-		let newCharVar = charVar;
-		let newFlagsVar = flagsVar;
-		let newRotationVar = rotationVar;
+		const newCharVar = charVar;
+		const newFlagsVar = flagsVar;
+		const newRotationVar = rotationVar;
 
 		switch (def.type) {
 			case TT_SRC: {
