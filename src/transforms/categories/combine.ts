@@ -207,6 +207,7 @@ declare module '../../core/SynthSource' {
 	interface SynthSource {
 		/**
 		 * Add another source.
+		 *
 		 * @param source - Source to add
 		 * @param amount - Blend amount (default: 0.5)
 		 *
@@ -217,6 +218,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Subtract another source.
+		 *
 		 * @param source - Source to subtract
 		 * @param amount - Blend amount (default: 0.5)
 		 *
@@ -227,6 +229,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Multiply with another source.
+		 *
 		 * @param source - Source to multiply
 		 * @param amount - Blend amount (default: 0.5)
 		 *
@@ -237,6 +240,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Blend with another source.
+		 *
 		 * @param source - Source to blend
 		 * @param amount - Blend amount (default: 0.5)
 		 *
@@ -247,6 +251,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Difference with another source.
+		 *
 		 * @param source - Source to compare
 		 *
 		 * @example
@@ -256,6 +261,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Layer another source on top.
+		 *
 		 * @param source - Source to layer
 		 *
 		 * @example
@@ -265,6 +271,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Mask using another source.
+		 *
 		 * @param source - Source to use as mask
 		 *
 		 * @example
@@ -274,6 +281,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Screen blend with another source.
+		 *
 		 * @param source - Source to screen
 		 * @param amount - Blend amount (default: 1.0)
 		 *
@@ -284,6 +292,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Overlay blend with another source.
+		 *
 		 * @param source - Source to overlay
 		 * @param amount - Blend amount (default: 1.0)
 		 *
@@ -294,6 +303,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Soft light blend with another source.
+		 *
 		 * @param source - Source to softlight
 		 * @param amount - Blend amount (default: 1.0)
 		 *
@@ -304,6 +314,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Hard light blend with another source.
+		 *
 		 * @param source - Source to hardlight
 		 * @param amount - Blend amount (default: 1.0)
 		 *
@@ -314,6 +325,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Color dodge blend with another source.
+		 *
 		 * @param source - Source to dodge
 		 * @param amount - Blend amount (default: 1.0)
 		 *
@@ -324,6 +336,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Color burn blend with another source.
+		 *
 		 * @param source - Source to burn
 		 * @param amount - Blend amount (default: 1.0)
 		 *
@@ -334,6 +347,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Lighten blend with another source.
+		 *
 		 * @param source - Source to lighten
 		 * @param amount - Blend amount (default: 1.0)
 		 *
@@ -344,6 +358,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Darken blend with another source.
+		 *
 		 * @param source - Source to darken
 		 * @param amount - Blend amount (default: 1.0)
 		 *

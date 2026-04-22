@@ -71,6 +71,7 @@ export class SynthSource {
 
 	/**
 	 * Create a new SynthSource.
+	 *
 	 * @param options Optional initialization options
 	 * @ignore Use generator functions like `osc()`, `noise()` instead
 	 */
@@ -88,6 +89,7 @@ export class SynthSource {
 	/**
 	 * Add a transform to the chain.
 	 * This method is called by dynamically injected transform methods.
+	 *
 	 * @ignore
 	 */
 	public addTransform(name: string, userArgs: SynthParameterValue[]): this {
@@ -101,6 +103,7 @@ export class SynthSource {
 
 	/**
 	 * Add a combine transform that references another source.
+	 *
 	 * @ignore
 	 */
 	public addCombineTransform(name: string, source: SynthSource, userArgs: SynthParameterValue[]): this {
@@ -112,6 +115,7 @@ export class SynthSource {
 	/**
 	 * Add an external layer reference at the current transform index.
 	 * Used by src(layer) to track cross-layer sampling.
+	 *
 	 * @ignore
 	 */
 	public addExternalLayerRef(ref: ExternalLayerReference): this {
@@ -123,6 +127,7 @@ export class SynthSource {
 	/**
 	 * Add a TextmodeSource reference at the current transform index.
 	 * Used by src(textmodeSource) to track image/video sampling.
+	 *
 	 * @ignore
 	 */
 	public addTextmodeSourceRef(ref: TextmodeSourceReference): this {
@@ -203,6 +208,7 @@ export class SynthSource {
 	charColor(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 	/**
 	 * Set the character foreground color using a grayscale value.
+	 *
 	 * @param gray - Grayscale value (0-1)
 	 *
 	 * @example
@@ -260,6 +266,7 @@ export class SynthSource {
 	cellColor(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 	/**
 	 * Set the cell background color using a grayscale value.
+	 *
 	 * @param gray - Grayscale value (0-1)
 	 *
 	 * @example
@@ -306,6 +313,7 @@ export class SynthSource {
 	paint(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 	/**
 	 * Set both character foreground and cell background color using a grayscale value.
+	 *
 	 * @param gray - Grayscale value (0-1)
 	 *
 	 * @example
@@ -367,6 +375,7 @@ export class SynthSource {
 
 	/**
 	 * Get the transform records.
+	 *
 	 * @ignore
 	 */
 	public get transforms(): readonly TransformRecord[] {
@@ -375,6 +384,7 @@ export class SynthSource {
 
 	/**
 	 * Get the character mapping if defined.
+	 *
 	 * @ignore
 	 */
 	public get charMapping(): CharacterMapping | undefined {
@@ -383,6 +393,7 @@ export class SynthSource {
 
 	/**
 	 * Get the color source if defined.
+	 *
 	 * @ignore
 	 */
 	public get charColorSource(): SynthSource | undefined {
@@ -391,6 +402,7 @@ export class SynthSource {
 
 	/**
 	 * Get the cell color source if defined.
+	 *
 	 * @ignore
 	 */
 	public get cellColorSource(): SynthSource | undefined {
@@ -399,6 +411,7 @@ export class SynthSource {
 
 	/**
 	 * Get the character source if defined (from char() function).
+	 *
 	 * @ignore
 	 */
 	public get charSource(): SynthSource | undefined {
@@ -407,6 +420,7 @@ export class SynthSource {
 
 	/**
 	 * Get all nested sources for combine operations.
+	 *
 	 * @ignore
 	 */
 	public get nestedSources(): Map<number, SynthSource> {
@@ -415,6 +429,7 @@ export class SynthSource {
 
 	/**
 	 * Get all external layer references for cross-layer sampling.
+	 *
 	 * @ignore
 	 */
 	public get externalLayerRefs(): Map<number, ExternalLayerReference> {
@@ -423,6 +438,7 @@ export class SynthSource {
 
 	/**
 	 * Get all TextmodeSource references for image/video sampling.
+	 *
 	 * @ignore
 	 */
 	public get textmodeSourceRefs(): Map<number, TextmodeSourceReference> {

@@ -182,6 +182,7 @@ declare module '../../core/SynthSource' {
 	interface SynthSource {
 		/**
 		 * Modulate coordinates using another source.
+		 *
 		 * @param source - Modulation source
 		 * @param amount - Modulation amount (default: 0.1)
 		 *
@@ -192,6 +193,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Modulate scale using another source.
+		 *
 		 * @param source - Modulation source
 		 * @param multiple - Scale multiplier (default: 1.0)
 		 * @param offset - Offset amount (default: 1.0)
@@ -207,6 +209,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Modulate rotation using another source.
+		 *
 		 * @param source - Modulation source
 		 * @param multiple - Rotation multiplier (default: 1.0)
 		 * @param offset - Offset amount (default: 0.0)
@@ -222,6 +225,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Modulate pixelation using another source.
+		 *
 		 * @param source - Modulation source
 		 * @param multiple - Pixelation multiplier (default: 10.0)
 		 * @param offset - Offset amount (default: 3.0)
@@ -237,6 +241,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Modulate kaleidoscope using another source.
+		 *
 		 * @param source - Modulation source
 		 * @param nSides - Number of sides (default: 4.0)
 		 *
@@ -247,6 +252,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Modulate X scroll using another source.
+		 *
 		 * @param source - Modulation source
 		 * @param scrollX - X scroll amount (default: 0.5)
 		 * @param speed - Scroll speed (default: 0.0)
@@ -262,6 +268,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Modulate Y scroll using another source.
+		 *
 		 * @param source - Modulation source
 		 * @param scrollY - Y scroll amount (default: 0.5)
 		 * @param speed - Scroll speed (default: 0.0)
@@ -277,6 +284,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Modulate repeat pattern with another source.
+		 *
 		 * @param source - Modulation source
 		 * @param repeatX - X repetitions (default: 3.0)
 		 * @param repeatY - Y repetitions (default: 3.0)
@@ -296,6 +304,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Modulate X repeat with another source.
+		 *
 		 * @param source - Modulation source
 		 * @param reps - Number of repetitions (default: 3.0)
 		 * @param offset - Offset amount (default: 0.5)
@@ -311,6 +320,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Modulate Y repeat with another source.
+		 *
 		 * @param source - Modulation source
 		 * @param reps - Number of repetitions (default: 3.0)
 		 * @param offset - Offset amount (default: 0.5)
@@ -326,6 +336,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Modulate coordinates based on hue differences.
+		 *
 		 * @param source - Modulation source
 		 * @param amount - Modulation amount (default: 1.0)
 		 *

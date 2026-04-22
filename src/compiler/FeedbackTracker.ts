@@ -33,6 +33,7 @@ export class FeedbackTracker {
 
 	/**
 	 * Track feedback usage for a given compilation target.
+	 *
 	 * @param target - The current compilation target context
 	 */
 	public trackUsage(target: CompilationTarget): void {

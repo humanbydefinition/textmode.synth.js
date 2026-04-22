@@ -343,6 +343,7 @@ declare module '../../core/SynthSource' {
 	interface SynthSource {
 		/**
 		 * Rotate coordinates.
+		 *
 		 * @param angle - Rotation angle in radians (default: 10.0)
 		 * @param speed - Rotation speed multiplier (default: 0.0)
 		 *
@@ -353,6 +354,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Scale coordinates.
+		 *
 		 * @param amount - Scale amount (default: 1.5)
 		 * @param xMult - X axis multiplier (default: 1.0)
 		 * @param yMult - Y axis multiplier (default: 1.0)
@@ -372,6 +374,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Scroll coordinates in both X and Y directions.
+		 *
 		 * @param scrollX - X scroll amount (default: 0.5)
 		 * @param scrollY - Y scroll amount (default: 0.5)
 		 * @param speedX - X scroll speed (default: 0.0)
@@ -389,6 +392,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Scroll coordinates in X direction.
+		 *
 		 * @param scrollX - X scroll amount (default: 0.5)
 		 * @param speed - Scroll speed (default: 0.0)
 		 *
@@ -399,6 +403,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Scroll coordinates in Y direction.
+		 *
 		 * @param scrollY - Y scroll amount (default: 0.5)
 		 * @param speed - Scroll speed (default: 0.0)
 		 *
@@ -409,6 +414,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Pixelate the output.
+		 *
 		 * @param pixelX - Pixel size in X (default: 20.0)
 		 * @param pixelY - Pixel size in Y (default: 20.0)
 		 *
@@ -419,6 +425,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Repeat coordinates in both X and Y directions.
+		 *
 		 * @param repeatX - Number of X repetitions (default: 3.0)
 		 * @param repeatY - Number of Y repetitions (default: 3.0)
 		 * @param offsetX - X offset between repetitions (default: 0.0)
@@ -436,6 +443,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Repeat coordinates in X direction.
+		 *
 		 * @param reps - Number of repetitions (default: 3.0)
 		 * @param offset - Offset between repetitions (default: 0.0)
 		 *
@@ -446,6 +454,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Repeat coordinates in Y direction.
+		 *
 		 * @param reps - Number of repetitions (default: 3.0)
 		 * @param offset - Offset between repetitions (default: 0.0)
 		 *
@@ -456,6 +465,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Apply kaleidoscope effect.
+		 *
 		 * @param nSides - Number of kaleidoscope sides (default: 4.0)
 		 *
 		 * @example
@@ -465,6 +475,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Convert coordinates to polar space.
+		 *
 		 * @param angle - Angle offset in radians (default: 0.0)
 		 * @param radius - Radius multiplier (default: 1.0)
 		 *
@@ -475,6 +486,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Twirl distortion with radial falloff.
+		 *
 		 * @param amount - Twirl strength (default: 2.0)
 		 * @param radius - Effect radius (default: 0.5)
 		 * @param centerX - Center X (default: 0.5)
@@ -492,6 +504,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Swirl distortion around a center.
+		 *
 		 * @param amount - Swirl strength (default: 4.0)
 		 * @param centerX - Center X (default: 0.5)
 		 * @param centerY - Center Y (default: 0.5)
@@ -503,6 +516,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Mirror coordinates across X and/or Y axes.
+		 *
 		 * @param mirrorX - Mirror X (0-1, default: 1.0)
 		 * @param mirrorY - Mirror Y (0-1, default: 1.0)
 		 *
@@ -513,6 +527,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Shear coordinates along X and Y axes.
+		 *
 		 * @param x - X shear amount (default: 0.0)
 		 * @param y - Y shear amount (default: 0.0)
 		 * @param centerX - Center X (default: 0.5)
@@ -530,6 +545,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Barrel distortion (bulge outward).
+		 *
 		 * @param amount - Distortion amount (default: 0.5)
 		 * @param centerX - Center X (default: 0.5)
 		 * @param centerY - Center Y (default: 0.5)
@@ -541,6 +557,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Pinch distortion (pull inward).
+		 *
 		 * @param amount - Distortion amount (default: 0.5)
 		 * @param centerX - Center X (default: 0.5)
 		 * @param centerY - Center Y (default: 0.5)
@@ -552,6 +569,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Fisheye lens distortion.
+		 *
 		 * @param amount - Distortion amount (default: 1.0)
 		 * @param centerX - Center X (default: 0.5)
 		 * @param centerY - Center Y (default: 0.5)

@@ -187,6 +187,7 @@ class SynthCompiler {
 
 	/**
 	 * Compile a transform chain.
+	 *
 	 * @param target - The compilation target context (determines src() behavior)
 	 */
 	private _compileChain(

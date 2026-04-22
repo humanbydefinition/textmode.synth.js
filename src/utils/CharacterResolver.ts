@@ -14,6 +14,7 @@ export class CharacterResolver {
 
 	/**
 	 * Resolve character indices using the font's character map.
+	 *
 	 * @param chars The character string to resolve
 	 * @param font The font to use for resolution
 	 * @returns Array of resolved font indices

@@ -215,6 +215,7 @@ declare module '../../core/SynthSource' {
 	interface SynthSource {
 		/**
 		 * Generate oscillating patterns using sine waves.
+		 *
 		 * @param frequency - Frequency of the oscillation (default: 60.0)
 		 * @param sync - Synchronization offset (default: 0.1)
 		 * @param offset - Phase offset (default: 0.0)
@@ -226,6 +227,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Generate Perlin noise patterns.
+		 *
 		 * @param scale - Scale of the noise pattern (default: 10.0)
 		 * @param speed - Animation speed (default: 0.1)
 		 *
@@ -236,6 +238,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Generate plasma-like sine field patterns.
+		 *
 		 * @param scale - Spatial scale of the plasma (default: 10.0)
 		 * @param speed - Animation speed (default: 0.5)
 		 * @param phase - Phase offset (default: 0.0)
@@ -253,6 +256,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Generate moire interference patterns.
+		 *
 		 * @param freqA - Frequency of first grating (default: 20.0)
 		 * @param freqB - Frequency of second grating (default: 21.0)
 		 * @param angleA - Angle of first grating in radians (default: 0.0)
@@ -274,6 +278,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Generate voronoi patterns.
+		 *
 		 * @param scale - Scale of voronoi cells (default: 5.0)
 		 * @param speed - Animation speed (default: 0.3)
 		 * @param blending - Blending between cell regions (default: 0.3)
@@ -285,6 +290,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Generate a rotating radial gradient.
+		 *
 		 * @param speed - Rotation speed (default: 0.0)
 		 *
 		 * @example
@@ -294,6 +300,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Generate geometric shapes (polygons).
+		 *
 		 * @param sides - Number of sides (default: 3)
 		 * @param radius - Radius of the shape (default: 0.3)
 		 * @param smoothing - Edge smoothing amount (default: 0.01)
@@ -305,6 +312,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Generate a solid grayscale color.
+		 *
 		 * @param gray - Grayscale value (0-1)
 		 *
 		 * @example
@@ -313,6 +321,7 @@ declare module '../../core/SynthSource' {
 		solid(gray: SynthParameterValue): this;
 		/**
 		 * Generate a solid color.
+		 *
 		 * @param r - Red channel (0-1, default: 0.0)
 		 * @param g - Green channel (0-1, default: 0.0)
 		 * @param b - Blue channel (0-1, default: 0.0)
