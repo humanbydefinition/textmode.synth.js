@@ -64,18 +64,20 @@ t.windowResized(() => {
 
 `textmode.js` renders to three textures: characters, foreground colors, and background colors. `textmode.synth.js` provides functions to drive each independently:
 
-| Function | Purpose |
-|----------|---------|
-| `char(source)` | Character generation |
-| `charColor(source)` | Foreground color |
-| `cellColor(source)` | Background color |
-| `paint(source)` | Both foreground & background |
+| Function            | Purpose                      |
+| ------------------- | ---------------------------- |
+| `char(source)`      | Character generation         |
+| `charColor(source)` | Foreground color             |
+| `cellColor(source)` | Background color             |
+| `paint(source)`     | Both foreground & background |
 
 Start from any entry point and chain the others:
 
 ```javascript
 // From characters
-char(noise(10)).charColor(osc(5)).cellColor(solid(0,0,0,0.5));
+char(noise(10))
+	.charColor(osc(5))
+	.cellColor(solid(0, 0, 0, 0.5));
 
 // From colors
 charColor(voronoi(5)).char(noise(10)).cellColor(gradient(0.5));
@@ -103,39 +105,39 @@ You can also pass a source directly to `.synth()` without any wrapper function:
 t.layers.base.synth(noise(10));
 ```
 
-This drives both characters *and* foreground colors from the same source *(background defaults to black)*. In practice, using separate sources for characters often looks better - character cycling is more rapid than color changes.
+This drives both characters _and_ foreground colors from the same source _(background defaults to black)_. In practice, using separate sources for characters often looks better - character cycling is more rapid than color changes.
 
 ### Source generators
 
-| Generator | Description |
-|-----------|-------------|
-| `osc(freq, sync, offset)` | Sine wave patterns |
-| `noise(scale, offset)` | Perlin noise |
-| `voronoi(scale, speed, blend)` | Cellular patterns |
-| `gradient(speed)` | Radial gradient |
-| `shape(sides, radius, smooth)` | Geometric polygons |
-| `solid(r, g, b, a)` | Solid colors |
-| `src(layer?)` | Feedback / cross-layer sampling |
-| `...` | ...and many more..? |
+| Generator                      | Description                     |
+| ------------------------------ | ------------------------------- |
+| `osc(freq, sync, offset)`      | Sine wave patterns              |
+| `noise(scale, offset)`         | Perlin noise                    |
+| `voronoi(scale, speed, blend)` | Cellular patterns               |
+| `gradient(speed)`              | Radial gradient                 |
+| `shape(sides, radius, smooth)` | Geometric polygons              |
+| `solid(r, g, b, a)`            | Solid colors                    |
+| `src(layer?)`                  | Feedback / cross-layer sampling |
+| `...`                          | ...and many more..?             |
 
 ### Transforms
 
 Chain transforms to modify patterns:
 
-| Category | Methods |
-|----------|---------|
-| **Geometry** | `rotate`, `scale`, `scroll`, `pixelate`, `repeat`, `kaleid`, ... |
-| **Color** | `brightness`, `contrast`, `invert`, `hue`, `saturate`, `colorama`, ... |
-| **Blend** | `add`, `sub`, `mult`, `blend`, `diff`, `layer`, `mask`, ... |
-| **Modulate** | `modulate`, `modulateScale`, `modulateRotate`, `modulateKaleid`, ... |
+| Category     | Methods                                                                |
+| ------------ | ---------------------------------------------------------------------- |
+| **Geometry** | `rotate`, `scale`, `scroll`, `pixelate`, `repeat`, `kaleid`, ...       |
+| **Color**    | `brightness`, `contrast`, `invert`, `hue`, `saturate`, `colorama`, ... |
+| **Blend**    | `add`, `sub`, `mult`, `blend`, `diff`, `layer`, `mask`, ...            |
+| **Modulate** | `modulate`, `modulateScale`, `modulateRotate`, `modulateKaleid`, ...   |
 
 ### Character mapping
 
 Use `.charMap()` to define the character set. By default, all characters available in the layer's font are used.
 
 ```javascript
-char(noise(10)).charMap('@#%*+=-:. ');  // ASCII gradient
-char(voronoi(5)).charMap('█▓▒░ ');       // Block characters
+char(noise(10)).charMap('@#%*+=-:. '); // ASCII gradient
+char(voronoi(5)).charMap('█▓▒░ '); // Block characters
 ```
 
 ## Documentation
@@ -155,4 +157,4 @@ Distributed under the **AGPL-3.0** License. See [LICENSE](./LICENSE) for more in
 This project is a derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.
 
 - **hydra-synth**: Core synthesis logic, GLSL shader generation, and functional API design.
-- **Modifications**: Adapted for `textmode.js`'s three-texture rendering pipeline *(characters, foreground colors, background colors)* and plugin system.
+- **Modifications**: Adapted for `textmode.js`'s three-texture rendering pipeline _(characters, foreground colors, background colors)_ and plugin system.
