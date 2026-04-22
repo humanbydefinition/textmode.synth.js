@@ -6,36 +6,39 @@ import type { Textmodifier, TextmodeFramebuffer } from 'textmode.js';
 import type { LayerSynthState } from '../../src/core/types';
 import { SynthSource } from '../../src/core/SynthSource';
 
-const createMockFramebuffer = (): TextmodeFramebuffer => ({
-	dispose: vi.fn(),
-	textures: [{}, {}, {}],
-	begin: vi.fn(),
-	end: vi.fn(),
-} as unknown as TextmodeFramebuffer);
-
-const createMockTextmodifier = () => ({
-	createFramebuffer: vi.fn(() => createMockFramebuffer()),
-	createFilterShader: vi.fn(() => Promise.resolve({ dispose: vi.fn() })),
-	setUniform: vi.fn(),
-	clear: vi.fn(),
-	shader: vi.fn(),
-	rect: vi.fn(),
-	resetShader: vi.fn(),
-	secs: 10,
-	frameCount: 100,
-} as unknown as Textmodifier);
-
-const createMockLayer = (cols = 10, rows = 10): TextmodeLayer => ({
-	grid: { cols, rows, width: cols * 10, height: rows * 10 },
-	drawFramebuffer: {
+const createMockFramebuffer = (): TextmodeFramebuffer =>
+	({
+		dispose: vi.fn(),
+		textures: [{}, {}, {}],
 		begin: vi.fn(),
 		end: vi.fn(),
-		textures: [],
-	},
-	getPluginState: vi.fn(),
-	setPluginState: vi.fn(),
-	font: { characters: [] },
-} as unknown as TextmodeLayer);
+	}) as unknown as TextmodeFramebuffer;
+
+const createMockTextmodifier = () =>
+	({
+		createFramebuffer: vi.fn(() => createMockFramebuffer()),
+		createFilterShader: vi.fn(() => Promise.resolve({ dispose: vi.fn() })),
+		setUniform: vi.fn(),
+		clear: vi.fn(),
+		shader: vi.fn(),
+		rect: vi.fn(),
+		resetShader: vi.fn(),
+		secs: 10,
+		frameCount: 100,
+	}) as unknown as Textmodifier;
+
+const createMockLayer = (cols = 10, rows = 10): TextmodeLayer =>
+	({
+		grid: { cols, rows, width: cols * 10, height: rows * 10 },
+		drawFramebuffer: {
+			begin: vi.fn(),
+			end: vi.fn(),
+			textures: [],
+		},
+		getPluginState: vi.fn(),
+		setPluginState: vi.fn(),
+		font: { characters: [] },
+	}) as unknown as TextmodeLayer;
 
 describe('synthRender Lifecycle', () => {
 	let layer: TextmodeLayer;
@@ -51,7 +54,7 @@ describe('synthRender Lifecycle', () => {
 			dynamicValues: new Map(),
 			characterResolver: {
 				resolve: () => [],
-				invalidate: () => { },
+				invalidate: () => {},
 			} as any,
 		};
 		vi.mocked(layer.getPluginState).mockReturnValue(state);
@@ -128,10 +131,12 @@ describe('synthRender Lifecycle', () => {
 
 			// Assert: New buffers created with new dimensions
 			expect(textmodifier.createFramebuffer).toHaveBeenCalledTimes(2);
-			expect(textmodifier.createFramebuffer).toHaveBeenCalledWith(expect.objectContaining({
-				width: 20,
-				height: 20
-			}));
+			expect(textmodifier.createFramebuffer).toHaveBeenCalledWith(
+				expect.objectContaining({
+					width: 20,
+					height: 20,
+				})
+			);
 			expect(state.pingPongDimensions).toEqual({ cols: 20, rows: 20 });
 		});
 
@@ -168,10 +173,14 @@ describe('synthRender Lifecycle', () => {
 
 			// Mock createFilterShader to return controllable promises
 			let resolveShader1: (v: any) => void;
-			const shaderPromise1 = new Promise((resolve) => { resolveShader1 = resolve; });
+			const shaderPromise1 = new Promise((resolve) => {
+				resolveShader1 = resolve;
+			});
 
 			let resolveShader2: (v: any) => void;
-			const shaderPromise2 = new Promise((resolve) => { resolveShader2 = resolve; });
+			const shaderPromise2 = new Promise((resolve) => {
+				resolveShader2 = resolve;
+			});
 
 			let callCount = 0;
 			vi.mocked(textmodifier.createFilterShader).mockImplementation(() => {
@@ -217,7 +226,7 @@ describe('synthRender Lifecycle', () => {
 
 			// Check for leak of intermediate shader
 			// If shader1 was created but isn't the current shader, it MUST be disposed
-			if (state.shader !== shader1 as any) {
+			if (state.shader !== (shader1 as any)) {
 				// If callCount was 2, shader1 was created. If it's not state.shader, did we dispose it?
 				// In the bug, callCount is 2, shader1 is NOT disposed.
 				const wasDisposed = (shader1.dispose as Mock).mock.calls.length > 0;
@@ -235,7 +244,9 @@ describe('synthRender Lifecycle', () => {
 			} as any;
 
 			let resolveShader: (v: any) => void;
-			const shaderPromise = new Promise((resolve) => { resolveShader = resolve; });
+			const shaderPromise = new Promise((resolve) => {
+				resolveShader = resolve;
+			});
 
 			// Mock createFilterShader to hang
 			vi.mocked(textmodifier.createFilterShader).mockReturnValue(shaderPromise as any);

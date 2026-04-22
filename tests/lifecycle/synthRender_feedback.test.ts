@@ -1,4 +1,3 @@
-
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { synthRender } from '../../src/lifecycle/synthRender';
 import { shaderManager } from '../../src/lifecycle/ShaderManager';
@@ -59,7 +58,7 @@ describe('synthRender Feedback Optimization', () => {
 			dynamicValues: new Map(),
 			characterResolver: {
 				resolve: () => [],
-				invalidate: () => { },
+				invalidate: () => {},
 			} as any,
 			pingPongIndex: 0,
 		};

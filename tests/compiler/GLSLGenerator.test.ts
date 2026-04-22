@@ -51,7 +51,7 @@ describe('GLSLGenerator', () => {
 				name: 'u_custom',
 				type: 'float',
 				value: 1.0,
-				isDynamic: false
+				isDynamic: false,
 			});
 
 			const options = { ...baseOptions, uniforms };
@@ -65,8 +65,8 @@ describe('GLSLGenerator', () => {
 				...baseOptions,
 				charMapping: {
 					chars: 'ABC',
-					indices: [65, 66, 67]
-				}
+					indices: [65, 66, 67],
+				},
 			};
 
 			const shader = generateFragmentShader(options);
@@ -110,12 +110,12 @@ describe('GLSLGenerator', () => {
 				uniformPrefix: 'u_layer1',
 				usesChar: true,
 				usesCharColor: true,
-				usesCellColor: false
+				usesCellColor: false,
 			});
 
 			const options: ShaderGenerationOptions = {
 				...baseOptions,
-				externalLayers
+				externalLayers,
 			};
 
 			const shader = generateFragmentShader(options);
@@ -128,7 +128,7 @@ describe('GLSLGenerator', () => {
 		it('includes u_charSourceCount when usesCharSource is true', () => {
 			const options: ShaderGenerationOptions = {
 				...baseOptions,
-				usesCharSource: true
+				usesCharSource: true,
 			};
 
 			const shader = generateFragmentShader(options);

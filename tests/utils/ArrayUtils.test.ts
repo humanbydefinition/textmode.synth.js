@@ -1,10 +1,5 @@
 import { describe, it, expect, beforeAll } from 'vitest';
-import {
-	initArrayUtils,
-	getArrayValue,
-	isModulatedArray,
-	EASING_FUNCTIONS,
-} from '../../src/utils/ArrayUtils';
+import { initArrayUtils, getArrayValue, isModulatedArray, EASING_FUNCTIONS } from '../../src/utils/ArrayUtils';
 import type { ModulatedArray } from '../../src/utils/ArrayUtils';
 import type { SynthContext } from '../../src/core/types';
 
@@ -125,14 +120,14 @@ describe('ArrayUtils', () => {
 			expect(getArrayValue(arr, { ...mockContext, time: 1.0 })).toBeCloseTo(5);
 		});
 
-        it('should handle smoothing wrapping around', () => {
-            const arr = [0, 10] as ModulatedArray;
-            arr.smooth(1);
-            // array length 2.
-            // Transition from index 1 (10) to index 0 (0) happens from 1.5 to 2.5
-            // So at index 2.0, we should be halfway (t=0.5)
-            expect(getArrayValue(arr, { ...mockContext, time: 2.0 })).toBeCloseTo(5);
-        });
+		it('should handle smoothing wrapping around', () => {
+			const arr = [0, 10] as ModulatedArray;
+			arr.smooth(1);
+			// array length 2.
+			// Transition from index 1 (10) to index 0 (0) happens from 1.5 to 2.5
+			// So at index 2.0, we should be halfway (t=0.5)
+			expect(getArrayValue(arr, { ...mockContext, time: 2.0 })).toBeCloseTo(5);
+		});
 
 		it('should handle easing', () => {
 			const arr = [0, 1] as ModulatedArray;
