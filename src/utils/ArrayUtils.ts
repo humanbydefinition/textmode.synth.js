@@ -239,7 +239,7 @@ export function getArrayValue(arr: ModulatedArray, ctx: SynthContext): number {
 	const speed = arr._speed ?? 1;
 	const smooth = arr._smooth ?? 0;
 	// Use BPM from context (can be global or layer-specific)
-	let index = ctx.time * speed * (ctx.bpm / 60) + (arr._offset ?? 0);
+	const index = ctx.time * speed * (ctx.bpm / 60) + (arr._offset ?? 0);
 
 	if (smooth !== 0) {
 		const ease = arr._ease ?? EASING_FUNCTIONS.linear;
