@@ -1,67 +1,58 @@
 {
-  "branches": [
-    "main",
-    {
-      "name": "beta",
-      "prerelease": true
-    }
-  ],
-  "tagFormat": "v${version}",
-  "plugins": [
-    [
-      "@semantic-release/commit-analyzer",
-      {
-        "releaseRules": [
-          { "type": "feat", "release": "minor" },
-          { "type": "fix", "release": "patch" },
-          { "type": "perf", "release": "patch" },
-          { "type": "refactor", "release": "patch" },
-          { "type": "docs", "release": false },
-          { "type": "style", "release": false },
-          { "type": "test", "release": false },
-          { "type": "chore", "release": false },
-          { "breaking": true, "release": "major" }
-        ]
-      }
-    ],
-    "@semantic-release/release-notes-generator",
-    [
-      "@semantic-release/npm",
-      {
-        "npmPublish": false
-      }
-    ],
-    [
-      "@semantic-release/exec",
-      {
-        "prepareCmd": "npm run build"
-      }
-    ],
-    [
-      "@semantic-release/npm",
-      {
-        "npmPublish": true
-      }
-    ],
-    [
-      "@semantic-release/github",
-      {
-        "assets": [
-          {
-            "path": "dist/textmode.synth.esm.js",
-            "label": "ESM bundle"
-          },
-          {
-            "path": "dist/textmode.synth.umd.js",
-            "label": "UMD bundle"
-          }
-        ],
-        "successComment": false,
-        "failComment": false,
-        "releasedLabels": false
-      }
-    ]
-  ],
-  "dryRun": false,
-  "ci": true
+	"branches": [
+		"main",
+		{
+			"name": "beta",
+			"prerelease": true
+		}
+	],
+	"tagFormat": "v${version}",
+	"plugins": [
+		[
+			"@semantic-release/commit-analyzer",
+			{
+				"releaseRules": [
+					{ "type": "feat", "release": "minor" },
+					{ "type": "fix", "release": "patch" },
+					{ "type": "perf", "release": "patch" },
+					{ "type": "refactor", "release": "patch" },
+					{ "type": "docs", "release": false },
+					{ "type": "style", "release": false },
+					{ "type": "test", "release": false },
+					{ "type": "chore", "release": false },
+					{ "breaking": true, "release": "major" }
+				]
+			}
+		],
+		"@semantic-release/release-notes-generator",
+		[
+			"@semantic-release/npm",
+			{
+				"npmPublish": false
+			}
+		],
+		[
+			"@semantic-release/exec",
+			{
+				"prepareCmd": "npm run build"
+			}
+		],
+		[
+			"@semantic-release/npm",
+			{
+				"npmPublish": true
+			}
+		],
+		[
+			"@semantic-release/github",
+			{
+				"assets": ["dist/textmode.synth.esm.js", "dist/textmode.synth.umd.js"],
+				"successComment": false,
+				"failComment": false,
+				"releasedLabels": false
+			}
+		]
+	],
+	"dryRun": false,
+	"ci": true
 }

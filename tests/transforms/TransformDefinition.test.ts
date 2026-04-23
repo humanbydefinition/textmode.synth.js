@@ -1,9 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import {
-	processTransform,
-	defineTransform,
-	type TransformDefinition,
-} from '../../src/transforms/TransformDefinition';
+import { processTransform, defineTransform, type TransformDefinition } from '../../src/transforms/TransformDefinition';
 
 describe('TransformDefinition', () => {
 	describe('defineTransform', () => {
@@ -105,9 +101,7 @@ describe('TransformDefinition', () => {
 			const processed = processTransform(def);
 
 			// Should contain standard arg (_c0) followed by inputs
-			expect(processed.glslFunction).toContain(
-				'vec4 paramTest(vec4 _c0, float amount, vec2 scale)'
-			);
+			expect(processed.glslFunction).toContain('vec4 paramTest(vec4 _c0, float amount, vec2 scale)');
 		});
 	});
 });

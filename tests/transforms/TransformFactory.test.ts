@@ -38,11 +38,7 @@ describe('TransformFactory', () => {
 			addTransform(name: string, userArgs: SynthParameterValue[]): unknown {
 				return { name, args: userArgs, type: 'transform' };
 			}
-			addCombineTransform(
-				name: string,
-				source: unknown,
-				userArgs: SynthParameterValue[]
-			): unknown {
+			addCombineTransform(name: string, source: unknown, userArgs: SynthParameterValue[]): unknown {
 				return { name, source, args: userArgs, type: 'combine' };
 			}
 		};

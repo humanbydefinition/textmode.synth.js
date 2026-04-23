@@ -1,4 +1,4 @@
-import type { TextmodeFont, TextmodeCharacter } from 'textmode.js/loadables';
+import type { TextmodeFont, TextmodeGlyph } from 'textmode.js/fonts';
 
 /**
  * Resolver for character indices using font data.
@@ -6,7 +6,7 @@ import type { TextmodeFont, TextmodeCharacter } from 'textmode.js/loadables';
  */
 export class CharacterResolver {
 	// Cache for character -> index mapping per font
-	private static _fontIndexCache = new WeakMap<TextmodeFont, Map<TextmodeCharacter, number>>();
+	private static _fontIndexCache = new WeakMap<TextmodeFont, Map<TextmodeGlyph, number>>();
 
 	private _resolvedIndices?: Int32Array;
 	private _lastFont?: TextmodeFont;
@@ -14,6 +14,7 @@ export class CharacterResolver {
 
 	/**
 	 * Resolve character indices using the font's character map.
+	 *
 	 * @param chars The character string to resolve
 	 * @param font The font to use for resolution
 	 * @returns Array of resolved font indices
@@ -26,7 +27,7 @@ export class CharacterResolver {
 		// Get or build the index map for this font
 		let indexMap = CharacterResolver._fontIndexCache.get(font);
 		if (!indexMap) {
-			indexMap = new Map<TextmodeCharacter, number>();
+			indexMap = new Map<TextmodeGlyph, number>();
 			const characters = font.characters;
 			for (let i = 0; i < characters.length; i++) {
 				indexMap.set(characters[i], i);

@@ -8,7 +8,7 @@ import type { SynthContext, SynthParameterValue, UpdatableTextmodeSource } from 
 import { SynthSource } from '../core/SynthSource';
 import { generatedFunctions } from '../bootstrap';
 import type { TextmodeLayer } from 'textmode.js/layering';
-import { TextmodeSource } from 'textmode.js/loadables';
+import { TextmodeSource } from 'textmode.js/media';
 
 /**
  * Create a synth source with cell background color defined.
@@ -47,6 +47,7 @@ export function cellColor(
 
 /**
  * Create a synth source with cell background color defined using a grayscale value.
+ *
  * @param gray - Grayscale value (0-1)
  *
  * @example
@@ -116,6 +117,7 @@ export function charColor(
 
 /**
  * Create a synth source with character foreground color defined using a grayscale value.
+ *
  * @param gray - Grayscale value (0-1)
  *
  * @example
@@ -134,6 +136,7 @@ export function charColor(
 
 /**
  * Generate a rotating radial gradient.
+ *
  * @param speed - Rotation speed (default: 0.0)
  *
  * @example
@@ -147,6 +150,7 @@ export function gradient(
 
 /**
  * Generate Perlin noise patterns.
+ *
  * @param scale - Scale of the noise pattern (default: 10.0)
  * @param offset - Offset in noise space (default: 0.1)
  *
@@ -162,6 +166,7 @@ export function noise(
 
 /**
  * Generate plasma-like sine field patterns.
+ *
  * @param scale - Spatial scale of the plasma (default: 10.0)
  * @param speed - Animation speed (default: 0.5)
  * @param phase - Phase offset (default: 0.0)
@@ -186,6 +191,7 @@ export function plasma(
 
 /**
  * Generate moire interference patterns.
+ *
  * @param freqA - Frequency of first grating (default: 20.0)
  * @param freqB - Frequency of second grating (default: 21.0)
  * @param angleA - Angle of first grating in radians (default: 0.0)
@@ -216,6 +222,7 @@ export function moire(
 
 /**
  * Generate oscillating patterns using sine waves.
+ *
  * @param frequency - Frequency of the oscillation (default: 60.0)
  * @param sync - Synchronization offset (default: 0.1)
  * @param offset - Phase offset (default: 0.0)
@@ -267,6 +274,7 @@ export function paint(
 
 /**
  * Create a synth source with both character and cell colors defined using a grayscale value.
+ *
  * @param gray - Grayscale value (0-1)
  *
  * @example
@@ -289,6 +297,7 @@ export function paint(
 
 /**
  * Generate geometric shapes (polygons).
+ *
  * @param sides - Number of sides (default: 3)
  * @param radius - Radius of the shape (default: 0.3)
  * @param smoothing - Edge smoothing amount (default: 0.01)
@@ -306,6 +315,7 @@ export function shape(
 
 /**
  * Generate a solid grayscale color.
+ *
  * @param gray - Grayscale value (0-1)
  *
  * @example
@@ -315,6 +325,7 @@ export function solid(gray: SynthParameterValue): SynthSource;
 
 /**
  * Generate a solid color.
+ *
  * @param r - Red channel (0-1, default: 0.0)
  * @param g - Green channel (0-1, default: 0.0)
  * @param b - Blue channel (0-1, default: 0.0)
@@ -451,6 +462,7 @@ function isTextmodeLayerObject(source: unknown): source is TextmodeLayer {
 
 /**
  * Generate voronoi patterns.
+ *
  * @param scale - Scale of voronoi cells (default: 5.0)
  * @param speed - Animation speed (default: 0.3)
  * @param blending - Blending between cell regions (default: 0.3)

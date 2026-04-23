@@ -266,6 +266,7 @@ declare module '../../core/SynthSource' {
 	interface SynthSource {
 		/**
 		 * Adjust brightness.
+		 *
 		 * @param amount - Brightness adjustment amount (default: 0.4)
 		 *
 		 * @example
@@ -275,6 +276,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Adjust contrast.
+		 *
 		 * @param amount - Contrast amount (default: 1.6)
 		 *
 		 * @example
@@ -284,6 +286,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Invert colors.
+		 *
 		 * @param amount - Inversion amount (default: 1.0)
 		 *
 		 * @example
@@ -293,6 +296,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Adjust color saturation.
+		 *
 		 * @param amount - Saturation amount (default: 2.0)
 		 *
 		 * @example
@@ -302,6 +306,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Shift hue.
+		 *
 		 * @param hue - Hue shift amount (default: 0.4)
 		 *
 		 * @example
@@ -311,6 +316,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Apply colorama effect (hue rotation based on luminance).
+		 *
 		 * @param amount - Effect amount (default: 0.005)
 		 *
 		 * @example
@@ -320,6 +326,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Posterize colors to limited palette.
+		 *
 		 * @param bins - Number of color bins (default: 3.0)
 		 * @param gamma - Gamma correction (default: 0.6)
 		 *
@@ -330,6 +337,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Apply threshold based on luminance.
+		 *
 		 * @param threshold - Threshold value (default: 0.5)
 		 * @param tolerance - Tolerance range (default: 0.1)
 		 *
@@ -340,6 +348,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Apply hard threshold.
+		 *
 		 * @param threshold - Threshold value (default: 0.5)
 		 * @param tolerance - Tolerance range (default: 0.04)
 		 *
@@ -350,6 +359,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Multiply all channels by a scalar value (grayscale).
+		 *
 		 * @param gray - Scalar multiplier
 		 *
 		 * @example
@@ -374,6 +384,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Extract the red channel as a grayscale value.
+		 *
 		 * @param scale - Scale multiplier (default: 1.0)
 		 * @param offset - Offset amount (default: 0.0)
 		 *
@@ -384,6 +395,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Extract the green channel as a grayscale value.
+		 *
 		 * @param scale - Scale multiplier (default: 1.0)
 		 * @param offset - Offset amount (default: 0.0)
 		 *
@@ -394,6 +406,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Extract the blue channel as a grayscale value.
+		 *
 		 * @param scale - Scale multiplier (default: 1.0)
 		 * @param offset - Offset amount (default: 0.0)
 		 *
@@ -404,6 +417,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Shift color channels by adding offset values.
+		 *
 		 * @param r - Red channel shift (default: 0.5)
 		 * @param g - Green channel shift (default: 0.0)
 		 * @param b - Blue channel shift (default: 0.0)
@@ -416,6 +430,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Apply gamma correction for nonlinear brightness control.
+		 *
 		 * @param amount - Gamma value (default: 1.0, < 1.0 brightens, > 1.0 darkens)
 		 *
 		 * @example
@@ -425,6 +440,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Adjust input/output levels and gamma for precise tonal control.
+		 *
 		 * @param inMin - Input minimum (default: 0.0)
 		 * @param inMax - Input maximum (default: 1.0)
 		 * @param outMin - Output minimum (default: 0.0)
@@ -444,6 +460,7 @@ declare module '../../core/SynthSource' {
 
 		/**
 		 * Clamp color values to a specified range for stability.
+		 *
 		 * @param min - Minimum value (default: 0.0)
 		 * @param max - Maximum value (default: 1.0)
 		 *

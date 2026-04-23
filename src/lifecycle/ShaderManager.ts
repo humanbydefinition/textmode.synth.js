@@ -108,6 +108,7 @@ class ShaderManager {
 
 /**
  * Singleton instance of the copy shader manager.
+ *
  * @internal
  */
 export const shaderManager = new ShaderManager();

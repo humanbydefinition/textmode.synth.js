@@ -1,4 +1,4 @@
-import { TextmodeSource } from 'textmode.js/loadables';
+import { TextmodeSource } from 'textmode.js/media';
 import type { SynthSource } from '../core/SynthSource';
 
 /**

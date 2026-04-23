@@ -49,9 +49,7 @@ describe('TransformRegistry', () => {
 			transformRegistry.register(mockTransform1);
 			transformRegistry.register(mockTransform1);
 
-			expect(consoleSpy).toHaveBeenCalledWith(
-				expect.stringContaining('Overwriting existing transform: mock1')
-			);
+			expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Overwriting existing transform: mock1'));
 		});
 
 		it('should invalidate processed cache on overwrite', () => {
@@ -134,10 +132,7 @@ describe('TransformRegistry', () => {
 
 	describe('getSourceTransforms', () => {
 		it('should return only src type transforms', () => {
-			transformRegistry.registerMany([
-				mockTransform1,
-				mockSourceTransform,
-			]);
+			transformRegistry.registerMany([mockTransform1, mockSourceTransform]);
 
 			const sources = transformRegistry.getSourceTransforms();
 			expect(sources).toHaveLength(1);
