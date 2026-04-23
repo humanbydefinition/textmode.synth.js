@@ -10,8 +10,8 @@ env:
     CI_NODE_VERSION: 24
 
 jobs:
-    test:
-        name: Test & Build
+    check:
+        name: Check
         runs-on: ubuntu-latest
 
         steps:
@@ -27,21 +27,12 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
-            - name: Check formatting
-              run: npm run format:check
-
-            - name: Lint Markdown
-              run: npm run lint:md
-
-            - name: Run tests
-              run: npm run test:run
-
-            - name: Build
-              run: npm run build
+            - name: Run project checks
+              run: npm run check
 
     release:
         name: Release
-        needs: test
+        needs: check
         runs-on: ubuntu-latest
         if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta')
         environment:
