@@ -1,5 +1,5 @@
 import type { Textmodifier } from 'textmode.js';
-import type { TextmodePlugin, TextmodePluginAPI } from 'textmode.js/plugins';
+import type { TextmodePlugin, TextmodePluginContext } from 'textmode.js/plugins';
 
 import { PLUGIN_NAME } from './constants';
 import {
@@ -11,6 +11,7 @@ import {
 } from '../extensions';
 import { synthRender, synthDispose, shaderManager } from '../lifecycle';
 import type { LayerSynthState } from '../core/types';
+import { TextmodeLayer } from 'textmode.js/layering';
 
 /**
  * The `textmode.synth.js` plugin to install.
@@ -40,7 +41,7 @@ export const SynthPlugin: TextmodePlugin = {
 	name: PLUGIN_NAME,
 	version: '1.5.1',
 
-	install(textmodifier, api: TextmodePluginAPI) {
+	install(textmodifier, api: TextmodePluginContext) {
 		// Reset copy shader manager in case of plugin reinstall
 		shaderManager.reset();
 
@@ -57,11 +58,11 @@ export const SynthPlugin: TextmodePlugin = {
 		});
 
 		// Lifecycle callbacks
-		api.registerLayerPreRenderHook((layer) => synthRender(layer, textmodifier));
+		api.registerLayerPreRenderHook((layer: TextmodeLayer) => synthRender(layer, textmodifier));
 		api.registerLayerDisposedHook(synthDispose);
 	},
 
-	uninstall(textmodifier, api: TextmodePluginAPI) {
+	uninstall(textmodifier, api: TextmodePluginContext) {
 		// Clean up all synth states
 		const allLayers = [api.layerManager.base, ...api.layerManager.all];
 		for (const layer of allLayers) {

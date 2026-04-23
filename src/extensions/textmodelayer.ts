@@ -7,7 +7,7 @@
  * - `bpm()` - Set layer-specific BPM override
  */
 
-import type { TextmodePluginAPI } from 'textmode.js/plugins';
+import type { TextmodePluginContext } from 'textmode.js/plugins';
 import type { TextmodeLayer } from 'textmode.js/layering';
 import type { SynthSource } from '../core/SynthSource';
 import { SynthSource as SynthSourceClass } from '../core/SynthSource';
@@ -56,7 +56,7 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
 /**
  * Extend layer with synth() method.
  */
-export function extendLayerSynth(api: TextmodePluginAPI): void {
+export function extendLayerSynth(api: TextmodePluginContext): void {
 	api.extendLayer('synth', function (this: TextmodeLayer, sourceOrFactory: SynthSource | (() => SynthSource)): void {
 		const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
 
@@ -100,7 +100,7 @@ export function extendLayerSynth(api: TextmodePluginAPI): void {
 /**
  * Extend layer with clearSynth() method.
  */
-export function extendLayerClearSynth(api: TextmodePluginAPI): void {
+export function extendLayerClearSynth(api: TextmodePluginContext): void {
 	api.extendLayer('clearSynth', function (this: TextmodeLayer): void {
 		const state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
 		if (!state) return;
@@ -124,7 +124,7 @@ export function extendLayerClearSynth(api: TextmodePluginAPI): void {
 /**
  * Extend layer with bpm() method.
  */
-export function extendLayerBpm(api: TextmodePluginAPI): void {
+export function extendLayerBpm(api: TextmodePluginContext): void {
 	api.extendLayer('bpm', function (this: TextmodeLayer, value: number): void {
 		let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
 
