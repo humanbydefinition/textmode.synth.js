@@ -105,7 +105,7 @@ You can also pass a source directly to `.synth()` without any wrapper function:
 t.layers.base.synth(noise(10));
 ```
 
-This drives both characters *and* foreground colors from the same source *(background defaults to black)*. In practice, using separate sources for characters often looks better - character cycling is more rapid than color changes.
+This drives both characters _and_ foreground colors from the same source _(background defaults to black)_. In practice, using separate sources for characters often looks better - character cycling is more rapid than color changes.
 
 ### Source generators
 
@@ -157,4 +157,4 @@ Distributed under the **AGPL-3.0** License. See [LICENSE](./LICENSE) for more in
 This project is a derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.
 
 - **hydra-synth**: Core synthesis logic, GLSL shader generation, and functional API design.
-- **Modifications**: Adapted for `textmode.js`'s three-texture rendering pipeline *(characters, foreground colors, background colors)* and plugin system.
+- **Modifications**: Adapted for `textmode.js`'s three-texture rendering pipeline _(characters, foreground colors, background colors)_ and plugin system.
