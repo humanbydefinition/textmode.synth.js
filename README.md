@@ -37,24 +37,19 @@ import { textmode } from 'textmode.js';
 import { SynthPlugin, char, osc } from 'textmode.synth.js';
 
 const t = textmode.create({
-  width: window.innerWidth,
-  height: window.innerHeight,
-  fontSize: 16,
-  plugins: [SynthPlugin]
+	width: window.innerWidth,
+	height: window.innerHeight,
+	fontSize: 16,
+	plugins: [SynthPlugin],
 });
 
 const charChain = osc(1, -0.1, 0.5).kaleid(50);
 const colorChain = osc(25, -0.1, 0.5).kaleid(50);
 
-t.layers.base.synth(
-  char(charChain)
-    .charMap('@#%*+=-:. ')
-    .charColor(colorChain)
-    .cellColor(colorChain.clone().invert())
-);
+t.layers.base.synth(char(charChain).charMap('@#%*+=-:. ').charColor(colorChain).cellColor(colorChain.clone().invert()));
 
 t.windowResized(() => {
-  t.resizeCanvas(window.innerWidth, window.innerHeight);
+	t.resizeCanvas(window.innerWidth, window.innerHeight);
 });
 ```
 
@@ -76,8 +71,8 @@ Start from any entry point and chain the others:
 ```javascript
 // From characters
 char(noise(10))
-    .charColor(osc(5))
-    .cellColor(solid(0, 0, 0, 0.5));
+	.charColor(osc(5))
+	.cellColor(solid(0, 0, 0, 0.5));
 
 // From colors
 charColor(voronoi(5)).char(noise(10)).cellColor(gradient(0.5));
