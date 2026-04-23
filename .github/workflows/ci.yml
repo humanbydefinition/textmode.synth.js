@@ -60,13 +60,6 @@ jobs:
                   fetch-depth: 0
                   token: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Fetch all tags
-              run: |
-                  git fetch origin '+refs/tags/*:refs/tags/*' --force --depth=1 # Fetch existing tags to avoid errors if they exist but aren't local
-                  git fetch --tags --force
-                  echo "Tags on this branch:"
-                  git tag --merged HEAD | grep -E '^v[0-9]' | sort -V | tail -10
-
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
