@@ -3,9 +3,9 @@
 	"version": "1.6.0",
 	"description": "Synth engine for textmode.js",
 	"type": "module",
-	"types": "./dist/types/index.d.ts",
 	"main": "./dist/textmode.synth.umd.js",
 	"module": "./dist/textmode.synth.esm.js",
+	"types": "./dist/types/index.d.ts",
 	"exports": {
 		".": {
 			"types": "./dist/types/index.d.ts",
@@ -18,10 +18,15 @@
 		"./dist/textmode.synth.esm.js",
 		"./dist/textmode.synth.umd.js"
 	],
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"dev": "vite --port 5174 --host",
-		"build": "vite build && tsc -p tsconfig.json",
-		"check": "npm run format:check && npm run lint && npm run lint:md && npm run typecheck && npm run check:api-docs && npm run test && npm run build",
+		"build:bundle": "vite build",
+		"build:types": "tsc",
+		"build": "npm run build:bundle && npm run build:types",
+		"check": "npm run check:format && npm run lint && npm run lint:md && npm run check:types && npm run check:api-docs && npm run test && npm run build",
 		"check:api-docs": "node ./scripts/check-public-api-docs.mjs",
 		"check:api-docs:accessors": "node ./scripts/check-public-api-docs.mjs --include-accessors",
 		"dev:docs": "typedoc --watch",
@@ -33,48 +38,46 @@
 		"test:coverage": "vitest --coverage",
 		"test:unit": "vitest run --project unit",
 		"test:integration": "vitest run --project integration",
-		"format": "prettier --write \"src/**/*.ts\" \"tests/**/*.ts\" \"*.{js,ts,json,md}\"",
-		"format:check": "prettier --check \"src/**/*.ts\" \"tests/**/*.ts\" \"*.{js,ts,json,md}\"",
-		"lint:md": "markdownlint-cli2 --no-globs README.md",
-		"lint:md:fix": "markdownlint-cli2 --fix --no-globs README.md",
+		"format": "prettier --write .",
+		"check:format": "prettier --check .",
+		"check:types": "tsc --noEmit",
+		"lint:md": "markdownlint-cli2",
+		"lint:md:fix": "markdownlint-cli2 --fix",
 		"lint": "eslint src --config eslint.config.js",
-		"typecheck": "tsc --noEmit",
 		"prepare": "husky"
 	},
 	"peerDependencies": {
 		"textmode.js": ">=0.9.1"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^20.3.1",
-		"@commitlint/config-conventional": "^20.3.1",
+		"@commitlint/cli": "^20.5.0",
+		"@commitlint/config-conventional": "^20.5.0",
+		"@eslint/js": "^9.39.4",
 		"@rollup/plugin-terser": "^0.4.4",
 		"@semantic-release/exec": "^7.1.0",
-		"@types/node": "^24.5.2",
+		"@types/node": "^24.0.13",
 		"@vitest/coverage-v8": "^3.2.4",
 		"@vitest/ui": "^3.1.2",
-		"eslint": "^9.39.4",
+		"eslint": "^9.39.2",
 		"eslint-plugin-jsdoc": "^62.9.0",
-		"globals": "^17.1.0",
+		"globals": "^17.5.0",
 		"husky": "^9.1.7",
 		"jsdom": "^27.4.0",
 		"lint-staged": "^16.4.0",
-		"markdownlint-cli2": "^0.20.0",
-		"prettier": "^3.7.4",
+		"markdownlint-cli2": "^0.22.1",
+		"markdownlint-cli2-formatter-default": "^0.0.6",
+		"prettier": "^3.8.3",
 		"semantic-release": "^25.0.3",
 		"terser": "^5.44.0",
 		"textmode.js": "^0.12.0",
-		"typedoc": "^0.28.13",
+		"typedoc": "^0.28.19",
 		"typedoc-plugin-frontmatter": "^1.3.1",
-		"typedoc-plugin-markdown": "^4.9.0",
+		"typedoc-plugin-markdown": "^4.11.0",
 		"typedoc-vitepress-theme": "^1.1.2",
-		"typescript": "~5.8.3",
-		"typescript-eslint": "^8.58.2",
-		"vite": "^7.1.7",
+		"typescript": "^5.9.2",
+		"typescript-eslint": "^8.59.0",
+		"vite": "^6.3.4",
 		"vitest": "^3.1.2"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/humanbydefinition/textmode.synth.js.git"
 	},
 	"keywords": [
 		"ascii",
@@ -92,14 +95,15 @@
 	],
 	"author": "humanbydefinition",
 	"license": "AGPL-3.0",
-	"bugs": {
-		"url": "https://github.com/humanbydefinition/textmode.synth.js/issues"
-	},
 	"homepage": "https://code.textmode.art",
 	"lint-staged": {
-		"src/**/*.{ts,js}": "prettier --write"
+		"*": "prettier --ignore-unknown --write"
 	},
-	"files": [
-		"dist"
-	]
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/humanbydefinition/textmode.synth.js.git"
+	},
+	"bugs": {
+		"url": "https://github.com/humanbydefinition/textmode.synth.js/issues"
+	}
 }
