@@ -21,7 +21,7 @@
 		"typedoc-plugin-frontmatter",
 		"typedoc-vitepress-theme",
 		"./typedoc-plugins/accessor-signature-order.js",
-		"./typedoc-plugins/example-author.js",
+		"./typedoc-plugins/strip-example-docblock.js",
 		"./typedoc-plugins/custom-frontmatter.js"
 	],
 	"frontmatterGlobals": {
