@@ -11,25 +11,31 @@ const t = textmode.create({
 
 const labelLayer = t.layers.add();
 
-function drawExampleLabel(text, col, row, color = '#ffffff') {
-	t.color(color);
+function drawText(text, x, y, r = 220, g = 230, b = 255) {
+	t.push();
 	t.printAlign('left', 'top');
-	t.print(text, col, row);
+	t.charColor(r, g, b);
+	t.print(text, x, y);
+	t.pop();
 }
 
-function drawExampleLabels() {
+labelLayer.draw(() => {
 	t.clear();
 	const left = -Math.floor(t.grid.cols / 2);
 	const top = -Math.floor(t.grid.rows / 2);
+	let y = top + 3;
+	const x = left + 3;
 
-	drawExampleLabel('Textmodifier.seed', left + 1, top + 1);
-}
+	drawText(`TEXTMODIFIER.SEED`, x, y++, 100, 255, 140);
+	drawText('------------------------------------', x, y++, 80, 100, 150);
+	drawText(`CONCEPT: GLOBAL RANDOM SEED`, x, y++, 100, 220, 255);
+	drawText(`Seeds global random generator.`, x, y++, 140, 160, 190);
+	drawText(`Locks stochastic noise patterns.`, x, y++, 140, 160, 190);
+	drawText('------------------------------------', x, y++, 80, 100, 150);
+	drawText(`Global Seed: 2026`, x, y++, 140, 255, 180);
+});
 
-labelLayer.draw(drawExampleLabels);
-
-t.seed(42);
-
-t.layers.base.synth(noise(10, 0.1).charMap('@#%*+=-:. '));
+t.layers.base.synth(noise(8, 0.15).color(0.5, 0.9, 0.2));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

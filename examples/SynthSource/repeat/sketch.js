@@ -11,23 +11,33 @@ const t = textmode.create({
 
 const labelLayer = t.layers.add();
 
-function drawExampleLabel(text, col, row, color = '#ffffff') {
-	t.color(color);
+function drawText(text, x, y, r = 220, g = 230, b = 255) {
+	t.push();
 	t.printAlign('left', 'top');
-	t.print(text, col, row);
+	t.charColor(r, g, b);
+	t.print(text, x, y);
+	t.pop();
 }
 
-function drawExampleLabels() {
+labelLayer.draw(() => {
 	t.clear();
 	const left = -Math.floor(t.grid.cols / 2);
 	const top = -Math.floor(t.grid.rows / 2);
+	let y = top + 3;
+	const x = left + 3;
 
-	drawExampleLabel('SynthSource.repeat', left + 1, top + 1);
-}
+	drawText(`SYNTHSOURCE.REPEAT`, x, y++, 100, 255, 140);
+	drawText('------------------------------------', x, y++, 80, 100, 150);
+	drawText(`CONCEPT: TILING COORDINATES`, x, y++, 100, 220, 255);
+	drawText(`Repeats space on X and Y axes.`, x, y++, 140, 160, 190);
+	drawText(`Creates multiple repeating tiles.`, x, y++, 140, 160, 190);
+	drawText('------------------------------------', x, y++, 80, 100, 150);
+	drawText(`Repeat: Eased X & Y (2 to 5)`, x, y++, 140, 255, 180);
+});
 
-labelLayer.draw(drawExampleLabels);
-
-t.layers.base.synth(shape(4, 0.25).repeat(4, 3, 0.1, 0.1));
+t.layers.base.synth(
+	shape(3, 0.3, 0.05).repeat([2, 5].ease('easeInOutSine'), [2, 5].ease('easeInOutSine')).color(0.8, 0.2, 0.8)
+);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
