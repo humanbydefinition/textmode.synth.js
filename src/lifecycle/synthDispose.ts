@@ -4,7 +4,7 @@
  * Cleans up synth resources when a layer is disposed.
  */
 
-import type { TextmodeLayer } from 'textmode.js/layering';
+import type { TextmodeLayer } from 'textmode.js';
 import { PLUGIN_NAME } from '../plugin/constants';
 import type { LayerSynthState } from '../core/types';
 

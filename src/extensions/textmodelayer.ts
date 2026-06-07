@@ -7,8 +7,8 @@
  * - `bpm()` - Set layer-specific BPM override
  */
 
-import type { TextmodePluginContext } from 'textmode.js/plugins';
-import type { TextmodeLayer } from 'textmode.js/layering';
+import type { TextmodePluginContext } from 'textmode.js';
+import type { TextmodeLayer } from 'textmode.js';
 import type { SynthSource } from '../core/SynthSource';
 import { SynthSource as SynthSourceClass } from '../core/SynthSource';
 import { PLUGIN_NAME } from '../plugin/constants';

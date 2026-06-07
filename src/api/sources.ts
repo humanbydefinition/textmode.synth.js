@@ -7,8 +7,8 @@
 import type { SynthContext, SynthParameterValue, UpdatableTextmodeSource } from '../core/types';
 import { SynthSource } from '../core/SynthSource';
 import { generatedFunctions } from '../bootstrap';
-import type { TextmodeLayer } from 'textmode.js/layering';
-import { TextmodeSource } from 'textmode.js/media';
+import type { TextmodeLayer } from 'textmode.js';
+import { TextmodeSource } from 'textmode.js';
 
 /**
  * Create a synth source with cell background color defined.

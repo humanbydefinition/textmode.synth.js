@@ -1,4 +1,4 @@
-import type { TextmodeFont, TextmodeGlyph } from 'textmode.js/fonts';
+import type { TextmodeFont, TextmodeGlyph } from 'textmode.js';
 
 /**
  * Resolver for character indices using font data.

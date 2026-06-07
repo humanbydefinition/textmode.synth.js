@@ -7,11 +7,11 @@
  */
 
 import type { TextmodeFramebuffer, TextmodeShader } from 'textmode.js';
-import type { TextmodeLayer } from 'textmode.js/layering';
+import type { TextmodeLayer } from 'textmode.js';
 import type { SynthSource } from './SynthSource';
 import type { CompiledSynthShader } from '../compiler/types';
 import type { CharacterResolver } from '../utils/CharacterResolver';
-import { TextmodeSource } from 'textmode.js/media';
+import { TextmodeSource } from 'textmode.js';
 import { TT_SRC, TT_COORD, TT_COLOR, TT_COMBINE, TT_COMBINE_COORD } from './constants';
 
 /**
