@@ -6,28 +6,46 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
+	fontSize: 8,
 	plugins: [SynthPlugin],
 });
 
-const labelLayer = t.layers.add();
+t.bpm(18);
 
-function drawExampleLabel(text, col, row, color = '#ffffff') {
-	t.color(color);
+const labelLayer = t.layers.add();
+const glyphs = ' .:-=+*#%@';
+
+function drawText(text, x, y, r = 220, g = 230, b = 255) {
+	t.push();
 	t.printAlign('left', 'top');
-	t.print(text, col, row);
+	t.charColor(r, g, b);
+	t.print(text, x, y);
+	t.pop();
 }
 
-function drawExampleLabels() {
+labelLayer.draw(() => {
 	t.clear();
 	const left = -Math.floor(t.grid.cols / 2);
 	const top = -Math.floor(t.grid.rows / 2);
+	let y = top + 3;
+	const x = left + 3;
 
-	drawExampleLabel('paint.paint2', left + 1, top + 1);
-}
+	drawText('PAINT.PAINT2', x, y++, 110, 255, 170);
+	drawText('------------------------------------', x, y++, 70, 110, 140);
+	drawText('TOP LEVEL PAINT SOURCE', x, y++, 120, 220, 255);
+	drawText('paint(source) owns colors.', x, y++, 160, 180, 210);
+	drawText('char(source) chooses glyphs.', x, y++, 160, 180, 210);
+	drawText('------------------------------------', x, y++, 70, 110, 140);
+	drawText('No separate color-channel methods.', x, y++, 150, 255, 190);
+});
 
-labelLayer.draw(drawExampleLabels);
+const paintField = osc(7, 0.016, 1.4)
+	.kaleid(6)
+	.color(0.28, 0.76, 1.0)
+	.modulate(plasma(2.6, 0.014, 0.1, 1.1), 0.025);
+const glyphField = osc(9, 0.018, 1.2).kaleid(5).modulate(noise(2.2, 0.012), 0.018).levels(0.18, 0.88, 0.04, 1.0, 0.9);
 
-t.layers.base.synth(paint(0.9, 0.8, 0.7).char(osc(6, 0.1, 0.5)));
+t.layers.base.synth(paint(paintField).char(glyphField).charMap(glyphs));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
