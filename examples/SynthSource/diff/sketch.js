@@ -6,10 +6,15 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
+	fontSize: 8,
 	plugins: [SynthPlugin],
 });
 
+t.bpm(18);
+
 const labelLayer = t.layers.add();
+const glyphs = ' .:-=+*#%@';
+const turn = [-0.42, 0.42].fast(0.14).ease('easeInOutSine');
 
 function drawText(text, x, y, r = 220, g = 230, b = 255) {
 	t.push();
@@ -26,19 +31,28 @@ labelLayer.draw(() => {
 	let y = top + 3;
 	const x = left + 3;
 
-	drawText(`SYNTHSOURCE.DIFF`, x, y++, 100, 255, 140);
-	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText(`CONCEPT: DIFFERENCE SHADER`, x, y++, 100, 220, 255);
-	drawText(`Subtracts absolute color values.`, x, y++, 140, 160, 190);
-	drawText(`Creates complex rotating overlaps.`, x, y++, 140, 160, 190);
-	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText(`Rotation: Eased (0 to PI)`, x, y++, 140, 255, 180);
+	drawText('SYNTHSOURCE.DIFF', x, y++, 110, 255, 170);
+	drawText('------------------------------------', x, y++, 70, 110, 140);
+	drawText('ABSOLUTE DIFFERENCE', x, y++, 120, 220, 255);
+	drawText('Distance becomes contour.', x, y++, 160, 180, 210);
+	drawText('Interference is slowed down.', x, y++, 160, 180, 210);
+	drawText('------------------------------------', x, y++, 70, 110, 140);
+	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
 });
 
+const ink = osc(5, 0.018, 1.1).kaleid(4).color(0.45, 0.72, 1.0).modulate(noise(2.2, 0.018), 0.025);
+const paper = plasma(3.6, 0.028, 0.1, 1.05).color(0.03, 0.08, 0.18).modulateScale(noise(2.0, 0.015), 0.22, 0.95);
+
 t.layers.base.synth(
-	osc(10, 0.05)
-		.diff(osc(10, 0.05).rotate([0, 3.14].ease('easeInOutCubic')))
-		.color(0.1, 0.8, 0.9)
+	osc(9, 0.02, 0.8)
+		.rotate(turn, 0.002)
+		.diff(osc(8, 0.018, 2.1).rotate(turn.offset(0.5), -0.002))
+		.modulateScale(noise(2.2, 0.014), 0.24, 0.95)
+		.colorama(0.09)
+		.contrast(1.24)
+		.charMap(glyphs)
+		.charColor(ink)
+		.cellColor(paper)
 );
 
 t.windowResized(() => {
