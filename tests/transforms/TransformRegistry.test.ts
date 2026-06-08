@@ -94,8 +94,9 @@ describe('TransformRegistry', () => {
 
 			expect(processed).toBeDefined();
 			expect(processed?.name).toBe('mock1');
+			expect(processed?.glslName).toBe('tm_mock1');
 			// Check if GLSL function wrapper is generated
-			expect(processed?.glslFunction).toContain('vec4 mock1(vec4 _c0)');
+			expect(processed?.glslFunction).toContain('vec4 tm_mock1(vec4 _c0)');
 			expect(processed?.glslFunction).toContain('return _c0;');
 		});
 
