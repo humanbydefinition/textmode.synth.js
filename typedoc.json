@@ -20,9 +20,10 @@
 		"typedoc-plugin-markdown",
 		"typedoc-plugin-frontmatter",
 		"typedoc-vitepress-theme",
-		"./typedoc-plugins/accessor-signature-order.js",
-		"./typedoc-plugins/example-author.js",
-		"./typedoc-plugins/custom-frontmatter.js"
+		"./typedoc-plugins/accessor-docs-normalizer/index.js",
+		"./typedoc-plugins/all-member-pages-router/index.js",
+		"./typedoc-plugins/include-code-examples/index.js",
+		"./typedoc-plugins/api-frontmatter/index.js"
 	],
 	"frontmatterGlobals": {
 		"layout": "doc",
@@ -31,6 +32,7 @@
 	"frontmatterCommentTags": ["author", "since", "deprecated"],
 	"preserveFrontmatterCommentTags": false,
 	"frontmatterNamingConvention": "camelCase",
+	"router": "all-member-pages",
 	"indexFormat": "table",
 	"parametersFormat": "table",
 	"interfacePropertiesFormat": "table",

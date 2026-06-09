@@ -1,4 +1,4 @@
-import type { TextmodeLayer } from 'textmode.js/layering';
+import type { TextmodeLayer } from 'textmode.js';
 import type { SynthSource } from '../core/SynthSource';
 
 /**

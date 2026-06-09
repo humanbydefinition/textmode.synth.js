@@ -103,7 +103,7 @@ export class TransformCodeGenerator {
 		}
 
 		if (def.name !== 'src') {
-			return def.name;
+			return def.glslName;
 		}
 
 		if (externalRef && getExternalPrefix) {

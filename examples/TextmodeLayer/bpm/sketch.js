@@ -9,9 +9,33 @@ const t = textmode.create({
 	plugins: [SynthPlugin],
 });
 
-t.layers.base.bpm(90);
+const labelLayer = t.layers.add();
 
-t.layers.base.synth(osc([4, 8, 12].fast(2), 0.1, 1.2).kaleid(5));
+function drawText(text, x, y, r = 220, g = 230, b = 255) {
+	t.push();
+	t.printAlign('left', 'top');
+	t.charColor(r, g, b);
+	t.print(text, x, y);
+	t.pop();
+}
+
+labelLayer.draw(() => {
+	t.clear();
+	const left = -Math.floor(t.grid.cols / 2);
+	const top = -Math.floor(t.grid.rows / 2);
+	let y = top + 3;
+	const x = left + 3;
+
+	drawText(`TEXTMODELAYER.BPM`, x, y++, 100, 255, 140);
+	drawText('------------------------------------', x, y++, 80, 100, 150);
+	drawText(`CONCEPT: LAYER TEMPO SYNC`, x, y++, 100, 220, 255);
+	drawText(`Sets rendering layer BPM.`, x, y++, 140, 160, 190);
+	drawText(`Drives tempo-locked animations.`, x, y++, 140, 160, 190);
+	drawText('------------------------------------', x, y++, 80, 100, 150);
+	drawText(`Layer BPM: 120 | Synced`, x, y++, 140, 255, 180);
+});
+
+t.layers.base.synth(osc(8, 0.1).color(0.2, 0.9, 0.5));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

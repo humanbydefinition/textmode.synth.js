@@ -5,8 +5,8 @@
  * to prevent WebGL errors from incomplete uniform state.
  */
 
-import type { TextmodeLayer } from 'textmode.js/layering';
-import type { TextmodeFont } from 'textmode.js/fonts';
+import type { TextmodeLayer } from 'textmode.js';
+import type { TextmodeFont } from 'textmode.js';
 import type { TextmodeFramebuffer, Textmodifier } from 'textmode.js';
 import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';

@@ -1,5 +1,5 @@
 import type { Textmodifier } from 'textmode.js';
-import type { TextmodePlugin, TextmodePluginContext } from 'textmode.js/plugins';
+import type { TextmodePlugin, TextmodePluginContext } from 'textmode.js';
 
 import { PLUGIN_NAME } from './constants';
 import {
@@ -11,7 +11,7 @@ import {
 } from '../extensions';
 import { synthRender, synthDispose, shaderManager } from '../lifecycle';
 import type { LayerSynthState } from '../core/types';
-import { TextmodeLayer } from 'textmode.js/layering';
+import { TextmodeLayer } from 'textmode.js';
 
 /**
  * The `textmode.synth.js` plugin to install.

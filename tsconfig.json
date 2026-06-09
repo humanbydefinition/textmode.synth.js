@@ -5,18 +5,17 @@
 		"module": "ESNext",
 		"lib": ["ES2022", "DOM", "DOM.Iterable"],
 		"types": ["vite/client", "node"],
-
 		"moduleResolution": "bundler",
 		"allowImportingTsExtensions": true,
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"moduleDetection": "force",
-
 		"rootDir": "./src",
 		"declaration": true,
 		"declarationMap": true,
 		"emitDeclarationOnly": true,
 		"outDir": "./dist/types",
+		"noEmitOnError": true,
 
 		"strict": true,
 		"noUnusedLocals": true,

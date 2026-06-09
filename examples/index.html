@@ -32,7 +32,9 @@
 				<div class="flex items-start justify-between flex-wrap gap-4">
 					<div>
 						<h1 class="text-xl font-semibold tracking-tight text-zinc-50">textmode.synth.js</h1>
-						<p class="text-zinc-500 text-xs mt-1">// what if you could forget all the lies you've been told?</p>
+						<p class="text-zinc-500 text-xs mt-1">
+							// what if you could forget all the lies you've been told?
+						</p>
 					</div>
 					<nav class="flex items-center gap-4 text-xs text-zinc-500">
 						<a
@@ -84,193 +86,60 @@
 		</div>
 
 		<script>
-			const GROUPS = [
-				{
-					name: 'Sources',
-					description: 'Pattern generator functions',
-					entries: [
-						'osc',
-						'noise',
-						'gradient',
-						'plasma',
-						'moire',
-						'voronoi',
-						'shape',
-						'solid',
-						'solid2',
-						'src',
-					],
-				},
-				{
-					name: 'Composition',
-					description: 'Color, character, and paint composition',
-					entries: [
-						'cellColor',
-						'cellColor2',
-						'cellColor3',
-						'charColor',
-						'charColor2',
-						'charColor3',
-						'char',
-						'paint',
-						'paint2',
-						'paint3',
-					],
-				},
-				{
-					name: 'Coordinates',
-					description: 'Coordinate transforms and distortions',
-					entries: [
-						'rotate',
-						'scale',
-						'scroll',
-						'scrollX',
-						'scrollY',
-						'pixelate',
-						'repeat',
-						'repeatX',
-						'repeatY',
-						'kaleid',
-						'polar',
-						'twirl',
-						'swirl',
-						'mirror',
-						'shear',
-						'barrel',
-						'pinch',
-						'fisheye',
-					],
-				},
-				{
-					name: 'Colors',
-					description: 'Color filters and adjustments',
-					entries: [
-						'brightness',
-						'contrast',
-						'invert',
-						'saturate',
-						'hue',
-						'colorama',
-						'posterize',
-						'luma',
-						'thresh',
-						'color',
-						'color2',
-						'r',
-						'g',
-						'b',
-						'shift',
-						'gamma',
-						'levels',
-						'clamp',
-						'seed',
-					],
-				},
-				{
-					name: 'Combines',
-					description: 'Blend and combine operations',
-					entries: [
-						'add',
-						'sub',
-						'mult',
-						'blend',
-						'diff',
-						'layer',
-						'mask',
-						'screen',
-						'overlay',
-						'softlight',
-						'hardlight',
-						'dodge',
-						'burn',
-						'lighten',
-						'darken',
-					],
-				},
-				{
-					name: 'Modulations',
-					description: 'Coordinate modulation using a second source',
-					entries: [
-						'modulate',
-						'modulateScale',
-						'modulateRotate',
-						'modulatePixelate',
-						'modulateKaleid',
-						'modulateScrollX',
-						'modulateScrollY',
-						'modulateRepeat',
-						'modulateRepeatX',
-						'modulateRepeatY',
-						'modulateHue',
-					],
-				},
-				{
-					name: 'Chain',
-					description: 'Chain methods: character mapping, coloring, and cloning',
-					entries: [
-						'charMap',
-						'charColor',
-						'charColor2',
-						'charColor3',
-						'cellColor',
-						'cellColor2',
-						'cellColor3',
-						'char',
-						'paint',
-						'paint2',
-						'paint3',
-						'clone',
-					],
-				},
-				{
-					name: 'Extensions',
-					description: 'Layer and modifier augmentations: synth, BPM, seed',
-					entries: ['synth', 'clearSynth', 'layerBpm', 'bpm', 'seed'],
-				},
-				{
-					name: 'Arrays',
-					description: 'Hydra-style array modulation: cycling, smoothing, easing',
-					entries: ['arrays', 'easingFunction', 'fast', 'smooth', 'ease', 'offset', 'fit'],
-				},
-			];
+			const MANIFEST_URL = './manifest.json';
+			const container = document.getElementById('examples');
+			const searchInput = document.getElementById('search');
 
-			function resolveExamplePath(groupName, entryName) {
-				switch (groupName) {
-					case 'Sources':
-					case 'Coordinates':
-					case 'Colors':
-					case 'Combines':
-					case 'Modulations':
-					case 'Chain':
-						return `SynthSource/${entryName}`;
-					case 'Composition': {
-						const compositionGroup = entryName.replace(/[0-9]+$/, '') || entryName;
-						return `${compositionGroup}/${entryName}`;
-					}
-					case 'Extensions':
-						if (entryName === 'synth' || entryName === 'clearSynth') {
-							return `TextmodeLayer/${entryName}`;
-						}
-						if (entryName === 'layerBpm') {
-							return 'TextmodeLayer/bpm';
-						}
-						return `Textmodifier/${entryName}`;
-					case 'Arrays':
-						if (entryName === 'easingFunction') {
-							return 'EasingFunction/easingFunction';
-						}
-						return `ModulatedArray/${entryName}`;
-					default:
-						return `${groupName}/${entryName}`;
-				}
+			function escapeHtml(value) {
+				return String(value).replace(/[&<>"']/g, (char) => {
+					return {
+						'&': '&amp;',
+						'<': '&lt;',
+						'>': '&gt;',
+						'"': '&quot;',
+						"'": '&#39;',
+					}[char];
+				});
 			}
 
-			function getExampleHref(groupName, entryName) {
-				return `./sketch.html?path=${encodeURIComponent(resolveExamplePath(groupName, entryName))}`;
+			function getExamplePath(sourceFile) {
+				if (!sourceFile.startsWith('examples/') || !sourceFile.endsWith('/sketch.js')) {
+					throw new Error(`Invalid example source file: ${sourceFile}`);
+				}
+
+				return sourceFile.slice('examples/'.length, -'/sketch.js'.length);
+			}
+
+			function getExampleName(examplePath) {
+				const segments = examplePath.split('/');
+				return segments[segments.length - 1];
+			}
+
+			function normalizeManifest(manifest) {
+				if (!Array.isArray(manifest.groups)) {
+					throw new Error('Examples manifest is missing a groups array.');
+				}
+
+				return manifest.groups.map((group) => ({
+					name: group.name,
+					description: group.description,
+					entries: group.examples.map((example) => {
+						const path = getExamplePath(example.sourceFile);
+
+						return {
+							name: getExampleName(path),
+							path,
+							title: example.title,
+						};
+					}),
+				}));
+			}
+
+			function getExampleHref(examplePath) {
+				return `./sketch.html?path=${encodeURIComponent(examplePath)}`;
 			}
 
 			function render(groups) {
-				const container = document.getElementById('examples');
 				container.innerHTML = '';
 
 				groups.forEach((group) => {
@@ -281,16 +150,17 @@
 
 					section.innerHTML = `
             <div class="flex items-center gap-3 px-4 py-3 border-b border-zinc-800 bg-zinc-900/60">
-              <h2 class="text-sm font-medium text-zinc-100 tracking-tight">${group.name}</h2>
-              <span class="text-xs text-zinc-600 hidden sm:block">${group.description}</span>
+              <h2 class="text-sm font-medium text-zinc-100 tracking-tight">${escapeHtml(group.name)}</h2>
+              <span class="text-xs text-zinc-600 hidden sm:block">${escapeHtml(group.description)}</span>
               <span class="ml-auto text-xs text-zinc-600 tabular-nums" data-count>${group.entries.length}</span>
             </div>
             <div class="px-4 py-3 flex flex-wrap gap-1.5" data-entries>
               ${group.entries
-					.map(
-						(entry) =>
-							`<a href="${getExampleHref(group.name, entry)}" class="entry-badge" data-entry="${entry.toLowerCase()}" data-entry-name="${entry}" aria-expanded="false">${entry}</a>`
-					)
+					.map((entry) => {
+						const name = escapeHtml(entry.name);
+						const title = escapeHtml(entry.title);
+						return `<a href="${escapeHtml(getExampleHref(entry.path))}" class="entry-badge" data-entry="${escapeHtml(entry.name.toLowerCase())}" data-entry-name="${name}" data-entry-title="${escapeHtml(entry.title.toLowerCase())}" aria-expanded="false" title="${title}">${name}</a>`;
+					})
 					.join('')}
             </div>
             <div class="example-preview" data-preview hidden>
@@ -305,13 +175,19 @@
                 </div>
               </div>
               <div class="example-preview-frame-wrap">
-                <iframe class="example-preview-frame" data-preview-frame loading="lazy" title="${group.name} example preview"></iframe>
+                <iframe class="example-preview-frame" data-preview-frame loading="lazy" title="${escapeHtml(group.name)} example preview"></iframe>
               </div>
             </div>
           `;
 
 					container.appendChild(section);
 				});
+
+				filterExamples();
+			}
+
+			function showGalleryState(message) {
+				container.innerHTML = `<p class="text-xs text-zinc-600">${escapeHtml(message)}</p>`;
 			}
 
 			function closePreview(section) {
@@ -357,9 +233,29 @@
 				preview.hidden = false;
 			}
 
-			render(GROUPS);
+			async function loadManifest() {
+				const response = await fetch(MANIFEST_URL);
 
-			document.getElementById('examples').addEventListener('click', (event) => {
+				if (!response.ok) {
+					throw new Error(`Unable to load ${MANIFEST_URL}: ${response.status} ${response.statusText}`);
+				}
+
+				return response.json();
+			}
+
+			async function bootstrapGallery() {
+				showGalleryState('loading examples...');
+
+				try {
+					const manifest = await loadManifest();
+					render(normalizeManifest(manifest));
+				} catch (error) {
+					console.error('Unable to load examples manifest.', error);
+					showGalleryState('Unable to load examples manifest.');
+				}
+			}
+
+			container.addEventListener('click', (event) => {
 				const closeButton = event.target.closest('[data-preview-close]');
 				if (closeButton) {
 					closePreview(closeButton.closest('[data-group]'));
@@ -386,9 +282,8 @@
 				openPreview(section, badge);
 			});
 
-			// Search / filter
-			document.getElementById('search').addEventListener('input', function () {
-				const q = this.value.trim().toLowerCase();
+			function filterExamples() {
+				const q = searchInput.value.trim().toLowerCase();
 
 				document.querySelectorAll('#examples > div').forEach((section) => {
 					const badges = section.querySelectorAll('.entry-badge');
@@ -397,7 +292,8 @@
 
 					badges.forEach((badge) => {
 						const entryName = badge.dataset.entry;
-						const match = !q || entryName.includes(q) || groupName.includes(q);
+						const entryTitle = badge.dataset.entryTitle;
+						const match = !q || entryName.includes(q) || entryTitle.includes(q) || groupName.includes(q);
 						badge.classList.toggle('hidden-entry', !match);
 						if (match) visible++;
 					});
@@ -416,7 +312,10 @@
 
 					section.style.display = visible === 0 ? 'none' : '';
 				});
-			});
+			}
+
+			searchInput.addEventListener('input', filterExamples);
+			bootstrapGallery();
 		</script>
 	</body>
 </html>

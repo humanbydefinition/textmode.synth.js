@@ -61,6 +61,8 @@ import {
 } from './api';
 export { cellColor, char, charColor, gradient, moire, noise, osc, paint, plasma, shape, solid, src, voronoi };
 
+import { EASING_FUNCTIONS } from './utils/ArrayUtils';
+export { EASING_FUNCTIONS };
 export type { ModulatedArray, EasingFunction } from './utils/ArrayUtils';
 
 // Error handling for live coding environments

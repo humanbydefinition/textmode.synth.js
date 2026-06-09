@@ -9,6 +9,51 @@ import type { SynthTransformType, TransformInput } from '../core/types';
 export type { TransformInput };
 import { TRANSFORM_TYPE_INFO } from '../core/types';
 
+const GLSL_RESERVED_IDENTIFIERS = new Set([
+	'abs',
+	'acos',
+	'asin',
+	'atan',
+	'ceil',
+	'clamp',
+	'cos',
+	'cross',
+	'degrees',
+	'distance',
+	'dot',
+	'equal',
+	'exp',
+	'exp2',
+	'faceforward',
+	'floor',
+	'fract',
+	'inverse',
+	'inversesqrt',
+	'length',
+	'lessThan',
+	'lessThanEqual',
+	'log',
+	'log2',
+	'max',
+	'min',
+	'mix',
+	'mod',
+	'normalize',
+	'not',
+	'notEqual',
+	'pow',
+	'radians',
+	'reflect',
+	'refract',
+	'sign',
+	'sin',
+	'smoothstep',
+	'sqrt',
+	'step',
+	'tan',
+	'texture',
+]);
+
 /**
  * Definition of a synthesis transform function.
  */
@@ -29,6 +74,8 @@ export interface TransformDefinition {
  * A processed transform with complete GLSL function.
  */
 export interface ProcessedTransform extends TransformDefinition {
+	/** Internal GLSL function name, kept separate from the public JS API name */
+	glslName: string;
 	/** Complete GLSL function code */
 	glslFunction: string;
 }
@@ -38,18 +85,34 @@ export interface ProcessedTransform extends TransformDefinition {
  */
 export function processTransform(def: TransformDefinition): ProcessedTransform {
 	const typeInfo = TRANSFORM_TYPE_INFO[def.type];
-	const allArgs = [...typeInfo.args, ...def.inputs.map((i) => ({ type: i.type, name: i.name }))];
+	const inputArgs = def.inputs.map((i) => ({ type: i.type, name: toSafeGlslIdentifier(i.name) }));
+	const allArgs = [...typeInfo.args, ...inputArgs];
 	const argsStr = allArgs.map((a) => `${a.type} ${a.name}`).join(', ');
+	const glslName = `tm_${def.name}`;
+	const glslBody = def.inputs.reduce((body, input) => {
+		const safeName = toSafeGlslIdentifier(input.name);
+		if (safeName === input.name) return body;
+		return body.replace(new RegExp(`\\b${escapeRegExp(input.name)}\\b`, 'g'), safeName);
+	}, def.glsl);
 
 	const glslFunction = `
-${typeInfo.returnType} ${def.name}(${argsStr}) {
-${def.glsl}
+${typeInfo.returnType} ${glslName}(${argsStr}) {
+${glslBody}
 }`;
 
 	return {
 		...def,
+		glslName,
 		glslFunction,
 	};
+}
+
+function toSafeGlslIdentifier(name: string): string {
+	return GLSL_RESERVED_IDENTIFIERS.has(name) ? `tm_${name}` : name;
+}
+
+function escapeRegExp(value: string): string {
+	return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /**

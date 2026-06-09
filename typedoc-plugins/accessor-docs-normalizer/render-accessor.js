@@ -1,10 +1,32 @@
-import { MarkdownTheme, MarkdownThemeContext } from 'typedoc-plugin-markdown';
+// @ts-check
+
 import { i18n, ReflectionKind } from 'typedoc';
 
+import { hasSyntheticAccessorComment } from './accessor-comments.js';
+
+/**
+ * @param {number} level
+ * @param {string} text
+ * @returns {string}
+ */
 function heading(level, text) {
 	return `${'#'.repeat(level)} ${text}`;
 }
 
+/**
+ * Render one getter or setter signature.
+ *
+ * @param {import('typedoc-plugin-markdown').MarkdownThemeContext} context
+ * @param {import('typedoc').SignatureReflection} signature
+ * @param {{
+ *   accessor: 'get' | 'set';
+ *   headingLevel: number;
+ *   includeParameters: boolean;
+ *   showSources: boolean;
+ *   title: string;
+ * }} options
+ * @returns {string}
+ */
 function renderAccessorSignature(context, signature, options) {
 	const md = [];
 
@@ -63,13 +85,21 @@ function renderAccessorSignature(context, signature, options) {
 	return md.filter(Boolean).join('\n\n');
 }
 
-export function renderAccessorMember(context, model, options) {
+/**
+ * Render accessor documentation with getter content before setter content.
+ *
+ * @param {import('typedoc-plugin-markdown').MarkdownThemeContext} context
+ * @param {import('typedoc').DeclarationReflection} accessor
+ * @param {{ headingLevel: number }} options
+ * @returns {string}
+ */
+export function renderAccessorDocs(context, accessor, options) {
 	const md = [];
-	const showSources = model?.parent?.kind !== ReflectionKind.TypeLiteral;
+	const showSources = accessor.parent?.kind !== ReflectionKind.TypeLiteral;
 
-	if (model.getSignature) {
+	if (accessor.getSignature) {
 		md.push(
-			renderAccessorSignature(context, model.getSignature, {
+			renderAccessorSignature(context, accessor.getSignature, {
 				accessor: 'get',
 				headingLevel: options.headingLevel,
 				includeParameters: false,
@@ -79,9 +109,9 @@ export function renderAccessorMember(context, model, options) {
 		);
 	}
 
-	if (model.setSignature) {
+	if (accessor.setSignature) {
 		md.push(
-			renderAccessorSignature(context, model.setSignature, {
+			renderAccessorSignature(context, accessor.setSignature, {
 				accessor: 'set',
 				headingLevel: options.headingLevel,
 				includeParameters: true,
@@ -91,41 +121,24 @@ export function renderAccessorMember(context, model, options) {
 		);
 	}
 
-	if (showSources && !context.options.getValue('disableSources')) {
-		if (!model.getSignature && !model.setSignature) {
-			md.push(context.partials.sources(model));
-		}
+	if (
+		showSources &&
+		!context.options.getValue('disableSources') &&
+		!accessor.getSignature &&
+		!accessor.setSignature
+	) {
+		md.push(context.partials.sources(accessor));
 	}
 
-	if (model.comment) {
+	if (accessor.comment && !hasSyntheticAccessorComment(accessor)) {
 		md.push(
-			context.partials.comment(model.comment, {
+			context.partials.comment(accessor.comment, {
 				headingLevel: options.headingLevel,
 			})
 		);
 	}
 
-	md.push(context.partials.inheritance(model, { headingLevel: options.headingLevel }));
+	md.push(context.partials.inheritance(accessor, { headingLevel: options.headingLevel }));
 
 	return md.filter(Boolean).join('\n\n');
-}
-
-class AccessorOrderMarkdownThemeContext extends MarkdownThemeContext {
-	constructor(theme, page, options) {
-		super(theme, page, options);
-		this.partials.accessor = (model, partialOptions) => renderAccessorMember(this, model, partialOptions);
-	}
-}
-
-let isPatched = false;
-
-export function load(app) {
-	if (!isPatched) {
-		MarkdownTheme.prototype.getRenderContext = function (page) {
-			return new AccessorOrderMarkdownThemeContext(this, page, this.application.options);
-		};
-		isPatched = true;
-	}
-
-	app.logger.verbose('[typedoc] Registered accessor signature ordering theme override');
 }
