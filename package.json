@@ -1,6 +1,6 @@
 {
 	"name": "textmode.synth.js",
-	"version": "1.6.0",
+	"version": "1.6.1",
 	"description": "Synth engine for textmode.js",
 	"type": "module",
 	"main": "./dist/textmode.synth.umd.js",
