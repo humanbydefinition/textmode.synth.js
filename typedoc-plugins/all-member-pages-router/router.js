@@ -49,6 +49,10 @@ export class AllMemberPagesRouter extends MemberRouter {
 
 	/** @param {import('typedoc').Reflection} reflection */
 	getReflectionFileName(reflection) {
-		return getMemberReflectionFileName(this, reflection);
+		if (isDirectMemberPageReflection(reflection)) {
+			return getMemberReflectionFileName(this, reflection);
+		}
+
+		return super.getReflectionFileName(reflection);
 	}
 }

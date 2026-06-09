@@ -1,8 +1,6 @@
 // @ts-check
 
-import { ReflectionKind } from 'typedoc';
-
-import { CONSTRUCTOR_FILE_NAME, MEMBER_DIRECTORIES } from './constants.js';
+import { MEMBER_DIRECTORIES } from './constants.js';
 
 /**
  * @typedef {{
@@ -17,7 +15,7 @@ import { CONSTRUCTOR_FILE_NAME, MEMBER_DIRECTORIES } from './constants.js';
  */
 
 /**
- * Get the directory name for a direct class/interface member kind.
+ * Get the directory name for a direct Sandpack member kind.
  *
  * @param {import('typedoc').ReflectionKind} kind
  * @returns {string | undefined}
@@ -27,7 +25,7 @@ export function getMemberDirectoryName(kind) {
 }
 
 /**
- * Build the directory path for a direct class/interface member page.
+ * Build the directory path for a direct Sandpack member page.
  *
  * @param {MemberDirectoryRouter} router
  * @param {import('typedoc').Reflection} reflection
@@ -39,16 +37,12 @@ export function getDirectMemberDirectory(router, reflection) {
 }
 
 /**
- * Build a reflection filename, preserving constructor page names.
+ * Build a reflection filename for a direct Sandpack member page.
  *
  * @param {ReflectionAliasRouter} router
  * @param {import('typedoc').Reflection} reflection
  * @returns {string}
  */
 export function getReflectionFileName(router, reflection) {
-	if (reflection.kind === ReflectionKind.Constructor) {
-		return CONSTRUCTOR_FILE_NAME;
-	}
-
 	return router.getReflectionAlias(reflection);
 }
