@@ -2,9 +2,16 @@ name: CI
 
 on:
     pull_request:
-        branches: [main, beta]
+        branches: [dev, beta, main]
     push:
-        branches: [main, beta]
+        branches: [dev, beta, main]
+
+concurrency:
+    group: ${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    contents: read
 
 env:
     CI_NODE_VERSION: 24
@@ -34,7 +41,7 @@ jobs:
         name: Release
         needs: check
         runs-on: ubuntu-latest
-        if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/beta')
+        if: github.event_name == 'push' && (github.ref == 'refs/heads/beta' || github.ref == 'refs/heads/main')
         environment:
             name: npm-publish
 
