@@ -3,7 +3,7 @@
 import { Converter, ReflectionKind } from 'typedoc';
 import { MarkdownPageEvent } from 'typedoc-plugin-markdown';
 
-import { API_BASE_URL } from '../../scripts/lib/api-doc-links-config.mjs';
+const API_BASE_URL = 'https://code.textmode.art/api/textmode.synth.js';
 
 /**
  * @param {import('typedoc').CommentDisplayPart} part
