@@ -36,6 +36,8 @@ import { TextmodeLayer } from 'textmode.js';
  *   t.resizeCanvas(window.innerWidth, window.innerHeight);
  * });
  * ```
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/variables/SynthPlugin | SynthPlugin API reference}
  */
 export const SynthPlugin: TextmodePlugin = {
 	name: PLUGIN_NAME,

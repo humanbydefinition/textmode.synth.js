@@ -349,6 +349,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/rotate/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/rotate | SynthSource.rotate API reference}
 		 */
 		rotate(angle?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -363,6 +365,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/scale/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/scale | SynthSource.scale API reference}
 		 */
 		scale(
 			amount?: SynthParameterValue,
@@ -382,6 +386,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/scroll/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/scroll | SynthSource.scroll API reference}
 		 */
 		scroll(
 			scrollX?: SynthParameterValue,
@@ -398,6 +404,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/scrollX/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/scrollX | SynthSource.scrollX API reference}
 		 */
 		scrollX(scrollX?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -409,6 +417,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/scrollY/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/scrollY | SynthSource.scrollY API reference}
 		 */
 		scrollY(scrollY?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -420,6 +430,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/pixelate/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/pixelate | SynthSource.pixelate API reference}
 		 */
 		pixelate(pixelX?: SynthParameterValue, pixelY?: SynthParameterValue): this;
 
@@ -433,6 +445,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/repeat/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/repeat | SynthSource.repeat API reference}
 		 */
 		repeat(
 			repeatX?: SynthParameterValue,
@@ -449,6 +463,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/repeatX/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/repeatX | SynthSource.repeatX API reference}
 		 */
 		repeatX(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -460,6 +476,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/repeatY/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/repeatY | SynthSource.repeatY API reference}
 		 */
 		repeatY(reps?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -470,6 +488,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/kaleid/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/kaleid | SynthSource.kaleid API reference}
 		 */
 		kaleid(nSides?: SynthParameterValue): this;
 
@@ -481,6 +501,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/polar/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/polar | SynthSource.polar API reference}
 		 */
 		polar(angle?: SynthParameterValue, radius?: SynthParameterValue): this;
 
@@ -494,6 +516,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/twirl/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/twirl | SynthSource.twirl API reference}
 		 */
 		twirl(
 			amount?: SynthParameterValue,
@@ -511,6 +535,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/swirl/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/swirl | SynthSource.swirl API reference}
 		 */
 		swirl(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
 
@@ -522,6 +548,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/mirror/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/mirror | SynthSource.mirror API reference}
 		 */
 		mirror(mirrorX?: SynthParameterValue, mirrorY?: SynthParameterValue): this;
 
@@ -535,6 +563,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/shear/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/shear | SynthSource.shear API reference}
 		 */
 		shear(
 			x?: SynthParameterValue,
@@ -552,6 +582,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/barrel/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/barrel | SynthSource.barrel API reference}
 		 */
 		barrel(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
 
@@ -564,6 +596,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/pinch/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/pinch | SynthSource.pinch API reference}
 		 */
 		pinch(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
 
@@ -576,6 +610,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/fisheye/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/fisheye | SynthSource.fisheye API reference}
 		 */
 		fisheye(amount?: SynthParameterValue, centerX?: SynthParameterValue, centerY?: SynthParameterValue): this;
 	}

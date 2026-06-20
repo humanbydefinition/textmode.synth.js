@@ -188,6 +188,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulate/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/modulate | SynthSource.modulate API reference}
 		 */
 		modulate(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -200,6 +202,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateScale/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/modulateScale | SynthSource.modulateScale API reference}
 		 */
 		modulateScale(
 			source: SynthSource | SynthParameterValue,
@@ -216,6 +220,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateRotate/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/modulateRotate | SynthSource.modulateRotate API reference}
 		 */
 		modulateRotate(
 			source: SynthSource | SynthParameterValue,
@@ -232,6 +238,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulatePixelate/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/modulatePixelate | SynthSource.modulatePixelate API reference}
 		 */
 		modulatePixelate(
 			source: SynthSource | SynthParameterValue,
@@ -247,6 +255,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateKaleid/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/modulateKaleid | SynthSource.modulateKaleid API reference}
 		 */
 		modulateKaleid(source: SynthSource | SynthParameterValue, nSides?: SynthParameterValue): this;
 
@@ -259,6 +269,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateScrollX/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/modulateScrollX | SynthSource.modulateScrollX API reference}
 		 */
 		modulateScrollX(
 			source: SynthSource | SynthParameterValue,
@@ -275,6 +287,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateScrollY/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/modulateScrollY | SynthSource.modulateScrollY API reference}
 		 */
 		modulateScrollY(
 			source: SynthSource | SynthParameterValue,
@@ -293,6 +307,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateRepeat/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/modulateRepeat | SynthSource.modulateRepeat API reference}
 		 */
 		modulateRepeat(
 			source: SynthSource | SynthParameterValue,
@@ -311,6 +327,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateRepeatX/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/modulateRepeatX | SynthSource.modulateRepeatX API reference}
 		 */
 		modulateRepeatX(
 			source: SynthSource | SynthParameterValue,
@@ -327,6 +345,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateRepeatY/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/modulateRepeatY | SynthSource.modulateRepeatY API reference}
 		 */
 		modulateRepeatY(
 			source: SynthSource | SynthParameterValue,
@@ -342,6 +362,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateHue/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/modulateHue | SynthSource.modulateHue API reference}
 		 */
 		modulateHue(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 	}
