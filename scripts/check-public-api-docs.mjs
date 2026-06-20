@@ -13,7 +13,7 @@ import {
 	TARGET_KINDS,
 } from './lib/api-doc-links-config.mjs';
 import { collectApiDocIssues, countApiDocIssues } from './lib/api-doc-checks.mjs';
-import { readMarkdownRoutes } from './lib/api-doc-routes.mjs';
+import { readOrGenerateMarkdownRoutes } from './lib/api-doc-routes.mjs';
 import { getIncludedReflections } from './lib/reflection-policy.mjs';
 import { renderIssueSection } from './lib/reporting.mjs';
 import { loadTypeDocProject } from './lib/typedoc-project.mjs';
@@ -66,7 +66,7 @@ async function main() {
 			return;
 		}
 
-		const routes = readMarkdownRoutes(API_DOCS_DIR);
+		const routes = await readOrGenerateMarkdownRoutes(API_DOCS_DIR);
 		const { docstringTargetKinds, exampleTargetKinds } = getTargetKinds(options);
 		const project = await loadTypeDocProject({
 			entryPoint: ENTRY_POINT,

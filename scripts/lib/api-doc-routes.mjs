@@ -1,4 +1,6 @@
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 
 import { ReflectionKind } from 'typedoc';
@@ -41,6 +43,29 @@ export function readMarkdownRoutes(apiDocsDir) {
 
 	walk(apiDocsDir);
 	return routes;
+}
+
+function generateTemporaryMarkdownRoutes() {
+	const outputDir = fs.mkdtempSync(path.join(tmpdir(), 'textmode-api-routes-'));
+
+	try {
+		execFileSync('npm', ['run', 'build:docs', '--', '--out', outputDir, '--logLevel', 'Error'], {
+			encoding: 'utf8',
+			maxBuffer: 1024 * 1024 * 20,
+			stdio: 'pipe',
+		});
+		return readMarkdownRoutes(outputDir);
+	} finally {
+		fs.rmSync(outputDir, { recursive: true, force: true });
+	}
+}
+
+export async function readOrGenerateMarkdownRoutes(apiDocsDir) {
+	if (fs.existsSync(apiDocsDir)) {
+		return readMarkdownRoutes(apiDocsDir);
+	}
+
+	return generateTemporaryMarkdownRoutes();
 }
 
 export function slugAnchor(name) {
