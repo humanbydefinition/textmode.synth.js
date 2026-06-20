@@ -57,6 +57,8 @@ export interface TransformInput {
  * - `function`: Evaluated each frame with context
  * - `SynthSource`: Nested synth chain for combine/modulate operations
  * - `null`: Use default value
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/type-aliases/SynthParameterValue | SynthParameterValue API reference}
  */
 export type SynthParameterValue =
 	| number
@@ -87,23 +89,57 @@ export type SynthParameterValue =
  *   t.resizeCanvas(window.innerWidth, window.innerHeight);
  * });
  * ```
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/SynthContext | SynthContext API reference}
  */
 export interface SynthContext {
-	/** Current time in seconds */
+	/**
+	 * Current time in seconds
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/SynthContext#time | SynthContext.time API reference}
+	 */
 	time: number;
-	/** Current frame count */
+	/**
+	 * Current frame count
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/SynthContext#framecount | SynthContext.frameCount API reference}
+	 */
 	frameCount: number;
-	/** Grid width in pixels */
+	/**
+	 * Grid width in pixels
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/SynthContext#width | SynthContext.width API reference}
+	 */
 	width: number;
-	/** Grid height in pixels */
+	/**
+	 * Grid height in pixels
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/SynthContext#height | SynthContext.height API reference}
+	 */
 	height: number;
-	/** Grid columns */
+	/**
+	 * Grid columns
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/SynthContext#cols | SynthContext.cols API reference}
+	 */
 	cols: number;
-	/** Grid rows */
+	/**
+	 * Grid rows
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/SynthContext#rows | SynthContext.rows API reference}
+	 */
 	rows: number;
-	/** Current BPM (beats per minute) for array modulation timing */
+	/**
+	 * Current BPM (beats per minute) for array modulation timing
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/SynthContext#bpm | SynthContext.bpm API reference}
+	 */
 	bpm: number;
-	/** Optional callback for handling dynamic parameter evaluation errors */
+	/**
+	 * Optional callback for handling dynamic parameter evaluation errors
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/SynthContext#onerror | SynthContext.onError API reference}
+	 */
 	onError?: (error: unknown, uniformName: string) => void;
 }
 

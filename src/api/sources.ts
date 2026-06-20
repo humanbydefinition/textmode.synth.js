@@ -24,6 +24,8 @@ import { TextmodeSource } from 'textmode.js';
  *
  * @example
  * {@includeCode ../../examples/cellColor/cellColor/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/cellColor | cellColor API reference}
  */
 export function cellColor(source: SynthSource): SynthSource;
 /**
@@ -37,6 +39,8 @@ export function cellColor(source: SynthSource): SynthSource;
  *
  * @example
  * {@includeCode ../../examples/cellColor/cellColor2/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/cellColor | cellColor API reference}
  */
 export function cellColor(
     r: SynthParameterValue,
@@ -52,6 +56,8 @@ export function cellColor(
  *
  * @example
  * {@includeCode ../../examples/cellColor/cellColor3/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/cellColor | cellColor API reference}
  */
 export function cellColor(gray: SynthParameterValue): SynthSource;
 
@@ -75,6 +81,8 @@ export function cellColor(
  *
  * @example
  * {@includeCode ../../examples/char/char/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/char | char API reference}
  */
 export const char = (source: SynthSource): SynthSource => {
     return new SynthSource({ charSource: source });
@@ -94,6 +102,8 @@ export const char = (source: SynthSource): SynthSource => {
  *
  * @example
  * {@includeCode ../../examples/charColor/charColor/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/charColor | charColor API reference}
  */
 export function charColor(source: SynthSource): SynthSource;
 /**
@@ -107,6 +117,8 @@ export function charColor(source: SynthSource): SynthSource;
  *
  * @example
  * {@includeCode ../../examples/charColor/charColor2/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/charColor | charColor API reference}
  */
 export function charColor(
     r: SynthParameterValue,
@@ -122,6 +134,8 @@ export function charColor(
  *
  * @example
  * {@includeCode ../../examples/charColor/charColor3/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/charColor | charColor API reference}
  */
 export function charColor(gray: SynthParameterValue): SynthSource;
 
@@ -141,6 +155,8 @@ export function charColor(
  *
  * @example
  * {@includeCode ../../examples/SynthSource/gradient/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/gradient | gradient API reference}
  */
 export function gradient(
     speed?: number | number[] | ((ctx: SynthContext) => number)
@@ -156,6 +172,8 @@ export function gradient(
  *
  * @example
  * {@includeCode ../../examples/SynthSource/noise/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/noise | noise API reference}
  */
 export function noise(
     scale?: number | number[] | ((ctx: SynthContext) => number),
@@ -174,6 +192,8 @@ export function noise(
  *
  * @example
  * {@includeCode ../../examples/SynthSource/plasma/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/plasma | plasma API reference}
  */
 export function plasma(
     scale?: number | number[] | ((ctx: SynthContext) => number),
@@ -201,6 +221,8 @@ export function plasma(
  *
  * @example
  * {@includeCode ../../examples/SynthSource/moire/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/moire | moire API reference}
  */
 export function moire(
     freqA?: number | number[] | ((ctx: SynthContext) => number),
@@ -229,6 +251,8 @@ export function moire(
  *
  * @example
  * {@includeCode ../../examples/SynthSource/osc/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/osc | osc API reference}
  */
 export function osc(
     frequency?: number | number[] | ((ctx: SynthContext) => number),
@@ -251,6 +275,8 @@ export function osc(
  *
  * @example
  * {@includeCode ../../examples/paint/paint/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/paint | paint API reference}
  */
 export function paint(source: SynthSource): SynthSource;
 /**
@@ -264,6 +290,8 @@ export function paint(source: SynthSource): SynthSource;
  *
  * @example
  * {@includeCode ../../examples/paint/paint2/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/paint | paint API reference}
  */
 export function paint(
     r: SynthParameterValue,
@@ -279,6 +307,8 @@ export function paint(
  *
  * @example
  * {@includeCode ../../examples/paint/paint3/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/paint | paint API reference}
  */
 export function paint(gray: SynthParameterValue): SynthSource;
 
@@ -304,6 +334,8 @@ export function paint(
  *
  * @example
  * {@includeCode ../../examples/SynthSource/shape/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/shape | shape API reference}
  */
 export function shape(
     sides?: number | number[] | ((ctx: SynthContext) => number),
@@ -320,6 +352,8 @@ export function shape(
  *
  * @example
  * {@includeCode ../../examples/SynthSource/solid/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/solid | solid API reference}
  */
 export function solid(gray: SynthParameterValue): SynthSource;
 
@@ -333,6 +367,8 @@ export function solid(gray: SynthParameterValue): SynthSource;
  *
  * @example
  * {@includeCode ../../examples/SynthSource/solid2/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/solid | solid API reference}
  */
 export function solid(
     r?: SynthParameterValue,
@@ -385,6 +421,8 @@ export function solid(
  *
  * @example
  * {@includeCode ../../examples/SynthSource/src/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/src | src API reference}
  */
 export const src = (
     source?:
@@ -469,6 +507,8 @@ function isTextmodeLayerObject(source: unknown): source is TextmodeLayer {
  *
  * @example
  * {@includeCode ../../examples/SynthSource/voronoi/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/voronoi | voronoi API reference}
  */
 export function voronoi(
     scale?: number | number[] | ((ctx: SynthContext) => number),

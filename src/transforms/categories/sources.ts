@@ -222,6 +222,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/osc/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/osc | SynthSource.osc API reference}
 		 */
 		osc(frequency?: SynthParameterValue, sync?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -233,6 +235,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/noise/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/noise | SynthSource.noise API reference}
 		 */
 		noise(scale?: SynthParameterValue, speed?: SynthParameterValue): this;
 
@@ -246,6 +250,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/plasma/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/plasma | SynthSource.plasma API reference}
 		 */
 		plasma(
 			scale?: SynthParameterValue,
@@ -266,6 +272,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/moire/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/moire | SynthSource.moire API reference}
 		 */
 		moire(
 			freqA?: SynthParameterValue,
@@ -285,6 +293,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/voronoi/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/voronoi | SynthSource.voronoi API reference}
 		 */
 		voronoi(scale?: SynthParameterValue, speed?: SynthParameterValue, blending?: SynthParameterValue): this;
 
@@ -295,6 +305,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/gradient/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/gradient | SynthSource.gradient API reference}
 		 */
 		gradient(speed?: SynthParameterValue): this;
 
@@ -307,6 +319,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/shape/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/shape | SynthSource.shape API reference}
 		 */
 		shape(sides?: SynthParameterValue, radius?: SynthParameterValue, smoothing?: SynthParameterValue): this;
 
@@ -317,6 +331,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/solid/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/solid | SynthSource.solid API reference}
 		 */
 		solid(gray: SynthParameterValue): this;
 		/**
@@ -329,6 +345,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/solid2/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/solid | SynthSource.solid API reference}
 		 */
 		solid(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 
@@ -350,6 +368,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/src/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/src | SynthSource.src API reference}
 		 */
 		src(): this;
 	}

@@ -43,6 +43,8 @@ export interface SynthSourceCreateOptions {
  *   t.resizeCanvas(window.innerWidth, window.innerHeight);
  * });
  * ```
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource | SynthSource API reference}
  */
 export class SynthSource {
 	/** The immutable chain of transforms */
@@ -145,6 +147,8 @@ export class SynthSource {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/charMap/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/charMap | SynthSource.charMap API reference}
 	 */
 	public charMap(chars: string): this {
 		if (chars.length === 0) {
@@ -191,6 +195,8 @@ export class SynthSource {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/charColor/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/charColor | SynthSource.charColor API reference}
 	 */
 	charColor(source: SynthSource): this;
 	/**
@@ -204,6 +210,8 @@ export class SynthSource {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/charColor2/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/charColor | SynthSource.charColor API reference}
 	 */
 	charColor(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 	/**
@@ -213,6 +221,8 @@ export class SynthSource {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/charColor3/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/charColor | SynthSource.charColor API reference}
 	 */
 	charColor(gray: SynthParameterValue): this;
 	public charColor(
@@ -235,6 +245,8 @@ export class SynthSource {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/char/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/char | SynthSource.char API reference}
 	 */
 	public char(source: SynthSource): this {
 		this._charSource = source;
@@ -249,6 +261,8 @@ export class SynthSource {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/cellColor/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/cellColor | SynthSource.cellColor API reference}
 	 */
 	cellColor(source: SynthSource): this;
 	/**
@@ -262,6 +276,8 @@ export class SynthSource {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/cellColor2/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/cellColor | SynthSource.cellColor API reference}
 	 */
 	cellColor(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 	/**
@@ -271,6 +287,8 @@ export class SynthSource {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/cellColor3/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/cellColor | SynthSource.cellColor API reference}
 	 */
 	cellColor(gray: SynthParameterValue): this;
 	public cellColor(
@@ -296,6 +314,8 @@ export class SynthSource {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/paint/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/paint | SynthSource.paint API reference}
 	 */
 	paint(source: SynthSource): this;
 	/**
@@ -309,6 +329,8 @@ export class SynthSource {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/paint2/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/paint | SynthSource.paint API reference}
 	 */
 	paint(r: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 	/**
@@ -318,6 +340,8 @@ export class SynthSource {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/paint3/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/paint | SynthSource.paint API reference}
 	 */
 	paint(gray: SynthParameterValue): this;
 	public paint(
@@ -341,6 +365,8 @@ export class SynthSource {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/clone/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/clone | SynthSource.clone API reference}
 	 */
 	public clone(): SynthSource {
 		// Clone nested sources
