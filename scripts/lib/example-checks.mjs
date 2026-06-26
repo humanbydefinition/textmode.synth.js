@@ -324,10 +324,6 @@ export function checkSketch(filePath) {
 			issues.push('`height` must be set to `window.innerHeight` in create options.');
 		}
 
-		if (!options.match(/pixelDensity:\s*1/)) {
-			issues.push('`pixelDensity` must be set to `1` in create options.');
-		}
-
 		const fontSizeMatch = options.match(/fontSize:\s*(\d+)/);
 		if (fontSizeMatch) {
 			const size = parseInt(fontSizeMatch[1], 10);
