@@ -1,9 +1,9 @@
 /**
  * @title SynthSource.cellColor3
- * @author codex
  */
 
 const t = textmode.create({
+	pixelDensity: 1,
 	width: window.innerWidth,
 	height: window.innerHeight,
 	fontSize: 8,

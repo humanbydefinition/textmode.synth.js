@@ -1,9 +1,9 @@
 /**
  * @title SynthSource.diff
- * @author codex
  */
 
 const t = textmode.create({
+	pixelDensity: 1,
 	width: window.innerWidth,
 	height: window.innerHeight,
 	fontSize: 8,
