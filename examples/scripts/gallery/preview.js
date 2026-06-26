@@ -9,6 +9,7 @@ function getPreviewElements(container) {
 		panel: container.querySelector('[data-preview-panel]'),
 		kicker: container.querySelector('[data-preview-kicker]'),
 		title: container.querySelector('[data-preview-title]'),
+		source: container.querySelector('[data-preview-source]'),
 		link: container.querySelector('[data-preview-link]'),
 		close: container.querySelector('[data-preview-close]'),
 		empty: container.querySelector('[data-preview-empty]'),
@@ -28,6 +29,8 @@ export function closePreview(container) {
 	preview.panel.dataset.empty = 'true';
 	preview.kicker.textContent = 'Preview';
 	preview.title.textContent = 'No sketch selected';
+	preview.source.hidden = true;
+	preview.source.removeAttribute('href');
 	preview.link.hidden = true;
 	preview.close.hidden = true;
 	preview.empty.hidden = false;
@@ -60,6 +63,12 @@ export function openPreview(badge, container, options = {}) {
 	preview.link.href = href;
 	preview.link.hidden = false;
 	preview.close.hidden = false;
+
+	const sourceBase = container.dataset.sourceBase;
+	if (sourceBase && badge.dataset.entryPath) {
+		preview.source.href = `${sourceBase}/examples/${badge.dataset.entryPath}/sketch.js`;
+		preview.source.hidden = false;
+	}
 	preview.empty.hidden = true;
 	preview.frame.hidden = false;
 	preview.frame.title = `${title} preview`;

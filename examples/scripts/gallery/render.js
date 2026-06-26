@@ -87,6 +87,7 @@ export function render(groups, container) {
 					<h2 class="preview-title" data-preview-title>No sketch selected</h2>
 				</div>
 				<div class="preview-actions">
+					<a class="preview-action" data-preview-source target="_blank" rel="noopener noreferrer" hidden>source</a>
 					<a class="preview-action" data-preview-link target="_blank" rel="noopener noreferrer" hidden>open</a>
 					<button type="button" class="preview-action" data-preview-close hidden>close</button>
 				</div>
