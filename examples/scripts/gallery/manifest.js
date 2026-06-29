@@ -15,6 +15,10 @@ export function getExampleHref(examplePath) {
 	return `./sketch.html?path=${encodeURIComponent(examplePath)}`;
 }
 
+export function getExampleSourceHref(examplePath) {
+	return `./${examplePath}/sketch.js`;
+}
+
 export function normalizeExample(example, subgroupName) {
 	const path = getExamplePath(example.sourceFile);
 

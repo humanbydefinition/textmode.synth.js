@@ -124,6 +124,12 @@ export function validateExamplesGallery(
 		issues.push(`${examplesIndex} must load ${examplesManifest}.`);
 	}
 
+	if (/data-source-base\s*=/.test(indexContent)) {
+		issues.push(
+			`${examplesIndex} must not hardcode a source base; preview links should resolve from example paths.`
+		);
+	}
+
 	return issues;
 }
 

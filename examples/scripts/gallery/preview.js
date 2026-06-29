@@ -1,3 +1,5 @@
+import { getExampleSourceHref } from './manifest.js';
+
 let activeBadge = null;
 
 export function getActiveBadge() {
@@ -64,9 +66,8 @@ export function openPreview(badge, container, options = {}) {
 	preview.link.hidden = false;
 	preview.close.hidden = false;
 
-	const sourceBase = container.dataset.sourceBase;
-	if (sourceBase && badge.dataset.entryPath) {
-		preview.source.href = `${sourceBase}/examples/${badge.dataset.entryPath}/sketch.js`;
+	if (badge.dataset.entryPath) {
+		preview.source.href = getExampleSourceHref(badge.dataset.entryPath);
 		preview.source.hidden = false;
 	}
 	preview.empty.hidden = true;
