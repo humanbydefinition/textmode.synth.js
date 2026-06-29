@@ -1,6 +1,5 @@
 /**
  * @title EasingFunction.easingFunction
- * @author codex
  */
 
 const t = textmode.create({

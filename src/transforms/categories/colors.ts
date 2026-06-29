@@ -271,6 +271,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/brightness/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/brightness | SynthSource.brightness API reference}
 		 */
 		brightness(amount?: SynthParameterValue): this;
 
@@ -281,6 +283,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/contrast/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/contrast | SynthSource.contrast API reference}
 		 */
 		contrast(amount?: SynthParameterValue): this;
 
@@ -291,6 +295,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/invert/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/invert | SynthSource.invert API reference}
 		 */
 		invert(amount?: SynthParameterValue): this;
 
@@ -301,6 +307,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/saturate/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/saturate | SynthSource.saturate API reference}
 		 */
 		saturate(amount?: SynthParameterValue): this;
 
@@ -311,6 +319,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/hue/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/hue | SynthSource.hue API reference}
 		 */
 		hue(hue?: SynthParameterValue): this;
 
@@ -321,6 +331,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/colorama/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/colorama | SynthSource.colorama API reference}
 		 */
 		colorama(amount?: SynthParameterValue): this;
 
@@ -332,6 +344,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/posterize/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/posterize | SynthSource.posterize API reference}
 		 */
 		posterize(bins?: SynthParameterValue, gamma?: SynthParameterValue): this;
 
@@ -343,6 +357,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/luma/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/luma | SynthSource.luma API reference}
 		 */
 		luma(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
 
@@ -354,6 +370,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/thresh/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/thresh | SynthSource.thresh API reference}
 		 */
 		thresh(threshold?: SynthParameterValue, tolerance?: SynthParameterValue): this;
 
@@ -364,6 +382,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/color/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/color | SynthSource.color API reference}
 		 */
 		color(gray: SynthParameterValue): this;
 		/**
@@ -379,6 +399,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/color2/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/color | SynthSource.color API reference}
 		 */
 		color(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 
@@ -390,6 +412,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/r/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/r | SynthSource.r API reference}
 		 */
 		r(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -401,6 +425,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/g/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/g | SynthSource.g API reference}
 		 */
 		g(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -412,6 +438,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/b/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/b | SynthSource.b API reference}
 		 */
 		b(scale?: SynthParameterValue, offset?: SynthParameterValue): this;
 
@@ -425,6 +453,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/shift/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/shift | SynthSource.shift API reference}
 		 */
 		shift(r?: SynthParameterValue, g?: SynthParameterValue, b?: SynthParameterValue, a?: SynthParameterValue): this;
 
@@ -435,6 +465,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/gamma/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/gamma | SynthSource.gamma API reference}
 		 */
 		gamma(amount?: SynthParameterValue): this;
 
@@ -449,6 +481,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/levels/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/levels | SynthSource.levels API reference}
 		 */
 		levels(
 			inMin?: SynthParameterValue,
@@ -466,6 +500,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/clamp/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/clamp | SynthSource.clamp API reference}
 		 */
 		clamp(min?: SynthParameterValue, max?: SynthParameterValue): this;
 
@@ -479,6 +515,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/seed/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/seed | SynthSource.seed API reference}
 		 */
 		seed(value: SynthParameterValue): this;
 	}

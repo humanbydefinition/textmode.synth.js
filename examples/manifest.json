@@ -3,48 +3,384 @@
 	"description": "Authoritative source of truth for the textmode.synth.js examples gallery, validation, and TypeDoc includeCode references.",
 	"groups": [
 		{
-			"name": "Sources",
-			"description": "Pattern generator functions",
-			"examples": [
+			"name": "SynthSource",
+			"description": "Synthesis chain methods",
+			"subgroups": [
 				{
-					"title": "SynthSource.osc",
-					"sourceFile": "examples/SynthSource/osc/sketch.js"
+					"name": "Sources",
+					"description": "Pattern generator functions",
+					"examples": [
+						{
+							"title": "SynthSource.osc",
+							"sourceFile": "examples/SynthSource/osc/sketch.js"
+						},
+						{
+							"title": "SynthSource.noise",
+							"sourceFile": "examples/SynthSource/noise/sketch.js"
+						},
+						{
+							"title": "SynthSource.gradient",
+							"sourceFile": "examples/SynthSource/gradient/sketch.js"
+						},
+						{
+							"title": "SynthSource.plasma",
+							"sourceFile": "examples/SynthSource/plasma/sketch.js"
+						},
+						{
+							"title": "SynthSource.moire",
+							"sourceFile": "examples/SynthSource/moire/sketch.js"
+						},
+						{
+							"title": "SynthSource.voronoi",
+							"sourceFile": "examples/SynthSource/voronoi/sketch.js"
+						},
+						{
+							"title": "SynthSource.shape",
+							"sourceFile": "examples/SynthSource/shape/sketch.js"
+						},
+						{
+							"title": "SynthSource.solid",
+							"sourceFile": "examples/SynthSource/solid/sketch.js"
+						},
+						{
+							"title": "SynthSource.solid2",
+							"sourceFile": "examples/SynthSource/solid2/sketch.js"
+						},
+						{
+							"title": "SynthSource.src",
+							"sourceFile": "examples/SynthSource/src/sketch.js"
+						}
+					]
 				},
 				{
-					"title": "SynthSource.noise",
-					"sourceFile": "examples/SynthSource/noise/sketch.js"
+					"name": "Coordinates",
+					"description": "Coordinate transforms and distortions",
+					"examples": [
+						{
+							"title": "SynthSource.rotate",
+							"sourceFile": "examples/SynthSource/rotate/sketch.js"
+						},
+						{
+							"title": "SynthSource.scale",
+							"sourceFile": "examples/SynthSource/scale/sketch.js"
+						},
+						{
+							"title": "SynthSource.scroll",
+							"sourceFile": "examples/SynthSource/scroll/sketch.js"
+						},
+						{
+							"title": "SynthSource.scrollX",
+							"sourceFile": "examples/SynthSource/scrollX/sketch.js"
+						},
+						{
+							"title": "SynthSource.scrollY",
+							"sourceFile": "examples/SynthSource/scrollY/sketch.js"
+						},
+						{
+							"title": "SynthSource.pixelate",
+							"sourceFile": "examples/SynthSource/pixelate/sketch.js"
+						},
+						{
+							"title": "SynthSource.repeat",
+							"sourceFile": "examples/SynthSource/repeat/sketch.js"
+						},
+						{
+							"title": "SynthSource.repeatX",
+							"sourceFile": "examples/SynthSource/repeatX/sketch.js"
+						},
+						{
+							"title": "SynthSource.repeatY",
+							"sourceFile": "examples/SynthSource/repeatY/sketch.js"
+						},
+						{
+							"title": "SynthSource.kaleid",
+							"sourceFile": "examples/SynthSource/kaleid/sketch.js"
+						},
+						{
+							"title": "SynthSource.polar",
+							"sourceFile": "examples/SynthSource/polar/sketch.js"
+						},
+						{
+							"title": "SynthSource.twirl",
+							"sourceFile": "examples/SynthSource/twirl/sketch.js"
+						},
+						{
+							"title": "SynthSource.swirl",
+							"sourceFile": "examples/SynthSource/swirl/sketch.js"
+						},
+						{
+							"title": "SynthSource.mirror",
+							"sourceFile": "examples/SynthSource/mirror/sketch.js"
+						},
+						{
+							"title": "SynthSource.shear",
+							"sourceFile": "examples/SynthSource/shear/sketch.js"
+						},
+						{
+							"title": "SynthSource.barrel",
+							"sourceFile": "examples/SynthSource/barrel/sketch.js"
+						},
+						{
+							"title": "SynthSource.pinch",
+							"sourceFile": "examples/SynthSource/pinch/sketch.js"
+						},
+						{
+							"title": "SynthSource.fisheye",
+							"sourceFile": "examples/SynthSource/fisheye/sketch.js"
+						}
+					]
 				},
 				{
-					"title": "SynthSource.gradient",
-					"sourceFile": "examples/SynthSource/gradient/sketch.js"
+					"name": "Colors",
+					"description": "Color filters and adjustments",
+					"examples": [
+						{
+							"title": "SynthSource.brightness",
+							"sourceFile": "examples/SynthSource/brightness/sketch.js"
+						},
+						{
+							"title": "SynthSource.contrast",
+							"sourceFile": "examples/SynthSource/contrast/sketch.js"
+						},
+						{
+							"title": "SynthSource.invert",
+							"sourceFile": "examples/SynthSource/invert/sketch.js"
+						},
+						{
+							"title": "SynthSource.saturate",
+							"sourceFile": "examples/SynthSource/saturate/sketch.js"
+						},
+						{
+							"title": "SynthSource.hue",
+							"sourceFile": "examples/SynthSource/hue/sketch.js"
+						},
+						{
+							"title": "SynthSource.colorama",
+							"sourceFile": "examples/SynthSource/colorama/sketch.js"
+						},
+						{
+							"title": "SynthSource.posterize",
+							"sourceFile": "examples/SynthSource/posterize/sketch.js"
+						},
+						{
+							"title": "SynthSource.luma",
+							"sourceFile": "examples/SynthSource/luma/sketch.js"
+						},
+						{
+							"title": "SynthSource.thresh",
+							"sourceFile": "examples/SynthSource/thresh/sketch.js"
+						},
+						{
+							"title": "SynthSource.color",
+							"sourceFile": "examples/SynthSource/color/sketch.js"
+						},
+						{
+							"title": "SynthSource.color2",
+							"sourceFile": "examples/SynthSource/color2/sketch.js"
+						},
+						{
+							"title": "SynthSource.r",
+							"sourceFile": "examples/SynthSource/r/sketch.js"
+						},
+						{
+							"title": "SynthSource.g",
+							"sourceFile": "examples/SynthSource/g/sketch.js"
+						},
+						{
+							"title": "SynthSource.b",
+							"sourceFile": "examples/SynthSource/b/sketch.js"
+						},
+						{
+							"title": "SynthSource.shift",
+							"sourceFile": "examples/SynthSource/shift/sketch.js"
+						},
+						{
+							"title": "SynthSource.gamma",
+							"sourceFile": "examples/SynthSource/gamma/sketch.js"
+						},
+						{
+							"title": "SynthSource.levels",
+							"sourceFile": "examples/SynthSource/levels/sketch.js"
+						},
+						{
+							"title": "SynthSource.clamp",
+							"sourceFile": "examples/SynthSource/clamp/sketch.js"
+						},
+						{
+							"title": "SynthSource.seed",
+							"sourceFile": "examples/SynthSource/seed/sketch.js"
+						}
+					]
 				},
 				{
-					"title": "SynthSource.plasma",
-					"sourceFile": "examples/SynthSource/plasma/sketch.js"
+					"name": "Combines",
+					"description": "Blend and combine operations",
+					"examples": [
+						{
+							"title": "SynthSource.add",
+							"sourceFile": "examples/SynthSource/add/sketch.js"
+						},
+						{
+							"title": "SynthSource.sub",
+							"sourceFile": "examples/SynthSource/sub/sketch.js"
+						},
+						{
+							"title": "SynthSource.mult",
+							"sourceFile": "examples/SynthSource/mult/sketch.js"
+						},
+						{
+							"title": "SynthSource.blend",
+							"sourceFile": "examples/SynthSource/blend/sketch.js"
+						},
+						{
+							"title": "SynthSource.diff",
+							"sourceFile": "examples/SynthSource/diff/sketch.js"
+						},
+						{
+							"title": "SynthSource.layer",
+							"sourceFile": "examples/SynthSource/layer/sketch.js"
+						},
+						{
+							"title": "SynthSource.mask",
+							"sourceFile": "examples/SynthSource/mask/sketch.js"
+						},
+						{
+							"title": "SynthSource.screen",
+							"sourceFile": "examples/SynthSource/screen/sketch.js"
+						},
+						{
+							"title": "SynthSource.overlay",
+							"sourceFile": "examples/SynthSource/overlay/sketch.js"
+						},
+						{
+							"title": "SynthSource.softlight",
+							"sourceFile": "examples/SynthSource/softlight/sketch.js"
+						},
+						{
+							"title": "SynthSource.hardlight",
+							"sourceFile": "examples/SynthSource/hardlight/sketch.js"
+						},
+						{
+							"title": "SynthSource.dodge",
+							"sourceFile": "examples/SynthSource/dodge/sketch.js"
+						},
+						{
+							"title": "SynthSource.burn",
+							"sourceFile": "examples/SynthSource/burn/sketch.js"
+						},
+						{
+							"title": "SynthSource.lighten",
+							"sourceFile": "examples/SynthSource/lighten/sketch.js"
+						},
+						{
+							"title": "SynthSource.darken",
+							"sourceFile": "examples/SynthSource/darken/sketch.js"
+						}
+					]
 				},
 				{
-					"title": "SynthSource.moire",
-					"sourceFile": "examples/SynthSource/moire/sketch.js"
+					"name": "Modulations",
+					"description": "Coordinate modulation using a second source",
+					"examples": [
+						{
+							"title": "SynthSource.modulate",
+							"sourceFile": "examples/SynthSource/modulate/sketch.js"
+						},
+						{
+							"title": "SynthSource.modulateScale",
+							"sourceFile": "examples/SynthSource/modulateScale/sketch.js"
+						},
+						{
+							"title": "SynthSource.modulateRotate",
+							"sourceFile": "examples/SynthSource/modulateRotate/sketch.js"
+						},
+						{
+							"title": "SynthSource.modulatePixelate",
+							"sourceFile": "examples/SynthSource/modulatePixelate/sketch.js"
+						},
+						{
+							"title": "SynthSource.modulateKaleid",
+							"sourceFile": "examples/SynthSource/modulateKaleid/sketch.js"
+						},
+						{
+							"title": "SynthSource.modulateScrollX",
+							"sourceFile": "examples/SynthSource/modulateScrollX/sketch.js"
+						},
+						{
+							"title": "SynthSource.modulateScrollY",
+							"sourceFile": "examples/SynthSource/modulateScrollY/sketch.js"
+						},
+						{
+							"title": "SynthSource.modulateRepeat",
+							"sourceFile": "examples/SynthSource/modulateRepeat/sketch.js"
+						},
+						{
+							"title": "SynthSource.modulateRepeatX",
+							"sourceFile": "examples/SynthSource/modulateRepeatX/sketch.js"
+						},
+						{
+							"title": "SynthSource.modulateRepeatY",
+							"sourceFile": "examples/SynthSource/modulateRepeatY/sketch.js"
+						},
+						{
+							"title": "SynthSource.modulateHue",
+							"sourceFile": "examples/SynthSource/modulateHue/sketch.js"
+						}
+					]
 				},
 				{
-					"title": "SynthSource.voronoi",
-					"sourceFile": "examples/SynthSource/voronoi/sketch.js"
-				},
-				{
-					"title": "SynthSource.shape",
-					"sourceFile": "examples/SynthSource/shape/sketch.js"
-				},
-				{
-					"title": "SynthSource.solid",
-					"sourceFile": "examples/SynthSource/solid/sketch.js"
-				},
-				{
-					"title": "SynthSource.solid2",
-					"sourceFile": "examples/SynthSource/solid2/sketch.js"
-				},
-				{
-					"title": "SynthSource.src",
-					"sourceFile": "examples/SynthSource/src/sketch.js"
+					"name": "Chain",
+					"description": "Chain methods: character mapping, coloring, and cloning",
+					"examples": [
+						{
+							"title": "SynthSource.charMap",
+							"sourceFile": "examples/SynthSource/charMap/sketch.js"
+						},
+						{
+							"title": "SynthSource.charColor",
+							"sourceFile": "examples/SynthSource/charColor/sketch.js"
+						},
+						{
+							"title": "SynthSource.charColor2",
+							"sourceFile": "examples/SynthSource/charColor2/sketch.js"
+						},
+						{
+							"title": "SynthSource.charColor3",
+							"sourceFile": "examples/SynthSource/charColor3/sketch.js"
+						},
+						{
+							"title": "SynthSource.cellColor",
+							"sourceFile": "examples/SynthSource/cellColor/sketch.js"
+						},
+						{
+							"title": "SynthSource.cellColor2",
+							"sourceFile": "examples/SynthSource/cellColor2/sketch.js"
+						},
+						{
+							"title": "SynthSource.cellColor3",
+							"sourceFile": "examples/SynthSource/cellColor3/sketch.js"
+						},
+						{
+							"title": "SynthSource.char",
+							"sourceFile": "examples/SynthSource/char/sketch.js"
+						},
+						{
+							"title": "SynthSource.paint",
+							"sourceFile": "examples/SynthSource/paint/sketch.js"
+						},
+						{
+							"title": "SynthSource.paint2",
+							"sourceFile": "examples/SynthSource/paint2/sketch.js"
+						},
+						{
+							"title": "SynthSource.paint3",
+							"sourceFile": "examples/SynthSource/paint3/sketch.js"
+						},
+						{
+							"title": "SynthSource.clone",
+							"sourceFile": "examples/SynthSource/clone/sketch.js"
+						}
+					]
 				}
 			]
 		},
@@ -54,373 +390,43 @@
 			"examples": [
 				{
 					"title": "cellColor.cellColor",
-					"sourceFile": "examples/cellColor/cellColor/sketch.js"
+					"sourceFile": "examples/Composition/cellColor/cellColor/sketch.js"
 				},
 				{
 					"title": "cellColor.cellColor2",
-					"sourceFile": "examples/cellColor/cellColor2/sketch.js"
+					"sourceFile": "examples/Composition/cellColor/cellColor2/sketch.js"
 				},
 				{
 					"title": "cellColor.cellColor3",
-					"sourceFile": "examples/cellColor/cellColor3/sketch.js"
+					"sourceFile": "examples/Composition/cellColor/cellColor3/sketch.js"
 				},
 				{
 					"title": "charColor.charColor",
-					"sourceFile": "examples/charColor/charColor/sketch.js"
+					"sourceFile": "examples/Composition/charColor/charColor/sketch.js"
 				},
 				{
 					"title": "charColor.charColor2",
-					"sourceFile": "examples/charColor/charColor2/sketch.js"
+					"sourceFile": "examples/Composition/charColor/charColor2/sketch.js"
 				},
 				{
 					"title": "charColor.charColor3",
-					"sourceFile": "examples/charColor/charColor3/sketch.js"
+					"sourceFile": "examples/Composition/charColor/charColor3/sketch.js"
 				},
 				{
 					"title": "char.char",
-					"sourceFile": "examples/char/char/sketch.js"
+					"sourceFile": "examples/Composition/char/char/sketch.js"
 				},
 				{
 					"title": "paint.paint",
-					"sourceFile": "examples/paint/paint/sketch.js"
+					"sourceFile": "examples/Composition/paint/paint/sketch.js"
 				},
 				{
 					"title": "paint.paint2",
-					"sourceFile": "examples/paint/paint2/sketch.js"
+					"sourceFile": "examples/Composition/paint/paint2/sketch.js"
 				},
 				{
 					"title": "paint.paint3",
-					"sourceFile": "examples/paint/paint3/sketch.js"
-				}
-			]
-		},
-		{
-			"name": "Coordinates",
-			"description": "Coordinate transforms and distortions",
-			"examples": [
-				{
-					"title": "SynthSource.rotate",
-					"sourceFile": "examples/SynthSource/rotate/sketch.js"
-				},
-				{
-					"title": "SynthSource.scale",
-					"sourceFile": "examples/SynthSource/scale/sketch.js"
-				},
-				{
-					"title": "SynthSource.scroll",
-					"sourceFile": "examples/SynthSource/scroll/sketch.js"
-				},
-				{
-					"title": "SynthSource.scrollX",
-					"sourceFile": "examples/SynthSource/scrollX/sketch.js"
-				},
-				{
-					"title": "SynthSource.scrollY",
-					"sourceFile": "examples/SynthSource/scrollY/sketch.js"
-				},
-				{
-					"title": "SynthSource.pixelate",
-					"sourceFile": "examples/SynthSource/pixelate/sketch.js"
-				},
-				{
-					"title": "SynthSource.repeat",
-					"sourceFile": "examples/SynthSource/repeat/sketch.js"
-				},
-				{
-					"title": "SynthSource.repeatX",
-					"sourceFile": "examples/SynthSource/repeatX/sketch.js"
-				},
-				{
-					"title": "SynthSource.repeatY",
-					"sourceFile": "examples/SynthSource/repeatY/sketch.js"
-				},
-				{
-					"title": "SynthSource.kaleid",
-					"sourceFile": "examples/SynthSource/kaleid/sketch.js"
-				},
-				{
-					"title": "SynthSource.polar",
-					"sourceFile": "examples/SynthSource/polar/sketch.js"
-				},
-				{
-					"title": "SynthSource.twirl",
-					"sourceFile": "examples/SynthSource/twirl/sketch.js"
-				},
-				{
-					"title": "SynthSource.swirl",
-					"sourceFile": "examples/SynthSource/swirl/sketch.js"
-				},
-				{
-					"title": "SynthSource.mirror",
-					"sourceFile": "examples/SynthSource/mirror/sketch.js"
-				},
-				{
-					"title": "SynthSource.shear",
-					"sourceFile": "examples/SynthSource/shear/sketch.js"
-				},
-				{
-					"title": "SynthSource.barrel",
-					"sourceFile": "examples/SynthSource/barrel/sketch.js"
-				},
-				{
-					"title": "SynthSource.pinch",
-					"sourceFile": "examples/SynthSource/pinch/sketch.js"
-				},
-				{
-					"title": "SynthSource.fisheye",
-					"sourceFile": "examples/SynthSource/fisheye/sketch.js"
-				}
-			]
-		},
-		{
-			"name": "Colors",
-			"description": "Color filters and adjustments",
-			"examples": [
-				{
-					"title": "SynthSource.brightness",
-					"sourceFile": "examples/SynthSource/brightness/sketch.js"
-				},
-				{
-					"title": "SynthSource.contrast",
-					"sourceFile": "examples/SynthSource/contrast/sketch.js"
-				},
-				{
-					"title": "SynthSource.invert",
-					"sourceFile": "examples/SynthSource/invert/sketch.js"
-				},
-				{
-					"title": "SynthSource.saturate",
-					"sourceFile": "examples/SynthSource/saturate/sketch.js"
-				},
-				{
-					"title": "SynthSource.hue",
-					"sourceFile": "examples/SynthSource/hue/sketch.js"
-				},
-				{
-					"title": "SynthSource.colorama",
-					"sourceFile": "examples/SynthSource/colorama/sketch.js"
-				},
-				{
-					"title": "SynthSource.posterize",
-					"sourceFile": "examples/SynthSource/posterize/sketch.js"
-				},
-				{
-					"title": "SynthSource.luma",
-					"sourceFile": "examples/SynthSource/luma/sketch.js"
-				},
-				{
-					"title": "SynthSource.thresh",
-					"sourceFile": "examples/SynthSource/thresh/sketch.js"
-				},
-				{
-					"title": "SynthSource.color",
-					"sourceFile": "examples/SynthSource/color/sketch.js"
-				},
-				{
-					"title": "SynthSource.color2",
-					"sourceFile": "examples/SynthSource/color2/sketch.js"
-				},
-				{
-					"title": "SynthSource.r",
-					"sourceFile": "examples/SynthSource/r/sketch.js"
-				},
-				{
-					"title": "SynthSource.g",
-					"sourceFile": "examples/SynthSource/g/sketch.js"
-				},
-				{
-					"title": "SynthSource.b",
-					"sourceFile": "examples/SynthSource/b/sketch.js"
-				},
-				{
-					"title": "SynthSource.shift",
-					"sourceFile": "examples/SynthSource/shift/sketch.js"
-				},
-				{
-					"title": "SynthSource.gamma",
-					"sourceFile": "examples/SynthSource/gamma/sketch.js"
-				},
-				{
-					"title": "SynthSource.levels",
-					"sourceFile": "examples/SynthSource/levels/sketch.js"
-				},
-				{
-					"title": "SynthSource.clamp",
-					"sourceFile": "examples/SynthSource/clamp/sketch.js"
-				},
-				{
-					"title": "SynthSource.seed",
-					"sourceFile": "examples/SynthSource/seed/sketch.js"
-				}
-			]
-		},
-		{
-			"name": "Combines",
-			"description": "Blend and combine operations",
-			"examples": [
-				{
-					"title": "SynthSource.add",
-					"sourceFile": "examples/SynthSource/add/sketch.js"
-				},
-				{
-					"title": "SynthSource.sub",
-					"sourceFile": "examples/SynthSource/sub/sketch.js"
-				},
-				{
-					"title": "SynthSource.mult",
-					"sourceFile": "examples/SynthSource/mult/sketch.js"
-				},
-				{
-					"title": "SynthSource.blend",
-					"sourceFile": "examples/SynthSource/blend/sketch.js"
-				},
-				{
-					"title": "SynthSource.diff",
-					"sourceFile": "examples/SynthSource/diff/sketch.js"
-				},
-				{
-					"title": "SynthSource.layer",
-					"sourceFile": "examples/SynthSource/layer/sketch.js"
-				},
-				{
-					"title": "SynthSource.mask",
-					"sourceFile": "examples/SynthSource/mask/sketch.js"
-				},
-				{
-					"title": "SynthSource.screen",
-					"sourceFile": "examples/SynthSource/screen/sketch.js"
-				},
-				{
-					"title": "SynthSource.overlay",
-					"sourceFile": "examples/SynthSource/overlay/sketch.js"
-				},
-				{
-					"title": "SynthSource.softlight",
-					"sourceFile": "examples/SynthSource/softlight/sketch.js"
-				},
-				{
-					"title": "SynthSource.hardlight",
-					"sourceFile": "examples/SynthSource/hardlight/sketch.js"
-				},
-				{
-					"title": "SynthSource.dodge",
-					"sourceFile": "examples/SynthSource/dodge/sketch.js"
-				},
-				{
-					"title": "SynthSource.burn",
-					"sourceFile": "examples/SynthSource/burn/sketch.js"
-				},
-				{
-					"title": "SynthSource.lighten",
-					"sourceFile": "examples/SynthSource/lighten/sketch.js"
-				},
-				{
-					"title": "SynthSource.darken",
-					"sourceFile": "examples/SynthSource/darken/sketch.js"
-				}
-			]
-		},
-		{
-			"name": "Modulations",
-			"description": "Coordinate modulation using a second source",
-			"examples": [
-				{
-					"title": "SynthSource.modulate",
-					"sourceFile": "examples/SynthSource/modulate/sketch.js"
-				},
-				{
-					"title": "SynthSource.modulateScale",
-					"sourceFile": "examples/SynthSource/modulateScale/sketch.js"
-				},
-				{
-					"title": "SynthSource.modulateRotate",
-					"sourceFile": "examples/SynthSource/modulateRotate/sketch.js"
-				},
-				{
-					"title": "SynthSource.modulatePixelate",
-					"sourceFile": "examples/SynthSource/modulatePixelate/sketch.js"
-				},
-				{
-					"title": "SynthSource.modulateKaleid",
-					"sourceFile": "examples/SynthSource/modulateKaleid/sketch.js"
-				},
-				{
-					"title": "SynthSource.modulateScrollX",
-					"sourceFile": "examples/SynthSource/modulateScrollX/sketch.js"
-				},
-				{
-					"title": "SynthSource.modulateScrollY",
-					"sourceFile": "examples/SynthSource/modulateScrollY/sketch.js"
-				},
-				{
-					"title": "SynthSource.modulateRepeat",
-					"sourceFile": "examples/SynthSource/modulateRepeat/sketch.js"
-				},
-				{
-					"title": "SynthSource.modulateRepeatX",
-					"sourceFile": "examples/SynthSource/modulateRepeatX/sketch.js"
-				},
-				{
-					"title": "SynthSource.modulateRepeatY",
-					"sourceFile": "examples/SynthSource/modulateRepeatY/sketch.js"
-				},
-				{
-					"title": "SynthSource.modulateHue",
-					"sourceFile": "examples/SynthSource/modulateHue/sketch.js"
-				}
-			]
-		},
-		{
-			"name": "Chain",
-			"description": "Chain methods: character mapping, coloring, and cloning",
-			"examples": [
-				{
-					"title": "SynthSource.charMap",
-					"sourceFile": "examples/SynthSource/charMap/sketch.js"
-				},
-				{
-					"title": "SynthSource.charColor",
-					"sourceFile": "examples/SynthSource/charColor/sketch.js"
-				},
-				{
-					"title": "SynthSource.charColor2",
-					"sourceFile": "examples/SynthSource/charColor2/sketch.js"
-				},
-				{
-					"title": "SynthSource.charColor3",
-					"sourceFile": "examples/SynthSource/charColor3/sketch.js"
-				},
-				{
-					"title": "SynthSource.cellColor",
-					"sourceFile": "examples/SynthSource/cellColor/sketch.js"
-				},
-				{
-					"title": "SynthSource.cellColor2",
-					"sourceFile": "examples/SynthSource/cellColor2/sketch.js"
-				},
-				{
-					"title": "SynthSource.cellColor3",
-					"sourceFile": "examples/SynthSource/cellColor3/sketch.js"
-				},
-				{
-					"title": "SynthSource.char",
-					"sourceFile": "examples/SynthSource/char/sketch.js"
-				},
-				{
-					"title": "SynthSource.paint",
-					"sourceFile": "examples/SynthSource/paint/sketch.js"
-				},
-				{
-					"title": "SynthSource.paint2",
-					"sourceFile": "examples/SynthSource/paint2/sketch.js"
-				},
-				{
-					"title": "SynthSource.paint3",
-					"sourceFile": "examples/SynthSource/paint3/sketch.js"
-				},
-				{
-					"title": "SynthSource.clone",
-					"sourceFile": "examples/SynthSource/clone/sketch.js"
+					"sourceFile": "examples/Composition/paint/paint3/sketch.js"
 				}
 			]
 		},

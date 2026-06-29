@@ -1,6 +1,5 @@
 /**
  * @title ModulatedArray.arrays
- * @author codex
  */
 
 const t = textmode.create({

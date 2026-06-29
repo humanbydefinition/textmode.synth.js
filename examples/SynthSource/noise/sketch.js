@@ -1,6 +1,5 @@
 /**
  * @title SynthSource.noise
- * @author codex
  */
 
 const t = textmode.create({

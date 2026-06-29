@@ -1,6 +1,5 @@
 /**
  * @title SynthSource.shear
- * @author codex
  */
 
 const t = textmode.create({

@@ -213,6 +213,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/add/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/add | SynthSource.add API reference}
 		 */
 		add(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -224,6 +226,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/sub/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/sub | SynthSource.sub API reference}
 		 */
 		sub(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -235,6 +239,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/mult/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/mult | SynthSource.mult API reference}
 		 */
 		mult(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -246,6 +252,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/blend/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/blend | SynthSource.blend API reference}
 		 */
 		blend(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -256,6 +264,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/diff/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/diff | SynthSource.diff API reference}
 		 */
 		diff(source: SynthSource | SynthParameterValue): this;
 
@@ -266,6 +276,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/layer/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/layer | SynthSource.layer API reference}
 		 */
 		layer(source: SynthSource | SynthParameterValue): this;
 
@@ -276,6 +288,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/mask/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/mask | SynthSource.mask API reference}
 		 */
 		mask(source: SynthSource | SynthParameterValue): this;
 
@@ -287,6 +301,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/screen/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/screen | SynthSource.screen API reference}
 		 */
 		screen(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -298,6 +314,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/overlay/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/overlay | SynthSource.overlay API reference}
 		 */
 		overlay(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -309,6 +327,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/softlight/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/softlight | SynthSource.softlight API reference}
 		 */
 		softlight(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -320,6 +340,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/hardlight/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/hardlight | SynthSource.hardlight API reference}
 		 */
 		hardlight(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -331,6 +353,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/dodge/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/dodge | SynthSource.dodge API reference}
 		 */
 		dodge(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -342,6 +366,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/burn/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/burn | SynthSource.burn API reference}
 		 */
 		burn(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -353,6 +379,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/lighten/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/lighten | SynthSource.lighten API reference}
 		 */
 		lighten(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 
@@ -364,6 +392,8 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/darken/sketch.js}
+		 *
+		 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/darken | SynthSource.darken API reference}
 		 */
 		darken(source: SynthSource | SynthParameterValue, amount?: SynthParameterValue): this;
 	}

@@ -1,6 +1,5 @@
 /**
  * @title Textmodifier.seed
- * @author codex
  */
 
 const t = textmode.create({

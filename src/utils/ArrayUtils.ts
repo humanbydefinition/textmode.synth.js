@@ -9,6 +9,8 @@ import type { SynthContext } from '../core/types';
 
 /**
  * Easing functions from https://gist.github.com/gre/1650294
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/variables/EASING_FUNCTIONS | EASING_FUNCTIONS API reference}
  */
 export const EASING_FUNCTIONS = {
 	linear: (t: number) => t,
@@ -36,6 +38,8 @@ export const EASING_FUNCTIONS = {
  *
  * @example
  * {@includeCode ../../examples/EasingFunction/easingFunction/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/type-aliases/EasingFunction | EasingFunction API reference}
  */
 export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => number);
 
@@ -48,6 +52,8 @@ export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => num
  *
  * @example
  * {@includeCode ../../examples/ModulatedArray/arrays/sketch.js}
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/ModulatedArray | ModulatedArray API reference}
  */
 export interface ModulatedArray extends Array<number> {
 	/** Speed multiplier for array cycling @ignore */
@@ -70,6 +76,8 @@ export interface ModulatedArray extends Array<number> {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/ModulatedArray/fast/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/ModulatedArray/methods/fast | ModulatedArray.fast API reference}
 	 */
 	fast(speed: number): this;
 
@@ -85,6 +93,8 @@ export interface ModulatedArray extends Array<number> {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/ModulatedArray/smooth/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/ModulatedArray/methods/smooth | ModulatedArray.smooth API reference}
 	 */
 	smooth(amount?: number): this;
 
@@ -105,6 +115,8 @@ export interface ModulatedArray extends Array<number> {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/ModulatedArray/ease/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/ModulatedArray/methods/ease | ModulatedArray.ease API reference}
 	 */
 	ease(ease: EasingFunction): this;
 
@@ -123,6 +135,8 @@ export interface ModulatedArray extends Array<number> {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/ModulatedArray/offset/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/ModulatedArray/methods/offset | ModulatedArray.offset API reference}
 	 */
 	offset(offset: number): this;
 
@@ -142,6 +156,8 @@ export interface ModulatedArray extends Array<number> {
 	 *
 	 * @example
 	 * {@includeCode ../../examples/ModulatedArray/fit/sketch.js}
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/ModulatedArray/methods/fit | ModulatedArray.fit API reference}
 	 */
 	fit(low: number, high: number): ModulatedArray;
 }

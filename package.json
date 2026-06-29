@@ -27,6 +27,7 @@
 		"build:types": "tsc",
 		"build": "npm run build:bundle && npm run build:types",
 		"check": "npm run check:format && npm run lint && npm run lint:md && npm run check:types && npm run check:api-docs && npm run check:examples && npm run test && npm run build",
+		"docs:links:add": "node ./scripts/add-api-doc-links.mjs",
 		"check:api-docs": "node ./scripts/check-public-api-docs.mjs",
 		"check:api-docs:accessors": "node ./scripts/check-public-api-docs.mjs --include-accessors",
 		"check:examples": "node ./scripts/check-examples.mjs",
