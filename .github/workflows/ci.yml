@@ -15,6 +15,7 @@ permissions:
 
 env:
     CI_NODE_VERSION: 24
+    CI_RELEASE_NODE_VERSION: 22
 
 jobs:
     check:
@@ -28,7 +29,7 @@ jobs:
             - name: Setup Node.js
               uses: actions/setup-node@v4
               with:
-                  node-version: ${{ env.CI_NODE_VERSION }}
+                  node-version: ${{ env.CI_RELEASE_NODE_VERSION }}
                   cache: 'npm'
 
             - name: Install dependencies
