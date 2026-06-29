@@ -1,6 +1,5 @@
 /**
  * @title SynthSource.modulateRepeat
- * @author codex
  */
 
 const t = textmode.create({

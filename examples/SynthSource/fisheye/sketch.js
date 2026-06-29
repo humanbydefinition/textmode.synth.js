@@ -1,6 +1,5 @@
 /**
  * @title SynthSource.fisheye
- * @author codex
  */
 
 const t = textmode.create({

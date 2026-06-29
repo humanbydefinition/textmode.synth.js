@@ -1,6 +1,5 @@
 /**
  * @title TextmodeLayer.synth
- * @author codex
  */
 
 const t = textmode.create({

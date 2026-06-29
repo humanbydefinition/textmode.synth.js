@@ -1,6 +1,5 @@
 /**
  * @title TextmodeLayer.bpm
- * @author codex
  */
 
 const t = textmode.create({

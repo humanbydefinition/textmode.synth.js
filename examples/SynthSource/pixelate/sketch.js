@@ -1,6 +1,5 @@
 /**
  * @title SynthSource.pixelate
- * @author codex
  */
 
 const t = textmode.create({

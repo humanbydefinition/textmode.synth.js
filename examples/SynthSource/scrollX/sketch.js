@@ -1,6 +1,5 @@
 /**
  * @title SynthSource.scrollX
- * @author codex
  */
 
 const t = textmode.create({

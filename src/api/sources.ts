@@ -23,7 +23,7 @@ import { TextmodeSource } from 'textmode.js';
  * @returns A new SynthSource configured with cell color
  *
  * @example
- * {@includeCode ../../examples/cellColor/cellColor/sketch.js}
+ * {@includeCode ../../examples/Composition/cellColor/cellColor/sketch.js}
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/cellColor | cellColor API reference}
  */
@@ -38,7 +38,7 @@ export function cellColor(source: SynthSource): SynthSource;
  * @returns A new SynthSource configured with cell color
  *
  * @example
- * {@includeCode ../../examples/cellColor/cellColor2/sketch.js}
+ * {@includeCode ../../examples/Composition/cellColor/cellColor2/sketch.js}
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/cellColor | cellColor API reference}
  */
@@ -55,7 +55,7 @@ export function cellColor(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * {@includeCode ../../examples/cellColor/cellColor3/sketch.js}
+ * {@includeCode ../../examples/Composition/cellColor/cellColor3/sketch.js}
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/cellColor | cellColor API reference}
  */
@@ -80,7 +80,7 @@ export function cellColor(
  * @returns A new SynthSource configured for character generation
  *
  * @example
- * {@includeCode ../../examples/char/char/sketch.js}
+ * {@includeCode ../../examples/Composition/char/char/sketch.js}
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/char | char API reference}
  */
@@ -101,7 +101,7 @@ export const char = (source: SynthSource): SynthSource => {
  * @returns A new SynthSource configured with character color
  *
  * @example
- * {@includeCode ../../examples/charColor/charColor/sketch.js}
+ * {@includeCode ../../examples/Composition/charColor/charColor/sketch.js}
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/charColor | charColor API reference}
  */
@@ -116,7 +116,7 @@ export function charColor(source: SynthSource): SynthSource;
  * @returns A new SynthSource configured with character color
  *
  * @example
- * {@includeCode ../../examples/charColor/charColor2/sketch.js}
+ * {@includeCode ../../examples/Composition/charColor/charColor2/sketch.js}
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/charColor | charColor API reference}
  */
@@ -133,7 +133,7 @@ export function charColor(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * {@includeCode ../../examples/charColor/charColor3/sketch.js}
+ * {@includeCode ../../examples/Composition/charColor/charColor3/sketch.js}
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/charColor | charColor API reference}
  */
@@ -274,7 +274,7 @@ export function osc(
  * @returns A new SynthSource configured with both color sources
  *
  * @example
- * {@includeCode ../../examples/paint/paint/sketch.js}
+ * {@includeCode ../../examples/Composition/paint/paint/sketch.js}
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/paint | paint API reference}
  */
@@ -289,7 +289,7 @@ export function paint(source: SynthSource): SynthSource;
  * @returns A new SynthSource configured with both color sources
  *
  * @example
- * {@includeCode ../../examples/paint/paint2/sketch.js}
+ * {@includeCode ../../examples/Composition/paint/paint2/sketch.js}
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/paint | paint API reference}
  */
@@ -306,7 +306,7 @@ export function paint(
  * @param gray - Grayscale value (0-1)
  *
  * @example
- * {@includeCode ../../examples/paint/paint3/sketch.js}
+ * {@includeCode ../../examples/Composition/paint/paint3/sketch.js}
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/paint | paint API reference}
  */

@@ -4,7 +4,8 @@ import process from 'node:process';
 
 const INCLUDE_CODE_PATTERN = /\{@includeCode\s+([^}\s]+)[^}]*\}/g;
 const MANIFEST_KEYS = new Set(['version', 'description', 'groups']);
-const GROUP_KEYS = new Set(['name', 'description', 'examples']);
+const GROUP_KEYS = new Set(['name', 'description', 'examples', 'subgroups']);
+const SUBGROUP_KEYS = new Set(['name', 'description', 'examples']);
 const EXAMPLE_KEYS = new Set(['title', 'description', 'sourceFile']);
 
 export const EXAMPLES_DIR = 'examples';
@@ -57,15 +58,29 @@ export function getSketchTitle(filePath) {
 }
 
 export function getManifestExamples(manifest) {
-	return manifest.groups.flatMap((group) =>
-		Array.isArray(group.examples)
-			? group.examples.filter(isRecord).map((example) => ({
-					...example,
-					groupName: group.name,
-					groupDescription: group.description,
-				}))
-			: []
-	);
+	const out = [];
+
+	for (const group of manifest.groups) {
+		if (Array.isArray(group.subgroups)) {
+			for (const subgroup of group.subgroups) {
+				if (Array.isArray(subgroup.examples)) {
+					for (const example of subgroup.examples) {
+						if (isRecord(example)) {
+							out.push({ ...example, groupName: group.name, groupDescription: group.description });
+						}
+					}
+				}
+			}
+		} else if (Array.isArray(group.examples)) {
+			for (const example of group.examples) {
+				if (isRecord(example)) {
+					out.push({ ...example, groupName: group.name, groupDescription: group.description });
+				}
+			}
+		}
+	}
+
+	return out;
 }
 
 export function getTypeDocExampleIncludes(sourceDir = SOURCE_DIR, examplesDir = EXAMPLES_DIR) {
@@ -107,6 +122,12 @@ export function validateExamplesGallery(
 
 	if (!indexContent.includes('manifest.json')) {
 		issues.push(`${examplesIndex} must load ${examplesManifest}.`);
+	}
+
+	if (/data-source-base\s*=/.test(indexContent)) {
+		issues.push(
+			`${examplesIndex} must not hardcode a source base; preview links should resolve from example paths.`
+		);
 	}
 
 	return issues;
@@ -156,21 +177,68 @@ export function validateExamplesManifest(manifest, options = {}) {
 			issues.push(`Manifest group "${group.name ?? groupIndex + 1}" is missing a description.`);
 		}
 
-		if (!Array.isArray(group.examples)) {
-			issues.push(`Manifest group "${group.name ?? groupIndex + 1}" examples must be an array.`);
+		const hasExamples = Array.isArray(group.examples);
+		const hasSubgroups = Array.isArray(group.subgroups);
+
+		if (!hasExamples && !hasSubgroups) {
+			issues.push(`Manifest group "${group.name}" must have either \`examples\` or \`subgroups\`.`);
 			continue;
 		}
 
-		for (const [exampleIndex, example] of group.examples.entries()) {
-			if (!isRecord(example)) {
-				issues.push(`Manifest example ${exampleIndex + 1} in group "${group.name}" must be an object.`);
-				continue;
-			}
+		if (hasExamples && hasSubgroups) {
+			issues.push(`Manifest group "${group.name}" must not have both \`examples\` and \`subgroups\`.`);
+			continue;
+		}
 
-			for (const key of getUnknownKeys(example, EXAMPLE_KEYS)) {
-				issues.push(
-					`Manifest example "${example.sourceFile ?? `${group.name}.${exampleIndex + 1}`}" contains unknown key: ${key}`
-				);
+		if (hasSubgroups) {
+			for (const [subgroupIndex, subgroup] of group.subgroups.entries()) {
+				if (!isRecord(subgroup)) {
+					issues.push(`Manifest subgroup ${subgroupIndex + 1} in "${group.name}" must be an object.`);
+					continue;
+				}
+
+				for (const key of getUnknownKeys(subgroup, SUBGROUP_KEYS)) {
+					issues.push(
+						`Manifest subgroup "${subgroup.name ?? subgroupIndex + 1}" in "${group.name}" contains unknown key: ${key}`
+					);
+				}
+
+				if (typeof subgroup.name !== 'string' || subgroup.name.length === 0) {
+					issues.push(`Manifest subgroup ${subgroupIndex + 1} in "${group.name}" is missing a name.`);
+				}
+
+				if (!Array.isArray(subgroup.examples)) {
+					issues.push(
+						`Manifest subgroup "${subgroup.name ?? subgroupIndex + 1}" in "${group.name}" examples must be an array.`
+					);
+					continue;
+				}
+
+				for (const [exampleIndex, example] of subgroup.examples.entries()) {
+					if (!isRecord(example)) {
+						issues.push(
+							`Manifest example ${exampleIndex + 1} in subgroup "${subgroup.name}" of group "${group.name}" must be an object.`
+						);
+						continue;
+					}
+
+					for (const key of getUnknownKeys(example, EXAMPLE_KEYS)) {
+						const label = example.sourceFile || group.name + '.' + subgroup.name + '.' + (exampleIndex + 1);
+						issues.push(`Manifest example "${label}" contains unknown key: ${key}`);
+					}
+				}
+			}
+		} else {
+			for (const [exampleIndex, example] of group.examples.entries()) {
+				if (!isRecord(example)) {
+					issues.push(`Manifest example ${exampleIndex + 1} in group "${group.name}" must be an object.`);
+					continue;
+				}
+
+				for (const key of getUnknownKeys(example, EXAMPLE_KEYS)) {
+					const label = example.sourceFile || group.name + '.' + (exampleIndex + 1);
+					issues.push(`Manifest example "${label}" contains unknown key: ${key}`);
+				}
 			}
 		}
 	}
