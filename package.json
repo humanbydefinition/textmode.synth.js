@@ -29,7 +29,7 @@
 		"check": "npm run check:format && npm run check:deps && npm run lint && npm run lint:md && npm run check:types && npm run check:api-docs && npm run check:examples && npm run test && npm run build",
 		"docs:links:add": "textmode-add-api-links",
 		"check:api-docs": "textmode-check-api-docs",
-		"check:api-docs:accessors": "node ./scripts/check-public-api-docs.mjs --include-accessors",
+		"check:api-docs:accessors": "textmode-check-api-docs --include-accessors",
 		"check:examples": "textmode-check-examples",
 		"dev:docs": "typedoc --watch",
 		"build:docs": "typedoc",
@@ -45,7 +45,7 @@
 		"check:types": "tsc --noEmit",
 		"lint:md": "markdownlint-cli2",
 		"lint:md:fix": "markdownlint-cli2 --fix",
-		"lint": "eslint src --config eslint.config.js",
+		"lint": "eslint src",
 		"prepare": "husky && install-husky",
 		"check:deps": "check-deps"
 	},
@@ -114,6 +114,12 @@
 	"homepage": "https://code.textmode.art",
 	"lint-staged": {
 		"*": "prettier --ignore-unknown --write"
+	},
+	"prettier": "@textmode/prettier-config",
+	"commitlint": {
+		"extends": [
+			"@textmode/commitlint-config"
+		]
 	},
 	"repository": {
 		"type": "git",
