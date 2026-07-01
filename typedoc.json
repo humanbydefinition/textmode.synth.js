@@ -20,12 +20,15 @@
 		"typedoc-plugin-markdown",
 		"typedoc-plugin-frontmatter",
 		"typedoc-vitepress-theme",
-		"./typedoc-plugins/accessor-docs-normalizer/index.js",
-		"./typedoc-plugins/all-member-pages-router/index.js",
-		"./typedoc-plugins/strip-api-self-links/index.js",
-		"./typedoc-plugins/include-code-examples/index.js",
-		"./typedoc-plugins/api-frontmatter/index.js"
+		"@textmode/tooling-scripts/typedoc-plugins/accessor-docs-normalizer/index.js",
+		"@textmode/tooling-scripts/typedoc-plugins/all-member-pages-router/index.js",
+		"@textmode/tooling-scripts/typedoc-plugins/strip-api-self-links/index.js",
+		"@textmode/tooling-scripts/typedoc-plugins/include-code-examples/index.js",
+		"@textmode/tooling-scripts/typedoc-plugins/api-frontmatter/index.js"
 	],
+	"textmodeApiBaseUrl": "https://code.textmode.art/api/textmode.synth.js",
+	"textmodeStripApiSelfLinksMode": "minimal",
+	"textmodeMemberPageKinds": ["method", "property", "accessor"],
 	"frontmatterGlobals": {
 		"layout": "doc",
 		"editLink": true
