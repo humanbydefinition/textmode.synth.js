@@ -22,15 +22,15 @@
 		"dist"
 	],
 	"scripts": {
-		"dev": "vite --port 5174 --host",
+		"dev": "vite --port 5176 --host",
 		"build:bundle": "vite build",
 		"build:types": "tsc",
 		"build": "npm run build:bundle && npm run build:types",
-		"check": "npm run check:format && npm run lint && npm run lint:md && npm run check:types && npm run check:api-docs && npm run check:examples && npm run test && npm run build",
-		"docs:links:add": "node ./scripts/add-api-doc-links.mjs",
-		"check:api-docs": "node ./scripts/check-public-api-docs.mjs",
+		"check": "npm run check:format && npm run check:deps && npm run lint && npm run lint:md && npm run check:types && npm run check:api-docs && npm run check:examples && npm run test && npm run build",
+		"docs:links:add": "textmode-add-api-links",
+		"check:api-docs": "textmode-check-api-docs",
 		"check:api-docs:accessors": "node ./scripts/check-public-api-docs.mjs --include-accessors",
-		"check:examples": "node ./scripts/check-examples.mjs",
+		"check:examples": "textmode-check-examples",
 		"dev:docs": "typedoc --watch",
 		"build:docs": "typedoc",
 		"preview": "vite preview",
@@ -46,10 +46,11 @@
 		"lint:md": "markdownlint-cli2",
 		"lint:md:fix": "markdownlint-cli2 --fix",
 		"lint": "eslint src --config eslint.config.js",
-		"prepare": "husky"
+		"prepare": "husky && install-husky",
+		"check:deps": "check-deps"
 	},
 	"peerDependencies": {
-		"textmode.js": ">=0.9.1"
+		"textmode.js": ">=0.16.0"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^20.5.0",
@@ -80,7 +81,19 @@
 		"typescript": "^5.9.2",
 		"typescript-eslint": "^8.59.0",
 		"vite": "^6.3.4",
-		"vitest": "^3.1.2"
+		"vitest": "^3.1.2",
+		"@textmode/commitlint-config": "^0.1.0",
+		"@textmode/eslint-config": "^0.1.0",
+		"@textmode/markdownlint-config": "^0.1.0",
+		"@textmode/prettier-config": "^0.1.0",
+		"@textmode/release-config": "^0.1.0",
+		"@textmode/tooling-scripts": "^0.1.0",
+		"@textmode/tsconfig": "^0.1.0",
+		"@textmode/vitest-config": "^0.1.0",
+		"@semantic-release/commit-analyzer": "^13.0.1",
+		"@semantic-release/github": "^12.0.6",
+		"@semantic-release/npm": "^13.1.5",
+		"@semantic-release/release-notes-generator": "^14.1.0"
 	},
 	"keywords": [
 		"ascii",
