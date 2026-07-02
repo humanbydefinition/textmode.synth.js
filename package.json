@@ -89,7 +89,7 @@
 		"@textmode/release-config": "^0.1.0",
 		"@textmode/tooling-scripts": "^0.1.0",
 		"@textmode/tsconfig": "^0.1.0",
-		"@textmode/vitest-config": "^0.1.0",
+		"@textmode/vitest-config": "^0.1.1",
 		"@semantic-release/commit-analyzer": "^13.0.1",
 		"@semantic-release/github": "^12.0.6",
 		"@semantic-release/npm": "^13.1.5",
