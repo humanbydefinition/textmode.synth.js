@@ -51,16 +51,12 @@
 	}
 
 	.preview-panel {
-		position: relative;
-		top: auto;
 		order: -1;
 		width: 100%;
 		height: auto;
 	}
 
 	.examples-list-panel {
-		position: relative;
-		top: auto;
 		width: 100%;
 		height: auto;
 		max-height: none;
@@ -116,18 +112,6 @@
 		padding-top: 0.75rem;
 	}
 
-	.examples-footer-links {
-		gap: 0.5rem 0.75rem;
-		white-space: nowrap;
-	}
-
-	.examples-footer-label {
-		min-width: 0;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
-	}
-
 	.preview-toolbar {
 		align-items: flex-start;
 		gap: 0.75rem;
@@ -176,9 +160,5 @@
 @media (max-width: 420px) {
 	.examples-header-primary {
 		gap: 0.5rem;
-	}
-
-	.examples-footer-links {
-		gap: 0.5rem 0.75rem;
 	}
 }

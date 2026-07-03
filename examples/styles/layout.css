@@ -53,9 +53,7 @@
 .examples-footer-label a {
 	color: var(--text-muted);
 	text-decoration: none;
-	transition:
-		color 0.15s,
-		border-color 0.15s;
+	transition: color 0.15s;
 }
 
 .examples-footer-label a:hover {
@@ -171,7 +169,6 @@
 .examples-footer {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
 	gap: 1rem;
 	padding-top: 1rem;
 	border-top: 1px solid var(--border-color);
@@ -186,19 +183,4 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-}
-
-.examples-footer-links {
-	display: flex;
-	flex-wrap: nowrap;
-	justify-content: flex-end;
-	gap: 0.75rem 1rem;
-	font-size: 0.72rem;
-	line-height: 1.4;
-	text-align: right;
-	min-width: 0;
-}
-
-.examples-footer-links a:hover {
-	color: var(--text-primary);
 }

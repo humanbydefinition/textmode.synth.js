@@ -45,7 +45,6 @@ if (!examplePath || !isValidPath(examplePath)) {
 } else {
 	window.textmode = textmodeModule.textmode;
 	window.TextmodeErrorLevel = textmodeModule.TextmodeErrorLevel;
-	window.LayerBlendMode = textmodeModule.LayerBlendMode;
 
 	window.SynthPlugin = synthModule.SynthPlugin;
 	window.SynthSource = synthModule.SynthSource;
@@ -62,8 +61,6 @@ if (!examplePath || !isValidPath(examplePath)) {
 	window.charColor = synthModule.charColor;
 	window.char = synthModule.char;
 	window.paint = synthModule.paint;
-
-	window.__TEXTMODE_SYNTH_EXAMPLE_PATH__ = examplePath;
 
 	document.title = `textmode.synth.js - ${examplePath}`;
 	const base = document.createElement('base');
