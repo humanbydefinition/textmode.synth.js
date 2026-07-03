@@ -1,4 +1,4 @@
-@layer reset, tokens, base;
+@layer tokens, base;
 
 @import './tokens.css' layer(tokens);
 @import './base.css' layer(base);
