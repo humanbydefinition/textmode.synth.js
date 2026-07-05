@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Strength: Eased (0 to 4)`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(osc(6, 0.1, 1.0).twirl([0, 4].ease('easeInOutCubic')).color(0.5, 0.2, 0.9));
+t.synth(osc(6, 0.1, 1.0).twirl([0, 4].ease('easeInOutCubic')).color(0.5, 0.2, 0.9));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

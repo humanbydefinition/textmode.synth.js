@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Scroll X: Linear (0 to 4)`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(plasma(6, 0.2).scrollX([0, 4].ease('linear')).colorama(0.1));
+t.synth(plasma(6, 0.2).scrollX([0, 4].ease('linear')).colorama(0.1));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

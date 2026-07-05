@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText('Overlay: Rotated shape on base osc', x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(
+t.synth(
 	osc(15, 0.1)
 		.color(0.2, 0.4, 0.8)
 		.layer(shape(5, 0.35, 0.1).rotate([0, 6.28].ease('linear')).color(1.0, 0.3, 0.5, 0.75))
