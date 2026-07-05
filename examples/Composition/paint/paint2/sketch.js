@@ -44,7 +44,7 @@ const paintField = osc(7, 0.016, 1.4)
 	.modulate(plasma(2.6, 0.014, 0.1, 1.1), 0.025);
 const glyphField = osc(9, 0.018, 1.2).kaleid(5).modulate(noise(2.2, 0.012), 0.018).levels(0.18, 0.88, 0.04, 1.0, 0.9);
 
-t.layers.base.synth(paint(paintField).char(glyphField).charMap(glyphs));
+t.synth(paint(paintField).char(glyphField).charMap(glyphs));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

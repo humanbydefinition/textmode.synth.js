@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Sides: 3-6 Eased | Repeat: 3x3`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(
+t.synth(
 	shape([3, 6].ease('easeInOutQuad'), 0.4, 0.1)
 		.repeat(3, 3)
 		.rotate(t.frameCount * 0.01)

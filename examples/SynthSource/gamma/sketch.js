@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Gamma Exponent: 0.3 to 3.0`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(plasma(6, 0.2).gamma([0.3, 3.0].ease('easeInOutQuad')).color(0.3, 0.8, 0.9));
+t.synth(plasma(6, 0.2).gamma([0.3, 3.0].ease('easeInOutQuad')).color(0.3, 0.8, 0.9));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

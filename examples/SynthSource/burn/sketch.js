@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Blend: Burn`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(noise(6).burn(osc(8, 0.15).color(0.9, 0.3, 0.2)));
+t.synth(noise(6).burn(osc(8, 0.15).color(0.9, 0.3, 0.2)));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

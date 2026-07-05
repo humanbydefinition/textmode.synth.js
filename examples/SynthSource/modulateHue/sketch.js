@@ -43,7 +43,7 @@ labelLayer.draw(() => {
 const ink = osc(6, 0.018, 1.6).rotate(turn, 0.002).color(0.9, 0.58, 1.0).modulateKaleid(noise(2.0, 0.014), 5);
 const paper = plasma(3.2, 0.024, 0.2, 1.08).color(0.08, 0.035, 0.16).hue(slow);
 
-t.layers.base.synth(
+t.synth(
 	plasma(4.4, 0.026, 0.2, 1.14)
 		.colorama(0.1)
 		.modulateHue(osc(5, 0.014).kaleid(5).hue(slow), 4.0)

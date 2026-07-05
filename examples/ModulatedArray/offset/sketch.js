@@ -44,7 +44,7 @@ const ink = osc(6, 0.018, 1.6).rotate(turn, 0.002).color(0.9, 0.58, 1.0).modulat
 const paper = plasma(3.2, 0.024, 0.2, 1.08).color(0.08, 0.035, 0.16).hue(slow);
 const turnA = [-0.35, 0.35].fast(0.12).ease('easeInOutSine');
 
-t.layers.base.synth(
+t.synth(
 	osc(10, 0.024, 1.0)
 		.rotate(turnA)
 		.kaleid(5)

@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Cells: 5-15 Eased | Modulate: noise`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(voronoi([5, 15].ease('easeInOutCubic'), 0.15, 0.5).modulate(noise(4), 0.2).colorama(0.1));
+t.synth(voronoi([5, 15].ease('easeInOutCubic'), 0.15, 0.5).modulate(noise(4), 0.2).colorama(0.1));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Mode: Char Color Only`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(charColor(osc(6, 0.1, 1.2).invert()).char(noise(6)));
+t.synth(charColor(osc(6, 0.1, 1.2).invert()).char(noise(6)));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

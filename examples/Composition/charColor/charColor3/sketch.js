@@ -40,7 +40,7 @@ labelLayer.draw(() => {
 
 const paper = plasma(3.6, 0.028, 0.1, 1.05).color(0.03, 0.08, 0.18).modulateScale(noise(2.0, 0.015), 0.22, 0.95);
 
-t.layers.base.synth(
+t.synth(
 	charColor([0.36, 0.92].fast(0.12).ease('easeInOutSine'))
 		.char(moire(7, 8, 0.15, 1.5, 0.018))
 		.charMap(glyphs)

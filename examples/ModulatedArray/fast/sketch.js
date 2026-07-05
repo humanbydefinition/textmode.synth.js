@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Speed: osc (2x) | kaleid (3x)`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(osc([10, 20, 30].fast(2.0), 0.15).kaleid([3, 5, 7].fast(3.0)).color(0.2, 0.8, 0.9));
+t.synth(osc([10, 20, 30].fast(2.0), 0.15).kaleid([3, 5, 7].fast(3.0)).color(0.2, 0.8, 0.9));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
