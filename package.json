@@ -57,8 +57,6 @@
 		"@commitlint/config-conventional": "^20.5.0",
 		"@eslint/js": "^9.39.4",
 		"@rollup/plugin-terser": "^0.4.4",
-		"@semantic-release/exec": "^7.1.0",
-		"@semantic-release/git": "^10.0.1",
 		"@types/node": "^24.0.13",
 		"@vitest/coverage-v8": "^3.2.4",
 		"@vitest/ui": "^3.1.2",
@@ -86,14 +84,10 @@
 		"@textmode/eslint-config": "^0.1.0",
 		"@textmode/markdownlint-config": "^0.1.0",
 		"@textmode/prettier-config": "^0.1.0",
-		"@textmode/release-config": "^0.1.0",
+		"@textmode/release-config": "^0.1.1",
 		"@textmode/tooling-scripts": "^0.1.0",
 		"@textmode/tsconfig": "^0.1.0",
-		"@textmode/vitest-config": "^0.1.1",
-		"@semantic-release/commit-analyzer": "^13.0.1",
-		"@semantic-release/github": "^12.0.6",
-		"@semantic-release/npm": "^13.1.5",
-		"@semantic-release/release-notes-generator": "^14.1.0"
+		"@textmode/vitest-config": "^0.1.1"
 	},
 	"keywords": [
 		"ascii",
