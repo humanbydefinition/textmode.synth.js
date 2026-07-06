@@ -453,6 +453,10 @@
 				{
 					"title": "Textmodifier.seed",
 					"sourceFile": "examples/Textmodifier/seed/sketch.js"
+				},
+				{
+					"title": "Textmodifier.synth",
+					"sourceFile": "examples/Textmodifier/synth/sketch.js"
 				}
 			]
 		},

@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Coords: Cartesian to Polar`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(osc(8, 0.1, 1.2).polar().color(0.1, 0.9, 0.5));
+t.synth(osc(8, 0.1, 1.2).polar().color(0.1, 0.9, 0.5));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

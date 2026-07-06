@@ -80,7 +80,7 @@ export type SynthParameterValue =
  *   plugins: [SynthPlugin]
  * });
  *
- * t.layers.base.synth(
+ * t.synth(
  *   noise((ctx) => 6 + Math.sin(ctx.time) * 4)
  *     .kaleid(5)
  * );

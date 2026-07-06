@@ -42,7 +42,7 @@ const paintField = moire(7, 8, 0.32, 1.5, 0.016)
 	.color(0.3, 0.9, 0.72)
 	.overlay(plasma(3.4, 0.018, 0.2, 1.05).color(0.9, 0.42, 0.85), 0.36);
 
-t.layers.base.synth(
+t.synth(
 	plasma(4.6, 0.02, 0.1, 1.18).modulateKaleid(noise(2.1, 0.012), 6).paint(paintField).charMap(glyphs).contrast(1.16)
 );
 

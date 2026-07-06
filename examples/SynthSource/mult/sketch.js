@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Blend: Multiply`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(osc(8, 0.1).mult(noise(6)).color(0.9, 0.7, 0.2));
+t.synth(osc(8, 0.1).mult(noise(6)).color(0.9, 0.7, 0.2));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

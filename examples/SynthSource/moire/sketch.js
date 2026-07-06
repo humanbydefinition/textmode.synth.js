@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Freq: 15 | Scale: 0.1 | Mod: Mult`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(
+t.synth(
 	moire(15, 0.1, 0.8)
 		.mult(osc(8, -0.05, 1.2).rotate(1.5))
 		.color(0.2, 0.7, 1.0)
