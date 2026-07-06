@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Seed: Integer 42`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(noise(8, 0.15).seed(42).color(0.2, 0.9, 0.6));
+t.synth(noise(8, 0.15).seed(42).color(0.2, 0.9, 0.6));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

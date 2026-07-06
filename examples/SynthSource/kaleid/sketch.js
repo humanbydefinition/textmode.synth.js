@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Segments: Eased (3 to 8)`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(osc(10, 0.1, 0.8).kaleid([3, 8].ease('easeInOutQuad')).color(0.9, 0.1, 0.4));
+t.synth(osc(10, 0.1, 0.8).kaleid([3, 8].ease('easeInOutQuad')).color(0.9, 0.1, 0.4));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

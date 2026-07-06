@@ -34,9 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Freq: 12 | Sync: 0.15`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(
-	osc(12, 0.15, [0.5, 2.0].ease('easeInOutQuad')).kaleid([3, 7].ease('easeInOutCubic')).color(0.9, 0.25, 1.2)
-);
+t.synth(osc(12, 0.15, [0.5, 2.0].ease('easeInOutQuad')).kaleid([3, 7].ease('easeInOutCubic')).color(0.9, 0.25, 1.2));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

@@ -7,6 +7,7 @@
  */
 
 import { Textmodifier } from 'textmode.js';
+import type { SynthSource } from '../core/SynthSource';
 
 /**
  * Symbol key for storing synth plugin state on textmodifier instances.
@@ -66,5 +67,15 @@ export function extendTextmodifierSeed(textmodifier: Textmodifier): void {
 	textmodifier.seed = function (value: number | null): number | null {
 		getSynthState(textmodifier).seed = value;
 		return value;
+	};
+}
+
+/**
+ * Extend textmodifier with synth() method — convenience shortcut
+ * for `t.synth(source)`.
+ */
+export function extendTextmodifierSynth(textmodifier: Textmodifier): void {
+	textmodifier.synth = function (source: SynthSource | (() => SynthSource)): void {
+		textmodifier.layers.base.synth(source);
 	};
 }

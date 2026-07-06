@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Easing: easeInOutCubic`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(shape(4).rotate([-1.5, 1.5].ease('easeInOutCubic')));
+t.synth(shape(4).rotate([-1.5, 1.5].ease('easeInOutCubic')));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

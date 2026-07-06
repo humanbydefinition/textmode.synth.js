@@ -44,7 +44,7 @@ const ink = osc(6, 0.018, 1.6).rotate(turn, 0.002).color(0.9, 0.58, 1.0).modulat
 const paper = plasma(3.2, 0.024, 0.2, 1.08).color(0.08, 0.035, 0.16).hue(slow);
 const gradientBase = gradient(0.025).twirl([1.8, 3.6].fast(0.1).ease('easeInOutSine'), 0.7).kaleid(5);
 
-t.layers.base.synth(
+t.synth(
 	gradientBase
 		.hue([0.0, 0.14].fast(0.08).ease('linear'))
 		.mult(gradient(0.022).twirl([2.2, 3.4].fast(0.1).ease('easeInOutSine').offset(0.5), 0.6).kaleid(4), 0.6)
