@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Fisheye: Eased (0.5 to 2.0)`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(plasma(5, 0.2).fisheye([0.5, 2.0].ease('easeInOutCubic')).color(0.9, 0.3, 0.7));
+t.synth(plasma(5, 0.2).fisheye([0.5, 2.0].ease('easeInOutCubic')).color(0.9, 0.3, 0.7));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

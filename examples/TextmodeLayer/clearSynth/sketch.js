@@ -13,7 +13,7 @@ const labelLayer = t.layers.add();
 let synthActive = true;
 
 // Activate a synth on base layer
-t.layers.base.synth(osc(15, 0.1).color(0.2, 0.5, 0.9).charMap(' .:-=+*#%@').cellColor(0.05, 0.05, 0.1));
+t.synth(osc(15, 0.1).color(0.2, 0.5, 0.9).charMap(' .:-=+*#%@').cellColor(0.05, 0.05, 0.1));
 
 // Clear the synth after 6 seconds
 setTimeout(() => {

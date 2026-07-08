@@ -8,6 +8,7 @@ import {
 	extendLayerClearSynth,
 	extendTextmodifierBpm,
 	extendTextmodifierSeed,
+	extendTextmodifierSynth,
 } from '../extensions';
 import { synthRender, synthDispose, shaderManager } from '../lifecycle';
 import type { LayerSynthState } from '../core/types';
@@ -26,7 +27,7 @@ import { TextmodeLayer } from 'textmode.js';
  *   plugins: [SynthPlugin]
  * });
  *
- * t.layers.base.synth(
+ * t.synth(
  *   noise(10)
  *     .charMap('@#%*+=-:. ')
  *     .charColor(osc(5, 0.1, 1.2).kaleid(4))
@@ -50,6 +51,7 @@ export const SynthPlugin: TextmodePlugin = {
 		// Extensions
 		extendTextmodifierBpm(textmodifier);
 		extendTextmodifierSeed(textmodifier);
+		extendTextmodifierSynth(textmodifier);
 		extendLayerSynth(api);
 		extendLayerBpm(api);
 		extendLayerClearSynth(api);
@@ -89,6 +91,7 @@ export const SynthPlugin: TextmodePlugin = {
 		// Remove textmodifier extensions
 		delete (textmodifier as Partial<Textmodifier>).bpm;
 		delete (textmodifier as Partial<Textmodifier & { seed?: unknown }>).seed;
+		delete (textmodifier as Partial<Textmodifier & { synth?: unknown }>).synth;
 
 		// Remove layer extensions
 		api.removeLayerExtension('synth');

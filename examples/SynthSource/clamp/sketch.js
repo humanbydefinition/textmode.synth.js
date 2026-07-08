@@ -38,7 +38,7 @@ labelLayer.draw(() => {
 	drawText('Single chain: source -> clamp.', x, y++, 150, 255, 190);
 });
 
-t.layers.base.synth(
+t.synth(
 	plasma(6.0, 0.12, 0.2, 1.45)
 		.add(osc(12, 0.06, 1.1).kaleid(5), 0.28)
 		.colorama(0.12)

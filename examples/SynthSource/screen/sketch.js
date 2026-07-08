@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Blend: Screen`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(osc(10, 0.05).screen(plasma(6, 0.2)));
+t.synth(osc(10, 0.05).screen(plasma(6, 0.2)));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

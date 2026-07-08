@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Grid: Eased (8x8 to 64x64)`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(plasma(8, 0.5).pixelate([8, 64].ease('easeInOutQuad')).color(0.5, 0.8, 0.2));
+t.synth(plasma(8, 0.5).pixelate([8, 64].ease('easeInOutQuad')).color(0.5, 0.8, 0.2));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

@@ -37,7 +37,7 @@ export interface SynthSourceCreateOptions {
  *   .cellColor(osc(5, 0.1, 1.2).kaleid(4).invert())
  *   .charMap('@#%*+=-:. ');
  *
- * t.layers.base.synth(synth);
+ * t.synth(synth);
  *
  * t.windowResized(() => {
  *   t.resizeCanvas(window.innerWidth, window.innerHeight);

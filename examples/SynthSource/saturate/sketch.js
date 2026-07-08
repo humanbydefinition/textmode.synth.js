@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText('Saturate: Eased cycle (0.0 to 4.0)', x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(
+t.synth(
 	noise(6, 0.1)
 		.color(0.3, 0.7, 0.9)
 		.saturate([0.0, 4.0].ease('easeInOutSine'))

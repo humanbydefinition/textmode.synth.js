@@ -42,7 +42,7 @@ labelLayer.draw(() => {
 
 const ink = osc(5, 0.018, 1.1).kaleid(4).color(0.45, 0.72, 1.0).modulate(noise(2.2, 0.018), 0.025);
 
-t.layers.base.synth(
+t.synth(
 	cellColor(0.02, breathe, breathe.offset(0.5), 1.0)
 		.char(noise(4.5, 0.03).kaleid(5).rotate(turn, 0.002))
 		.charMap(glyphs)

@@ -47,7 +47,7 @@ let globalErrorCallback: DynamicErrorCallback | null = null;
  *   plugins: [SynthPlugin]
  * });
  *
- * t.layers.base.synth(
+ * t.synth(
  *   osc(8, 0.1, 1.2)
  *     .modulate(noise((ctx) => 1 + Math.sin(ctx.time) * 0.5), 0.2)
  * );

@@ -46,7 +46,7 @@ const glyphField = noise(4.5, 0.018)
 	.levels(0.18, 0.86, 0.05, 1.0, 0.82)
 	.contrast(1.12);
 
-t.layers.base.synth(paint(paintField).char(glyphField).charMap(glyphs));
+t.synth(paint(paintField).char(glyphField).charMap(glyphs));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

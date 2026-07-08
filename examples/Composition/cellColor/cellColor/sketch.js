@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Cell: plasma | Char: noise thresh`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(cellColor(plasma(6, 0.3).colorama(0.15)).char(noise(8, 0.2).thresh(0.5)));
+t.synth(cellColor(plasma(6, 0.3).colorama(0.15)).char(noise(8, 0.2).thresh(0.5)));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
