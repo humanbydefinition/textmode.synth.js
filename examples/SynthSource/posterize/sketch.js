@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText('Posterize: 4 discrete color steps', x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(gradient(0.5).hue(0.2).posterize(4.0, 0.6).charMap(' .:-=+*#%@').cellColor(0.05, 0.05, 0.1));
+t.synth(gradient(0.5).hue(0.2).posterize(4.0, 0.6).charMap(' .:-=+*#%@').cellColor(0.05, 0.05, 0.1));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Polyrhythms: Freq, Segment, Color`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(
+t.synth(
 	osc([8, 16, 32], 0.1, [0.5, 1.5])
 		.kaleid([3, 5, 8])
 		.color([1, 0].ease('linear'), [0, 1].ease('linear'), [0.5, 0.8].ease('linear'))

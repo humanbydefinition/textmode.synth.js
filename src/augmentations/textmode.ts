@@ -64,6 +64,20 @@ declare module 'textmode.js' {
 declare module 'textmode.js' {
 	interface Textmodifier {
 		/**
+		 * Convenience shortcut to apply a synth source to the base layer.
+		 *
+		 * Equivalent to `t.synth(source)`. Provided as a comfort
+		 * method for the common case of synthesizing directly on the base layer
+		 * without needing to access the layer manager explicitly.
+		 *
+		 * @param source - A {@link SynthSource} chain or a factory function returning one
+		 *
+		 * @example
+		 * {@includeCode ../../examples/Textmodifier/synth/sketch.js}
+		 */
+		synth(source: SynthSource | (() => SynthSource)): void;
+
+		/**
 		 * Set the global BPM (Beats Per Minute) for array modulation timing.
 		 *
 		 * This sets the master tempo for all layers. Individual layers can override

@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Pivot: Eased (0.3 to 0.7)`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(noise(6).thresh([0.3, 0.7].ease('easeInOutSine')));
+t.synth(noise(6).thresh([0.3, 0.7].ease('easeInOutSine')));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

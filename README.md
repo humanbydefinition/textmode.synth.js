@@ -46,7 +46,7 @@ const t = textmode.create({
 const charChain = osc(1, -0.1, 0.5).kaleid(50);
 const colorChain = osc(25, -0.1, 0.5).kaleid(50);
 
-t.layers.base.synth(char(charChain).charMap('@#%*+=-:. ').charColor(colorChain).cellColor(colorChain.clone().invert()));
+t.synth(char(charChain).charMap('@#%*+=-:. ').charColor(colorChain).cellColor(colorChain.clone().invert()));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
@@ -87,7 +87,7 @@ Use `paint()` to color both foreground and background identically, effectively h
 
 ```javascript
 t.fontSize(16);
-t.layers.base.synth(paint(noise(10)));
+t.synth(paint(noise(10)));
 ```
 
 > **Tip:** With `t.fontSize(1)`, you can recreate most hydra visuals 1:1.
@@ -97,7 +97,7 @@ t.layers.base.synth(paint(noise(10)));
 You can also pass a source directly to `.synth()` without any wrapper function:
 
 ```javascript
-t.layers.base.synth(noise(10));
+t.synth(noise(10));
 ```
 
 This drives both characters *and* foreground colors from the same source *(background defaults to black)*. In practice, using separate sources for characters often looks better - character cycling is more rapid than color changes.

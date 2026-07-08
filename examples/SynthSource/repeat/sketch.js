@@ -34,9 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Repeat: Eased X & Y (2 to 5)`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(
-	shape(3, 0.3, 0.05).repeat([2, 5].ease('easeInOutSine'), [2, 5].ease('easeInOutSine')).color(0.8, 0.2, 0.8)
-);
+t.synth(shape(3, 0.3, 0.05).repeat([2, 5].ease('easeInOutSine'), [2, 5].ease('easeInOutSine')).color(0.8, 0.2, 0.8));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

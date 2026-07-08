@@ -34,9 +34,7 @@ labelLayer.draw(() => {
 	drawText('Rotate: Continuous spin (speed 1.0)', x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(
-	osc(18, 0.1).color(0.2, 0.6, 1.0).rotate(0.0, 1.0).charMap(' .:-=+*#%@').cellColor(0.05, 0.05, 0.15)
-);
+t.synth(osc(18, 0.1).color(0.2, 0.6, 1.0).rotate(0.0, 1.0).charMap(' .:-=+*#%@').cellColor(0.05, 0.05, 0.15));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

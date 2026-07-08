@@ -41,7 +41,7 @@ labelLayer.draw(() => {
 const ink = moire(8, 9, 0.15, 1.6, 0.025).color(1.0, 0.62, 0.34).modulate(noise(2.3, 0.018), 0.022);
 const paper = noise(3.0, 0.025).color(0.16, 0.055, 0.025).softlight(osc(4, 0.016), 0.22);
 
-t.layers.base.synth(
+t.synth(
 	moire(9, 10, 0.1, 1.6, 0.02)
 		.color(0.95, 0.5, 0.18)
 		.hardlight(noise(3.2, 0.025).color(0.18, 0.5, 1.0), 0.48)

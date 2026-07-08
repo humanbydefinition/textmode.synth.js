@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`RGB: 0.9, 0.2, 0.5`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(osc(10, 0.1).cellColor(0.9, 0.2, 0.5));
+t.synth(osc(10, 0.1).cellColor(0.9, 0.2, 0.5));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

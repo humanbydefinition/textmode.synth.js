@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Blend: Mask`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(osc(12, 0.1).mask(shape(5, 0.4, 0.05).rotate(t.frameCount * 0.02)));
+t.synth(osc(12, 0.1).mask(shape(5, 0.4, 0.05).rotate(t.frameCount * 0.02)));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

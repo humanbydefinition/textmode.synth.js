@@ -42,7 +42,7 @@ labelLayer.draw(() => {
 const ink = plasma(4.2, 0.024, 0.0, 1.12).color(0.42, 1.0, 0.58).modulateRotate(noise(2.0, 0.015), 0.28, 0.04);
 const paper = moire(6, 7, 0.0, 1.57, 0.018).color(0.025, 0.13, 0.065).softlight(noise(2.0, 0.014), 0.18);
 
-t.layers.base.synth(
+t.synth(
 	plasma(4.2, 0.022, 0.3, 1.12)
 		.modulateRepeatY(osc(4, 0.012).rotate(turn), [3, 6].fast(0.1).ease('easeInOutSine'), 0.22)
 		.color(0.35, 0.95, 0.65)

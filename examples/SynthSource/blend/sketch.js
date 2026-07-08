@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText('Oscillator blended with noise', x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(
+t.synth(
 	osc(15, 0.1, 0.5)
 		.color(0.2, 0.6, 1.0)
 		.blend(noise(10, 0.15).color(1.0, 0.3, 0.6), [0.1, 0.9].ease('easeInOutQuad'))

@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Blend: Dodge`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(noise(6).dodge(osc(8, 0.15).color(0.2, 0.8, 0.9)));
+t.synth(noise(6).dodge(osc(8, 0.15).color(0.2, 0.8, 0.9)));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

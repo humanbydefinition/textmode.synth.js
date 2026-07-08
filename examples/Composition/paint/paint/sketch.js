@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText('Source: osc color | Char: noise', x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(paint(osc(10, 0.1).color(0.2, 0.8, 0.9)).char(noise(8, 0.15)));
+t.synth(paint(osc(10, 0.1).color(0.2, 0.8, 0.9)).char(noise(8, 0.15)));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

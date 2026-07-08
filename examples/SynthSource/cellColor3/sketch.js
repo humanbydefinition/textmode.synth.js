@@ -40,7 +40,7 @@ labelLayer.draw(() => {
 
 const ink = plasma(4.2, 0.024, 0.0, 1.12).color(0.42, 1.0, 0.58).modulateRotate(noise(2.0, 0.015), 0.28, 0.04);
 
-t.layers.base.synth(
+t.synth(
 	plasma(4.2, 0.022, 0.2, 1.12)
 		.modulate(noise(2.0, 0.014), 0.02)
 		.cellColor([0.05, 0.22].fast(0.12).ease('easeInOutSine'))

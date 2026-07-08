@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Phase: Eased (0.1 to 0.9)`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(noise(6).colorama([0.1, 0.9].ease('easeInOutQuad')));
+t.synth(noise(6).colorama([0.1, 0.9].ease('easeInOutQuad')));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

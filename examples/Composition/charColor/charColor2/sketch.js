@@ -42,7 +42,7 @@ labelLayer.draw(() => {
 
 const paper = noise(3.0, 0.025).color(0.16, 0.055, 0.025).softlight(osc(4, 0.016), 0.22);
 
-t.layers.base.synth(
+t.synth(
 	charColor(breathe, breathe.offset(0.3), 0.18, 1.0)
 		.char(noise(4.2, 0.028).kaleid(5).rotate(turn, 0.002))
 		.charMap(glyphs)
