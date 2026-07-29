@@ -22,9 +22,18 @@ Create procedural ASCII/text animations with a `hydra`-inspired, chainable visua
 
 ## Try it online first
 
-To go along with the release of this library, we've created a **live coding environment** where you can explore everything in the browser: [synth.textmode.art](https://synth.textmode.art)
+Open [editor.textmode.art](https://editor.textmode.art/), a browser-based live-coding environment for the
+complete official `textmode.js` ecosystem. Sketches run as you edit, with no local toolchain required.
 
-It features IntelliSense & auto-completion, documentation on hover, curated examples to explore, and a lot more. The whole `textmode.js` ecosystem is available at your fingertips.
+The editor includes `textmode.js` and all four official add-ons: `textmode.export.js`, `textmode.filters.js`,
+`textmode.figlet.js`, and `textmode.synth.js`.
+
+- Write with Monaco-powered completions, hover documentation, and diagnostics.
+- Start with a blank sketch, an included example, or a community gallery sketch.
+- Keep code and preferences saved in the browser, then share sketches through URL-based links.
+- Use microphone or line-input analysis for audio-reactive work, and create on desktop or mobile.
+
+Use it to build and modify synthesis chains through live coding.
 
 ## Installation
 
@@ -142,7 +151,7 @@ There's a lot more to explore beyond this overview:
 
 - **[Online documentation](https://code.textmode.art/docs/synth)** - Full guides and tutorials
 - **[API reference](./api/index.md)** - Complete API documentation
-- **[synth.textmode.art](https://synth.textmode.art)** - Live coding environment
+- **[synth.textmode.art](https://synth.textmode.art)** - Focused synth live-coding environment
 
 ## License
 
