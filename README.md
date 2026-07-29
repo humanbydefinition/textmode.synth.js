@@ -1,5 +1,11 @@
 # textmode.synth.js
 
+<div align="center">
+
+<img alt="textmode.synth.js — patch textmode live and modular" src=".github/assets/readme-og.png" />
+
+</div>
+
 **A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.**
 
 Create procedural ASCII/text animations with a `hydra`-inspired, chainable visual synthesis system.
