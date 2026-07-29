@@ -26,15 +26,10 @@ To go along with the release of this library, we've created a **live coding envi
 
 It features IntelliSense & auto-completion, documentation on hover, curated examples to explore, and a lot more. The whole `textmode.js` ecosystem is available at your fingertips.
 
-## Prerequisites
-
-- **textmode.js v0.9.1+** - This library depends on the core `textmode.js` package v0.9.1 or higher.
-
 ## Installation
 
-```bash
-npm install textmode.synth.js
-```
+Follow the [official installation guide](https://code.textmode.art/docs/installation) to install
+`textmode.synth.js` alongside `textmode.js` with npm or browser-ready UMD bundles.
 
 ## Quick start
 
