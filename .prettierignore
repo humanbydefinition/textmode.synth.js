@@ -1,7 +1,0 @@
-# Build outputs
-api/
-dist/
-node_modules/
-
-# Markdown is linted separately and intentionally not part of the format scripts
-**/*.md

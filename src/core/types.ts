@@ -25,11 +25,7 @@ import { TT_SRC, TT_COORD, TT_COLOR, TT_COMBINE, TT_COMBINE_COORD } from './cons
  * - `combineCoord`: Modulation that uses one source to affect another's coordinates
  */
 export type SynthTransformType =
-	| typeof TT_SRC
-	| typeof TT_COORD
-	| typeof TT_COLOR
-	| typeof TT_COMBINE
-	| typeof TT_COMBINE_COORD;
+	typeof TT_SRC | typeof TT_COORD | typeof TT_COLOR | typeof TT_COMBINE | typeof TT_COMBINE_COORD;
 
 /**
  * GLSL type for transform inputs.
