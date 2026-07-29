@@ -24,12 +24,12 @@
 		"logo": "default",
 		"labels": {
 			"brandName": "textmode.synth.js",
-			"mainTopRight": "VISUAL SYNTHESIS ADD-ON",
+			"mainTopRight": "TEXTMODE.JS ADD-ON",
 			"mainHeadlinePrefix": "PATCH",
 			"mainHeadlineEmphasis": "TEXTMODE",
 			"mainHeadlineSecondLine": "LIVE + MODULAR",
 			"mainBottomLeft": "OSC / NOISE / MODULATE / FEEDBACK",
-			"mainBottomRight": "TEXTMODE.JS ADD-ON"
+			"mainBottomRight": "CODE.TEXTMODE.ART"
 		}
 	}
 }
