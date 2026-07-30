@@ -197,7 +197,9 @@ char(voronoi(5)).charMap('█▓▒░ '); // Block characters
 
 ## Acknowledgements
 
-- **[hydra-synth](https://github.com/hydra-synth/hydra-synth)** — Derivative source by [Olivia Jack](https://github.com/ojack) for core synthesis logic, GLSL shader generation, and functional API design; adapted for `textmode.js`'s three-texture rendering pipeline (characters, foreground colors, background colors) and plugin system. License: [AGPL-3.0](https://github.com/hydra-synth/hydra-synth/blob/main/LICENSE).
+- **[hydra-synth](https://github.com/hydra-synth/hydra-synth)**
+  - Derivative source by [Olivia Jack](https://github.com/ojack) for core synthesis logic, GLSL shader generation, and functional API design; adapted for `textmode.js`'s three-texture rendering pipeline (characters, foreground colors, background colors) and plugin system.
+  - License: [AGPL-3.0](https://github.com/hydra-synth/hydra-synth/blob/main/LICENSE).
 
 ---
 
