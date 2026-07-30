@@ -6,9 +6,9 @@
 
 </div>
 
-**A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.**
+`textmode.synth.js` is a free, modular visual-synthesis add-on for [`textmode.js`](https://github.com/humanbydefinition/textmode.js) that brings a `hydra`-inspired, chainable API to procedural ASCII and textmode animation. It translates composable sources and transforms into optimized GLSL shaders while targeting separate character, foreground-color, and background-color textures.
 
-Create procedural ASCII/text animations with a `hydra`-inspired, chainable visual synthesis system.
+The add-on is designed for live coding, rapid experimentation, and expressive generative workflows. Whether you're combining oscillators and noise, building feedback loops, or extending the system with custom sources and transforms, `textmode.synth.js` makes complex animated compositions approachable through concise, compositional chains.
 
 ## Features
 
