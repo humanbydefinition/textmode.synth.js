@@ -40,6 +40,13 @@ Use it to build and modify synthesis chains through live coding.
 Follow the [official installation guide](https://code.textmode.art/docs/installation) to install
 `textmode.synth.js` alongside `textmode.js` with npm or browser-ready UMD bundles.
 
+## Next steps
+
+- **[Read the synth documentation](https://code.textmode.art/docs/live-coding-synth-textmode-art)** for synthesis workflows and examples.
+- **[Browse the API reference](https://code.textmode.art/api/textmode.synth.js/)** for the complete typed API.
+- **[Explore the examples](./examples/)** to see sources, transforms, and composition patterns in action.
+- **[Try synth.textmode.art](https://synth.textmode.art/)** to experiment with synthesis chains in the browser.
+
 ## Contributing
 
 Thank you for considering contributing to this project! (✿◠‿◠)
@@ -150,14 +157,6 @@ Use `.charMap()` to define the character set. By default, all characters availab
 char(noise(10)).charMap('@#%*+=-:. '); // ASCII gradient
 char(voronoi(5)).charMap('█▓▒░ '); // Block characters
 ```
-
-## Documentation
-
-There's a lot more to explore beyond this overview:
-
-- **[Online documentation](https://code.textmode.art/docs/synth)** - Full guides and tutorials
-- **[API reference](./api/index.md)** - Complete API documentation
-- **[synth.textmode.art](https://synth.textmode.art)** - Focused synth live-coding environment
 
 ## License
 
