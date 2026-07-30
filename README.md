@@ -155,11 +155,21 @@ There's a lot more to explore beyond this overview:
 
 ## License
 
-Distributed under the **AGPL-3.0** License. See [LICENSE](./LICENSE) for more information.
+`textmode.synth.js` is licensed under the [AGPL-3.0 License](./LICENSE).
 
-## Credits
+## Acknowledgements
 
 This project is a derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.
 
 - **hydra-synth**: Core synthesis logic, GLSL shader generation, and functional API design.
 - **Modifications**: Adapted for `textmode.js`'s three-texture rendering pipeline *(characters, foreground colors, background colors)* and plugin system.
+
+---
+
+<div align="center">
+
+<br />
+
+**[↑ back to top](#textmodesynthjs)**
+
+</div>
