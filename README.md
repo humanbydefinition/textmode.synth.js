@@ -8,17 +8,17 @@
 
 `textmode.synth.js` is a free, modular visual-synthesis add-on for [`textmode.js`](https://github.com/humanbydefinition/textmode.js) that brings a `hydra`-inspired, chainable API to procedural ASCII and textmode animation. It translates composable sources and transforms into optimized GLSL shaders while targeting separate character, foreground-color, and background-color textures.
 
-The add-on is designed for live coding, rapid experimentation, and expressive generative workflows. Whether you're combining oscillators and noise, building feedback loops, or extending the system with custom sources and transforms, `textmode.synth.js` makes complex animated compositions approachable through concise, compositional chains.
+The add-on is designed for live coding, rapid experimentation, and expressive generative workflows. Whether you're combining oscillators and noise, building feedback loops, or sampling layers and media while dynamically modulating parameters, `textmode.synth.js` makes complex animated compositions approachable through concise, compositional chains.
 
 ## Features
 
-- **Procedural generation** - Oscillators, noise, voronoi, and more
-- **Method chaining** - Hydra-style fluent API for complex visuals
-- **Three-texture system** - Independent control over characters, foreground, and background
-- **WebGL powered** - Compiled to optimized GLSL shaders
-- **Feedback loops** - Trails, motion blur, and recursive patterns
-- **Compositional API** - Start from any aspect and build organically
-- **Extensible** - Add your own sources, transforms, and more
+- **Hydra-inspired chains** - Compose procedural sources and transforms through fluent `SynthSource` chains compiled into GLSL
+- **Pattern and transform library** - Combine generators, coordinate transforms, color operations, masks, blends, and modulation
+- **textmode-native channels** - Control character selection, character color, and cell color independently
+- **Dynamic modulation** - Drive parameters with values, contextual callbacks, or BPM-aware arrays with speed, smoothing, easing, offset, and fitting
+- **Feedback loops** - Sample previous-frame character, foreground, or background channels through context-aware feedback
+- **Layer and media sampling** - Use other textmode layers, images, videos, and textures as synthesis sources
+- **Per-layer synthesis** - Apply, replace, clear, and independently pace synth chains on individual layers
 
 ## Try it online first
 
@@ -55,7 +55,7 @@ Please read the [Contributing Guide](https://github.com/humanbydefinition/textmo
 
 <!-- TEXTMODE-CONTRIBUTORS:START -->
 <!-- prettier-ignore-start -->
-<!-- Generated from https://github.com/humanbydefinition/code.textmode.art/blob/main/.vitepress/data/contributors.json. Do not edit this section directly. -->
+<!-- Generated from https://github.com/humanbydefinition/code.textmode.art/blob/main/.vitepress/data/contributors.json and https://github.com/humanbydefinition/code.textmode.art/blob/main/.vitepress/data/contribution-types.json. Do not edit this section directly. -->
 ## Contributors
 
 Thanks to the people who contribute code, documentation, design, examples, ideas, infrastructure, and care
