@@ -6,6 +6,8 @@
 
 </div>
 
+**A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.**
+
 Create procedural ASCII/text animations with a `hydra`-inspired, chainable visual synthesis system.
 
 ## Features
