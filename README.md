@@ -43,7 +43,7 @@ Follow the [official installation guide](https://code.textmode.art/docs/installa
 - **[Read the synth documentation](https://code.textmode.art/docs/live-coding-synth-textmode-art)** for synthesis workflows and examples.
 - **[Browse the API reference](https://code.textmode.art/api/textmode.synth.js/)** for the complete typed API.
 - **[Explore the examples](./examples/)** to see sources, transforms, and composition patterns in action.
-- **[Try synth.textmode.art](https://synth.textmode.art/)** to experiment with synthesis chains in the browser.
+- **[Try editor.textmode.art](https://editor.textmode.art/)** to experiment with synthesis chains in the browser.
 
 ## Contributing
 
