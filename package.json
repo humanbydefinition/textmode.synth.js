@@ -26,13 +26,13 @@
 		"build:bundle": "vite build",
 		"build:types": "tsc",
 		"build": "npm run build:bundle && npm run build:types",
-		"check": "npm run check:format && npm run lint && npm run lint:md && npm run check:types && npm run check:api-docs && npm run check:examples && npm run test && npm run build",
-		"docs:links:add": "textmode-add-api-links",
-		"check:api-docs": "textmode-check-api-docs",
-		"check:api-docs:accessors": "textmode-check-api-docs --include-accessors",
-		"check:examples": "textmode-check-examples",
-		"dev:docs": "typedoc --options ./node_modules/@textmode/tooling-scripts/src/typedoc.member-pages.base.json --watch",
-		"build:docs": "typedoc --options ./node_modules/@textmode/tooling-scripts/src/typedoc.member-pages.base.json",
+		"check": "npm run check:format && npm run lint && npm run lint:md && npm run check:types && npm run check:docs && npm run test && npm run build",
+		"docs:links:add": "textmode-docs links add",
+		"check:api-docs": "textmode-docs api-check",
+		"check:api-docs:accessors": "textmode-docs api-check --include-accessors",
+		"check:docs": "textmode-docs check",
+		"dev:docs": "textmode-docs watch",
+		"build:docs": "textmode-docs build",
 		"preview": "vite preview",
 		"test": "vitest run",
 		"test:watch": "vitest",
@@ -54,11 +54,12 @@
 	"devDependencies": {
 		"@commitlint/cli": "^21.2.1",
 		"@textmode/commitlint-config": "^0.1.1",
+		"@textmode/docs": "file:../textmode-tooling/packages/docs",
 		"@textmode/eslint-config": "^0.2.0",
 		"@textmode/markdownlint-config": "^0.1.1",
 		"@textmode/prettier-config": "^0.1.0",
 		"@textmode/release-config": "^0.1.1",
-		"@textmode/tooling-scripts": "^0.3.9",
+		"@textmode/tooling-scripts": "^0.4.0",
 		"@textmode/tsconfig": "^0.1.0",
 		"@textmode/vite-config": "^0.1.0",
 		"@textmode/vitest-config": "^0.2.0",
@@ -72,10 +73,6 @@
 		"semantic-release": "^25.0.5",
 		"terser": "^5.46.1",
 		"textmode.js": "^0.17.0",
-		"typedoc": "^0.28.20",
-		"typedoc-plugin-frontmatter": "^1.3.1",
-		"typedoc-plugin-markdown": "^4.12.0",
-		"typedoc-vitepress-theme": "^1.1.3",
 		"typescript": "^6.0.3",
 		"vite": "^8.1.3",
 		"vitest": "^4.1.10"
@@ -112,23 +109,6 @@
 	},
 	"bugs": {
 		"url": "https://github.com/humanbydefinition/textmode.synth.js/issues"
-	},
-	"typedocOptions": {
-		"entryPoints": [
-			"src/index.ts"
-		],
-		"out": "api/textmode.synth.js",
-		"tsconfig": "tsconfig.json",
-		"sort": [
-			"source-order"
-		],
-		"textmodeApiBaseUrl": "https://code.textmode.art/api/textmode.synth.js",
-		"textmodeStripApiSelfLinksMode": "minimal",
-		"textmodeMemberPageKinds": [
-			"method",
-			"property",
-			"accessor"
-		]
 	},
 	"markdownlint-cli2": {
 		"globs": [
