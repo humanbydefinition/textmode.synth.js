@@ -40,6 +40,12 @@ Use it to build and modify synthesis chains through live coding.
 Follow the [official installation guide](https://code.textmode.art/docs/installation) to install
 `textmode.synth.js` alongside `textmode.js` with npm or browser-ready UMD bundles.
 
+## Contributing
+
+Thank you for considering contributing to this project! (✿◠‿◠)
+
+Please read the [Contributing Guide](https://github.com/humanbydefinition/textmode.js-dev/blob/dev/CONTRIBUTING.md) to get started.
+
 ## Quick start
 
 ```javascript
