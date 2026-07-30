@@ -6,8 +6,6 @@
 
 </div>
 
-**A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.**
-
 Create procedural ASCII/text animations with a `hydra`-inspired, chainable visual synthesis system.
 
 ## Features
@@ -199,10 +197,7 @@ char(voronoi(5)).charMap('█▓▒░ '); // Block characters
 
 ## Acknowledgements
 
-This project is a derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack), adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.
-
-- **hydra-synth**: Core synthesis logic, GLSL shader generation, and functional API design.
-- **Modifications**: Adapted for `textmode.js`'s three-texture rendering pipeline *(characters, foreground colors, background colors)* and plugin system.
+- **[hydra-synth](https://github.com/hydra-synth/hydra-synth)** — Derivative source by [Olivia Jack](https://github.com/ojack) for core synthesis logic, GLSL shader generation, and functional API design; adapted for `textmode.js`'s three-texture rendering pipeline (characters, foreground colors, background colors) and plugin system. License: [AGPL-3.0](https://github.com/hydra-synth/hydra-synth/blob/main/LICENSE).
 
 ---
 
