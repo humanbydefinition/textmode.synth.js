@@ -54,7 +54,7 @@ Follow the [official installation guide](https://code.textmode.art/docs/installa
 
 Thank you for considering contributing to this project! (✿◠‿◠)
 
-Please read the [Contributing Guide](https://github.com/humanbydefinition/textmode.js-dev/blob/dev/CONTRIBUTING.md) to get started.
+Please read the [Contributing Guide](./CONTRIBUTING.md) to get started.
 
 <!-- TEXTMODE-CONTRIBUTORS:START -->
 <!-- prettier-ignore-start -->
