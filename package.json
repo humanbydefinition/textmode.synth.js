@@ -29,7 +29,6 @@
 		"check": "npm run check:format && npm run lint && npm run lint:md && npm run check:types && npm run check:docs && npm run test && npm run build",
 		"docs:links:add": "textmode-docs links add",
 		"check:api-docs": "textmode-docs api-check",
-		"check:api-docs:accessors": "textmode-docs api-check --include-accessors",
 		"check:docs": "textmode-docs check",
 		"dev:docs": "textmode-docs watch",
 		"build:docs": "textmode-docs build",
