@@ -5,13 +5,19 @@ contact_links:
       about: Read the shared workflow before proposing or implementing a change.
     - name: Synth documentation
       url: https://code.textmode.art/docs/live-coding-synth-textmode-art
-      about: Check the synthesis guide before opening a usage question.
+      about: Read the synthesis guide before opening a usage question.
     - name: API reference
       url: https://code.textmode.art/api/textmode.synth.js/
       about: Check the generated API reference for methods, options, and types.
+    - name: Examples gallery
+      url: https://examples.textmode.art/textmode.synth.js/
+      about: Browse runnable textmode.synth.js examples and compare expected behavior.
+    - name: Web editor
+      url: https://editor.textmode.art/
+      about: Create and share a minimal reproduction using the official textmode.js libraries.
     - name: textmode.js core repository
       url: https://github.com/humanbydefinition/textmode.js/issues
-      about: Report problems reproducible without the synth add-on in the core repository.
+      about: Report problems reproducible without this add-on in the textmode.js core repository.
     - name: Discord
       url: https://discord.gg/sjrw8QXNks
-      about: Ask usage questions or discuss synth behavior before filing an issue.
+      about: Ask usage questions or sanity-check ideas before filing an issue.
