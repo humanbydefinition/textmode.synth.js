@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { CharacterResolver } from '../../src/utils/CharacterResolver';
-import type { TextmodeFont, TextmodeCharacter } from 'textmode.js/loadables';
+import type { TextmodeFont, TextmodeGlyph } from 'textmode.js';
 
 describe('CharacterResolver', () => {
 	let resolver: CharacterResolver;
@@ -11,10 +11,10 @@ describe('CharacterResolver', () => {
 	// We use a simple object mock. The resolver only cares about object identity
 	// for the map lookups, so the content of these objects doesn't strictly matter
 	// as long as they are consistent.
-	const charA = { id: 'A' } as unknown as TextmodeCharacter;
-	const charB = { id: 'B' } as unknown as TextmodeCharacter;
-	const charSpace = { id: ' ' } as unknown as TextmodeCharacter;
-	const charC = { id: 'C' } as unknown as TextmodeCharacter;
+	const charA = { id: 'A' } as unknown as TextmodeGlyph;
+	const charB = { id: 'B' } as unknown as TextmodeGlyph;
+	const charSpace = { id: ' ' } as unknown as TextmodeGlyph;
+	const charC = { id: 'C' } as unknown as TextmodeGlyph;
 
 	beforeEach(() => {
 		resolver = new CharacterResolver();

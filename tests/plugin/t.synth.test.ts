@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { SynthPlugin } from '../../src/plugin/SynthPlugin';
-import type { TextmodePluginAPI } from 'textmode.js/plugins';
+import type { TextmodePluginContext } from 'textmode.js';
 
 describe('t.synth comfort method', () => {
-	let api: TextmodePluginAPI;
+	let api: TextmodePluginContext;
 	let textmodifier: any;
 	let baseLayer: any;
 
@@ -24,7 +24,7 @@ describe('t.synth comfort method', () => {
 				base: baseLayer,
 				all: [],
 			},
-		} as unknown as TextmodePluginAPI;
+		} as unknown as TextmodePluginContext;
 
 		textmodifier = {
 			bpm: undefined,

@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeAll } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import { UniformManager } from '../../src/compiler/UniformManager';
 import { initArrayUtils } from '../../src/utils/ArrayUtils';
 import type { TransformInput, SynthContext } from '../../src/core/types';
