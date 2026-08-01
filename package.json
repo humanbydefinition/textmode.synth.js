@@ -53,7 +53,7 @@
 	"devDependencies": {
 		"@commitlint/cli": "^21.2.1",
 		"@textmode/commitlint-config": "^0.1.1",
-		"@textmode/docs": "^0.2.0",
+		"@textmode/docs": "^0.2.1",
 		"@textmode/eslint-config": "^0.2.0",
 		"@textmode/markdownlint-config": "^0.1.1",
 		"@textmode/prettier-config": "^0.1.0",
