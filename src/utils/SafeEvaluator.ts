@@ -12,6 +12,8 @@ import type { SynthContext } from '../core/types';
  * Callback signature for dynamic parameter evaluation errors.
  * Live coding environments can use this to display errors without interrupting rendering.
  *
+ * @category Live-Coding Errors
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/type-aliases/DynamicErrorCallback | DynamicErrorCallback API reference}
  */
 export type DynamicErrorCallback = (error: unknown, uniformName: string) => void;
@@ -34,6 +36,8 @@ let globalErrorCallback: DynamicErrorCallback | null = null;
  *
  * Provides a centralized way for live coding environments to receive
  * notifications whenever a dynamic parameter fails to evaluate.
+ *
+ * @category Live-Coding Errors
  *
  * @example
  * ```javascript

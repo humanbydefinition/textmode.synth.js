@@ -19,6 +19,8 @@ import { TextmodeLayer } from 'textmode.js';
  *
  * Install this plugin to enable `.synth()` on TextmodeLayer instances.
  *
+ * @category Workflow
+ *
  * @example
  * ```javascript
  * const t = textmode.create({

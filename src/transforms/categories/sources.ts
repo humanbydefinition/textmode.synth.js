@@ -219,6 +219,7 @@ declare module '../../core/SynthSource' {
 		 * @param frequency - Frequency of the oscillation (default: 60.0)
 		 * @param sync - Synchronization offset (default: 0.1)
 		 * @param offset - Phase offset (default: 0.0)
+		 * @category Sources & Sampling
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/osc/sketch.js}
@@ -232,6 +233,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param scale - Scale of the noise pattern (default: 10.0)
 		 * @param speed - Animation speed (default: 0.1)
+		 * @category Sources & Sampling
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/noise/sketch.js}
@@ -247,6 +249,7 @@ declare module '../../core/SynthSource' {
 		 * @param speed - Animation speed (default: 0.5)
 		 * @param phase - Phase offset (default: 0.0)
 		 * @param contrast - Contrast adjustment (default: 1.0)
+		 * @category Sources & Sampling
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/plasma/sketch.js}
@@ -269,6 +272,7 @@ declare module '../../core/SynthSource' {
 		 * @param angleB - Angle of second grating in radians (default: 1.5708)
 		 * @param speed - Animation speed (default: 0.1)
 		 * @param phase - Phase offset (default: 0.0)
+		 * @category Sources & Sampling
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/moire/sketch.js}
@@ -290,6 +294,7 @@ declare module '../../core/SynthSource' {
 		 * @param scale - Scale of voronoi cells (default: 5.0)
 		 * @param speed - Animation speed (default: 0.3)
 		 * @param blending - Blending between cell regions (default: 0.3)
+		 * @category Sources & Sampling
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/voronoi/sketch.js}
@@ -302,6 +307,7 @@ declare module '../../core/SynthSource' {
 		 * Generate a rotating radial gradient.
 		 *
 		 * @param speed - Rotation speed (default: 0.0)
+		 * @category Sources & Sampling
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/gradient/sketch.js}
@@ -316,6 +322,7 @@ declare module '../../core/SynthSource' {
 		 * @param sides - Number of sides (default: 3)
 		 * @param radius - Radius of the shape (default: 0.3)
 		 * @param smoothing - Edge smoothing amount (default: 0.01)
+		 * @category Sources & Sampling
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/shape/sketch.js}
@@ -328,6 +335,7 @@ declare module '../../core/SynthSource' {
 		 * Generate a solid grayscale color.
 		 *
 		 * @param gray - Grayscale value (0-1)
+		 * @category Sources & Sampling
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/solid/sketch.js}
@@ -342,6 +350,7 @@ declare module '../../core/SynthSource' {
 		 * @param g - Green channel (0-1, default: 0.0)
 		 * @param b - Blue channel (0-1, default: 0.0)
 		 * @param a - Alpha channel (0-1, default: 1.0)
+		 * @category Sources & Sampling
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/solid2/sketch.js}
@@ -365,6 +374,7 @@ declare module '../../core/SynthSource' {
 		 * and recursive patterns. Equivalent to hydra's `src(o0)` (self-reference).
 		 *
 		 * To sample from another layer, use the top-level `src(layer)` function instead.
+		 * @category Sources & Sampling
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/src/sketch.js}

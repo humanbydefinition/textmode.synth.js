@@ -210,6 +210,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Source to add
 		 * @param amount - Blend amount (default: 0.5)
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/add/sketch.js}
@@ -223,6 +224,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Source to subtract
 		 * @param amount - Blend amount (default: 0.5)
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/sub/sketch.js}
@@ -236,6 +238,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Source to multiply
 		 * @param amount - Blend amount (default: 0.5)
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/mult/sketch.js}
@@ -249,6 +252,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Source to blend
 		 * @param amount - Blend amount (default: 0.5)
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/blend/sketch.js}
@@ -261,6 +265,7 @@ declare module '../../core/SynthSource' {
 		 * Difference with another source.
 		 *
 		 * @param source - Source to compare
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/diff/sketch.js}
@@ -273,6 +278,7 @@ declare module '../../core/SynthSource' {
 		 * Layer another source on top.
 		 *
 		 * @param source - Source to layer
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/layer/sketch.js}
@@ -285,6 +291,7 @@ declare module '../../core/SynthSource' {
 		 * Mask using another source.
 		 *
 		 * @param source - Source to use as mask
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/mask/sketch.js}
@@ -298,6 +305,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Source to screen
 		 * @param amount - Blend amount (default: 1.0)
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/screen/sketch.js}
@@ -311,6 +319,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Source to overlay
 		 * @param amount - Blend amount (default: 1.0)
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/overlay/sketch.js}
@@ -324,6 +333,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Source to softlight
 		 * @param amount - Blend amount (default: 1.0)
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/softlight/sketch.js}
@@ -337,6 +347,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Source to hardlight
 		 * @param amount - Blend amount (default: 1.0)
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/hardlight/sketch.js}
@@ -350,6 +361,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Source to dodge
 		 * @param amount - Blend amount (default: 1.0)
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/dodge/sketch.js}
@@ -363,6 +375,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Source to burn
 		 * @param amount - Blend amount (default: 1.0)
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/burn/sketch.js}
@@ -376,6 +389,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Source to lighten
 		 * @param amount - Blend amount (default: 1.0)
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/lighten/sketch.js}
@@ -389,6 +403,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Source to darken
 		 * @param amount - Blend amount (default: 1.0)
+		 * @category Combining sources
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/darken/sketch.js}
