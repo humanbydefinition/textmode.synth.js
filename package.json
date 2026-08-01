@@ -57,7 +57,7 @@
 		"@textmode/eslint-config": "^0.2.0",
 		"@textmode/markdownlint-config": "^0.1.1",
 		"@textmode/prettier-config": "^0.1.0",
-		"@textmode/release-config": "^0.1.1",
+		"@textmode/release-config": "^0.1.2",
 		"@textmode/tooling-scripts": "^0.4.0",
 		"@textmode/tsconfig": "^0.1.0",
 		"@textmode/vite-config": "^0.1.0",
@@ -101,6 +101,9 @@
 		"extends": [
 			"@textmode/commitlint-config"
 		]
+	},
+	"release": {
+		"extends": "@textmode/release-config"
 	},
 	"repository": {
 		"type": "git",
