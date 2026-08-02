@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText('Fit: Rotation & Scale dynamic bounds', x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(osc(12, 0.1).rotate([0, 1].fit(-3.14, 3.14)).scale([0, 1].fit(0.5, 2.5)).color(0.9, 0.2, 0.6));
+t.synth(osc(12, 0.1).rotate([0, 1].fit(-3.14, 3.14)).scale([0, 1].fit(0.5, 2.5)).color(0.9, 0.2, 0.6));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

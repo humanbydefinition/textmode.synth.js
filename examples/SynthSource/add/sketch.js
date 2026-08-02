@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Blend: Add | Factor: 0.5`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(osc(8, 0.1).add(noise(6), 0.5).color(0.9, 0.2, 0.6));
+t.synth(osc(8, 0.1).add(noise(6), 0.5).color(0.9, 0.2, 0.6));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

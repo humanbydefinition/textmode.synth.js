@@ -40,7 +40,7 @@ labelLayer.draw(() => {
 
 const paintField = plasma(4.4, 0.022, 0.18, 1.16).colorama(0.16).modulateHue(osc(5, 0.012).kaleid(5), 2.6);
 
-t.layers.base.synth(
+t.synth(
 	moire(8, 9, 0.15, 1.58, 0.018)
 		.modulateRotate(noise(2.0, 0.012), 0.24, 0.03)
 		.paint(paintField)

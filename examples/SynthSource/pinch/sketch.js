@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Lens: Eased (-0.5 to 0.8)`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(noise(6).pinch([-0.5, 0.8].ease('easeInOutSine')).color(0.1, 0.7, 0.9));
+t.synth(noise(6).pinch([-0.5, 0.8].ease('easeInOutSine')).color(0.1, 0.7, 0.9));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

@@ -1,3 +1,1 @@
-import config from '@textmode/eslint-config';
-
-export default config;
+export { default } from '@textmode/eslint-config';

@@ -40,7 +40,7 @@ labelLayer.draw(() => {
 
 const ink = plasma(4.2, 0.024, 0.0, 1.12).color(0.42, 1.0, 0.58).modulateRotate(noise(2.0, 0.015), 0.28, 0.04);
 
-t.layers.base.synth(
+t.synth(
 	cellColor([0.04, 0.2].fast(0.12).ease('easeInOutSine'))
 		.char(plasma(4.4, 0.024, 0.1, 1.12).kaleid(5))
 		.charMap(glyphs)

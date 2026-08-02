@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Offset: Eased (-0.5 to 0.3)`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(plasma(6, 0.3).brightness([-0.5, 0.3].ease('easeInOutSine')).color(0.9, 0.4, 0.2));
+t.synth(plasma(6, 0.3).brightness([-0.5, 0.3].ease('easeInOutSine')).color(0.9, 0.4, 0.2));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

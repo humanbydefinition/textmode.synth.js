@@ -42,7 +42,7 @@ labelLayer.draw(() => {
 const ink = osc(5, 0.018, 1.1).kaleid(4).color(0.45, 0.72, 1.0).modulate(noise(2.2, 0.018), 0.025);
 const paper = plasma(3.6, 0.028, 0.1, 1.05).color(0.03, 0.08, 0.18).modulateScale(noise(2.0, 0.015), 0.22, 0.95);
 
-t.layers.base.synth(
+t.synth(
 	moire(7, 8, 0.1, 1.57, 0.018)
 		.modulateScrollX(noise(2.8, 0.02), [0.03, 0.16].fast(0.12).ease('easeInOutSine'), 0.006)
 		.color(0.25, 0.7, 1.0)

@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Octaves: 8 | Falloff: 0.2`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(noise(8, 0.2).colorama(0.5).pixelate([16, 32].ease('easeInOutSine')));
+t.synth(noise(8, 0.2).colorama(0.5).pixelate([16, 32].ease('easeInOutSine')));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

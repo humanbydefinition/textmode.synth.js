@@ -12,43 +12,53 @@
 					"examples": [
 						{
 							"title": "SynthSource.osc",
-							"sourceFile": "examples/SynthSource/osc/sketch.js"
+							"sourceFile": "examples/SynthSource/osc/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.noise",
-							"sourceFile": "examples/SynthSource/noise/sketch.js"
+							"sourceFile": "examples/SynthSource/noise/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.gradient",
-							"sourceFile": "examples/SynthSource/gradient/sketch.js"
+							"sourceFile": "examples/SynthSource/gradient/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.plasma",
-							"sourceFile": "examples/SynthSource/plasma/sketch.js"
+							"sourceFile": "examples/SynthSource/plasma/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.moire",
-							"sourceFile": "examples/SynthSource/moire/sketch.js"
+							"sourceFile": "examples/SynthSource/moire/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.voronoi",
-							"sourceFile": "examples/SynthSource/voronoi/sketch.js"
+							"sourceFile": "examples/SynthSource/voronoi/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.shape",
-							"sourceFile": "examples/SynthSource/shape/sketch.js"
+							"sourceFile": "examples/SynthSource/shape/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.solid",
-							"sourceFile": "examples/SynthSource/solid/sketch.js"
+							"sourceFile": "examples/SynthSource/solid/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.solid2",
-							"sourceFile": "examples/SynthSource/solid2/sketch.js"
+							"sourceFile": "examples/SynthSource/solid2/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.src",
-							"sourceFile": "examples/SynthSource/src/sketch.js"
+							"sourceFile": "examples/SynthSource/src/sketch.js",
+							"status": "unrated"
 						}
 					]
 				},
@@ -58,75 +68,93 @@
 					"examples": [
 						{
 							"title": "SynthSource.rotate",
-							"sourceFile": "examples/SynthSource/rotate/sketch.js"
+							"sourceFile": "examples/SynthSource/rotate/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.scale",
-							"sourceFile": "examples/SynthSource/scale/sketch.js"
+							"sourceFile": "examples/SynthSource/scale/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.scroll",
-							"sourceFile": "examples/SynthSource/scroll/sketch.js"
+							"sourceFile": "examples/SynthSource/scroll/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.scrollX",
-							"sourceFile": "examples/SynthSource/scrollX/sketch.js"
+							"sourceFile": "examples/SynthSource/scrollX/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.scrollY",
-							"sourceFile": "examples/SynthSource/scrollY/sketch.js"
+							"sourceFile": "examples/SynthSource/scrollY/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.pixelate",
-							"sourceFile": "examples/SynthSource/pixelate/sketch.js"
+							"sourceFile": "examples/SynthSource/pixelate/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.repeat",
-							"sourceFile": "examples/SynthSource/repeat/sketch.js"
+							"sourceFile": "examples/SynthSource/repeat/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.repeatX",
-							"sourceFile": "examples/SynthSource/repeatX/sketch.js"
+							"sourceFile": "examples/SynthSource/repeatX/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.repeatY",
-							"sourceFile": "examples/SynthSource/repeatY/sketch.js"
+							"sourceFile": "examples/SynthSource/repeatY/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.kaleid",
-							"sourceFile": "examples/SynthSource/kaleid/sketch.js"
+							"sourceFile": "examples/SynthSource/kaleid/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.polar",
-							"sourceFile": "examples/SynthSource/polar/sketch.js"
+							"sourceFile": "examples/SynthSource/polar/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.twirl",
-							"sourceFile": "examples/SynthSource/twirl/sketch.js"
+							"sourceFile": "examples/SynthSource/twirl/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.swirl",
-							"sourceFile": "examples/SynthSource/swirl/sketch.js"
+							"sourceFile": "examples/SynthSource/swirl/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.mirror",
-							"sourceFile": "examples/SynthSource/mirror/sketch.js"
+							"sourceFile": "examples/SynthSource/mirror/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.shear",
-							"sourceFile": "examples/SynthSource/shear/sketch.js"
+							"sourceFile": "examples/SynthSource/shear/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.barrel",
-							"sourceFile": "examples/SynthSource/barrel/sketch.js"
+							"sourceFile": "examples/SynthSource/barrel/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.pinch",
-							"sourceFile": "examples/SynthSource/pinch/sketch.js"
+							"sourceFile": "examples/SynthSource/pinch/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.fisheye",
-							"sourceFile": "examples/SynthSource/fisheye/sketch.js"
+							"sourceFile": "examples/SynthSource/fisheye/sketch.js",
+							"status": "unrated"
 						}
 					]
 				},
@@ -136,79 +164,98 @@
 					"examples": [
 						{
 							"title": "SynthSource.brightness",
-							"sourceFile": "examples/SynthSource/brightness/sketch.js"
+							"sourceFile": "examples/SynthSource/brightness/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.contrast",
-							"sourceFile": "examples/SynthSource/contrast/sketch.js"
+							"sourceFile": "examples/SynthSource/contrast/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.invert",
-							"sourceFile": "examples/SynthSource/invert/sketch.js"
+							"sourceFile": "examples/SynthSource/invert/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.saturate",
-							"sourceFile": "examples/SynthSource/saturate/sketch.js"
+							"sourceFile": "examples/SynthSource/saturate/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.hue",
-							"sourceFile": "examples/SynthSource/hue/sketch.js"
+							"sourceFile": "examples/SynthSource/hue/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.colorama",
-							"sourceFile": "examples/SynthSource/colorama/sketch.js"
+							"sourceFile": "examples/SynthSource/colorama/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.posterize",
-							"sourceFile": "examples/SynthSource/posterize/sketch.js"
+							"sourceFile": "examples/SynthSource/posterize/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.luma",
-							"sourceFile": "examples/SynthSource/luma/sketch.js"
+							"sourceFile": "examples/SynthSource/luma/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.thresh",
-							"sourceFile": "examples/SynthSource/thresh/sketch.js"
+							"sourceFile": "examples/SynthSource/thresh/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.color",
-							"sourceFile": "examples/SynthSource/color/sketch.js"
+							"sourceFile": "examples/SynthSource/color/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.color2",
-							"sourceFile": "examples/SynthSource/color2/sketch.js"
+							"sourceFile": "examples/SynthSource/color2/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.r",
-							"sourceFile": "examples/SynthSource/r/sketch.js"
+							"sourceFile": "examples/SynthSource/r/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.g",
-							"sourceFile": "examples/SynthSource/g/sketch.js"
+							"sourceFile": "examples/SynthSource/g/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.b",
-							"sourceFile": "examples/SynthSource/b/sketch.js"
+							"sourceFile": "examples/SynthSource/b/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.shift",
-							"sourceFile": "examples/SynthSource/shift/sketch.js"
+							"sourceFile": "examples/SynthSource/shift/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.gamma",
-							"sourceFile": "examples/SynthSource/gamma/sketch.js"
+							"sourceFile": "examples/SynthSource/gamma/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.levels",
-							"sourceFile": "examples/SynthSource/levels/sketch.js"
+							"sourceFile": "examples/SynthSource/levels/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.clamp",
-							"sourceFile": "examples/SynthSource/clamp/sketch.js"
+							"sourceFile": "examples/SynthSource/clamp/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.seed",
-							"sourceFile": "examples/SynthSource/seed/sketch.js"
+							"sourceFile": "examples/SynthSource/seed/sketch.js",
+							"status": "unrated"
 						}
 					]
 				},
@@ -218,63 +265,78 @@
 					"examples": [
 						{
 							"title": "SynthSource.add",
-							"sourceFile": "examples/SynthSource/add/sketch.js"
+							"sourceFile": "examples/SynthSource/add/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.sub",
-							"sourceFile": "examples/SynthSource/sub/sketch.js"
+							"sourceFile": "examples/SynthSource/sub/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.mult",
-							"sourceFile": "examples/SynthSource/mult/sketch.js"
+							"sourceFile": "examples/SynthSource/mult/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.blend",
-							"sourceFile": "examples/SynthSource/blend/sketch.js"
+							"sourceFile": "examples/SynthSource/blend/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.diff",
-							"sourceFile": "examples/SynthSource/diff/sketch.js"
+							"sourceFile": "examples/SynthSource/diff/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.layer",
-							"sourceFile": "examples/SynthSource/layer/sketch.js"
+							"sourceFile": "examples/SynthSource/layer/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.mask",
-							"sourceFile": "examples/SynthSource/mask/sketch.js"
+							"sourceFile": "examples/SynthSource/mask/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.screen",
-							"sourceFile": "examples/SynthSource/screen/sketch.js"
+							"sourceFile": "examples/SynthSource/screen/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.overlay",
-							"sourceFile": "examples/SynthSource/overlay/sketch.js"
+							"sourceFile": "examples/SynthSource/overlay/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.softlight",
-							"sourceFile": "examples/SynthSource/softlight/sketch.js"
+							"sourceFile": "examples/SynthSource/softlight/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.hardlight",
-							"sourceFile": "examples/SynthSource/hardlight/sketch.js"
+							"sourceFile": "examples/SynthSource/hardlight/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.dodge",
-							"sourceFile": "examples/SynthSource/dodge/sketch.js"
+							"sourceFile": "examples/SynthSource/dodge/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.burn",
-							"sourceFile": "examples/SynthSource/burn/sketch.js"
+							"sourceFile": "examples/SynthSource/burn/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.lighten",
-							"sourceFile": "examples/SynthSource/lighten/sketch.js"
+							"sourceFile": "examples/SynthSource/lighten/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.darken",
-							"sourceFile": "examples/SynthSource/darken/sketch.js"
+							"sourceFile": "examples/SynthSource/darken/sketch.js",
+							"status": "unrated"
 						}
 					]
 				},
@@ -284,47 +346,58 @@
 					"examples": [
 						{
 							"title": "SynthSource.modulate",
-							"sourceFile": "examples/SynthSource/modulate/sketch.js"
+							"sourceFile": "examples/SynthSource/modulate/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.modulateScale",
-							"sourceFile": "examples/SynthSource/modulateScale/sketch.js"
+							"sourceFile": "examples/SynthSource/modulateScale/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.modulateRotate",
-							"sourceFile": "examples/SynthSource/modulateRotate/sketch.js"
+							"sourceFile": "examples/SynthSource/modulateRotate/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.modulatePixelate",
-							"sourceFile": "examples/SynthSource/modulatePixelate/sketch.js"
+							"sourceFile": "examples/SynthSource/modulatePixelate/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.modulateKaleid",
-							"sourceFile": "examples/SynthSource/modulateKaleid/sketch.js"
+							"sourceFile": "examples/SynthSource/modulateKaleid/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.modulateScrollX",
-							"sourceFile": "examples/SynthSource/modulateScrollX/sketch.js"
+							"sourceFile": "examples/SynthSource/modulateScrollX/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.modulateScrollY",
-							"sourceFile": "examples/SynthSource/modulateScrollY/sketch.js"
+							"sourceFile": "examples/SynthSource/modulateScrollY/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.modulateRepeat",
-							"sourceFile": "examples/SynthSource/modulateRepeat/sketch.js"
+							"sourceFile": "examples/SynthSource/modulateRepeat/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.modulateRepeatX",
-							"sourceFile": "examples/SynthSource/modulateRepeatX/sketch.js"
+							"sourceFile": "examples/SynthSource/modulateRepeatX/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.modulateRepeatY",
-							"sourceFile": "examples/SynthSource/modulateRepeatY/sketch.js"
+							"sourceFile": "examples/SynthSource/modulateRepeatY/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.modulateHue",
-							"sourceFile": "examples/SynthSource/modulateHue/sketch.js"
+							"sourceFile": "examples/SynthSource/modulateHue/sketch.js",
+							"status": "unrated"
 						}
 					]
 				},
@@ -334,51 +407,63 @@
 					"examples": [
 						{
 							"title": "SynthSource.charMap",
-							"sourceFile": "examples/SynthSource/charMap/sketch.js"
+							"sourceFile": "examples/SynthSource/charMap/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.charColor",
-							"sourceFile": "examples/SynthSource/charColor/sketch.js"
+							"sourceFile": "examples/SynthSource/charColor/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.charColor2",
-							"sourceFile": "examples/SynthSource/charColor2/sketch.js"
+							"sourceFile": "examples/SynthSource/charColor2/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.charColor3",
-							"sourceFile": "examples/SynthSource/charColor3/sketch.js"
+							"sourceFile": "examples/SynthSource/charColor3/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.cellColor",
-							"sourceFile": "examples/SynthSource/cellColor/sketch.js"
+							"sourceFile": "examples/SynthSource/cellColor/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.cellColor2",
-							"sourceFile": "examples/SynthSource/cellColor2/sketch.js"
+							"sourceFile": "examples/SynthSource/cellColor2/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.cellColor3",
-							"sourceFile": "examples/SynthSource/cellColor3/sketch.js"
+							"sourceFile": "examples/SynthSource/cellColor3/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.char",
-							"sourceFile": "examples/SynthSource/char/sketch.js"
+							"sourceFile": "examples/SynthSource/char/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.paint",
-							"sourceFile": "examples/SynthSource/paint/sketch.js"
+							"sourceFile": "examples/SynthSource/paint/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.paint2",
-							"sourceFile": "examples/SynthSource/paint2/sketch.js"
+							"sourceFile": "examples/SynthSource/paint2/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.paint3",
-							"sourceFile": "examples/SynthSource/paint3/sketch.js"
+							"sourceFile": "examples/SynthSource/paint3/sketch.js",
+							"status": "unrated"
 						},
 						{
 							"title": "SynthSource.clone",
-							"sourceFile": "examples/SynthSource/clone/sketch.js"
+							"sourceFile": "examples/SynthSource/clone/sketch.js",
+							"status": "unrated"
 						}
 					]
 				}
@@ -390,43 +475,53 @@
 			"examples": [
 				{
 					"title": "cellColor.cellColor",
-					"sourceFile": "examples/Composition/cellColor/cellColor/sketch.js"
+					"sourceFile": "examples/Composition/cellColor/cellColor/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "cellColor.cellColor2",
-					"sourceFile": "examples/Composition/cellColor/cellColor2/sketch.js"
+					"sourceFile": "examples/Composition/cellColor/cellColor2/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "cellColor.cellColor3",
-					"sourceFile": "examples/Composition/cellColor/cellColor3/sketch.js"
+					"sourceFile": "examples/Composition/cellColor/cellColor3/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "charColor.charColor",
-					"sourceFile": "examples/Composition/charColor/charColor/sketch.js"
+					"sourceFile": "examples/Composition/charColor/charColor/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "charColor.charColor2",
-					"sourceFile": "examples/Composition/charColor/charColor2/sketch.js"
+					"sourceFile": "examples/Composition/charColor/charColor2/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "charColor.charColor3",
-					"sourceFile": "examples/Composition/charColor/charColor3/sketch.js"
+					"sourceFile": "examples/Composition/charColor/charColor3/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "char.char",
-					"sourceFile": "examples/Composition/char/char/sketch.js"
+					"sourceFile": "examples/Composition/char/char/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "paint.paint",
-					"sourceFile": "examples/Composition/paint/paint/sketch.js"
+					"sourceFile": "examples/Composition/paint/paint/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "paint.paint2",
-					"sourceFile": "examples/Composition/paint/paint2/sketch.js"
+					"sourceFile": "examples/Composition/paint/paint2/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "paint.paint3",
-					"sourceFile": "examples/Composition/paint/paint3/sketch.js"
+					"sourceFile": "examples/Composition/paint/paint3/sketch.js",
+					"status": "unrated"
 				}
 			]
 		},
@@ -436,23 +531,33 @@
 			"examples": [
 				{
 					"title": "TextmodeLayer.synth",
-					"sourceFile": "examples/TextmodeLayer/synth/sketch.js"
+					"sourceFile": "examples/TextmodeLayer/synth/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "TextmodeLayer.clearSynth",
-					"sourceFile": "examples/TextmodeLayer/clearSynth/sketch.js"
+					"sourceFile": "examples/TextmodeLayer/clearSynth/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "TextmodeLayer.bpm",
-					"sourceFile": "examples/TextmodeLayer/bpm/sketch.js"
+					"sourceFile": "examples/TextmodeLayer/bpm/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "Textmodifier.bpm",
-					"sourceFile": "examples/Textmodifier/bpm/sketch.js"
+					"sourceFile": "examples/Textmodifier/bpm/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "Textmodifier.seed",
-					"sourceFile": "examples/Textmodifier/seed/sketch.js"
+					"sourceFile": "examples/Textmodifier/seed/sketch.js",
+					"status": "unrated"
+				},
+				{
+					"title": "Textmodifier.synth",
+					"sourceFile": "examples/Textmodifier/synth/sketch.js",
+					"status": "unrated"
 				}
 			]
 		},
@@ -462,31 +567,38 @@
 			"examples": [
 				{
 					"title": "ModulatedArray.arrays",
-					"sourceFile": "examples/ModulatedArray/arrays/sketch.js"
+					"sourceFile": "examples/ModulatedArray/arrays/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "EasingFunction.easingFunction",
-					"sourceFile": "examples/EasingFunction/easingFunction/sketch.js"
+					"sourceFile": "examples/EasingFunction/easingFunction/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "ModulatedArray.fast",
-					"sourceFile": "examples/ModulatedArray/fast/sketch.js"
+					"sourceFile": "examples/ModulatedArray/fast/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "ModulatedArray.smooth",
-					"sourceFile": "examples/ModulatedArray/smooth/sketch.js"
+					"sourceFile": "examples/ModulatedArray/smooth/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "ModulatedArray.ease",
-					"sourceFile": "examples/ModulatedArray/ease/sketch.js"
+					"sourceFile": "examples/ModulatedArray/ease/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "ModulatedArray.offset",
-					"sourceFile": "examples/ModulatedArray/offset/sketch.js"
+					"sourceFile": "examples/ModulatedArray/offset/sketch.js",
+					"status": "unrated"
 				},
 				{
 					"title": "ModulatedArray.fit",
-					"sourceFile": "examples/ModulatedArray/fit/sketch.js"
+					"sourceFile": "examples/ModulatedArray/fit/sketch.js",
+					"status": "unrated"
 				}
 			]
 		}

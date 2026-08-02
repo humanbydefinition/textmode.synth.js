@@ -1,7 +1,5 @@
-# Build outputs
-api/
-dist/
-node_modules/
-
-# Markdown is linted separately and intentionally not part of the format scripts
+# Markdown and shader files use dedicated tooling or hand-maintained formatting.
 **/*.md
+**/*.frag
+**/*.vert
+**/*.glsl

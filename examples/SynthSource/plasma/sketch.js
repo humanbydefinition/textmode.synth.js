@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Freq: 6 | Scale: 0.4`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(plasma(6, 0.4, 0.8, 1.5).kaleid([3, 6].ease('easeInOutExpo')).contrast(1.2).brightness(0.1));
+t.synth(plasma(6, 0.4, 0.8, 1.5).kaleid([3, 6].ease('easeInOutExpo')).contrast(1.2).brightness(0.1));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText('Modulate: Oscillator warped by noise', x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(
+t.synth(
 	osc(20, 0.1).modulate(noise(6, 0.15), 0.15).color(0.2, 0.8, 1.0).charMap(' .:-=+*#%@').cellColor(0.05, 0.05, 0.1)
 );
 

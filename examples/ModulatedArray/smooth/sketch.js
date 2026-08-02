@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Smoothing Coefficient: 0.95`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(shape(4).rotate([0, 1.5, 3.14].smooth(0.95)));
+t.synth(shape(4).rotate([0, 1.5, 3.14].smooth(0.95)));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

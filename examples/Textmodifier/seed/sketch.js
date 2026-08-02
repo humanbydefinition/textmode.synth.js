@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Global Seed: 2026`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(noise(8, 0.15).color(0.5, 0.9, 0.2));
+t.synth(noise(8, 0.15).color(0.5, 0.9, 0.2));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

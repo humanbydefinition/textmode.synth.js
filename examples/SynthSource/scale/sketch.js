@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText(`Scale: Eased (0.5 to 3.0)`, x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(osc(10, 0.05, 0.5).scale([0.5, 3.0].ease('easeInOutCubic')).color(0.9, 0.2, 0.5));
+t.synth(osc(10, 0.05, 0.5).scale([0.5, 3.0].ease('easeInOutCubic')).color(0.9, 0.2, 0.5));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

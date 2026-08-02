@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText('Oscillators merged with min-blend', x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(
+t.synth(
 	osc(15, 0.1)
 		.color(0.9, 0.3, 0.6)
 		.darken(osc(15, 0.12).rotate(1.57).color(0.2, 0.8, 1.0), 1.0)

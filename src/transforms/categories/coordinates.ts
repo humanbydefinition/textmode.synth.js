@@ -346,6 +346,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param angle - Rotation angle in radians (default: 10.0)
 		 * @param speed - Rotation speed multiplier (default: 0.0)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/rotate/sketch.js}
@@ -362,6 +363,7 @@ declare module '../../core/SynthSource' {
 		 * @param yMult - Y axis multiplier (default: 1.0)
 		 * @param offsetX - X offset (default: 0.5)
 		 * @param offsetY - Y offset (default: 0.5)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/scale/sketch.js}
@@ -383,6 +385,7 @@ declare module '../../core/SynthSource' {
 		 * @param scrollY - Y scroll amount (default: 0.5)
 		 * @param speedX - X scroll speed (default: 0.0)
 		 * @param speedY - Y scroll speed (default: 0.0)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/scroll/sketch.js}
@@ -401,6 +404,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param scrollX - X scroll amount (default: 0.5)
 		 * @param speed - Scroll speed (default: 0.0)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/scrollX/sketch.js}
@@ -414,6 +418,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param scrollY - Y scroll amount (default: 0.5)
 		 * @param speed - Scroll speed (default: 0.0)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/scrollY/sketch.js}
@@ -427,6 +432,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param pixelX - Pixel size in X (default: 20.0)
 		 * @param pixelY - Pixel size in Y (default: 20.0)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/pixelate/sketch.js}
@@ -442,6 +448,7 @@ declare module '../../core/SynthSource' {
 		 * @param repeatY - Number of Y repetitions (default: 3.0)
 		 * @param offsetX - X offset between repetitions (default: 0.0)
 		 * @param offsetY - Y offset between repetitions (default: 0.0)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/repeat/sketch.js}
@@ -460,6 +467,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param reps - Number of repetitions (default: 3.0)
 		 * @param offset - Offset between repetitions (default: 0.0)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/repeatX/sketch.js}
@@ -473,6 +481,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param reps - Number of repetitions (default: 3.0)
 		 * @param offset - Offset between repetitions (default: 0.0)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/repeatY/sketch.js}
@@ -485,6 +494,7 @@ declare module '../../core/SynthSource' {
 		 * Apply kaleidoscope effect.
 		 *
 		 * @param nSides - Number of kaleidoscope sides (default: 4.0)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/kaleid/sketch.js}
@@ -498,6 +508,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param angle - Angle offset in radians (default: 0.0)
 		 * @param radius - Radius multiplier (default: 1.0)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/polar/sketch.js}
@@ -513,6 +524,7 @@ declare module '../../core/SynthSource' {
 		 * @param radius - Effect radius (default: 0.5)
 		 * @param centerX - Center X (default: 0.5)
 		 * @param centerY - Center Y (default: 0.5)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/twirl/sketch.js}
@@ -532,6 +544,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Swirl strength (default: 4.0)
 		 * @param centerX - Center X (default: 0.5)
 		 * @param centerY - Center Y (default: 0.5)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/swirl/sketch.js}
@@ -545,6 +558,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param mirrorX - Mirror X (0-1, default: 1.0)
 		 * @param mirrorY - Mirror Y (0-1, default: 1.0)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/mirror/sketch.js}
@@ -560,6 +574,7 @@ declare module '../../core/SynthSource' {
 		 * @param y - Y shear amount (default: 0.0)
 		 * @param centerX - Center X (default: 0.5)
 		 * @param centerY - Center Y (default: 0.5)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/shear/sketch.js}
@@ -579,6 +594,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Distortion amount (default: 0.5)
 		 * @param centerX - Center X (default: 0.5)
 		 * @param centerY - Center Y (default: 0.5)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/barrel/sketch.js}
@@ -593,6 +609,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Distortion amount (default: 0.5)
 		 * @param centerX - Center X (default: 0.5)
 		 * @param centerY - Center Y (default: 0.5)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/pinch/sketch.js}
@@ -607,6 +624,7 @@ declare module '../../core/SynthSource' {
 		 * @param amount - Distortion amount (default: 1.0)
 		 * @param centerX - Center X (default: 0.5)
 		 * @param centerY - Center Y (default: 0.5)
+		 * @category Coordinate transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/fisheye/sketch.js}

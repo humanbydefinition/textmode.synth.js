@@ -22,6 +22,34 @@ export interface SynthSourceCreateOptions {
  * generating procedural textmode visuals. Each method call adds a
  * transform to the chain, which is later compiled into a GLSL shader.
  *
+ * @category Synthesis Chains
+ *
+ * @categoryDescription Sources & Sampling
+ * Methods that begin a chain from procedural patterns, feedback, or a sampled source.
+ *
+ * @categoryDescription Coordinate transforms
+ * Methods that reshape the sampling coordinates before a source is evaluated.
+ *
+ * @categoryDescription Color transforms
+ * Methods that adjust, extract, or remap the colors produced by a source.
+ *
+ * @categoryDescription Combining sources
+ * Methods that blend, mask, or layer one synth source with another.
+ *
+ * @categoryDescription Coordinate modulation
+ * Methods that use one source to distort another source's coordinates.
+ *
+ * @categoryDescription Output Channels
+ * Methods that choose characters and route values to character and cell colors.
+ *
+ * @categoryDescription Chain utilities
+ * Methods for reusing or copying an existing synthesis chain.
+ *
+ * @categoryDescription Determinism
+ * Methods that make noise-based source chains reproducible.
+ *
+ * @showCategories
+ *
  * @example
  * ```javascript
  * const t = textmode.create({
@@ -37,7 +65,7 @@ export interface SynthSourceCreateOptions {
  *   .cellColor(osc(5, 0.1, 1.2).kaleid(4).invert())
  *   .charMap('@#%*+=-:. ');
  *
- * t.layers.base.synth(synth);
+ * t.synth(synth);
  *
  * t.windowResized(() => {
  *   t.resizeCanvas(window.innerWidth, window.innerHeight);
@@ -145,6 +173,8 @@ export class SynthSource {
 	 * @param chars A string of characters to map indices to
 	 * @returns The SynthSource for chaining
 	 *
+	 * @category Output Channels
+	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/charMap/sketch.js}
 	 *
@@ -192,6 +222,8 @@ export class SynthSource {
 	 *
 	 * @param source A SynthSource producing color values, or RGBA values
 	 * @returns The SynthSource for chaining
+	 *
+	 * @category Output Channels
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/charColor/sketch.js}
@@ -243,6 +275,8 @@ export class SynthSource {
 	 * @param source A synth source producing character indices
 	 * @returns The SynthSource for chaining
 	 *
+	 * @category Output Channels
+	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/char/sketch.js}
 	 *
@@ -258,6 +292,8 @@ export class SynthSource {
 	 *
 	 * @param source A SynthSource producing color values, or RGBA values
 	 * @returns The SynthSource for chaining
+	 *
+	 * @category Output Channels
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/cellColor/sketch.js}
@@ -312,6 +348,8 @@ export class SynthSource {
 	 * @param source A SynthSource producing color values
 	 * @returns The SynthSource for chaining
 	 *
+	 * @category Output Channels
+	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/paint/sketch.js}
 	 *
@@ -362,6 +400,8 @@ export class SynthSource {
 	 * without affecting the original.
 	 *
 	 * @returns A new SynthSource with the same transform chain
+	 *
+	 * @category Chain utilities
 	 *
 	 * @example
 	 * {@includeCode ../../examples/SynthSource/clone/sketch.js}

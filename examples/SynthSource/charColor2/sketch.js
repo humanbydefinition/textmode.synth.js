@@ -41,7 +41,7 @@ labelLayer.draw(() => {
 
 const paper = noise(3.0, 0.025).color(0.16, 0.055, 0.025).softlight(osc(4, 0.016), 0.22);
 
-t.layers.base.synth(
+t.synth(
 	noise(3.8, 0.025)
 		.modulateScale(osc(3, 0.01), 0.25, 0.95)
 		.charMap(glyphs)

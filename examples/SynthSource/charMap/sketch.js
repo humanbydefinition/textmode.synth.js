@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText('CharMap: Binary code screen "01 "', x, y++, 140, 255, 180);
 });
 
-t.layers.base.synth(noise(10, 0.15).color(0.2, 0.9, 0.4).cellColor(0.02, 0.05, 0.02).charMap('01 '));
+t.synth(noise(10, 0.15).color(0.2, 0.9, 0.4).cellColor(0.02, 0.05, 0.02).charMap('01 '));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

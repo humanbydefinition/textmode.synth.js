@@ -42,7 +42,7 @@ labelLayer.draw(() => {
 
 const ink = osc(6, 0.018, 1.6).rotate(turn, 0.002).color(0.9, 0.58, 1.0).modulateKaleid(noise(2.0, 0.014), 5);
 
-t.layers.base.synth(
+t.synth(
 	osc(10, 0.018, 1.1)
 		.kaleid(5)
 		.color(0.9, 0.5, 0.3)

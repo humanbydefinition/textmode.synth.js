@@ -25,11 +25,7 @@ import { TT_SRC, TT_COORD, TT_COLOR, TT_COMBINE, TT_COMBINE_COORD } from './cons
  * - `combineCoord`: Modulation that uses one source to affect another's coordinates
  */
 export type SynthTransformType =
-	| typeof TT_SRC
-	| typeof TT_COORD
-	| typeof TT_COLOR
-	| typeof TT_COMBINE
-	| typeof TT_COMBINE_COORD;
+	typeof TT_SRC | typeof TT_COORD | typeof TT_COLOR | typeof TT_COMBINE | typeof TT_COMBINE_COORD;
 
 /**
  * GLSL type for transform inputs.
@@ -58,6 +54,8 @@ export interface TransformInput {
  * - `SynthSource`: Nested synth chain for combine/modulate operations
  * - `null`: Use default value
  *
+ * @category Parameter Modulation
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/type-aliases/SynthParameterValue | SynthParameterValue API reference}
  */
 export type SynthParameterValue =
@@ -72,6 +70,8 @@ export type SynthParameterValue =
 /**
  * Context passed to dynamic parameter functions during rendering.
  *
+ * @category Parameter Modulation
+ *
  * @example
  * ```javascript
  * const t = textmode.create({
@@ -80,7 +80,7 @@ export type SynthParameterValue =
  *   plugins: [SynthPlugin]
  * });
  *
- * t.layers.base.synth(
+ * t.synth(
  *   noise((ctx) => 6 + Math.sin(ctx.time) * 4)
  *     .kaleid(5)
  * );
