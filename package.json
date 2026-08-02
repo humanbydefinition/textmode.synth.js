@@ -3,6 +3,18 @@
 	"version": "1.7.1",
 	"description": "Synth engine for textmode.js",
 	"type": "module",
+	"devEngines": {
+		"runtime": {
+			"name": "node",
+			"version": "^24.0.0",
+			"onFail": "error"
+		},
+		"packageManager": {
+			"name": "npm",
+			"version": "^11.0.0",
+			"onFail": "error"
+		}
+	},
 	"main": "./dist/textmode.synth.umd.js",
 	"module": "./dist/textmode.synth.esm.js",
 	"types": "./dist/types/index.d.ts",
@@ -63,7 +75,7 @@
 		"@textmode/tsconfig": "^0.2.0",
 		"@textmode/vite-config": "^0.1.0",
 		"@textmode/vitest-config": "^0.2.1",
-		"@types/node": "^26.1.1",
+		"@types/node": "^24.0.0",
 		"@vitest/ui": "^4.1.10",
 		"eslint": "^10.6.0",
 		"jsdom": "^30.0.0",
