@@ -1,12 +1,40 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { transformFactory } from '../../src/transforms/TransformFactory';
 import { transformRegistry } from '../../src/transforms/TransformRegistry';
-import type { SynthSourcePrototype } from '../../src/transforms/TransformFactory';
+import { SynthSource } from '../../src/core/SynthSource';
 import type { TransformDefinition } from '../../src/transforms/TransformDefinition';
 import type { SynthParameterValue } from '../../src/core/types';
 
+interface TransformInvocation {
+	name: string;
+	args: SynthParameterValue[];
+	type: 'transform' | 'combine';
+	source?: SynthSource;
+}
+
+class RecordingSynthSource extends SynthSource {
+	public lastInvocation?: TransformInvocation;
+
+	public override addTransform(name: string, userArgs: SynthParameterValue[]): this {
+		this.lastInvocation = { name, args: userArgs, type: 'transform' };
+		return this;
+	}
+
+	public override addCombineTransform(name: string, source: SynthSource, userArgs: SynthParameterValue[]): this {
+		this.lastInvocation = { name, source, args: userArgs, type: 'combine' };
+		return this;
+	}
+}
+
+type InjectedTransform = (...args: SynthParameterValue[]) => SynthSource;
+
+function callInjected(instance: RecordingSynthSource, name: string, ...args: SynthParameterValue[]): SynthSource {
+	const methods = instance as unknown as Record<string, InjectedTransform>;
+	return methods[name](...args);
+}
+
 describe('TransformFactory', () => {
-	let MockSynthSource: new () => SynthSourcePrototype;
+	let MockSynthSource: typeof RecordingSynthSource;
 
 	const mockTransform: TransformDefinition = {
 		name: 'mockEffect',
@@ -32,16 +60,7 @@ describe('TransformFactory', () => {
 	beforeEach(() => {
 		transformRegistry.clear();
 		// Create a fresh class for each test to avoid prototype pollution
-		MockSynthSource = class implements SynthSourcePrototype {
-			[key: string]: unknown;
-
-			addTransform(name: string, userArgs: SynthParameterValue[]): unknown {
-				return { name, args: userArgs, type: 'transform' };
-			}
-			addCombineTransform(name: string, source: unknown, userArgs: SynthParameterValue[]): unknown {
-				return { name, source, args: userArgs, type: 'combine' };
-			}
-		};
+		MockSynthSource = class extends RecordingSynthSource {};
 		transformFactory.setSynthSourceClass(MockSynthSource);
 	});
 
@@ -67,10 +86,10 @@ describe('TransformFactory', () => {
 
 			expect(prototype).toHaveProperty('mockEffect');
 			const instance = new MockSynthSource();
-			// @ts-expect-error - method is injected dynamically
-			const result = instance.mockEffect(0.8);
+			const result = callInjected(instance, 'mockEffect', 0.8);
 
-			expect(result).toEqual({
+			expect(result).toBe(instance);
+			expect(instance.lastInvocation).toEqual({
 				name: 'mockEffect',
 				args: [0.8],
 				type: 'transform',
@@ -86,10 +105,10 @@ describe('TransformFactory', () => {
 			expect(prototype).toHaveProperty('mockCombine');
 			const instance = new MockSynthSource();
 			const source = new MockSynthSource();
-			// @ts-expect-error - method is injected dynamically
-			const result = instance.mockCombine(source, 0.2);
+			const result = callInjected(instance, 'mockCombine', source, 0.2);
 
-			expect(result).toEqual({
+			expect(result).toBe(instance);
+			expect(instance.lastInvocation).toEqual({
 				name: 'mockCombine',
 				source: source,
 				args: [0.2],
@@ -103,10 +122,10 @@ describe('TransformFactory', () => {
 			transformFactory.injectMethods(prototype);
 
 			const instance = new MockSynthSource();
-			// @ts-expect-error - method is injected dynamically
-			const result = instance.mockEffect(); // No args provided
+			const result = callInjected(instance, 'mockEffect'); // No args provided
 
-			expect(result).toEqual({
+			expect(result).toBe(instance);
+			expect(instance.lastInvocation).toEqual({
 				name: 'mockEffect',
 				args: [0.5], // Default value
 				type: 'transform',
@@ -126,7 +145,8 @@ describe('TransformFactory', () => {
 
 			const result = functions.mockSrc(2.0);
 			// It should create a new instance and call addTransform
-			expect(result).toEqual({
+			expect(result).toBeInstanceOf(MockSynthSource);
+			expect((result as RecordingSynthSource).lastInvocation).toEqual({
 				name: 'mockSrc',
 				args: [2.0],
 				type: 'transform',
@@ -143,7 +163,7 @@ describe('TransformFactory', () => {
 
 		it('should throw if SynthSource class is not set', () => {
 			// Temporarily unset the class
-			(transformFactory as any)._synthSourceClass = null;
+			Reflect.set(transformFactory, '_synthSourceClass', null);
 
 			expect(() => transformFactory.generateStandaloneFunctions()).toThrow(
 				'[TransformFactory] SynthSource class not set'

@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { synthRender } from '../../src/lifecycle/synthRender';
 import { synthDispose } from '../../src/lifecycle/synthDispose';
-import type { TextmodeLayer } from 'textmode.js/layering';
+import type { TextmodeLayer } from 'textmode.js';
 import type { Textmodifier, TextmodeFramebuffer } from 'textmode.js';
 import type { LayerSynthState } from '../../src/core/types';
 import { SynthSource } from '../../src/core/SynthSource';

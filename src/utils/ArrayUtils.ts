@@ -10,6 +10,8 @@ import type { SynthContext } from '../core/types';
 /**
  * Easing functions from https://gist.github.com/gre/1650294
  *
+ * @category Parameter Modulation
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/variables/EASING_FUNCTIONS | EASING_FUNCTIONS API reference}
  */
 export const EASING_FUNCTIONS = {
@@ -36,6 +38,8 @@ export const EASING_FUNCTIONS = {
  * `'easeInCubic'`, `'easeOutCubic'`, `'easeInOutCubic'`, `'easeInQuart'`, `'easeOutQuart'`,
  * `'easeInOutQuart'`, `'easeInQuint'`, `'easeOutQuint'`, `'easeInOutQuint'`, `'sin'`
  *
+ * @category Parameter Modulation
+ *
  * @example
  * {@includeCode ../../examples/EasingFunction/easingFunction/sketch.js}
  *
@@ -49,6 +53,8 @@ export type EasingFunction = keyof typeof EASING_FUNCTIONS | ((t: number) => num
  * Arrays in textmode.synth.js behave like hydra - they cycle through values over time,
  * creating dynamic, time-varying parameters. This enables complex animations without
  * manually tracking time or state.
+ *
+ * @category Parameter Modulation
  *
  * @example
  * {@includeCode ../../examples/ModulatedArray/arrays/sketch.js}

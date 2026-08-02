@@ -24,28 +24,29 @@
 	"scripts": {
 		"dev": "vite --port 5176 --host",
 		"build:bundle": "vite build",
-		"build:types": "tsc",
+		"build:types": "textmode-types build",
 		"build": "npm run build:bundle && npm run build:types",
-		"check": "npm run check:format && npm run lint && npm run lint:md && npm run check:types && npm run check:docs && npm run test && npm run build",
+		"check": "textmode-project check",
 		"docs:links:add": "textmode-docs links add",
-		"check:api-docs": "textmode-docs api-check",
-		"check:docs": "textmode-docs check",
-		"dev:docs": "textmode-docs watch",
-		"build:docs": "textmode-docs build",
+		"docs:api:check": "textmode-docs api-check",
+		"docs:check": "textmode-docs check",
+		"docs:dev": "textmode-docs watch",
+		"docs:build": "textmode-docs build",
 		"preview": "vite preview",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"test:ui": "vitest --ui",
-		"test:coverage": "vitest --coverage",
 		"test:unit": "vitest run --project unit",
 		"test:integration": "vitest run --project integration",
-		"format": "prettier --write . --ignore-path node_modules/@textmode/tooling-scripts/src/prettierignore",
-		"check:format": "prettier --check . --ignore-path node_modules/@textmode/tooling-scripts/src/prettierignore",
-		"check:types": "tsc --noEmit",
-		"lint:md": "markdownlint-cli2 --config package.json --configPointer /markdownlint-cli2",
-		"lint:md:fix": "markdownlint-cli2 --config package.json --configPointer /markdownlint-cli2 --fix",
-		"lint": "eslint --config ./node_modules/@textmode/eslint-config/index.js src",
-		"prepare": "install-git-hooks"
+		"format": "prettier --write . --ignore-unknown",
+		"format:check": "prettier --check . --ignore-unknown",
+		"typecheck": "textmode-types check",
+		"types:verify": "textmode-types verify",
+		"lint:markdown": "markdownlint-cli2 --config package.json --configPointer /markdownlint-cli2",
+		"lint:markdown:fix": "markdownlint-cli2 --config package.json --configPointer /markdownlint-cli2 --fix",
+		"lint": "eslint src",
+		"prepare": "install-git-hooks",
+		"prepack": "textmode-project prepack",
+		"release": "semantic-release"
 	},
 	"peerDependencies": {
 		"textmode.js": ">=0.16.0"
@@ -53,15 +54,15 @@
 	"devDependencies": {
 		"@commitlint/cli": "^21.2.1",
 		"@textmode/commitlint-config": "^0.1.1",
-		"@textmode/docs": "^0.1.0",
+		"@textmode/docs": "^0.2.2",
 		"@textmode/eslint-config": "^0.2.0",
 		"@textmode/markdownlint-config": "^0.1.1",
 		"@textmode/prettier-config": "^0.1.0",
-		"@textmode/release-config": "^0.1.1",
-		"@textmode/tooling-scripts": "^0.4.0",
-		"@textmode/tsconfig": "^0.1.0",
+		"@textmode/release-config": "^0.1.2",
+		"@textmode/tooling-scripts": "^0.5.0",
+		"@textmode/tsconfig": "^0.2.0",
 		"@textmode/vite-config": "^0.1.0",
-		"@textmode/vitest-config": "^0.2.0",
+		"@textmode/vitest-config": "^0.2.1",
 		"@types/node": "^26.1.1",
 		"@vitest/ui": "^4.1.10",
 		"eslint": "^10.6.0",
@@ -94,13 +95,16 @@
 	"license": "AGPL-3.0",
 	"homepage": "https://code.textmode.art",
 	"lint-staged": {
-		"*": "prettier --ignore-unknown --ignore-path node_modules/@textmode/tooling-scripts/src/prettierignore --write"
+		"*": "prettier --ignore-unknown --write"
 	},
 	"prettier": "@textmode/prettier-config",
 	"commitlint": {
 		"extends": [
 			"@textmode/commitlint-config"
 		]
+	},
+	"release": {
+		"extends": "@textmode/release-config"
 	},
 	"repository": {
 		"type": "git",
