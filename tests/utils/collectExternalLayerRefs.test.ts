@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { collectExternalLayerRefs } from '../../src/utils/collectExternalLayerRefs';
 import { SynthSource } from '../../src/core/SynthSource';
 import type { ExternalLayerReference } from '../../src/core/types';
-import type { TextmodeLayer } from 'textmode.js/layering';
+import type { TextmodeLayer } from 'textmode.js';
 
 // Mock TextmodeLayer - just needs to be an object for reference equality
 const createMockLayer = (id: string): TextmodeLayer => {

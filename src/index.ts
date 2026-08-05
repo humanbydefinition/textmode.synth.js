@@ -1,9 +1,28 @@
 /**
+ * @packageDocumentation
  *
- * A derivative work of [hydra-synth](https://github.com/hydra-synth/hydra-synth) by [Olivia Jack](https://github.com/ojack),
- * adapted for the [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem, providing
- * a visual synthesis system for procedural generation of characters, colors,
- * and visual effects through method chaining.
+ * Create shader-backed, live-coded textmode scenes by composing generators and
+ * transforms into a {@link SynthSource} chain.
+ *
+ * ## Sketch workflow
+ *
+ * 1. Add {@link SynthPlugin} to the sketch's plugins.
+ * 2. Start a chain with a source generator such as {@link noise} or {@link osc}.
+ * 3. Shape it with coordinate, color, combination, and modulation transforms.
+ * 4. Route the result to character, foreground-color, and cell-color channels
+ *    with {@link char}, {@link charColor}, {@link cellColor}, and {@link paint}.
+ * 5. Apply the completed chain with `t.synth(source)`.
+ *
+ * Use {@link src} for feedback, layer, image, or video sampling. Parameters
+ * accept values, callbacks that receive {@link SynthContext}, or modulated
+ * arrays for time-based motion.
+ *
+ * ## Origins
+ *
+ * textmode.synth.js adapts the compositional approach of
+ * [hydra-synth](https://github.com/hydra-synth/hydra-synth) by
+ * [Olivia Jack](https://github.com/ojack) for the
+ * [textmode.js](https://github.com/humanbydefinition/textmode.js) ecosystem.
  *
  * @example
  * ```javascript
@@ -27,7 +46,25 @@
  * });
  * ```
  *
- * @packageDocumentation
+ * @categoryDescription Workflow
+ * The plugin that enables synthesis on textmode.js layers.
+ *
+ * @categoryDescription Synthesis Chains
+ * The chainable source object that records transforms for shader compilation.
+ *
+ * @categoryDescription Sources & Sampling
+ * Functions that start a chain from procedural patterns, feedback, layers, or media.
+ *
+ * @categoryDescription Output Channels
+ * Functions that route synthesized values to characters, foreground colors, and cell colors.
+ *
+ * @categoryDescription Parameter Modulation
+ * Values, callbacks, context, easing, and arrays for time-varying synth parameters.
+ *
+ * @categoryDescription Live-Coding Errors
+ * Hooks for reporting invalid or failed dynamic parameter evaluation without stopping rendering.
+ *
+ * @showCategories
  */
 
 // Initialize the synth system (runs on import)

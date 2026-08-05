@@ -54,6 +54,8 @@ export interface TransformInput {
  * - `SynthSource`: Nested synth chain for combine/modulate operations
  * - `null`: Use default value
  *
+ * @category Parameter Modulation
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/type-aliases/SynthParameterValue | SynthParameterValue API reference}
  */
 export type SynthParameterValue =
@@ -67,6 +69,8 @@ export type SynthParameterValue =
 
 /**
  * Context passed to dynamic parameter functions during rendering.
+ *
+ * @category Parameter Modulation
  *
  * @example
  * ```javascript

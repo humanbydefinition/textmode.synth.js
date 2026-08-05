@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { synthRender } from '../../src/lifecycle/synthRender';
 import { synthDispose } from '../../src/lifecycle/synthDispose';
-import type { TextmodeLayer } from 'textmode.js/layering';
+import type { TextmodeLayer } from 'textmode.js';
 import type { Textmodifier, TextmodeFramebuffer } from 'textmode.js';
 import type { LayerSynthState } from '../../src/core/types';
 import { SynthSource } from '../../src/core/SynthSource';
@@ -17,7 +17,7 @@ const createMockFramebuffer = (): TextmodeFramebuffer =>
 const createMockTextmodifier = () =>
 	({
 		createFramebuffer: vi.fn(() => createMockFramebuffer()),
-		createFilterShader: vi.fn(() => Promise.resolve({ dispose: vi.fn() })),
+		createMaterialShader: vi.fn(() => Promise.resolve({ dispose: vi.fn() })),
 		setUniform: vi.fn(),
 		clear: vi.fn(),
 		shader: vi.fn(),
@@ -171,7 +171,7 @@ describe('synthRender Lifecycle', () => {
 				dynamicUpdaters: new Map(),
 			} as any;
 
-			// Mock createFilterShader to return controllable promises
+			// Mock createMaterialShader to return controllable promises
 			let resolveShader1: (v: any) => void;
 			const shaderPromise1 = new Promise((resolve) => {
 				resolveShader1 = resolve;
@@ -183,7 +183,7 @@ describe('synthRender Lifecycle', () => {
 			});
 
 			let callCount = 0;
-			vi.mocked(textmodifier.createFilterShader).mockImplementation(() => {
+			vi.mocked(textmodifier.createMaterialShader).mockImplementation(() => {
 				callCount++;
 				if (callCount === 1) return shaderPromise1 as any;
 				return shaderPromise2 as any;
@@ -211,14 +211,14 @@ describe('synthRender Lifecycle', () => {
 
 			// Assertions for the BUG state:
 			// 1. initialShader disposed twice (once per call)
-			// 2. createFilterShader called twice
+			// 2. createMaterialShader called twice
 			// 3. state.shader is shader2 (last one wins)
 			// 4. shader1 is NOT disposed (LEAK!)
 
 			// We assert that the FIX prevents this.
 			// Ideally:
 			// 1. initialShader disposed ONCE (after new shader is ready)
-			// 2. createFilterShader called ONCE (second call skipped or queued)
+			// 2. createMaterialShader called ONCE (second call skipped or queued)
 			// OR if called twice, the intermediate one must be disposed.
 
 			// Check for double free of initial shader
@@ -248,8 +248,8 @@ describe('synthRender Lifecycle', () => {
 				resolveShader = resolve;
 			});
 
-			// Mock createFilterShader to hang
-			vi.mocked(textmodifier.createFilterShader).mockReturnValue(shaderPromise as any);
+			// Mock createMaterialShader to hang
+			vi.mocked(textmodifier.createMaterialShader).mockReturnValue(shaderPromise as any);
 
 			// Act 1: Start rendering (triggers compilation)
 			const renderPromise = synthRender(layer, textmodifier);

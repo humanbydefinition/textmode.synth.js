@@ -85,8 +85,8 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 		}
 
 		try {
-			// Use createFilterShader - leverages the instanced vertex shader
-			const newShader = await textmodifier.createFilterShader(compilingTarget.fragmentSource);
+			// Use createMaterialShader - leverages the instanced vertex shader
+			const newShader = await textmodifier.createMaterialShader(compilingTarget.fragmentSource);
 
 			// Check if layer was disposed while compiling
 			if (state.isDisposed) {

@@ -2,8 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { SynthPlugin } from '../../src/plugin/SynthPlugin';
 import { PLUGIN_NAME } from '../../src/plugin/constants';
 import { shaderManager } from '../../src/lifecycle/ShaderManager';
-import type { TextmodeLayer } from 'textmode.js/layering';
-import type { TextmodePluginAPI } from 'textmode.js/plugins';
+import type { TextmodeLayer, TextmodePluginContext } from 'textmode.js';
 import type { LayerSynthState } from '../../src/core/types';
 
 // Mocks
@@ -12,14 +11,14 @@ const createMockLayer = (id: string) => {
 	return {
 		id,
 		getPluginState: vi.fn(() => state),
-		setPluginState: vi.fn((name, s) => {
+		setPluginState: vi.fn((_name, s) => {
 			state = s;
 		}),
 	} as unknown as TextmodeLayer;
 };
 
 describe('SynthPlugin', () => {
-	let api: TextmodePluginAPI;
+	let api: TextmodePluginContext;
 	let layer: TextmodeLayer;
 	let textmodifier: any;
 
@@ -37,11 +36,11 @@ describe('SynthPlugin', () => {
 				base: layer,
 				all: [],
 			},
-		} as unknown as TextmodePluginAPI;
+		} as unknown as TextmodePluginContext;
 
 		textmodifier = {
 			bpm: undefined,
-			createFilterShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
+			createMaterialShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
 		};
 	});
 
@@ -96,7 +95,7 @@ describe('SynthPlugin', () => {
 	it('should dispose global copy shader on uninstall', async () => {
 		// Mock shader
 		const mockShader = { dispose: vi.fn() };
-		textmodifier.createFilterShader = vi.fn().mockResolvedValue(mockShader);
+		textmodifier.createMaterialShader = vi.fn().mockResolvedValue(mockShader);
 
 		// Mock hook to execute immediately
 		const hook = vi.fn((cb) => cb());

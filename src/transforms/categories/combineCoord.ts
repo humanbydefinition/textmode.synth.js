@@ -185,6 +185,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Modulation source
 		 * @param amount - Modulation amount (default: 0.1)
+		 * @category Coordinate modulation
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulate/sketch.js}
@@ -199,6 +200,7 @@ declare module '../../core/SynthSource' {
 		 * @param source - Modulation source
 		 * @param multiple - Scale multiplier (default: 1.0)
 		 * @param offset - Offset amount (default: 1.0)
+		 * @category Coordinate modulation
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateScale/sketch.js}
@@ -217,6 +219,7 @@ declare module '../../core/SynthSource' {
 		 * @param source - Modulation source
 		 * @param multiple - Rotation multiplier (default: 1.0)
 		 * @param offset - Offset amount (default: 0.0)
+		 * @category Coordinate modulation
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateRotate/sketch.js}
@@ -235,6 +238,7 @@ declare module '../../core/SynthSource' {
 		 * @param source - Modulation source
 		 * @param multiple - Pixelation multiplier (default: 10.0)
 		 * @param offset - Offset amount (default: 3.0)
+		 * @category Coordinate modulation
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulatePixelate/sketch.js}
@@ -252,6 +256,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Modulation source
 		 * @param nSides - Number of sides (default: 4.0)
+		 * @category Coordinate modulation
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateKaleid/sketch.js}
@@ -266,6 +271,7 @@ declare module '../../core/SynthSource' {
 		 * @param source - Modulation source
 		 * @param scrollX - X scroll amount (default: 0.5)
 		 * @param speed - Scroll speed (default: 0.0)
+		 * @category Coordinate modulation
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateScrollX/sketch.js}
@@ -284,6 +290,7 @@ declare module '../../core/SynthSource' {
 		 * @param source - Modulation source
 		 * @param scrollY - Y scroll amount (default: 0.5)
 		 * @param speed - Scroll speed (default: 0.0)
+		 * @category Coordinate modulation
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateScrollY/sketch.js}
@@ -304,6 +311,7 @@ declare module '../../core/SynthSource' {
 		 * @param repeatY - Y repetitions (default: 3.0)
 		 * @param offsetX - X offset (default: 0.5)
 		 * @param offsetY - Y offset (default: 0.5)
+		 * @category Coordinate modulation
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateRepeat/sketch.js}
@@ -324,6 +332,7 @@ declare module '../../core/SynthSource' {
 		 * @param source - Modulation source
 		 * @param reps - Number of repetitions (default: 3.0)
 		 * @param offset - Offset amount (default: 0.5)
+		 * @category Coordinate modulation
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateRepeatX/sketch.js}
@@ -342,6 +351,7 @@ declare module '../../core/SynthSource' {
 		 * @param source - Modulation source
 		 * @param reps - Number of repetitions (default: 3.0)
 		 * @param offset - Offset amount (default: 0.5)
+		 * @category Coordinate modulation
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateRepeatY/sketch.js}
@@ -359,6 +369,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param source - Modulation source
 		 * @param amount - Modulation amount (default: 1.0)
+		 * @category Coordinate modulation
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/modulateHue/sketch.js}

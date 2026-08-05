@@ -268,6 +268,7 @@ declare module '../../core/SynthSource' {
 		 * Adjust brightness.
 		 *
 		 * @param amount - Brightness adjustment amount (default: 0.4)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/brightness/sketch.js}
@@ -280,6 +281,7 @@ declare module '../../core/SynthSource' {
 		 * Adjust contrast.
 		 *
 		 * @param amount - Contrast amount (default: 1.6)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/contrast/sketch.js}
@@ -292,6 +294,7 @@ declare module '../../core/SynthSource' {
 		 * Invert colors.
 		 *
 		 * @param amount - Inversion amount (default: 1.0)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/invert/sketch.js}
@@ -304,6 +307,7 @@ declare module '../../core/SynthSource' {
 		 * Adjust color saturation.
 		 *
 		 * @param amount - Saturation amount (default: 2.0)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/saturate/sketch.js}
@@ -316,6 +320,7 @@ declare module '../../core/SynthSource' {
 		 * Shift hue.
 		 *
 		 * @param hue - Hue shift amount (default: 0.4)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/hue/sketch.js}
@@ -328,6 +333,7 @@ declare module '../../core/SynthSource' {
 		 * Apply colorama effect (hue rotation based on luminance).
 		 *
 		 * @param amount - Effect amount (default: 0.005)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/colorama/sketch.js}
@@ -341,6 +347,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param bins - Number of color bins (default: 3.0)
 		 * @param gamma - Gamma correction (default: 0.6)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/posterize/sketch.js}
@@ -354,6 +361,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param threshold - Threshold value (default: 0.5)
 		 * @param tolerance - Tolerance range (default: 0.1)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/luma/sketch.js}
@@ -367,6 +375,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param threshold - Threshold value (default: 0.5)
 		 * @param tolerance - Tolerance range (default: 0.04)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/thresh/sketch.js}
@@ -379,6 +388,7 @@ declare module '../../core/SynthSource' {
 		 * Multiply all channels by a scalar value (grayscale).
 		 *
 		 * @param gray - Scalar multiplier
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/color/sketch.js}
@@ -396,6 +406,7 @@ declare module '../../core/SynthSource' {
 		 * @param g - Green channel multiplier (default: 1.0)
 		 * @param b - Blue channel multiplier (default: 1.0)
 		 * @param a - Alpha channel multiplier (default: 1.0)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/color2/sketch.js}
@@ -409,6 +420,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param scale - Scale multiplier (default: 1.0)
 		 * @param offset - Offset amount (default: 0.0)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/r/sketch.js}
@@ -422,6 +434,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param scale - Scale multiplier (default: 1.0)
 		 * @param offset - Offset amount (default: 0.0)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/g/sketch.js}
@@ -435,6 +448,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param scale - Scale multiplier (default: 1.0)
 		 * @param offset - Offset amount (default: 0.0)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/b/sketch.js}
@@ -450,6 +464,7 @@ declare module '../../core/SynthSource' {
 		 * @param g - Green channel shift (default: 0.0)
 		 * @param b - Blue channel shift (default: 0.0)
 		 * @param a - Alpha channel shift (default: 0.0)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/shift/sketch.js}
@@ -462,6 +477,7 @@ declare module '../../core/SynthSource' {
 		 * Apply gamma correction for nonlinear brightness control.
 		 *
 		 * @param amount - Gamma value (default: 1.0, < 1.0 brightens, > 1.0 darkens)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/gamma/sketch.js}
@@ -478,6 +494,7 @@ declare module '../../core/SynthSource' {
 		 * @param outMin - Output minimum (default: 0.0)
 		 * @param outMax - Output maximum (default: 1.0)
 		 * @param gamma - Gamma correction (default: 1.0)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/levels/sketch.js}
@@ -497,6 +514,7 @@ declare module '../../core/SynthSource' {
 		 *
 		 * @param min - Minimum value (default: 0.0)
 		 * @param max - Maximum value (default: 1.0)
+		 * @category Color transforms
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/clamp/sketch.js}
@@ -512,6 +530,8 @@ declare module '../../core/SynthSource' {
 		 * reproducible patterns. Different seeds produce different patterns.
 		 *
 		 * @param value - Seed value (any number)
+		 *
+		 * @category Determinism
 		 *
 		 * @example
 		 * {@includeCode ../../../examples/SynthSource/seed/sketch.js}

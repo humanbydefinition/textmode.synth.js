@@ -25,6 +25,8 @@ import { TextmodeSource } from 'textmode.js';
  * @example
  * {@includeCode ../../examples/Composition/cellColor/cellColor/sketch.js}
  *
+ * @category Output Channels
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/cellColor | cellColor API reference}
  */
 export function cellColor(source: SynthSource): SynthSource;
@@ -40,13 +42,15 @@ export function cellColor(source: SynthSource): SynthSource;
  * @example
  * {@includeCode ../../examples/Composition/cellColor/cellColor2/sketch.js}
  *
+ * @category Output Channels
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/cellColor | cellColor API reference}
  */
 export function cellColor(
-    r: SynthParameterValue,
-    g?: SynthParameterValue,
-    b?: SynthParameterValue,
-    a?: SynthParameterValue
+	r: SynthParameterValue,
+	g?: SynthParameterValue,
+	b?: SynthParameterValue,
+	a?: SynthParameterValue
 ): SynthSource;
 
 /**
@@ -57,17 +61,19 @@ export function cellColor(
  * @example
  * {@includeCode ../../examples/Composition/cellColor/cellColor3/sketch.js}
  *
+ * @category Output Channels
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/cellColor | cellColor API reference}
  */
 export function cellColor(gray: SynthParameterValue): SynthSource;
 
 export function cellColor(
-    rOrSource: SynthParameterValue,
-    g?: SynthParameterValue,
-    b?: SynthParameterValue,
-    a?: SynthParameterValue
+	rOrSource: SynthParameterValue,
+	g?: SynthParameterValue,
+	b?: SynthParameterValue,
+	a?: SynthParameterValue
 ): SynthSource {
-    return new SynthSource({ cellColorSource: resolveSource(rOrSource, g, b, a) });
+	return new SynthSource({ cellColorSource: resolveSource(rOrSource, g, b, a) });
 }
 
 /**
@@ -82,10 +88,12 @@ export function cellColor(
  * @example
  * {@includeCode ../../examples/Composition/char/char/sketch.js}
  *
+ * @category Output Channels
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/char | char API reference}
  */
 export const char = (source: SynthSource): SynthSource => {
-    return new SynthSource({ charSource: source });
+	return new SynthSource({ charSource: source });
 };
 
 /**
@@ -103,6 +111,8 @@ export const char = (source: SynthSource): SynthSource => {
  * @example
  * {@includeCode ../../examples/Composition/charColor/charColor/sketch.js}
  *
+ * @category Output Channels
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/charColor | charColor API reference}
  */
 export function charColor(source: SynthSource): SynthSource;
@@ -118,13 +128,15 @@ export function charColor(source: SynthSource): SynthSource;
  * @example
  * {@includeCode ../../examples/Composition/charColor/charColor2/sketch.js}
  *
+ * @category Output Channels
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/charColor | charColor API reference}
  */
 export function charColor(
-    r: SynthParameterValue,
-    g?: SynthParameterValue,
-    b?: SynthParameterValue,
-    a?: SynthParameterValue
+	r: SynthParameterValue,
+	g?: SynthParameterValue,
+	b?: SynthParameterValue,
+	a?: SynthParameterValue
 ): SynthSource;
 
 /**
@@ -135,17 +147,19 @@ export function charColor(
  * @example
  * {@includeCode ../../examples/Composition/charColor/charColor3/sketch.js}
  *
+ * @category Output Channels
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/charColor | charColor API reference}
  */
 export function charColor(gray: SynthParameterValue): SynthSource;
 
 export function charColor(
-    rOrSource: SynthParameterValue,
-    g?: SynthParameterValue,
-    b?: SynthParameterValue,
-    a?: SynthParameterValue
+	rOrSource: SynthParameterValue,
+	g?: SynthParameterValue,
+	b?: SynthParameterValue,
+	a?: SynthParameterValue
 ): SynthSource {
-    return new SynthSource({ charColorSource: resolveSource(rOrSource, g, b, a) });
+	return new SynthSource({ charColorSource: resolveSource(rOrSource, g, b, a) });
 }
 
 /**
@@ -156,12 +170,12 @@ export function charColor(
  * @example
  * {@includeCode ../../examples/SynthSource/gradient/sketch.js}
  *
+ * @category Sources & Sampling
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/gradient | gradient API reference}
  */
-export function gradient(
-    speed?: number | number[] | ((ctx: SynthContext) => number)
-): SynthSource {
-    return generatedFunctions['gradient'](speed ?? null);
+export function gradient(speed?: number | number[] | ((ctx: SynthContext) => number)): SynthSource {
+	return generatedFunctions['gradient'](speed ?? null);
 }
 
 /**
@@ -173,13 +187,15 @@ export function gradient(
  * @example
  * {@includeCode ../../examples/SynthSource/noise/sketch.js}
  *
+ * @category Sources & Sampling
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/noise | noise API reference}
  */
 export function noise(
-    scale?: number | number[] | ((ctx: SynthContext) => number),
-    offset?: number | number[] | ((ctx: SynthContext) => number)
+	scale?: number | number[] | ((ctx: SynthContext) => number),
+	offset?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return generatedFunctions['noise'](scale ?? null, offset ?? null);
+	return generatedFunctions['noise'](scale ?? null, offset ?? null);
 }
 
 /**
@@ -193,20 +209,17 @@ export function noise(
  * @example
  * {@includeCode ../../examples/SynthSource/plasma/sketch.js}
  *
+ * @category Sources & Sampling
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/plasma | plasma API reference}
  */
 export function plasma(
-    scale?: number | number[] | ((ctx: SynthContext) => number),
-    speed?: number | number[] | ((ctx: SynthContext) => number),
-    phase?: number | number[] | ((ctx: SynthContext) => number),
-    contrast?: number | number[] | ((ctx: SynthContext) => number)
+	scale?: number | number[] | ((ctx: SynthContext) => number),
+	speed?: number | number[] | ((ctx: SynthContext) => number),
+	phase?: number | number[] | ((ctx: SynthContext) => number),
+	contrast?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return generatedFunctions['plasma'](
-        scale ?? null,
-        speed ?? null,
-        phase ?? null,
-        contrast ?? null
-    );
+	return generatedFunctions['plasma'](scale ?? null, speed ?? null, phase ?? null, contrast ?? null);
 }
 
 /**
@@ -222,24 +235,26 @@ export function plasma(
  * @example
  * {@includeCode ../../examples/SynthSource/moire/sketch.js}
  *
+ * @category Sources & Sampling
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/moire | moire API reference}
  */
 export function moire(
-    freqA?: number | number[] | ((ctx: SynthContext) => number),
-    freqB?: number | number[] | ((ctx: SynthContext) => number),
-    angleA?: number | number[] | ((ctx: SynthContext) => number),
-    angleB?: number | number[] | ((ctx: SynthContext) => number),
-    speed?: number | number[] | ((ctx: SynthContext) => number),
-    phase?: number | number[] | ((ctx: SynthContext) => number)
+	freqA?: number | number[] | ((ctx: SynthContext) => number),
+	freqB?: number | number[] | ((ctx: SynthContext) => number),
+	angleA?: number | number[] | ((ctx: SynthContext) => number),
+	angleB?: number | number[] | ((ctx: SynthContext) => number),
+	speed?: number | number[] | ((ctx: SynthContext) => number),
+	phase?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return generatedFunctions['moire'](
-        freqA ?? null,
-        freqB ?? null,
-        angleA ?? null,
-        angleB ?? null,
-        speed ?? null,
-        phase ?? null
-    );
+	return generatedFunctions['moire'](
+		freqA ?? null,
+		freqB ?? null,
+		angleA ?? null,
+		angleB ?? null,
+		speed ?? null,
+		phase ?? null
+	);
 }
 
 /**
@@ -252,14 +267,16 @@ export function moire(
  * @example
  * {@includeCode ../../examples/SynthSource/osc/sketch.js}
  *
+ * @category Sources & Sampling
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/osc | osc API reference}
  */
 export function osc(
-    frequency?: number | number[] | ((ctx: SynthContext) => number),
-    sync?: number | number[] | ((ctx: SynthContext) => number),
-    offset?: number | number[] | ((ctx: SynthContext) => number)
+	frequency?: number | number[] | ((ctx: SynthContext) => number),
+	sync?: number | number[] | ((ctx: SynthContext) => number),
+	offset?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return generatedFunctions['osc'](frequency ?? null, sync ?? null, offset ?? null);
+	return generatedFunctions['osc'](frequency ?? null, sync ?? null, offset ?? null);
 }
 
 /**
@@ -276,6 +293,8 @@ export function osc(
  * @example
  * {@includeCode ../../examples/Composition/paint/paint/sketch.js}
  *
+ * @category Output Channels
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/paint | paint API reference}
  */
 export function paint(source: SynthSource): SynthSource;
@@ -291,13 +310,15 @@ export function paint(source: SynthSource): SynthSource;
  * @example
  * {@includeCode ../../examples/Composition/paint/paint2/sketch.js}
  *
+ * @category Output Channels
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/paint | paint API reference}
  */
 export function paint(
-    r: SynthParameterValue,
-    g?: SynthParameterValue,
-    b?: SynthParameterValue,
-    a?: SynthParameterValue
+	r: SynthParameterValue,
+	g?: SynthParameterValue,
+	b?: SynthParameterValue,
+	a?: SynthParameterValue
 ): SynthSource;
 
 /**
@@ -308,21 +329,23 @@ export function paint(
  * @example
  * {@includeCode ../../examples/Composition/paint/paint3/sketch.js}
  *
+ * @category Output Channels
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/paint | paint API reference}
  */
 export function paint(gray: SynthParameterValue): SynthSource;
 
 export function paint(
-    rOrSource: SynthParameterValue,
-    g?: SynthParameterValue,
-    b?: SynthParameterValue,
-    a?: SynthParameterValue
+	rOrSource: SynthParameterValue,
+	g?: SynthParameterValue,
+	b?: SynthParameterValue,
+	a?: SynthParameterValue
 ): SynthSource {
-    const source = resolveSource(rOrSource, g, b, a);
-    return new SynthSource({
-        charColorSource: source,
-        cellColorSource: source,
-    });
+	const source = resolveSource(rOrSource, g, b, a);
+	return new SynthSource({
+		charColorSource: source,
+		cellColorSource: source,
+	});
 }
 
 /**
@@ -335,14 +358,16 @@ export function paint(
  * @example
  * {@includeCode ../../examples/SynthSource/shape/sketch.js}
  *
+ * @category Sources & Sampling
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/shape | shape API reference}
  */
 export function shape(
-    sides?: number | number[] | ((ctx: SynthContext) => number),
-    radius?: number | number[] | ((ctx: SynthContext) => number),
-    smoothing?: number | number[] | ((ctx: SynthContext) => number)
+	sides?: number | number[] | ((ctx: SynthContext) => number),
+	radius?: number | number[] | ((ctx: SynthContext) => number),
+	smoothing?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return generatedFunctions['shape'](sides ?? null, radius ?? null, smoothing ?? null);
+	return generatedFunctions['shape'](sides ?? null, radius ?? null, smoothing ?? null);
 }
 
 /**
@@ -352,6 +377,8 @@ export function shape(
  *
  * @example
  * {@includeCode ../../examples/SynthSource/solid/sketch.js}
+ *
+ * @category Sources & Sampling
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/solid | solid API reference}
  */
@@ -368,28 +395,30 @@ export function solid(gray: SynthParameterValue): SynthSource;
  * @example
  * {@includeCode ../../examples/SynthSource/solid2/sketch.js}
  *
+ * @category Sources & Sampling
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/solid | solid API reference}
  */
 export function solid(
-    r?: SynthParameterValue,
-    g?: SynthParameterValue,
-    b?: SynthParameterValue,
-    a?: SynthParameterValue
+	r?: SynthParameterValue,
+	g?: SynthParameterValue,
+	b?: SynthParameterValue,
+	a?: SynthParameterValue
 ): SynthSource;
 
 export function solid(
-    r?: SynthParameterValue,
-    g?: SynthParameterValue,
-    b?: SynthParameterValue,
-    a?: SynthParameterValue
+	r?: SynthParameterValue,
+	g?: SynthParameterValue,
+	b?: SynthParameterValue,
+	a?: SynthParameterValue
 ): SynthSource {
-    // Handle overload for solid(gray)
-    // If only first argument is provided and it's a number, pass it as single argument
-    // so the underlying factory can replicate it to RGB.
-    if (r !== undefined && g === undefined && b === undefined && a === undefined && typeof r === 'number') {
-        return generatedFunctions['solid'](r);
-    }
-    return generatedFunctions['solid'](r ?? null, g ?? null, b ?? null, a ?? null);
+	// Handle overload for solid(gray)
+	// If only first argument is provided and it's a number, pass it as single argument
+	// so the underlying factory can replicate it to RGB.
+	if (r !== undefined && g === undefined && b === undefined && a === undefined && typeof r === 'number') {
+		return generatedFunctions['solid'](r);
+	}
+	return generatedFunctions['solid'](r ?? null, g ?? null, b ?? null, a ?? null);
 }
 
 /**
@@ -422,53 +451,51 @@ export function solid(
  * @example
  * {@includeCode ../../examples/SynthSource/src/sketch.js}
  *
+ * @category Sources & Sampling
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/src | src API reference}
  */
 export const src = (
-    source?:
-        | TextmodeLayer
-        | TextmodeSource
-        | (() => TextmodeSource | TextmodeLayer | undefined)
+	source?: TextmodeLayer | TextmodeSource | (() => TextmodeSource | TextmodeLayer | undefined)
 ): SynthSource => {
-    // Get the base src function for self-feedback
-    const baseSrc = generatedFunctions['src'];
+	// Get the base src function for self-feedback
+	const baseSrc = generatedFunctions['src'];
 
-    if (!source) {
-        // No source provided - use self-feedback (context-aware)
-        return baseSrc();
-    }
+	if (!source) {
+		// No source provided - use self-feedback (context-aware)
+		return baseSrc();
+	}
 
-    const synthSource = new SynthSource();
+	const synthSource = new SynthSource();
 
-    // Handle lazy function
-    if (typeof source === 'function') {
-        const probeResult = source();
-        if (probeResult && isTextmodeLayerObject(probeResult)) {
-            const layerId =
-                probeResult.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-            synthSource.addExternalLayerRef({ layerId, layer: source as () => TextmodeLayer | undefined });
-        } else {
-            const sourceId = `tms_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-            synthSource.addTextmodeSourceRef({
-                sourceId,
-                source: source as () => UpdatableTextmodeSource | undefined,
-            });
-        }
-    } else if (isTextmodeSourceObject(source)) {
-        // Check if it's a TextmodeSource (image/video) using duck-typing
-        const sourceId = `tms_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-        synthSource.addTextmodeSourceRef({
-            sourceId,
-            source: source as UpdatableTextmodeSource,
-        });
-    } else {
-        // Layer provided - create external layer reference
-        const layer = source as TextmodeLayer;
-        const layerId = layer.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
-        synthSource.addExternalLayerRef({ layerId, layer });
-    }
+	// Handle lazy function
+	if (typeof source === 'function') {
+		const probeResult = source();
+		if (probeResult && isTextmodeLayerObject(probeResult)) {
+			const layerId = probeResult.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+			synthSource.addExternalLayerRef({ layerId, layer: source as () => TextmodeLayer | undefined });
+		} else {
+			const sourceId = `tms_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+			synthSource.addTextmodeSourceRef({
+				sourceId,
+				source: source as () => UpdatableTextmodeSource | undefined,
+			});
+		}
+	} else if (isTextmodeSourceObject(source)) {
+		// Check if it's a TextmodeSource (image/video) using duck-typing
+		const sourceId = `tms_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+		synthSource.addTextmodeSourceRef({
+			sourceId,
+			source: source as UpdatableTextmodeSource,
+		});
+	} else {
+		// Layer provided - create external layer reference
+		const layer = source as TextmodeLayer;
+		const layerId = layer.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+		synthSource.addExternalLayerRef({ layerId, layer });
+	}
 
-    return synthSource;
+	return synthSource;
 };
 
 /**
@@ -476,13 +503,13 @@ export const src = (
  * Uses duck-typing to detect TextmodeImage and TextmodeVideo instances.
  */
 function isTextmodeSourceObject(source: unknown): source is TextmodeSource {
-    return (
-        source !== null &&
-        typeof source === 'object' &&
-        'texture' in source &&
-        'originalWidth' in source &&
-        'originalHeight' in source
-    );
+	return (
+		source !== null &&
+		typeof source === 'object' &&
+		'texture' in source &&
+		'originalWidth' in source &&
+		'originalHeight' in source
+	);
 }
 
 /**
@@ -490,12 +517,7 @@ function isTextmodeSourceObject(source: unknown): source is TextmodeSource {
  * Uses duck-typing to detect TextmodeLayer instances.
  */
 function isTextmodeLayerObject(source: unknown): source is TextmodeLayer {
-    return (
-        source !== null &&
-        typeof source === 'object' &&
-        'grid' in source &&
-        'drawFramebuffer' in source
-    );
+	return source !== null && typeof source === 'object' && 'grid' in source && 'drawFramebuffer' in source;
 }
 
 /**
@@ -508,14 +530,16 @@ function isTextmodeLayerObject(source: unknown): source is TextmodeLayer {
  * @example
  * {@includeCode ../../examples/SynthSource/voronoi/sketch.js}
  *
+ * @category Sources & Sampling
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/voronoi | voronoi API reference}
  */
 export function voronoi(
-    scale?: number | number[] | ((ctx: SynthContext) => number),
-    speed?: number | number[] | ((ctx: SynthContext) => number),
-    blending?: number | number[] | ((ctx: SynthContext) => number)
+	scale?: number | number[] | ((ctx: SynthContext) => number),
+	speed?: number | number[] | ((ctx: SynthContext) => number),
+	blending?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-    return generatedFunctions['voronoi'](scale ?? null, speed ?? null, blending ?? null);
+	return generatedFunctions['voronoi'](scale ?? null, speed ?? null, blending ?? null);
 }
 
 /**
@@ -523,13 +547,13 @@ export function voronoi(
  * Used by charColor, cellColor, and paint.
  */
 function resolveSource(
-    rOrSource: SynthParameterValue,
-    g?: SynthParameterValue,
-    b?: SynthParameterValue,
-    a?: SynthParameterValue
+	rOrSource: SynthParameterValue,
+	g?: SynthParameterValue,
+	b?: SynthParameterValue,
+	a?: SynthParameterValue
 ): SynthSource {
-    if (rOrSource instanceof SynthSource) {
-        return rOrSource;
-    }
-    return solid(rOrSource, g, b, a);
+	if (rOrSource instanceof SynthSource) {
+		return rOrSource;
+	}
+	return solid(rOrSource, g, b, a);
 }
