@@ -17,7 +17,7 @@ const createMockFramebuffer = (): TextmodeFramebuffer =>
 const createMockTextmodifier = () =>
 	({
 		createFramebuffer: vi.fn(() => createMockFramebuffer()),
-		createFilterShader: vi.fn(() => Promise.resolve({ dispose: vi.fn(), id: 'shader_default' })),
+		createMaterialShader: vi.fn(() => Promise.resolve({ dispose: vi.fn(), id: 'shader_default' })),
 		setUniform: vi.fn(),
 		clear: vi.fn(),
 		shader: vi.fn(),
@@ -86,7 +86,7 @@ describe('synthRender Feedback Optimization', () => {
 		state.pingPongDimensions = { cols: 10, rows: 10 };
 
 		// Initialize copy shader manager
-		vi.mocked(textmodifier.createFilterShader).mockResolvedValueOnce(copyShader as any);
+		vi.mocked(textmodifier.createMaterialShader).mockResolvedValueOnce(copyShader as any);
 		await shaderManager.initialize(textmodifier);
 
 		// Act: Render
@@ -132,7 +132,7 @@ describe('synthRender Feedback Optimization', () => {
 	it('should compile copy shader only once via manager', async () => {
 		// Arrange
 		const copyShader = { id: 'copy_shader', dispose: vi.fn() };
-		vi.mocked(textmodifier.createFilterShader).mockResolvedValue(copyShader as any);
+		vi.mocked(textmodifier.createMaterialShader).mockResolvedValue(copyShader as any);
 
 		// Act: Initialize multiple times
 		await shaderManager.initialize(textmodifier);
@@ -140,7 +140,7 @@ describe('synthRender Feedback Optimization', () => {
 		await shaderManager.initialize(textmodifier);
 
 		// Assert: Only compiled once
-		expect(textmodifier.createFilterShader).toHaveBeenCalledTimes(1);
+		expect(textmodifier.createMaterialShader).toHaveBeenCalledTimes(1);
 		expect(shaderManager.isReady()).toBe(true);
 		expect(shaderManager.getShader()).toBe(copyShader);
 	});
@@ -148,7 +148,7 @@ describe('synthRender Feedback Optimization', () => {
 	it('should properly dispose and reset the manager', async () => {
 		// Arrange
 		const copyShader = { id: 'copy_shader', dispose: vi.fn() };
-		vi.mocked(textmodifier.createFilterShader).mockResolvedValue(copyShader as any);
+		vi.mocked(textmodifier.createMaterialShader).mockResolvedValue(copyShader as any);
 
 		await shaderManager.initialize(textmodifier);
 		expect(shaderManager.isReady()).toBe(true);
@@ -164,7 +164,7 @@ describe('synthRender Feedback Optimization', () => {
 		// Act: Reset and reinitialize
 		shaderManager.reset();
 		const newCopyShader = { id: 'new_copy_shader', dispose: vi.fn() };
-		vi.mocked(textmodifier.createFilterShader).mockResolvedValue(newCopyShader as any);
+		vi.mocked(textmodifier.createMaterialShader).mockResolvedValue(newCopyShader as any);
 		await shaderManager.initialize(textmodifier);
 
 		// Assert: New shader created

@@ -60,7 +60,7 @@ class ShaderManager {
 		this._isCompiling = true;
 
 		try {
-			this._shader = await textmodifier.createFilterShader(COPY_SHADER_SOURCE);
+			this._shader = await textmodifier.createMaterialShader(COPY_SHADER_SOURCE);
 		} catch (err) {
 			console.warn('[textmode.synth.js] Failed to compile copy shader:', err);
 		} finally {
