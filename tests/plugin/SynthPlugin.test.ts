@@ -40,7 +40,7 @@ describe('SynthPlugin', () => {
 
 		textmodifier = {
 			bpm: undefined,
-			createFilterShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
+			createMaterialShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
 		};
 	});
 
@@ -95,7 +95,7 @@ describe('SynthPlugin', () => {
 	it('should dispose global copy shader on uninstall', async () => {
 		// Mock shader
 		const mockShader = { dispose: vi.fn() };
-		textmodifier.createFilterShader = vi.fn().mockResolvedValue(mockShader);
+		textmodifier.createMaterialShader = vi.fn().mockResolvedValue(mockShader);
 
 		// Mock hook to execute immediately
 		const hook = vi.fn((cb) => cb());

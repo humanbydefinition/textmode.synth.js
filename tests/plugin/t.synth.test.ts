@@ -31,7 +31,7 @@ describe('t.synth comfort method', () => {
 			layers: {
 				base: baseLayer,
 			},
-			createFilterShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
+			createMaterialShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
 		};
 	});
 
