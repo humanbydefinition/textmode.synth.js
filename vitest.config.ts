@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { defineTextmodeProject } from '@textmode/vitest-config';
+import { defineTextmodeProject } from '@textmode/build';
 
 export default defineTextmodeProject({
 	projects: [
