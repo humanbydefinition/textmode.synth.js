@@ -38,7 +38,7 @@
 		"build:bundle": "textmode-build build",
 		"build:types": "textmode-types build",
 		"build": "npm run build:bundle && npm run build:types",
-		"check": "textmode-project check",
+		"check": "textmode-release check",
 		"docs:links:add": "textmode-docs links add",
 		"docs:api:check": "textmode-docs api-check",
 		"docs:check": "textmode-docs check",
@@ -56,25 +56,20 @@
 		"lint:markdown": "textmode-lint lint:markdown",
 		"lint:markdown:fix": "textmode-lint lint:markdown --fix",
 		"lint": "textmode-lint lint src",
-		"prepare": "install-git-hooks",
-		"prepack": "textmode-project prepack",
-		"release": "semantic-release"
+		"prepare": "textmode-release hooks",
+		"prepack": "textmode-release prepack",
+		"release": "textmode-release release"
 	},
 	"peerDependencies": {
 		"textmode.js": ">=0.16.0"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "^21.2.1",
 		"@textmode/build": "^0.1.0",
-		"@textmode/commitlint-config": "^0.1.1",
 		"@textmode/docs": "^0.3.0",
 		"@textmode/lint": "^0.1.0",
-		"@textmode/release-config": "^0.1.2",
-		"@textmode/tooling-scripts": "^0.5.0",
+		"@textmode/release": "^0.1.0",
 		"@textmode/tsconfig": "^0.2.0",
 		"@types/node": "^24.0.0",
-		"lint-staged": "^17.0.8",
-		"semantic-release": "^25.0.5",
 		"textmode.js": "^0.17.0",
 		"typescript": "^6.0.3",
 		"vitest": "^4.1.10"
@@ -96,18 +91,7 @@
 	"author": "humanbydefinition",
 	"license": "AGPL-3.0",
 	"homepage": "https://code.textmode.art",
-	"lint-staged": {
-		"*": "textmode-lint format"
-	},
 	"prettier": "@textmode/lint/prettier",
-	"commitlint": {
-		"extends": [
-			"@textmode/commitlint-config"
-		]
-	},
-	"release": {
-		"extends": "@textmode/release-config"
-	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/humanbydefinition/textmode.synth.js.git"
