@@ -1,1 +1,1 @@
-export { default } from '@textmode/eslint-config';
+export { default } from '@textmode/lint';

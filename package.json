@@ -49,13 +49,13 @@
 		"test:watch": "vitest",
 		"test:unit": "vitest run --project unit",
 		"test:integration": "vitest run --project integration",
-		"format": "prettier --write . --ignore-unknown",
-		"format:check": "prettier --check . --ignore-unknown",
+		"format": "textmode-lint format",
+		"format:check": "textmode-lint format:check",
 		"typecheck": "textmode-types check",
 		"types:verify": "textmode-types verify",
-		"lint:markdown": "markdownlint-cli2 --config package.json --configPointer /markdownlint-cli2",
-		"lint:markdown:fix": "markdownlint-cli2 --config package.json --configPointer /markdownlint-cli2 --fix",
-		"lint": "eslint src",
+		"lint:markdown": "textmode-lint lint:markdown",
+		"lint:markdown:fix": "textmode-lint lint:markdown --fix",
+		"lint": "textmode-lint lint src",
 		"prepare": "install-git-hooks",
 		"prepack": "textmode-project prepack",
 		"release": "semantic-release"
@@ -67,9 +67,7 @@
 		"@commitlint/cli": "^21.2.1",
 		"@textmode/commitlint-config": "^0.1.1",
 		"@textmode/docs": "^0.3.0",
-		"@textmode/eslint-config": "^0.2.0",
-		"@textmode/markdownlint-config": "^0.1.1",
-		"@textmode/prettier-config": "^0.1.0",
+		"@textmode/lint": "^0.1.0",
 		"@textmode/release-config": "^0.1.2",
 		"@textmode/tooling-scripts": "^0.5.0",
 		"@textmode/tsconfig": "^0.2.0",
@@ -77,11 +75,8 @@
 		"@textmode/vitest-config": "^0.2.1",
 		"@types/node": "^24.0.0",
 		"@vitest/ui": "^4.1.10",
-		"eslint": "^10.6.0",
 		"jsdom": "^30.0.0",
 		"lint-staged": "^17.0.8",
-		"markdownlint-cli2": "^0.23.0",
-		"prettier": "^3.9.4",
 		"semantic-release": "^25.0.5",
 		"terser": "^5.46.1",
 		"textmode.js": "^0.17.0",
@@ -107,9 +102,9 @@
 	"license": "AGPL-3.0",
 	"homepage": "https://code.textmode.art",
 	"lint-staged": {
-		"*": "prettier --ignore-unknown --write"
+		"*": "textmode-lint format"
 	},
-	"prettier": "@textmode/prettier-config",
+	"prettier": "@textmode/lint/prettier",
 	"commitlint": {
 		"extends": [
 			"@textmode/commitlint-config"
@@ -124,27 +119,5 @@
 	},
 	"bugs": {
 		"url": "https://github.com/humanbydefinition/textmode.synth.js/issues"
-	},
-	"markdownlint-cli2": {
-		"globs": [
-			"**/*.md"
-		],
-		"ignores": [
-			"api/**",
-			"node_modules/**",
-			"dist/**",
-			"examples/**/*.md",
-			"**/CHANGELOG.md",
-			".agents/**"
-		],
-		"fix": false,
-		"outputFormatters": [
-			[
-				"markdownlint-cli2-formatter-default"
-			]
-		],
-		"config": {
-			"extends": "@textmode/markdownlint-config"
-		}
 	}
 }
