@@ -107,6 +107,23 @@ import { setGlobalErrorCallback } from './utils/SafeEvaluator';
 export { setGlobalErrorCallback };
 export type { DynamicErrorCallback } from './utils/SafeEvaluator';
 
+// Transform extensibility
+import { setFunction, extendTransforms, defineSource, inspectSynth, createSynthRuntime } from './extensions/public';
+export { setFunction, extendTransforms, defineSource, inspectSynth, createSynthRuntime };
+
+export type {
+	TransformType,
+	TransformDefinition,
+	TransformInput,
+	ExtensionOptions,
+	ExtensionRegistration,
+	SourceFunction,
+	SynthInspection,
+	IsolatedSynthRuntime,
+	CreateSynthRuntimeOptions,
+} from './extensions/types';
+export type { SynthTransformType } from './core/types';
+
 // UMD global exports
 if (typeof window !== 'undefined') {
 	(window as any).SynthPlugin = SynthPlugin;

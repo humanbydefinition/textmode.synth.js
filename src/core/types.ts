@@ -23,6 +23,8 @@ import { TT_SRC, TT_COORD, TT_COLOR, TT_COMBINE, TT_COMBINE_COORD } from './cons
  * - `color`: Color transforms that modify existing color values
  * - `combine`: Blending operations that combine two color sources
  * - `combineCoord`: Modulation that uses one source to affect another's coordinates
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/type-aliases/SynthTransformType | SynthTransformType API reference}
  */
 export type SynthTransformType =
 	typeof TT_SRC | typeof TT_COORD | typeof TT_COLOR | typeof TT_COMBINE | typeof TT_COMBINE_COORD;
@@ -34,13 +36,27 @@ export type GLSLType = 'float' | 'vec2' | 'vec3' | 'vec4' | 'int' | 'sampler2D';
 
 /**
  * Input parameter definition for a transform function.
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformInput | TransformInput API reference}
  */
 export interface TransformInput {
-	/** Parameter name used in GLSL and JS API */
+	/**
+	 * Parameter name used in GLSL and JS API
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformInput#name | TransformInput.name API reference}
+	 */
 	name: string;
-	/** GLSL type */
+	/**
+	 * GLSL type
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformInput#type | TransformInput.type API reference}
+	 */
 	type: GLSLType;
-	/** Default value if not provided */
+	/**
+	 * Default value if not provided
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformInput#default | TransformInput.default API reference}
+	 */
 	default: number | number[] | null;
 }
 

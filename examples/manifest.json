@@ -601,6 +601,47 @@
 					"status": "unrated"
 				}
 			]
+		},
+		{
+			"name": "CustomTransforms",
+			"description": "Register procedural sources and transforms at runtime with defineSource, setFunction, extendTransforms, and createSynthRuntime",
+			"examples": [
+				{
+					"title": "defineSource",
+					"sourceFile": "examples/CustomTransforms/defineSource/sketch.js",
+					"status": "unrated"
+				},
+				{
+					"title": "setFunction.coord",
+					"sourceFile": "examples/CustomTransforms/setFunctionCoord/sketch.js",
+					"status": "unrated"
+				},
+				{
+					"title": "setFunction.color",
+					"sourceFile": "examples/CustomTransforms/setFunctionColor/sketch.js",
+					"status": "unrated"
+				},
+				{
+					"title": "setFunction.combine",
+					"sourceFile": "examples/CustomTransforms/setFunctionCombine/sketch.js",
+					"status": "unrated"
+				},
+				{
+					"title": "setFunction.combineCoord",
+					"sourceFile": "examples/CustomTransforms/setFunctionCombineCoord/sketch.js",
+					"status": "unrated"
+				},
+				{
+					"title": "extendTransforms",
+					"sourceFile": "examples/CustomTransforms/extendTransforms/sketch.js",
+					"status": "unrated"
+				},
+				{
+					"title": "createSynthRuntime",
+					"sourceFile": "examples/CustomTransforms/createSynthRuntime/sketch.js",
+					"status": "unrated"
+				}
+			]
 		}
 	]
 }

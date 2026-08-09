@@ -22,6 +22,7 @@ export { FeedbackTracker, type FeedbackUsage } from './FeedbackTracker';
 export { ExternalLayerManager } from './ExternalLayerManager';
 export { TransformCodeGenerator, type TransformCodeResult } from './TransformCodeGenerator';
 export { UniformManager } from './UniformManager';
+export { ArgumentLowerer, formatNumber, formatInt, formatVector } from './ArgumentLowerer';
 
 // GLSL generation
 export * from './GLSLGenerator';

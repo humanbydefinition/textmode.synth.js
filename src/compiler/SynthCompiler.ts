@@ -11,20 +11,19 @@
  *   - FeedbackTracker: Manages feedback texture usage
  *   - ExternalLayerManager: Manages cross-layer sampling
  *   - TransformCodeGenerator: Generates GLSL for individual transforms
- *   - UniformManager: Manages shader uniforms
+ *   - ArgumentLowerer: Type-directed uniform/literal lowering
  *   - GLSLGenerator: Assembles the final shader
  */
 
-import type { SynthSource } from '../core/SynthSource';
+import { SynthSource } from '../core/SynthSource';
 import type { CompiledSynthShader, ChainCompilationResult, CompilationTarget } from './types';
 import { FeedbackTracker } from './FeedbackTracker';
 import { ExternalLayerManager } from './ExternalLayerManager';
 import { TextmodeSourceManager } from './TextmodeSourceManager';
 import { TransformCodeGenerator } from './TransformCodeGenerator';
-import { UniformManager } from './UniformManager';
+import { ArgumentLowerer } from './ArgumentLowerer';
 import { generateFragmentShader, generateCharacterOutputCode } from './GLSLGenerator';
-import { transformRegistry } from '../transforms/TransformRegistry';
-import type { ProcessedTransform } from '../transforms/TransformDefinition';
+import type { RegisteredTransform, NormalizedTransformInput } from '../transforms/TransformDefinition';
 import type { ExternalLayerReference } from '../core';
 import { COMBINE_TYPES, COORD_TYPES } from '../core/constants';
 
@@ -52,12 +51,12 @@ export function compileSynthSource(source: SynthSource): CompiledSynthShader {
  *   - FeedbackTracker: Manages feedback texture usage
  *   - ExternalLayerManager: Manages cross-layer sampling
  *   - TransformCodeGenerator: Generates GLSL for individual transforms
- *   - UniformManager: Manages shader uniforms
+ *   - ArgumentLowerer: Type-directed uniform/literal lowering
  *   - GLSLGenerator: Assembles the final shader
  */
 class SynthCompiler {
 	// Delegated managers
-	private readonly _uniformManager = new UniformManager();
+	private readonly _argumentLowerer = new ArgumentLowerer();
 	private readonly _feedbackTracker = new FeedbackTracker();
 	private readonly _externalLayerManager = new ExternalLayerManager();
 	private readonly _textmodeSourceManager = new TextmodeSourceManager();
@@ -119,7 +118,7 @@ class SynthCompiler {
 
 		// Build the final shader
 		const fragmentSource = generateFragmentShader({
-			uniforms: this._uniformManager.getUniforms(),
+			uniforms: this._argumentLowerer.getUniforms(),
 			glslFunctions: this._glslFunctions,
 			mainCode: this._mainCode,
 			charOutputCode,
@@ -136,8 +135,8 @@ class SynthCompiler {
 
 		return {
 			fragmentSource,
-			uniforms: this._uniformManager.getUniforms(),
-			dynamicUpdaters: this._uniformManager.getDynamicUpdaters(),
+			uniforms: this._argumentLowerer.getUniforms(),
+			dynamicUpdaters: this._argumentLowerer.getDynamicUpdaters(),
 			charMapping: source.charMapping,
 			usesCharColorFeedback: feedbackUsage.usesCharColorFeedback,
 			usesCharFeedback: feedbackUsage.usesCharFeedback,
@@ -153,7 +152,7 @@ class SynthCompiler {
 	 */
 	private _reset(): void {
 		this._varCounter = 0;
-		this._uniformManager.clear();
+		this._argumentLowerer.clear();
 		this._feedbackTracker.reset();
 		this._externalLayerManager.reset();
 		this._textmodeSourceManager.reset();
@@ -218,8 +217,9 @@ class SynthCompiler {
 
 		const transforms = source.transforms;
 
-		// Resolve all transform defs once
-		const defs = transforms.map((t) => this._getProcessedTransform(t.name));
+		// Chain records capture immutable registered transforms at call time,
+		// so redefinition or disposal cannot change an existing chain.
+		const defs = transforms.map((t) => t.transform);
 
 		// Identify coordinate transforms (applied in reverse order)
 		const coordWrapperIndices = this._identifyCoordTransforms(defs);
@@ -229,8 +229,7 @@ class SynthCompiler {
 			const record = transforms[i];
 			const def = defs[i];
 			if (!def) {
-				console.warn(`[SynthCompiler] Unknown transform: ${record.name}`);
-				return;
+				throw new Error(`[textmode.synth.js] Unknown transform in chain: ${record.name}`);
 			}
 
 			// Check for external layer reference at this index
@@ -258,8 +257,16 @@ class SynthCompiler {
 			);
 			this._glslFunctions.add(glslFunc);
 
-			// Process arguments
-			const args = this._processArguments(record.userArgs, def.inputs, `${prefix}_${i}_${record.name}`);
+			// Process arguments (type-directed lowering with sampler support)
+			const args = this._processArguments(
+				source,
+				i,
+				def,
+				record.userArgs,
+				`${prefix}_${i}_${record.name}`,
+				coordVar,
+				target
+			);
 
 			// Handle nested sources for combine operations
 			const nestedSource = source.nestedSources.get(i);
@@ -331,7 +338,7 @@ class SynthCompiler {
 	/**
 	 * Identify coordinate transform indices for reverse-order application.
 	 */
-	private _identifyCoordTransforms(defs: Array<ProcessedTransform | undefined>): number[] {
+	private _identifyCoordTransforms(defs: Array<RegisteredTransform | undefined>): number[] {
 		const coordWrapperIndices: number[] = [];
 		for (let i = 0; i < defs.length; i++) {
 			const def = defs[i];
@@ -357,30 +364,70 @@ class SynthCompiler {
 	}
 
 	/**
-	 * Get a processed transform definition.
-	 */
-	private _getProcessedTransform(name: string): ProcessedTransform | undefined {
-		return transformRegistry.getProcessed(name);
-	}
-
-	/**
 	 * Process user arguments and create uniforms for dynamic values.
+	 * Scalar and vector inputs are lowered by {@link ArgumentLowerer};
+	 * sampler2D inputs resolve the reference attached at chain construction
+	 * and register it with the TextmodeSource manager for render-time binding.
 	 */
 	private _processArguments(
+		source: SynthSource,
+		index: number,
+		def: RegisteredTransform,
 		userArgs: readonly unknown[],
-		inputs: readonly { name: string; type: string; default: number | number[] | null }[],
-		prefix: string
+		prefix: string,
+		coordVar: string,
+		target: CompilationTarget
 	): string[] {
 		const result: string[] = [];
 
-		for (let i = 0; i < inputs.length; i++) {
-			const input = inputs[i];
-			const arg = userArgs[i] ?? input.default;
+		for (let j = 0; j < def.inputs.length; j++) {
+			const input = def.inputs[j];
+			const arg = userArgs[j] ?? input.default;
 
-			const processed = this._uniformManager.processArgument(arg as never, input as never, prefix);
-			result.push(processed.glslValue);
+			if (input.type === 'sampler2D') {
+				result.push(this._lowerSamplerInput(source, index, input));
+				continue;
+			}
+
+			// A SynthSource passed to a vec4 input compiles recursively at the
+			// current coordinate/target, matching Hydra's nested source support.
+			if (input.type === 'vec4' && arg instanceof SynthSource) {
+				result.push(this._compileNestedVec4(arg, coordVar, target));
+				continue;
+			}
+
+			result.push(this._argumentLowerer.process(input, arg, prefix).glslValue);
 		}
 
 		return result;
+	}
+
+	/**
+	 * Compile a nested source for a vec4 input and return its color variable.
+	 */
+	private _compileNestedVec4(nested: SynthSource, coordVar: string, target: CompilationTarget): string {
+		const nestedResult = this._compileChain(
+			nested,
+			`${coordVar.replace(/\W/g, '')}_nested_${this._varCounter++}`,
+			'vec4(0.0)',
+			coordVar,
+			target
+		);
+		return nestedResult.colorVar;
+	}
+
+	/**
+	 * Lower a sampler2D input to its TextmodeSource uniform name.
+	 */
+	private _lowerSamplerInput(source: SynthSource, index: number, input: NormalizedTransformInput): string {
+		const ref = source.textmodeSourceRefs.get(index);
+		if (!ref) {
+			throw new Error(
+				`[textmode.synth.js] sampler2D input "${input.publicName}" requires a TextmodeSource value. ` +
+					'Pass an image/video loaded through t.loadImage()/t.loadVideo().'
+			);
+		}
+		this._textmodeSourceManager.trackUsage(ref, this._currentTarget);
+		return this._textmodeSourceManager.getUniformName(ref.sourceId);
 	}
 }

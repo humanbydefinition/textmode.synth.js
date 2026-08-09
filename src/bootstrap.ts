@@ -3,27 +3,17 @@
  *
  * This module handles all side-effect initialization required for
  * the synth system to function. It runs once when the library is imported.
+ *
+ * Built-in transforms are installed through the default {@link SynthRuntime},
+ * the same path custom extensions use, so there is no parallel "custom
+ * transform compiler".
  */
 
-import { transformRegistry } from './transforms/TransformRegistry';
-import { transformFactory } from './transforms/TransformFactory';
-import { ALL_TRANSFORMS } from './transforms/categories';
-import { SynthSource } from './core/SynthSource';
+import { createDefaultRuntime } from './runtime/createDefaultRuntime';
 import { initArrayUtils } from './utils/ArrayUtils';
 
 // Extend Array.prototype with array utils
 initArrayUtils();
 
-// Register all built-in transforms with the registry
-transformRegistry.registerMany(ALL_TRANSFORMS);
-
-// Set up the SynthSource class for method injection
-transformFactory.setSynthSourceClass(SynthSource);
-
-// Inject chainable methods into SynthSource prototype
-transformFactory.injectMethods(SynthSource.prototype);
-
-/**
- * Generated standalone functions for source transforms (e.g., osc(), noise())
- */
-export const generatedFunctions = transformFactory.generateStandaloneFunctions();
+// Construct the default runtime and install built-ins through it.
+createDefaultRuntime();
