@@ -1,5 +1,5 @@
-import type { Textmodifier } from 'textmode.js';
-import type { TextmodePlugin, TextmodePluginContext } from 'textmode.js';
+import type { TextmodePlugin, TextmodePluginContext, TextmodeLayer } from 'textmode.js';
+import packageMetadata from '../../package.json';
 
 import { PLUGIN_NAME } from './constants';
 import {
@@ -12,71 +12,46 @@ import {
 } from '../extensions';
 import { synthRender, synthDispose, shaderManager } from '../lifecycle';
 import type { LayerSynthState } from '../core/types';
-import { TextmodeLayer } from 'textmode.js';
 
 /**
- * The `textmode.synth.js` plugin to install.
+ * textmode.synth.js plugin for textmode.js.
  *
- * Install this plugin to enable `.synth()` on TextmodeLayer instances.
- *
- * @category Workflow
- *
- * @example
- * ```javascript
- * const t = textmode.create({
- *   width: window.innerWidth,
- *   height: window.innerHeight,
- *   plugins: [SynthPlugin]
- * });
- *
- * t.synth(
- *   noise(10)
- *     .charMap('@#%*+=-:. ')
- *     .charColor(osc(5, 0.1, 1.2).kaleid(4))
- * );
- *
- * t.windowResized(() => {
- *   t.resizeCanvas(window.innerWidth, window.innerHeight);
- * });
- * ```
+ * Adds procedural synthesis to {@link TextmodeLayer} instances through the
+ * native textmode.js plugin system. Layer extensions (`synth`, `clearSynth`,
+ * `bpm`) and Textmodifier extensions (`synth`, `bpm`, `seed`) are registered
+ * via {@link TextmodePluginContext.defineExtension}, so the host owns their
+ * cleanup when the plugin is uninstalled.
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/variables/SynthPlugin | SynthPlugin API reference}
  */
 export const SynthPlugin: TextmodePlugin = {
 	name: PLUGIN_NAME,
-	version: '1.5.1',
+	version: packageMetadata.version,
 
 	install(textmodifier, api: TextmodePluginContext) {
-		// Reset copy shader manager in case of plugin reinstall
 		shaderManager.reset();
 
-		// Extensions
-		extendTextmodifierBpm(textmodifier);
-		extendTextmodifierSeed(textmodifier);
-		extendTextmodifierSynth(textmodifier);
+		extendTextmodifierBpm(api);
+		extendTextmodifierSeed(api);
+		extendTextmodifierSynth(api);
 		extendLayerSynth(api);
 		extendLayerBpm(api);
 		extendLayerClearSynth(api);
 
-		// Pre-setup hook: initialize the copy shader once before user code runs
 		api.registerPreSetupHook(async () => {
 			await shaderManager.initialize(textmodifier);
 		});
 
-		// Lifecycle callbacks
 		api.registerLayerPreRenderHook((layer: TextmodeLayer) => synthRender(layer, textmodifier));
 		api.registerLayerDisposedHook(synthDispose);
 	},
 
-	uninstall(textmodifier, api: TextmodePluginContext) {
-		// Clean up all synth states
+	uninstall(_textmodifier, api: TextmodePluginContext) {
 		const allLayers = [api.layerManager.base, ...api.layerManager.all];
 		for (const layer of allLayers) {
 			const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
 			if (state) {
-				// Mark as disposed to prevent pending async operations from continuing
 				state.isDisposed = true;
-
 				if (state.shader?.dispose) {
 					state.shader.dispose();
 				}
@@ -84,23 +59,13 @@ export const SynthPlugin: TextmodePlugin = {
 					state.pingPongBuffers[0].dispose?.();
 					state.pingPongBuffers[1].dispose?.();
 				}
-
-				// Remove state from layer
 				layer.setPluginState(PLUGIN_NAME, undefined);
 			}
 		}
 
-		// Remove textmodifier extensions
-		delete (textmodifier as Partial<Textmodifier>).bpm;
-		delete (textmodifier as Partial<Textmodifier & { seed?: unknown }>).seed;
-		delete (textmodifier as Partial<Textmodifier & { synth?: unknown }>).synth;
+		// Layer and Textmodifier extension properties are removed by the
+		// plugin runtime's extension registry on uninstall.
 
-		// Remove layer extensions
-		api.removeLayerExtension('synth');
-		api.removeLayerExtension('bpm');
-		api.removeLayerExtension('clearSynth');
-
-		// Dispose global copy shader
 		shaderManager.dispose();
 	},
 };

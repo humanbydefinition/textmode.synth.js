@@ -57,43 +57,45 @@ function createLayerSynthState(partial: Partial<LayerSynthState> = {}): LayerSyn
  * Extend layer with synth() method.
  */
 export function extendLayerSynth(api: TextmodePluginContext): void {
-	api.extendLayer('synth', function (this: TextmodeLayer, sourceOrFactory: SynthSource | (() => SynthSource)): void {
-		const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
+	api.defineExtension('layer', 'synth', {
+		value: function (this: TextmodeLayer, sourceOrFactory: SynthSource | (() => SynthSource)): void {
+			const isInitialized = this.grid !== undefined && this.drawFramebuffer !== undefined;
 
-		let source: SynthSource;
-		let sourceFactory: (() => SynthSource) | undefined;
+			let source: SynthSource;
+			let sourceFactory: (() => SynthSource) | undefined;
 
-		if (typeof sourceOrFactory === 'function') {
-			sourceFactory = sourceOrFactory;
-			source = new SynthSourceClass();
-		} else {
-			source = sourceOrFactory;
-		}
-
-		let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
-
-		if (state) {
-			// Update existing state
-			state.source = source;
-			state.sourceFactory = sourceFactory;
-			state.needsCompile = true;
-			state.characterResolver.invalidate();
-
-			// Only compile immediately if we have a real source
-			if (isInitialized && !sourceFactory) {
-				state.compiled = compileSynthSource(source);
+			if (typeof sourceOrFactory === 'function') {
+				sourceFactory = sourceOrFactory;
+				source = new SynthSourceClass();
+			} else {
+				source = sourceOrFactory;
 			}
-		} else {
-			// Create new state using factory
-			state = createLayerSynthState({
-				source,
-				sourceFactory,
-				compiled: isInitialized && !sourceFactory ? compileSynthSource(source) : undefined,
-				needsCompile: true,
-			});
-		}
 
-		this.setPluginState(PLUGIN_NAME, state);
+			let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+
+			if (state) {
+				// Update existing state
+				state.source = source;
+				state.sourceFactory = sourceFactory;
+				state.needsCompile = true;
+				state.characterResolver.invalidate();
+
+				// Only compile immediately if we have a real source
+				if (isInitialized && !sourceFactory) {
+					state.compiled = compileSynthSource(source);
+				}
+			} else {
+				// Create new state using factory
+				state = createLayerSynthState({
+					source,
+					sourceFactory,
+					compiled: isInitialized && !sourceFactory ? compileSynthSource(source) : undefined,
+					needsCompile: true,
+				});
+			}
+
+			this.setPluginState(PLUGIN_NAME, state);
+		},
 	});
 }
 
@@ -101,23 +103,25 @@ export function extendLayerSynth(api: TextmodePluginContext): void {
  * Extend layer with clearSynth() method.
  */
 export function extendLayerClearSynth(api: TextmodePluginContext): void {
-	api.extendLayer('clearSynth', function (this: TextmodeLayer): void {
-		const state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
-		if (!state) return;
+	api.defineExtension('layer', 'clearSynth', {
+		value: function (this: TextmodeLayer): void {
+			const state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+			if (!state) return;
 
-		// Dispose shader
-		if (state.shader?.dispose) {
-			state.shader.dispose();
-		}
+			// Dispose shader
+			if (state.shader?.dispose) {
+				state.shader.dispose();
+			}
 
-		// Dispose ping-pong buffers
-		if (state.pingPongBuffers) {
-			state.pingPongBuffers[0].dispose?.();
-			state.pingPongBuffers[1].dispose?.();
-		}
+			// Dispose ping-pong buffers
+			if (state.pingPongBuffers) {
+				state.pingPongBuffers[0].dispose?.();
+				state.pingPongBuffers[1].dispose?.();
+			}
 
-		// Clear plugin state
-		this.setPluginState(PLUGIN_NAME, undefined);
+			// Clear plugin state
+			this.setPluginState(PLUGIN_NAME, undefined);
+		},
 	});
 }
 
@@ -125,17 +129,19 @@ export function extendLayerClearSynth(api: TextmodePluginContext): void {
  * Extend layer with bpm() method.
  */
 export function extendLayerBpm(api: TextmodePluginContext): void {
-	api.extendLayer('bpm', function (this: TextmodeLayer, value: number): void {
-		let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+	api.defineExtension('layer', 'bpm', {
+		value: function (this: TextmodeLayer, value: number): void {
+			let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
 
-		if (state) {
-			// Update existing state
-			state.bpm = value;
-		} else {
-			// Create minimal state to store BPM using factory
-			state = createLayerSynthState({ bpm: value });
-		}
+			if (state) {
+				// Update existing state
+				state.bpm = value;
+			} else {
+				// Create minimal state to store BPM using factory
+				state = createLayerSynthState({ bpm: value });
+			}
 
-		this.setPluginState(PLUGIN_NAME, state);
+			this.setPluginState(PLUGIN_NAME, state);
+		},
 	});
 }
