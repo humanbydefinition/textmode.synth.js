@@ -46,8 +46,8 @@ export const SynthPlugin: TextmodePlugin = {
 		api.registerLayerDisposedHook(synthDispose);
 	},
 
-	uninstall(_textmodifier, api: TextmodePluginContext) {
-		const allLayers = [api.layerManager.base, ...api.layerManager.all];
+	uninstall(textmodifier, _api: TextmodePluginContext) {
+		const allLayers = [textmodifier.layers.base, ...textmodifier.layers.all];
 		for (const layer of allLayers) {
 			const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
 			if (state) {

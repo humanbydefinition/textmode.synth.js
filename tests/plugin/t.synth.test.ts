@@ -23,6 +23,7 @@ describe('t.synth comfort method', () => {
 		textmodifier = {
 			layers: {
 				base: baseLayer,
+				all: [],
 			},
 			createMaterialShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
 		};
@@ -43,10 +44,6 @@ describe('t.synth comfort method', () => {
 			registerLayerPreRenderHook: vi.fn(),
 			registerLayerDisposedHook: vi.fn(),
 			registerPreSetupHook: vi.fn(),
-			layerManager: {
-				base: baseLayer,
-				all: [],
-			},
 		} as unknown as TextmodePluginContext;
 	});
 

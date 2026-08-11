@@ -36,6 +36,10 @@ describe('SynthPlugin', () => {
 
 		textmodifier = {
 			createMaterialShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
+			layers: {
+				base: layer,
+				all: [],
+			},
 		};
 
 		api = {
@@ -57,10 +61,6 @@ describe('SynthPlugin', () => {
 			registerLayerPreRenderHook: vi.fn(),
 			registerLayerDisposedHook: vi.fn(),
 			registerPreSetupHook: vi.fn(),
-			layerManager: {
-				base: layer,
-				all: [],
-			},
 		} as unknown as TextmodePluginContext;
 	});
 
