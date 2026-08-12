@@ -3,20 +3,10 @@ import type { TextmodeLayer, TextmodePluginContext } from 'textmode.js';
 
 import type { LayerSynthState } from '../../src/core/types';
 import { SynthPlugin } from '../../src/plugin/SynthPlugin';
-import { PLUGIN_NAME } from '../../src/plugin/constants';
+import { getLayerSynthState, setLayerSynthState } from '../../src/lifecycle/layerState';
 
 function createLayer(id: string): TextmodeLayer {
-	let state: LayerSynthState | undefined;
-	return {
-		id,
-		getPluginState: vi.fn(() => state),
-		setPluginState: vi.fn((_name, value) => {
-			state = value as LayerSynthState;
-		}),
-		deletePluginState: vi.fn(() => {
-			state = undefined;
-		}),
-	} as unknown as TextmodeLayer;
+	return { id } as TextmodeLayer;
 }
 
 function createHarness() {
@@ -77,7 +67,7 @@ describe('SynthPlugin', () => {
 			pingPongBuffers: [buffer, buffer],
 			isDisposed: false,
 		} as unknown as LayerSynthState;
-		harness.layer.setPluginState(PLUGIN_NAME, state);
+		setLayerSynthState(harness.layer, state);
 
 		SynthPlugin.install(harness.textmodifier as any, harness.api);
 		SynthPlugin.uninstall?.(harness.textmodifier as any, harness.api);
@@ -86,7 +76,19 @@ describe('SynthPlugin', () => {
 		expect(shader.dispose).toHaveBeenCalledOnce();
 		expect(pendingShader.dispose).toHaveBeenCalledOnce();
 		expect(buffer.dispose).toHaveBeenCalledTimes(2);
-		expect(harness.layer.deletePluginState).toHaveBeenCalledWith(PLUGIN_NAME);
+		expect(getLayerSynthState(harness.layer)).toBeUndefined();
+	});
+
+	it('keeps layer extension state private to the synth package', () => {
+		SynthPlugin.install(harness.textmodifier as any, harness.api);
+		const bpm = harness.layerExtensions.get('layer:bpm')!.value! as (this: TextmodeLayer, value: number) => void;
+		const clearSynth = harness.layerExtensions.get('layer:clearSynth')!.value! as (this: TextmodeLayer) => void;
+
+		bpm.call(harness.layer, 128);
+		expect(getLayerSynthState(harness.layer)?.bpm).toBe(128);
+
+		clearSynth.call(harness.layer);
+		expect(getLayerSynthState(harness.layer)).toBeUndefined();
 	});
 
 	it('keeps copy shaders isolated between simultaneous installations', async () => {

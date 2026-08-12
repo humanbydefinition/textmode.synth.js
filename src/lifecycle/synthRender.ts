@@ -8,12 +8,12 @@
 import type { TextmodeLayer } from 'textmode.js';
 import type { TextmodeFont, TextmodeShader } from 'textmode.js';
 import type { TextmodeFramebuffer, Textmodifier } from 'textmode.js';
-import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
 import { CHANNEL_SUFFIXES, CHANNEL_SAMPLERS } from '../core/constants';
 import { collectExternalLayerRefs, collectTextmodeSourceRefs } from '../utils';
 import { getInstanceBpm, getInstanceSeed } from '../extensions/textmodifier';
 import type { SynthContext, LayerSynthState } from '../core/types';
+import { getLayerSynthState } from './layerState';
 
 /**
  * Render synth source to layer framebuffers.
@@ -27,7 +27,7 @@ export function synthRender(
 	textmodifier: Textmodifier,
 	copyShader: TextmodeShader | null = null
 ): void {
-	const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
+	const state = getLayerSynthState(layer);
 	if (!state) return;
 
 	const grid = layer.grid;
@@ -301,7 +301,7 @@ function applySynthUniforms(
 				continue;
 			}
 
-			const extState = extLayer.getPluginState<LayerSynthState>(PLUGIN_NAME);
+			const extState = getLayerSynthState(extLayer);
 			let extTextures: WebGLTexture[] | undefined;
 
 			if (extState?.pingPongBuffers) {

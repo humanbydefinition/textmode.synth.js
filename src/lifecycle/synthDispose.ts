@@ -5,14 +5,13 @@
  */
 
 import type { TextmodeLayer } from 'textmode.js';
-import { PLUGIN_NAME } from '../plugin/constants';
-import type { LayerSynthState } from '../core/types';
+import { deleteLayerSynthState, getLayerSynthState } from './layerState';
 
 /**
  * Clean up synth resources when a layer is disposed.
  */
 export function synthDispose(layer: TextmodeLayer): void {
-	const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
+	const state = getLayerSynthState(layer);
 	if (state) {
 		state.isDisposed = true;
 		state.shader?.dispose();
@@ -21,6 +20,6 @@ export function synthDispose(layer: TextmodeLayer): void {
 			state.pingPongBuffers[0].dispose();
 			state.pingPongBuffers[1].dispose();
 		}
-		layer.deletePluginState(PLUGIN_NAME);
+		deleteLayerSynthState(layer);
 	}
 }

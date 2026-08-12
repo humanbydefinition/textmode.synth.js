@@ -11,11 +11,11 @@ import type { TextmodePluginContext } from 'textmode.js';
 import type { TextmodeLayer } from 'textmode.js';
 import type { SynthSource } from '../core/SynthSource';
 import { SynthSource as SynthSourceClass } from '../core/SynthSource';
-import { PLUGIN_NAME } from '../plugin/constants';
 import type { LayerSynthState } from '../core/types';
 import { compileSynthSource } from '../compiler/SynthCompiler';
 import { CharacterResolver } from '../utils/CharacterResolver';
 import { synthDispose } from '../lifecycle/synthDispose';
+import { getLayerSynthState, setLayerSynthState } from '../lifecycle/layerState';
 
 /**
  * Create a new LayerSynthState with default values.
@@ -73,7 +73,7 @@ export function extendLayerSynth(api: TextmodePluginContext): void {
 				source = sourceOrFactory;
 			}
 
-			let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+			let state = getLayerSynthState(this);
 
 			if (state) {
 				// Update existing state
@@ -96,7 +96,7 @@ export function extendLayerSynth(api: TextmodePluginContext): void {
 				});
 			}
 
-			this.setPluginState(PLUGIN_NAME, state);
+			setLayerSynthState(this, state);
 		},
 	});
 }
@@ -107,7 +107,7 @@ export function extendLayerSynth(api: TextmodePluginContext): void {
 export function extendLayerClearSynth(api: TextmodePluginContext): void {
 	api.defineExtension('layer', 'clearSynth', {
 		value: function (this: TextmodeLayer): void {
-			const state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+			const state = getLayerSynthState(this);
 			if (!state) return;
 
 			synthDispose(this);
@@ -121,7 +121,7 @@ export function extendLayerClearSynth(api: TextmodePluginContext): void {
 export function extendLayerBpm(api: TextmodePluginContext): void {
 	api.defineExtension('layer', 'bpm', {
 		value: function (this: TextmodeLayer, value: number): void {
-			let state = this.getPluginState<LayerSynthState>(PLUGIN_NAME);
+			let state = getLayerSynthState(this);
 
 			if (state) {
 				// Update existing state
@@ -131,7 +131,7 @@ export function extendLayerBpm(api: TextmodePluginContext): void {
 				state = createLayerSynthState({ bpm: value });
 			}
 
-			this.setPluginState(PLUGIN_NAME, state);
+			setLayerSynthState(this, state);
 		},
 	});
 }

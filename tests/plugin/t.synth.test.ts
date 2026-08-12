@@ -11,9 +11,6 @@ describe('t.synth comfort method', () => {
 	beforeEach(() => {
 		baseLayer = {
 			synth: vi.fn(),
-			getPluginState: vi.fn(),
-			setPluginState: vi.fn(),
-			deletePluginState: vi.fn(),
 		};
 
 		const unregisterFns: Array<() => void> = [];

@@ -5,6 +5,7 @@ import type { TextmodeLayer } from 'textmode.js';
 import type { Textmodifier, TextmodeFramebuffer } from 'textmode.js';
 import type { LayerSynthState } from '../../src/core/types';
 import { SynthSource } from '../../src/core/SynthSource';
+import { setLayerSynthState } from '../../src/lifecycle/layerState';
 
 const createMockFramebuffer = (): TextmodeFramebuffer =>
 	({
@@ -35,9 +36,6 @@ const createMockLayer = (cols = 10, rows = 10): TextmodeLayer =>
 			end: vi.fn(),
 			textures: [],
 		},
-		getPluginState: vi.fn(),
-		setPluginState: vi.fn(),
-		deletePluginState: vi.fn(),
 		font: { characters: [] },
 	}) as unknown as TextmodeLayer;
 
@@ -61,7 +59,7 @@ describe('synthRender Feedback Optimization', () => {
 			} as any,
 			pingPongIndex: 0,
 		};
-		vi.mocked(layer.getPluginState).mockReturnValue(state);
+		setLayerSynthState(layer, state as LayerSynthState);
 	});
 
 	afterEach(() => {
