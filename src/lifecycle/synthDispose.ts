@@ -15,12 +15,12 @@ export function synthDispose(layer: TextmodeLayer): void {
 	const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
 	if (state) {
 		state.isDisposed = true;
-		if (state.shader?.dispose) {
-			state.shader.dispose();
-		}
+		state.shader?.dispose();
+		state.pendingShader?.dispose();
 		if (state.pingPongBuffers) {
-			state.pingPongBuffers[0].dispose?.();
-			state.pingPongBuffers[1].dispose?.();
+			state.pingPongBuffers[0].dispose();
+			state.pingPongBuffers[1].dispose();
 		}
+		layer.deletePluginState(PLUGIN_NAME);
 	}
 }

@@ -171,6 +171,8 @@ export interface LayerSynthState {
 	compiled?: CompiledSynthShader;
 	/** The compiled GLShader instance */
 	shader?: TextmodeShader;
+	/** Shader compiled asynchronously and promoted at the start of a later frame. */
+	pendingShader?: TextmodeShader;
 	/** Character resolver for this layer's synth */
 	characterResolver: CharacterResolver;
 	/** Whether the shader needs to be recompiled */
