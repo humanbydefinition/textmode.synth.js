@@ -13,6 +13,7 @@ describe('t.synth comfort method', () => {
 			synth: vi.fn(),
 			getPluginState: vi.fn(),
 			setPluginState: vi.fn(),
+			deletePluginState: vi.fn(),
 		};
 
 		const unregisterFns: Array<() => void> = [];
@@ -41,9 +42,7 @@ describe('t.synth comfort method', () => {
 				unregisterFns.push(unregister);
 				return unregister;
 			}),
-			registerLayerPreRenderHook: vi.fn(),
-			registerLayerDisposedHook: vi.fn(),
-			registerPreSetupHook: vi.fn(),
+			on: vi.fn(),
 		} as unknown as TextmodePluginContext;
 	});
 

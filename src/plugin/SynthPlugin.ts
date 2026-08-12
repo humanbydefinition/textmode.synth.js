@@ -1,4 +1,4 @@
-import type { TextmodePlugin, TextmodePluginContext, TextmodeLayer } from 'textmode.js';
+import type { TextmodePlugin, TextmodePluginContext, TextmodeLayer, Textmodifier } from 'textmode.js';
 import packageMetadata from '../../package.json';
 
 import { PLUGIN_NAME } from './constants';
@@ -10,8 +10,10 @@ import {
 	extendTextmodifierSeed,
 	extendTextmodifierSynth,
 } from '../extensions';
-import { synthRender, synthDispose, shaderManager } from '../lifecycle';
-import type { LayerSynthState } from '../core/types';
+import { ShaderManager, synthDispose, synthRender } from '../lifecycle';
+import { clearSynthState } from '../extensions/textmodifier';
+
+const shaderManagers = new WeakMap<Textmodifier, ShaderManager>();
 
 /**
  * textmode.synth.js plugin for textmode.js.
@@ -29,7 +31,8 @@ export const SynthPlugin: TextmodePlugin = {
 	version: packageMetadata.version,
 
 	install(textmodifier, api: TextmodePluginContext) {
-		shaderManager.reset();
+		const shaderManager = new ShaderManager();
+		shaderManagers.set(textmodifier, shaderManager);
 
 		extendTextmodifierBpm(api);
 		extendTextmodifierSeed(api);
@@ -38,34 +41,22 @@ export const SynthPlugin: TextmodePlugin = {
 		extendLayerBpm(api);
 		extendLayerClearSynth(api);
 
-		api.registerPreSetupHook(async () => {
+		api.on('preSetup', async () => {
 			await shaderManager.initialize(textmodifier);
 		});
 
-		api.registerLayerPreRenderHook((layer: TextmodeLayer) => synthRender(layer, textmodifier));
-		api.registerLayerDisposedHook(synthDispose);
+		api.on('layerPreRender', (layer: TextmodeLayer) => synthRender(layer, textmodifier, shaderManager.getShader()));
+		api.on('layerDisposed', synthDispose);
 	},
 
 	uninstall(textmodifier, _api: TextmodePluginContext) {
-		const allLayers = [textmodifier.layers.base, ...textmodifier.layers.all];
-		for (const layer of allLayers) {
-			const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
-			if (state) {
-				state.isDisposed = true;
-				if (state.shader?.dispose) {
-					state.shader.dispose();
-				}
-				if (state.pingPongBuffers) {
-					state.pingPongBuffers[0].dispose?.();
-					state.pingPongBuffers[1].dispose?.();
-				}
-				layer.setPluginState(PLUGIN_NAME, undefined);
-			}
-		}
+		for (const layer of [textmodifier.layers.base, ...textmodifier.layers.all]) synthDispose(layer);
+		clearSynthState(textmodifier);
 
 		// Layer and Textmodifier extension properties are removed by the
 		// plugin runtime's extension registry on uninstall.
 
-		shaderManager.dispose();
+		shaderManagers.get(textmodifier)?.dispose();
+		shaderManagers.delete(textmodifier);
 	},
 };
