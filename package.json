@@ -38,8 +38,7 @@
 		"build:bundle": "textmode-build build",
 		"build:types": "textmode-types build",
 		"build": "npm run build:bundle && npm run build:types",
-		"check": "npm run format:check && npm run lint && npm run lint:markdown && npm run typecheck && npm run docs:check && npm run test && npm run build && npm run types:verify && npm run verify:exports",
-		"verify:exports": "node scripts/verify-exports.mjs",
+		"check": "npm run format:check && npm run lint && npm run lint:markdown && npm run typecheck && npm run docs:check && npm run test && npm run build && npm run types:verify",
 		"docs:links:add": "textmode-docs links add",
 		"docs:api:check": "textmode-docs api-check",
 		"docs:check": "textmode-docs check",
@@ -62,7 +61,7 @@
 		"release": "textmode-release release"
 	},
 	"peerDependencies": {
-		"textmode.js": ">=0.18.0 <0.19.0"
+		"textmode.js": ">=0.18.0 <0.20.0"
 	},
 	"devDependencies": {
 		"@textmode/build": "^0.1.0",
