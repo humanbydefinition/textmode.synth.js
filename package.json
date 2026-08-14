@@ -70,7 +70,7 @@
 		"@textmode/release": "^0.1.0",
 		"@textmode/tsconfig": "^0.2.0",
 		"@types/node": "^24.0.0",
-		"textmode.js": "file:../textmode.js-dev",
+		"textmode.js": "^0.17.2-beta.1",
 		"typescript": "^6.0.3",
 		"vitest": "^4.1.10"
 	},
