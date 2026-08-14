@@ -1,117 +1,122 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { SynthPlugin } from '../../src/plugin/SynthPlugin';
-import { PLUGIN_NAME } from '../../src/plugin/constants';
-import { shaderManager } from '../../src/lifecycle/ShaderManager';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { TextmodeLayer, TextmodePluginContext } from 'textmode.js';
-import type { LayerSynthState } from '../../src/core/types';
 
-// Mocks
-const createMockLayer = (id: string) => {
-	let state: any = undefined;
-	return {
-		id,
-		getPluginState: vi.fn(() => state),
-		setPluginState: vi.fn((_name, s) => {
-			state = s;
+import type { LayerSynthState } from '../../src/core/types';
+import { SynthPlugin } from '../../src/plugin/SynthPlugin';
+import { getLayerSynthState, setLayerSynthState } from '../../src/lifecycle/layerState';
+
+function createLayer(id: string): TextmodeLayer {
+	return { id } as TextmodeLayer;
+}
+
+function createHarness() {
+	const layer = createLayer('base');
+	const layerExtensions = new Map<string, PropertyDescriptor>();
+	const hooks = new Map<string, (...args: any[]) => any>();
+	const unregisterExtensions: Array<() => void> = [];
+	const textmodifier = {
+		createMaterialShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
+		layers: { base: layer, all: [] },
+	};
+	const api = {
+		defineExtension: vi.fn((target: string, name: string, descriptor: PropertyDescriptor) => {
+			if (target === 'textmodifier')
+				Object.defineProperty(textmodifier, name, { ...descriptor, configurable: true });
+			else layerExtensions.set(`${target}:${name}`, descriptor);
+			const unregister = () => {
+				if (target === 'textmodifier') delete (textmodifier as any)[name];
+				layerExtensions.delete(`${target}:${name}`);
+			};
+			unregisterExtensions.push(unregister);
+			return unregister;
 		}),
-	} as unknown as TextmodeLayer;
-};
+		on: vi.fn((name: string, callback: (...args: any[]) => any) => {
+			hooks.set(name, callback);
+			return () => hooks.delete(name);
+		}),
+	} as unknown as TextmodePluginContext;
+	return { api, hooks, layer, layerExtensions, textmodifier, unregisterExtensions };
+}
 
 describe('SynthPlugin', () => {
-	let api: TextmodePluginContext;
-	let layer: TextmodeLayer;
-	let textmodifier: any;
+	let harness: ReturnType<typeof createHarness>;
 
 	beforeEach(() => {
-		shaderManager.dispose(); // Ensure clean state
-
-		layer = createMockLayer('base');
-		api = {
-			extendLayer: vi.fn(),
-			removeLayerExtension: vi.fn(),
-			registerLayerPreRenderHook: vi.fn(),
-			registerLayerDisposedHook: vi.fn(),
-			registerPreSetupHook: vi.fn(),
-			layerManager: {
-				base: layer,
-				all: [],
-			},
-		} as unknown as TextmodePluginContext;
-
-		textmodifier = {
-			bpm: undefined,
-			createMaterialShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
-		};
+		harness = createHarness();
 	});
 
-	it('should install and register hooks', () => {
-		SynthPlugin.install(textmodifier, api);
-		expect(api.registerLayerPreRenderHook).toHaveBeenCalled();
-		expect(api.registerLayerDisposedHook).toHaveBeenCalled();
+	it('registers the established extensions and lifecycle hooks', () => {
+		SynthPlugin.install(harness.textmodifier as any, harness.api);
+
+		for (const name of ['synth', 'clearSynth', 'bpm']) {
+			expect(harness.layerExtensions.has(`layer:${name}`)).toBe(true);
+		}
+		expect(typeof (harness.textmodifier as any).synth).toBe('function');
+		expect(typeof (harness.textmodifier as any).bpm).toBe('function');
+		expect(typeof (harness.textmodifier as any).seed).toBe('function');
+		expect([...harness.hooks.keys()]).toEqual(['preSetup', 'layerPreRender', 'layerDisposed']);
 	});
 
-	it('should dispose resources on uninstall', () => {
-		// Setup state with resources
-		const shaderDispose = vi.fn();
-		const bufferDispose = vi.fn();
-		const state: Partial<LayerSynthState> = {
-			shader: { dispose: shaderDispose } as any,
-			pingPongBuffers: [{ dispose: bufferDispose }, { dispose: bufferDispose }] as any,
-		};
-		layer.setPluginState(PLUGIN_NAME, state as any);
+	it('consolidates layer cleanup during uninstall', () => {
+		const shader = { dispose: vi.fn() };
+		const pendingShader = { dispose: vi.fn() };
+		const buffer = { dispose: vi.fn() };
+		const state = {
+			shader,
+			pendingShader,
+			pingPongBuffers: [buffer, buffer],
+			isDisposed: false,
+		} as unknown as LayerSynthState;
+		setLayerSynthState(harness.layer, state);
 
-		// Act
-		SynthPlugin.uninstall?.(textmodifier, api);
+		SynthPlugin.install(harness.textmodifier as any, harness.api);
+		SynthPlugin.uninstall?.(harness.textmodifier as any, harness.api);
 
-		// Assert resources disposed
-		expect(shaderDispose).toHaveBeenCalled();
-		expect(bufferDispose).toHaveBeenCalledTimes(2);
-	});
-
-	it('should remove plugin state from layer on uninstall', () => {
-		// Setup state
-		const state: Partial<LayerSynthState> = { isDisposed: false };
-		layer.setPluginState(PLUGIN_NAME, state as any);
-
-		// Act
-		SynthPlugin.uninstall?.(textmodifier, api);
-
-		// Assert state removed
-		expect(layer.getPluginState(PLUGIN_NAME)).toBeUndefined();
-	});
-
-	it('should mark state as disposed on uninstall', () => {
-		// Setup state
-		const state: Partial<LayerSynthState> = { isDisposed: false };
-		layer.setPluginState(PLUGIN_NAME, state as any);
-
-		// Act
-		SynthPlugin.uninstall?.(textmodifier, api);
-
-		// Assert state marked disposed
 		expect(state.isDisposed).toBe(true);
+		expect(shader.dispose).toHaveBeenCalledOnce();
+		expect(pendingShader.dispose).toHaveBeenCalledOnce();
+		expect(buffer.dispose).toHaveBeenCalledTimes(2);
+		expect(getLayerSynthState(harness.layer)).toBeUndefined();
 	});
 
-	it('should dispose global copy shader on uninstall', async () => {
-		// Mock shader
-		const mockShader = { dispose: vi.fn() };
-		textmodifier.createMaterialShader = vi.fn().mockResolvedValue(mockShader);
+	it('keeps layer extension state private to the synth package', () => {
+		SynthPlugin.install(harness.textmodifier as any, harness.api);
+		const bpm = harness.layerExtensions.get('layer:bpm')!.value! as (this: TextmodeLayer, value: number) => void;
+		const clearSynth = harness.layerExtensions.get('layer:clearSynth')!.value! as (this: TextmodeLayer) => void;
 
-		// Mock hook to execute immediately
-		const hook = vi.fn((cb) => cb());
-		api.registerPreSetupHook = hook as any;
+		bpm.call(harness.layer, 128);
+		expect(getLayerSynthState(harness.layer)?.bpm).toBe(128);
 
-		// Install and initialize
-		SynthPlugin.install(textmodifier, api);
-		await new Promise((resolve) => setTimeout(resolve, 0)); // Wait for async init
+		clearSynth.call(harness.layer);
+		expect(getLayerSynthState(harness.layer)).toBeUndefined();
+	});
 
-		expect(shaderManager.getShader()).toBe(mockShader);
+	it('keeps copy shaders isolated between simultaneous installations', async () => {
+		const first = createHarness();
+		const second = createHarness();
+		const firstShader = { dispose: vi.fn() };
+		const secondShader = { dispose: vi.fn() };
+		first.textmodifier.createMaterialShader.mockResolvedValue(firstShader);
+		second.textmodifier.createMaterialShader.mockResolvedValue(secondShader);
 
-		// Uninstall
-		SynthPlugin.uninstall?.(textmodifier, api);
+		SynthPlugin.install(first.textmodifier as any, first.api);
+		SynthPlugin.install(second.textmodifier as any, second.api);
+		await first.hooks.get('preSetup')!();
+		await second.hooks.get('preSetup')!();
+		SynthPlugin.uninstall?.(first.textmodifier as any, first.api);
 
-		// Assert shader disposed
-		expect(mockShader.dispose).toHaveBeenCalled();
-		expect(shaderManager.getShader()).toBeNull();
+		expect(firstShader.dispose).toHaveBeenCalledOnce();
+		expect(secondShader.dispose).not.toHaveBeenCalled();
+		SynthPlugin.uninstall?.(second.textmodifier as any, second.api);
+		expect(secondShader.dispose).toHaveBeenCalledOnce();
+	});
+
+	it('leaves extension removal to the host runtime', () => {
+		SynthPlugin.install(harness.textmodifier as any, harness.api);
+		SynthPlugin.uninstall?.(harness.textmodifier as any, harness.api);
+		expect(typeof (harness.textmodifier as any).synth).toBe('function');
+
+		for (const unregister of harness.unregisterExtensions) unregister();
+		expect((harness.textmodifier as any).synth).toBeUndefined();
 	});
 });

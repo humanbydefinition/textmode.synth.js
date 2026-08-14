@@ -277,6 +277,11 @@ ${uniformDecls}
 
 ${UTILITY_FUNCTIONS}
 
+// Compatibility aliases for Hydra-style extension bodies.
+// resolution aliases u_resolution; texture2D maps to the WebGL2 texture built-in.
+#define resolution u_resolution
+#define texture2D texture
+
 // Transform functions
 ${Array.from(glslFunctions).join('\n')}
 

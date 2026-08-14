@@ -38,7 +38,7 @@
 		"build:bundle": "textmode-build build",
 		"build:types": "textmode-types build",
 		"build": "npm run build:bundle && npm run build:types",
-		"check": "textmode-release check",
+		"check": "npm run format:check && npm run lint && npm run lint:markdown && npm run typecheck && npm run docs:check && npm run test && npm run build && npm run types:verify",
 		"docs:links:add": "textmode-docs links add",
 		"docs:api:check": "textmode-docs api-check",
 		"docs:check": "textmode-docs check",
@@ -57,11 +57,11 @@
 		"lint:markdown:fix": "textmode-lint lint:markdown --fix",
 		"lint": "textmode-lint lint src",
 		"prepare": "textmode-release hooks",
-		"prepack": "textmode-release prepack",
+		"prepack": "npm run build && npm run types:verify",
 		"release": "textmode-release release"
 	},
 	"peerDependencies": {
-		"textmode.js": ">=0.16.0"
+		"textmode.js": ">=0.17.2-beta.1 <0.20.0"
 	},
 	"devDependencies": {
 		"@textmode/build": "^0.1.0",
@@ -70,7 +70,7 @@
 		"@textmode/release": "^0.1.0",
 		"@textmode/tsconfig": "^0.2.0",
 		"@types/node": "^24.0.0",
-		"textmode.js": "^0.17.0",
+		"textmode.js": "^0.17.2-beta.1",
 		"typescript": "^6.0.3",
 		"vitest": "^4.1.10"
 	},

@@ -1,13 +1,23 @@
 import type { SynthParameterValue } from './types';
+import type { RegisteredTransform } from '../transforms/TransformDefinition';
 
 /**
  * A recorded transform in the synthesis chain.
+ *
+ * `transform` is an immutable registered-definition snapshot captured when the
+ * chain method was called. Redefining or disposing a transform therefore
+ * affects future chains only; a captured chain keeps compiling with the
+ * definition it recorded. The field is optional so plain records can be
+ * constructed for tests and migration code; chains built through
+ * {@link SynthSource} always carry a snapshot.
  */
 export interface TransformRecord {
 	/** Transform function name */
 	name: string;
 	/** User-provided arguments */
 	userArgs: SynthParameterValue[];
+	/** Immutable registration snapshot captured at call time */
+	transform?: RegisteredTransform;
 }
 
 /**

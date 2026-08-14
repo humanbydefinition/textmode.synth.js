@@ -7,7 +7,7 @@ export default defineTextmodeProject({
 		{
 			test: {
 				name: 'unit',
-				include: ['tests/{api,compiler,core,transforms,utils}/**/*.test.ts'],
+				include: ['tests/{api,compiler,core,extensions,runtime,transforms,utils}/**/*.test.ts'],
 			},
 		},
 		{
