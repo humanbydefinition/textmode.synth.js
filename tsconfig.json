@@ -1,10 +1,7 @@
 {
 	"extends": "@textmode/tsconfig/browser-library.json",
 	"compilerOptions": {
-		"types": ["node"],
-		"paths": {
-			"textmode.js": ["../textmode.js-dev/dist/types/index.d.ts"]
-		}
+		"types": ["node"]
 	},
 	"include": ["src", "tests", "vite.config.ts", "vitest.config.ts"]
 }
