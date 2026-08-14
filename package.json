@@ -67,7 +67,7 @@
 		"@textmode/build": "^0.1.0",
 		"@textmode/docs": "^0.3.0",
 		"@textmode/lint": "^0.1.0",
-		"@textmode/release": "^0.1.0",
+		"@textmode/release": "^0.2.0",
 		"@textmode/tsconfig": "^0.2.0",
 		"@types/node": "^24.0.0",
 		"textmode.js": "^0.17.2-beta.1",
