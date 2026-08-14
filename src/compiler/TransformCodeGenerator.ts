@@ -1,4 +1,4 @@
-import type { ProcessedTransform } from '../transforms/TransformDefinition';
+import type { RegisteredTransform } from '../transforms/TransformDefinition';
 import type { CompilationTarget } from './types';
 import type { ExternalLayerReference, TextmodeSourceReference } from '../core/types';
 import { getTextureChannel } from './channels';
@@ -58,7 +58,7 @@ export class TransformCodeGenerator {
 	 * @returns The GLSL function code
 	 */
 	public getContextAwareGlslFunction(
-		def: ProcessedTransform,
+		def: RegisteredTransform,
 		name: string,
 		currentTarget: CompilationTarget,
 		externalRef?: ExternalLayerReference,
@@ -89,7 +89,7 @@ export class TransformCodeGenerator {
 	 * Handles context-aware naming for src() and srcTexture() operations.
 	 */
 	public getFunctionName(
-		def: ProcessedTransform,
+		def: RegisteredTransform,
 		currentTarget: CompilationTarget,
 		externalRef?: ExternalLayerReference,
 		textmodeSourceRef?: TextmodeSourceReference,
@@ -136,7 +136,7 @@ export class TransformCodeGenerator {
 	 */
 	public generateTransformCode(
 		mainCode: string[],
-		def: ProcessedTransform,
+		def: RegisteredTransform,
 		varId: number,
 		coordVar: string,
 		colorVar: string,

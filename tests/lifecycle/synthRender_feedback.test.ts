@@ -1,10 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { synthRender } from '../../src/lifecycle/synthRender';
-import { shaderManager } from '../../src/lifecycle/ShaderManager';
+import { ShaderManager } from '../../src/lifecycle/ShaderManager';
 import type { TextmodeLayer } from 'textmode.js';
 import type { Textmodifier, TextmodeFramebuffer } from 'textmode.js';
 import type { LayerSynthState } from '../../src/core/types';
 import { SynthSource } from '../../src/core/SynthSource';
+import { setLayerSynthState } from '../../src/lifecycle/layerState';
 
 const createMockFramebuffer = (): TextmodeFramebuffer =>
 	({
@@ -35,8 +36,6 @@ const createMockLayer = (cols = 10, rows = 10): TextmodeLayer =>
 			end: vi.fn(),
 			textures: [],
 		},
-		getPluginState: vi.fn(),
-		setPluginState: vi.fn(),
 		font: { characters: [] },
 	}) as unknown as TextmodeLayer;
 
@@ -44,12 +43,10 @@ describe('synthRender Feedback Optimization', () => {
 	let layer: TextmodeLayer;
 	let textmodifier: Textmodifier;
 	let state: Partial<LayerSynthState>;
+	let shaderManager: ShaderManager;
 
 	beforeEach(() => {
-		// Reset the copy shader manager before each test
-		shaderManager.dispose();
-		shaderManager.reset();
-
+		shaderManager = new ShaderManager();
 		textmodifier = createMockTextmodifier();
 		layer = createMockLayer();
 		state = {
@@ -62,7 +59,7 @@ describe('synthRender Feedback Optimization', () => {
 			} as any,
 			pingPongIndex: 0,
 		};
-		vi.mocked(layer.getPluginState).mockReturnValue(state);
+		setLayerSynthState(layer, state as LayerSynthState);
 	});
 
 	afterEach(() => {
@@ -90,7 +87,7 @@ describe('synthRender Feedback Optimization', () => {
 		await shaderManager.initialize(textmodifier);
 
 		// Act: Render
-		await synthRender(layer, textmodifier);
+		synthRender(layer, textmodifier, shaderManager.getShader());
 
 		// Assert: Copy shader is used for the draw framebuffer pass
 		const shaderCalls = vi.mocked(textmodifier.shader).mock.calls;
@@ -120,7 +117,7 @@ describe('synthRender Feedback Optimization', () => {
 		state.pingPongDimensions = { cols: 10, rows: 10 };
 
 		// Act: Render without initialized copy shader
-		await synthRender(layer, textmodifier);
+		synthRender(layer, textmodifier);
 
 		// Assert: Main shader used for both passes (fallback behavior)
 		const shaderCalls = vi.mocked(textmodifier.shader).mock.calls;
@@ -145,7 +142,7 @@ describe('synthRender Feedback Optimization', () => {
 		expect(shaderManager.getShader()).toBe(copyShader);
 	});
 
-	it('should properly dispose and reset the manager', async () => {
+	it('should properly dispose the manager', async () => {
 		// Arrange
 		const copyShader = { id: 'copy_shader', dispose: vi.fn() };
 		vi.mocked(textmodifier.createMaterialShader).mockResolvedValue(copyShader as any);
@@ -160,15 +157,5 @@ describe('synthRender Feedback Optimization', () => {
 		expect(copyShader.dispose).toHaveBeenCalled();
 		expect(shaderManager.isReady()).toBe(false);
 		expect(shaderManager.getShader()).toBeNull();
-
-		// Act: Reset and reinitialize
-		shaderManager.reset();
-		const newCopyShader = { id: 'new_copy_shader', dispose: vi.fn() };
-		vi.mocked(textmodifier.createMaterialShader).mockResolvedValue(newCopyShader as any);
-		await shaderManager.initialize(textmodifier);
-
-		// Assert: New shader created
-		expect(shaderManager.isReady()).toBe(true);
-		expect(shaderManager.getShader()).toBe(newCopyShader);
 	});
 });

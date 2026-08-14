@@ -40,7 +40,7 @@ void main() {
  * to the draw framebuffer during feedback rendering, avoiding the overhead
  * of re-running the full synth shader pipeline.
  */
-class ShaderManager {
+export class ShaderManager {
 	private _shader: TextmodeShader | null = null;
 	private _isCompiling = false;
 	private _isDisposed = false;
@@ -60,7 +60,9 @@ class ShaderManager {
 		this._isCompiling = true;
 
 		try {
-			this._shader = await textmodifier.createMaterialShader(COPY_SHADER_SOURCE);
+			const shader = await textmodifier.createMaterialShader(COPY_SHADER_SOURCE);
+			if (this._isDisposed) shader.dispose();
+			else this._shader = shader;
 		} catch (err) {
 			console.warn('[textmode.synth.js] Failed to compile copy shader:', err);
 		} finally {
@@ -96,19 +98,4 @@ class ShaderManager {
 		this._shader = null;
 		this._isCompiling = false;
 	}
-
-	/**
-	 * Reset the manager state for reinitialization.
-	 * Called when the plugin is reinstalled.
-	 */
-	public reset(): void {
-		this._isDisposed = false;
-	}
 }
-
-/**
- * Singleton instance of the copy shader manager.
- *
- * @internal
- */
-export const shaderManager = new ShaderManager();
