@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import '../../src/bootstrap';
-import { osc, noise, solid, charColor } from '../../src/api';
-import { setFunction, extendTransforms, defineSource, inspectSynth } from '../../src/extensions/public';
+import { osc, noise, solid } from '../../src/api';
+import { setFunction, extendTransforms, defineSource } from '../../src/extensions/public';
 import { getRuntime } from '../../src/runtime/runtimeAccessor';
 import { compileSynthSource } from '../../src/compiler/SynthCompiler';
 import { SynthSource } from '../../src/core/SynthSource';
@@ -256,10 +256,9 @@ describe('transform extensibility', () => {
 			const newShader = compileSynthSource(stripesChain(12)).fragmentSource;
 			expect(newShader).not.toBe(oldShader);
 
-			// The old chain still captures its original definition revision.
+			// The old chain still captures its original definition.
 			const oldStill = compileSynthSource(oldChain).fragmentSource;
 			expect(oldStill).toBe(oldShader);
-			expect(oldChain.transforms[0].transform?.revision).toBeLessThan(getRuntime().lookup('stripes')!.revision);
 		});
 
 		it('disposing an extension does not invalidate captured chains', () => {
@@ -269,7 +268,7 @@ describe('transform extensibility', () => {
 
 			registration.dispose();
 
-			// The chain remains compilable with its captured revision.
+			// The chain remains compilable with its captured definition.
 			expect(compileSynthSource(chain).fragmentSource).toBe(shader);
 			// New chains now fail fast at construction.
 			expect(() => stripesChain(12)).toThrow(/Unknown transform "stripes"/);
@@ -335,28 +334,6 @@ describe('transform extensibility', () => {
 
 		it('throws for unknown transforms', () => {
 			expect(() => new SynthSource().transform('nope', 1)).toThrow(/Unknown transform "nope"/);
-		});
-	});
-
-	describe('inspectSynth', () => {
-		it('returns structured data without logging', () => {
-			registrations.push(setFunction(STRIPES, { exposeGlobal: false }));
-			registrations.push(setFunction(DUOTONE, { exposeGlobal: false }));
-
-			const source = charColor(chainMethods(stripesChain(4)).duotone());
-			const inspection = inspectSynth(source);
-
-			expect(inspection.fragmentSource).toContain('tm_stripes(');
-			const names = inspection.transforms.map((t) => t.publicName);
-			expect(names).toContain('stripes');
-			expect(names).toContain('duotone');
-			for (const transform of inspection.transforms) {
-				expect(transform.revision).toBeGreaterThan(0);
-				expect(transform.generatedName).toContain('tm_');
-			}
-			expect(inspection.uniforms).toBeDefined();
-			expect(inspection.samplers).toBeDefined();
-			expect(inspection.feedbackChannels).toBeDefined();
 		});
 	});
 });

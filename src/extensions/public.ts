@@ -7,30 +7,23 @@
  *   batch installs. Its default conflict policy is `error`.
  * - {@link defineSource} registers a procedural source and returns the
  *   standalone function with an attached `registration` handle.
- * - {@link inspectSynth} returns structured compiler data for debugging
- *   extensions without exposing compiler internals.
  *
- * All four share one underlying runtime operation; they are interface aliases,
+ * All three share one underlying runtime operation; they are interface aliases,
  * not separate implementations.
  *
  * @module
  */
 
 import type { TransformDefinition } from './types';
-import type { ExtensionOptions, ExtensionRegistration, SourceFunction, SynthInspection } from '../runtime/types';
-import type { SynthSource } from '../core/SynthSource';
+import type { ExtensionOptions, ExtensionRegistration, SourceFunction } from '../runtime/types';
 import { getRuntime } from '../runtime/runtimeAccessor';
-import { createSynthRuntime } from '../runtime/createSynthRuntime';
-
-export { createSynthRuntime };
-export type { CreateSynthRuntimeOptions, IsolatedSynthRuntime } from '../runtime/createSynthRuntime';
 
 /**
  * Register a transform definition using Hydra's `setFunction()` contract.
  *
  * Replaces any existing registration with the same name (including built-ins)
  * for future chain calls; previously created chains keep their captured
- * revision. A `src`-type definition becomes a standalone function returned in
+ * definition. A `src`-type definition becomes a standalone function returned in
  * `sources` and, in browser global mode, on `window`.
  *
  * @param definition - The transform definition
@@ -115,28 +108,6 @@ export function defineSource(
 	}
 
 	return Object.assign(sourceFunction, { registration });
-}
-
-/**
- * Compile and inspect a synth source without logging.
- *
- * Returns the fragment shader, the captured transform revisions, uniforms, and
- * sampler bindings. Editors can render it, tests can assert it, and users can
- * copy the shader into WebGL tooling.
- *
- * @param source - The SynthSource chain to inspect
- * @returns Structured inspection data
- *
- * @example
- * ```js
- * const inspection = inspectSynth(osc(6).kaleid(4));
- * console.log(inspection.fragmentSource);
- * ```
- *
- * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/inspectSynth | inspectSynth API reference}
- */
-export function inspectSynth(source: SynthSource): SynthInspection {
-	return getRuntime().inspect(source);
 }
 
 function pickExposeGlobal(options?: ExtensionOptions): { exposeGlobal?: boolean | 'auto' } {

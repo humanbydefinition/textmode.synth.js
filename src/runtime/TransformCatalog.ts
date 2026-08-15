@@ -1,9 +1,9 @@
 /**
- * TransformCatalog - Runtime-owned transform registry with revision stacks.
+ * TransformCatalog - Runtime-owned transform registry with per-name stacks.
  *
  * Each public name owns a stack of immutable {@link RegisteredTransform}
- * revisions. Installation pushes a new revision; disposal removes exactly that
- * revision and restores whatever was below it. This gives deterministic
+ * instances. Installation pushes a new entry; disposal removes exactly that
+ * entry and restores whatever was below it. This gives deterministic
  * replacement and cleanup semantics for live coding and extension packages.
  *
  * The catalog is an internal seam used by the runtime, bindings, and the
@@ -17,16 +17,13 @@ import { TT_SRC } from '../core/constants';
 
 export class TransformCatalog {
 	private readonly _stacks = new Map<string, RegisteredTransform[]>();
-	private readonly _revisionById = new Map<symbol, number>();
-	private _revision = 0;
 
 	/**
-	 * Install a normalized definition, allocating its id and revision.
+	 * Install a normalized definition, allocating its id.
 	 */
 	public install(normalized: NormalizedTransformDefinition, builtIn: boolean): RegisteredTransform {
 		const id = Symbol(normalized.name);
-		const revision = ++this._revision;
-		const registered = buildRegisteredTransform(normalized, { id, revision, builtIn });
+		const registered = buildRegisteredTransform(normalized, { id, builtIn });
 
 		let stack = this._stacks.get(registered.name);
 		if (!stack) {
@@ -34,7 +31,6 @@ export class TransformCatalog {
 			this._stacks.set(registered.name, stack);
 		}
 		stack.push(registered);
-		this._revisionById.set(id, revision);
 
 		return registered;
 	}
@@ -52,7 +48,6 @@ export class TransformCatalog {
 		if (stack.length === 0) {
 			this._stacks.delete(registered.name);
 		}
-		this._revisionById.delete(registered.id);
 		return true;
 	}
 
@@ -62,8 +57,8 @@ export class TransformCatalog {
 		return stack?.[stack.length - 1];
 	}
 
-	/** All revisions for a name, oldest first. */
-	public revisions(name: string): readonly RegisteredTransform[] {
+	/** All registrations for a name, oldest first. */
+	public stack(name: string): readonly RegisteredTransform[] {
 		return this._stacks.get(name) ?? [];
 	}
 
@@ -95,7 +90,5 @@ export class TransformCatalog {
 
 	public clear(): void {
 		this._stacks.clear();
-		this._revisionById.clear();
-		this._revision = 0;
 	}
 }

@@ -108,8 +108,8 @@ export { setGlobalErrorCallback };
 export type { DynamicErrorCallback } from './utils/SafeEvaluator';
 
 // Transform extensibility
-import { setFunction, extendTransforms, defineSource, inspectSynth, createSynthRuntime } from './extensions/public';
-export { setFunction, extendTransforms, defineSource, inspectSynth, createSynthRuntime };
+import { setFunction, extendTransforms, defineSource } from './extensions/public';
+export { setFunction, extendTransforms, defineSource };
 
 export type {
 	TransformType,
@@ -118,9 +118,6 @@ export type {
 	ExtensionOptions,
 	ExtensionRegistration,
 	SourceFunction,
-	SynthInspection,
-	IsolatedSynthRuntime,
-	CreateSynthRuntimeOptions,
 } from './extensions/types';
 export type { SynthTransformType } from './core/types';
 
