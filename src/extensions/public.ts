@@ -30,6 +30,8 @@ import { getRuntime } from '../runtime/runtimeAccessor';
  * @param options - Extension options (`exposeGlobal` only; conflict is always replace)
  * @returns A registration handle whose `dispose()` restores the prior binding
  *
+ * @category Extensibility
+ *
  * @example
  * {@includeCode ../../examples/CustomTransforms/setFunctionCoord/sketch.js}
  *
@@ -56,6 +58,8 @@ export function setFunction(
  * @param options - Conflict policy and global exposure
  * @returns A registration handle whose `dispose()` restores the prior bindings
  *
+ * @category Extensibility
+ *
  * @example
  * {@includeCode ../../examples/CustomTransforms/extendTransforms/sketch.js}
  *
@@ -81,6 +85,8 @@ export function extendTransforms(
  * @param definition - Source definition (the `type` is always `'src'`)
  * @param options - Global exposure options
  * @returns The standalone source function with an attached registration handle
+ *
+ * @category Extensibility
  *
  * @example
  * {@includeCode ../../examples/CustomTransforms/defineSource/sketch.js}
