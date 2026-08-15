@@ -268,8 +268,8 @@ export function normalizeDefinition(
 
 /**
  * Rewrite public input names to their safe GLSL identifiers in the body.
- * This is the same renaming `processTransform` performed, applied once at
- * normalization time so the registered definition is fully self-contained.
+ * Applied once at normalization time so the registered definition is fully
+ * self-contained.
  */
 function rewriteInputNames(glsl: string, inputs: readonly NormalizedTransformInput[]): string {
 	return inputs.reduce((body, input) => {
