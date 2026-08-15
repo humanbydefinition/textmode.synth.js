@@ -52,6 +52,9 @@
  * @categoryDescription Synthesis Chains
  * The chainable source object that records transforms for shader compilation.
  *
+ * @categoryDescription Extensibility
+ * Register custom transform and source definitions with setFunction, extendTransforms, and defineSource.
+ *
  * @categoryDescription Sources & Sampling
  * Functions that start a chain from procedural patterns, feedback, layers, or media.
  *

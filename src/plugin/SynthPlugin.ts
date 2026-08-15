@@ -24,6 +24,8 @@ const shaderManagers = new WeakMap<Textmodifier, ShaderManager>();
  * via {@link TextmodePluginContext.defineExtension}, so the host owns their
  * cleanup when the plugin is uninstalled.
  *
+ * @category Workflow
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/variables/SynthPlugin | SynthPlugin API reference}
  */
 export const SynthPlugin: TextmodePlugin = {

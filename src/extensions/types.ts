@@ -14,6 +14,8 @@ import type { SynthTransformType } from '../core/types';
  * Transform type categories determining how functions compose in the shader
  * pipeline: `src`, `coord`, `color`, `combine`, and `combineCoord`.
  *
+ * @category Extensibility
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/type-aliases/TransformType | TransformType API reference}
  */
 export type TransformType = SynthTransformType;

@@ -7,12 +7,16 @@ import type { SynthSource } from '../core/SynthSource';
 /**
  * A standalone function that starts a source chain.
  *
+ * @category Extensibility
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/type-aliases/SourceFunction | SourceFunction API reference}
  */
 export type SourceFunction = (...args: unknown[]) => SynthSource;
 
 /**
  * Options controlling a single or batch registration.
+ *
+ * @category Extensibility
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/ExtensionOptions | ExtensionOptions API reference}
  */
@@ -38,6 +42,8 @@ export interface ExtensionOptions {
  * `dispose()` restores the previous binding (method, source function, and
  * global property) and is idempotent. Disposing an older shadowed handle does
  * not remove a newer registration.
+ *
+ * @category Extensibility
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/ExtensionRegistration | ExtensionRegistration API reference}
  */

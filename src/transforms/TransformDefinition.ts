@@ -57,6 +57,8 @@ export const GLSL_RESERVED_IDENTIFIERS = new Set([
 /**
  * Definition of a synthesis transform function.
  *
+ * @category Extensibility
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformDefinition | TransformDefinition API reference}
  */
 export interface TransformDefinition {

@@ -24,6 +24,8 @@ import { TT_SRC, TT_COORD, TT_COLOR, TT_COMBINE, TT_COMBINE_COORD } from './cons
  * - `combine`: Blending operations that combine two color sources
  * - `combineCoord`: Modulation that uses one source to affect another's coordinates
  *
+ * @category Extensibility
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/type-aliases/SynthTransformType | SynthTransformType API reference}
  */
 export type SynthTransformType =
@@ -36,6 +38,8 @@ export type GLSLType = 'float' | 'vec2' | 'vec3' | 'vec4' | 'int' | 'sampler2D';
 
 /**
  * Input parameter definition for a transform function.
+ *
+ * @category Extensibility
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformInput | TransformInput API reference}
  */
