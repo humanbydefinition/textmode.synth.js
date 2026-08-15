@@ -20,5 +20,4 @@ export type TransformType = SynthTransformType;
 
 export type { TransformInput } from '../core/types';
 export type { TransformDefinition } from '../transforms/TransformDefinition';
-export type { ExtensionOptions, ExtensionRegistration, SourceFunction, SynthInspection } from '../runtime/types';
-export type { CreateSynthRuntimeOptions, IsolatedSynthRuntime } from '../runtime/createSynthRuntime';
+export type { ExtensionOptions, ExtensionRegistration, SourceFunction } from '../runtime/types';

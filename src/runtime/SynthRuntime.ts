@@ -6,9 +6,7 @@
  * function creation, chain-method binding, global exposure, and compilation.
  *
  * The default runtime is the module-level active runtime that static built-in
- * exports and `SynthSource` chain methods use. A future isolated-runtime path
- * (`createSynthRuntime`) will construct additional instances with the same
- * interface without sharing catalog, bindings, or prototype state.
+ * exports and `SynthSource` chain methods use.
  */
 
 import type { SynthSource } from '../core/SynthSource';
@@ -16,18 +14,10 @@ import type { TransformDefinition, RegisteredTransform } from '../transforms/Tra
 import { TT_SRC } from '../core/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
 import type { CompiledSynthShader } from '../compiler/types';
-import { CHANNEL_SUFFIXES, CHANNEL_SAMPLERS } from '../core/constants';
-import type { TextureChannel } from '../core/types';
 import { TransformCatalog } from './TransformCatalog';
 import { TransformBindings, type SourceFunction } from './TransformBindings';
 import { normalizeDefinition } from './TransformValidator';
-import type {
-	ExtensionOptions,
-	ExtensionRegistration,
-	SynthInspection,
-	SamplerInspection,
-	TransformInspection,
-} from './types';
+import type { ExtensionOptions, ExtensionRegistration } from './types';
 import { setRuntime } from './runtimeAccessor';
 
 export interface SynthRuntimeOptions {
@@ -194,87 +184,6 @@ export class SynthRuntime {
 	public compile(source: SynthSource): CompiledSynthShader {
 		return compileSynthSource(source);
 	}
-
-	/**
-	 * Compile and structurally inspect a SynthSource without logging.
-	 */
-	public inspect(source: SynthSource): SynthInspection {
-		const compiled = compileSynthSource(source);
-
-		const transforms: TransformInspection[] = [];
-		collectTransforms(source, transforms);
-
-		const uniforms: SynthInspection['uniforms'] = Array.from(compiled.uniforms.values()).map((uniform) => ({
-			name: uniform.name,
-			type: uniform.type,
-			isDynamic: uniform.isDynamic,
-		}));
-
-		const samplers: SamplerInspection[] = [];
-		const feedbackChannels: TextureChannel[] = [];
-		if (compiled.usesCharColorFeedback) feedbackChannels.push('charColor');
-		if (compiled.usesCharFeedback) feedbackChannels.push('char');
-		if (compiled.usesCellColorFeedback) feedbackChannels.push('cellColor');
-		for (const channel of feedbackChannels) {
-			samplers.push({ uniformName: CHANNEL_SAMPLERS[channel], kind: 'feedback' });
-		}
-		for (const [, info] of compiled.externalLayers) {
-			for (const [channel, suffix] of Object.entries(CHANNEL_SUFFIXES) as Array<[TextureChannel, string]>) {
-				if (info.usesChar && channel === 'char' && suffix) {
-					samplers.push({
-						uniformName: `${info.uniformPrefix}${suffix}`,
-						kind: 'layer',
-						layerId: info.layerId,
-					});
-				}
-				if (info.usesCharColor && channel === 'charColor') {
-					samplers.push({
-						uniformName: `${info.uniformPrefix}${suffix}`,
-						kind: 'layer',
-						layerId: info.layerId,
-					});
-				}
-				if (info.usesCellColor && channel === 'cellColor') {
-					samplers.push({
-						uniformName: `${info.uniformPrefix}${suffix}`,
-						kind: 'layer',
-						layerId: info.layerId,
-					});
-				}
-			}
-		}
-		for (const [, info] of compiled.textmodeSources) {
-			samplers.push({ uniformName: info.uniformName, kind: 'textmodeSource', sourceId: info.sourceId });
-		}
-
-		return {
-			fragmentSource: compiled.fragmentSource,
-			transforms,
-			uniforms,
-			samplers,
-			feedbackChannels,
-		};
-	}
-}
-
-function collectTransforms(source: SynthSource, out: TransformInspection[]): void {
-	for (const record of source.transforms) {
-		const transform = record.transform;
-		if (transform) {
-			out.push({
-				publicName: transform.name,
-				generatedName: transform.glslName,
-				revision: transform.revision,
-				type: transform.type,
-			});
-		}
-	}
-	for (const nested of source.nestedSources.values()) {
-		collectTransforms(nested, out);
-	}
-	if (source.charSource) collectTransforms(source.charSource, out);
-	if (source.charColorSource) collectTransforms(source.charColorSource, out);
-	if (source.cellColorSource) collectTransforms(source.cellColorSource, out);
 }
 
 /** Make a runtime the active module-level runtime. */
