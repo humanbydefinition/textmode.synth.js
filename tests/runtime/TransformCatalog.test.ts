@@ -14,12 +14,12 @@ describe('TransformCatalog', () => {
 		catalog = new TransformCatalog();
 	});
 
-	it('installs definitions with monotonically increasing revisions', () => {
+	it('installs definitions with unique symbol ids', () => {
 		const a = catalog.install(normalizeDefinition(makeDef('first')), false);
 		const b = catalog.install(normalizeDefinition(makeDef('second')), false);
-		expect(a.revision).toBe(1);
-		expect(b.revision).toBe(2);
-		expect(b.revision).toBeGreaterThan(a.revision);
+		expect(a.id).toBeTypeOf('symbol');
+		expect(b.id).toBeTypeOf('symbol');
+		expect(a.id).not.toBe(b.id);
 	});
 
 	it('returns the top-of-stack registration as current', () => {
@@ -28,7 +28,7 @@ describe('TransformCatalog', () => {
 
 		const second = catalog.install(normalizeDefinition(makeDef('tint', 'return _c0 * 0.5;')), false);
 		expect(catalog.current('tint')).toBe(second);
-		expect(catalog.revisions('tint')).toHaveLength(2);
+		expect(catalog.stack('tint')).toHaveLength(2);
 	});
 
 	it('disposal restores the previous registration', () => {
@@ -47,7 +47,7 @@ describe('TransformCatalog', () => {
 		// Dispose the oldest while newer ones remain.
 		expect(catalog.dispose(first)).toBe(true);
 		expect(catalog.current('tint')).toBe(third);
-		expect(catalog.revisions('tint')).toEqual([second, third]);
+		expect(catalog.stack('tint')).toEqual([second, third]);
 
 		// Then dispose the current to fall back to the middle one.
 		expect(catalog.dispose(third)).toBe(true);

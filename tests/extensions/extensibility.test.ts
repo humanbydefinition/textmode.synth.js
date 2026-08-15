@@ -256,10 +256,9 @@ describe('transform extensibility', () => {
 			const newShader = compileSynthSource(stripesChain(12)).fragmentSource;
 			expect(newShader).not.toBe(oldShader);
 
-			// The old chain still captures its original definition revision.
+			// The old chain still captures its original definition.
 			const oldStill = compileSynthSource(oldChain).fragmentSource;
 			expect(oldStill).toBe(oldShader);
-			expect(oldChain.transforms[0].transform?.revision).toBeLessThan(getRuntime().lookup('stripes')!.revision);
 		});
 
 		it('disposing an extension does not invalidate captured chains', () => {
@@ -269,7 +268,7 @@ describe('transform extensibility', () => {
 
 			registration.dispose();
 
-			// The chain remains compilable with its captured revision.
+			// The chain remains compilable with its captured definition.
 			expect(compileSynthSource(chain).fragmentSource).toBe(shader);
 			// New chains now fail fast at construction.
 			expect(() => stripesChain(12)).toThrow(/Unknown transform "stripes"/);

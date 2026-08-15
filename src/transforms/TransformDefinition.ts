@@ -123,21 +123,18 @@ export interface NormalizedTransformDefinition {
 export interface BuildRegisteredTransformOptions {
 	/** Unique identifier for this registration */
 	readonly id: symbol;
-	/** Monotonically increasing revision allocated by the catalog */
-	readonly revision: number;
 	/** Whether this registration is a built-in definition */
 	readonly builtIn: boolean;
 }
 
 /**
- * An immutable, revisioned registration captured by chain nodes.
+ * An immutable registration captured by chain nodes.
  *
  * Chain nodes capture this record when a chain method is called, so
  * redefining or disposing a transform affects future chains only.
  */
 export interface RegisteredTransform {
 	readonly id: symbol;
-	readonly revision: number;
 	/** Public name used by the JavaScript API */
 	readonly name: string;
 	readonly type: SynthTransformType;
@@ -172,7 +169,6 @@ ${normalized.glsl}
 
 	return Object.freeze({
 		id: options.id,
-		revision: options.revision,
 		name: normalized.name,
 		type: normalized.type,
 		inputs: normalized.inputs,
