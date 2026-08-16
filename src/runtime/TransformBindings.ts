@@ -13,9 +13,8 @@ import type { RegisteredTransform, NormalizedTransformInput } from '../transform
 import { COMBINE_TYPES, TT_SRC } from '../core/constants';
 import { SynthSource } from '../core/SynthSource';
 import type { SynthRuntime } from './SynthRuntime';
+import type { SourceFunction } from './types';
 import { GlobalExposureAdapter } from './GlobalExposureAdapter';
-
-export type SourceFunction = (...args: unknown[]) => SynthSource;
 
 /**
  * Options for installing a binding.
@@ -187,17 +186,14 @@ function readDescriptor(target: object, name: string): PropertyDescriptor | 'abs
 /**
  * Resolve user arguments against the declared inputs, filling defaults.
  */
-export function resolveArgs(
-	inputs: readonly NormalizedTransformInput[],
-	args: readonly unknown[]
-): SynthParameterValue[] {
+function resolveArgs(inputs: readonly NormalizedTransformInput[], args: readonly unknown[]): SynthParameterValue[] {
 	return inputs.map((input, index) => (args[index] ?? input.default) as SynthParameterValue);
 }
 
 /**
  * Expand a single scalar argument for color-like transforms into RGB.
  */
-export function expandColorArgs(name: string, args: readonly unknown[]): unknown[] {
+function expandColorArgs(name: string, args: readonly unknown[]): unknown[] {
 	if ((name === 'solid' || name === 'color') && args.length === 1 && typeof args[0] === 'number') {
 		const val = args[0];
 		return [val, val, val];

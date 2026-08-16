@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import '../../src/bootstrap';
-import { setFunction, extendTransforms, defineSource } from '../../src/extensions/public';
+import { setFunction } from '../../src/extensions/public';
 import { gradient, moire, noise, osc, shape } from '../../src/api';
 import { compileSynthSource } from '../../src/compiler/SynthCompiler';
 import type { SynthSource } from '../../src/core/SynthSource';
@@ -21,10 +21,11 @@ describe('CustomTransforms example sketches compile', () => {
 		for (const registration of disposed.splice(0)) registration.dispose();
 	});
 
-	it('defineSource (tideChart)', () => {
-		const tideChart = defineSource(
+	it('setFunction.source (tideChart)', () => {
+		const registration = setFunction(
 			{
 				name: 'tideChart',
+				type: 'src',
 				inputs: [
 					{ name: 'frequency', type: 'float', default: 4.5 },
 					{ name: 'drift', type: 'float', default: 0.3 },
@@ -40,7 +41,8 @@ describe('CustomTransforms example sketches compile', () => {
 			},
 			{ exposeGlobal: false }
 		);
-		disposed.push(tideChart.registration);
+		disposed.push(registration);
+		const tideChart = registration.sources.tideChart;
 
 		const glyphs = tideChart(4.5, 0.3).charMap(' .,:;=xX#@');
 		const ink = tideChart(3, -0.12).color(0.22, 0.82, 1.15);
@@ -172,8 +174,8 @@ describe('CustomTransforms example sketches compile', () => {
 		).toContain('tm_fieldBend(');
 	});
 
-	it('extendTransforms extension pack', () => {
-		const pack = extendTransforms(
+	it('setFunction batch extension pack', () => {
+		const pack = setFunction(
 			[
 				{
 					name: 'surveyGrid',

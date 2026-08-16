@@ -19,14 +19,6 @@ import type { SynthContext } from '../core/types';
 export type DynamicErrorCallback = (error: unknown, uniformName: string) => void;
 
 /**
- * Options for dynamic parameter evaluation.
- */
-export interface EvalOptions {
-	/** Callback invoked when an error occurs (overrides global callback) */
-	onError?: DynamicErrorCallback;
-}
-
-/**
  * Global error callback for all dynamic parameter errors.
  */
 let globalErrorCallback: DynamicErrorCallback | null = null;
@@ -65,13 +57,6 @@ let globalErrorCallback: DynamicErrorCallback | null = null;
  */
 export function setGlobalErrorCallback(callback: DynamicErrorCallback | null): void {
 	globalErrorCallback = callback;
-}
-
-/**
- * Get the current global error callback.
- */
-export function getGlobalErrorCallback(): DynamicErrorCallback | null {
-	return globalErrorCallback;
 }
 
 /**

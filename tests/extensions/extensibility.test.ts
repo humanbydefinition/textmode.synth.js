@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import '../../src/bootstrap';
 import { osc, noise, solid } from '../../src/api';
-import { setFunction, extendTransforms, defineSource } from '../../src/extensions/public';
+import { setFunction } from '../../src/extensions/public';
 import { getRuntime } from '../../src/runtime/runtimeAccessor';
 import { compileSynthSource } from '../../src/compiler/SynthCompiler';
 import { SynthSource } from '../../src/core/SynthSource';
@@ -162,9 +162,9 @@ describe('transform extensibility', () => {
 		});
 	});
 
-	describe('extendTransforms', () => {
+	describe('setFunction batch install', () => {
 		it('installs a batch atomically', () => {
-			const registration = extendTransforms([STRIPES, DUOTONE, BLEND2], { exposeGlobal: false });
+			const registration = setFunction([STRIPES, DUOTONE, BLEND2], { exposeGlobal: false });
 			registrations.push(registration);
 			expect(registration.names).toEqual(['stripes', 'duotone', 'blend2']);
 			expect(registration.sources.stripes).toBeDefined();
@@ -172,7 +172,7 @@ describe('transform extensibility', () => {
 
 		it('rolls back the whole batch if one definition is invalid', () => {
 			expect(() =>
-				extendTransforms(
+				setFunction(
 					[
 						STRIPES,
 						{
@@ -191,15 +191,23 @@ describe('transform extensibility', () => {
 			expect(getRuntime().lookup('broken')).toBeUndefined();
 		});
 
-		it('default conflict policy is error', () => {
-			registrations.push(extendTransforms(STRIPES, { exposeGlobal: false }));
-			expect(() => extendTransforms(STRIPES, { exposeGlobal: false })).toThrow(/already registered/);
+		it('rejects name collisions with an explicit error conflict policy', () => {
+			registrations.push(setFunction(STRIPES, { exposeGlobal: false }));
+			expect(() => setFunction(STRIPES, { conflict: 'error', exposeGlobal: false })).toThrow(
+				/already registered/
+			);
+		});
+
+		it('refuses to overwrite a built-in with an error conflict policy', () => {
+			expect(() =>
+				setFunction({ name: 'osc', type: 'src', inputs: [], glsl: 'return vec4(1.0);' }, { conflict: 'error' })
+			).toThrow(/built-in/);
 		});
 
 		it('allows replacement with an explicit conflict option', () => {
-			const first = extendTransforms(STRIPES, { exposeGlobal: false });
+			const first = setFunction(STRIPES, { exposeGlobal: false });
 			registrations.push(first);
-			const second = extendTransforms(
+			const second = setFunction(
 				{ ...STRIPES, glsl: 'return vec4(0.0, 1.0, 0.0, 1.0);' },
 				{ conflict: 'replace', exposeGlobal: false }
 			);
@@ -208,21 +216,16 @@ describe('transform extensibility', () => {
 			const compiled = compileSynthSource(second.sources.stripes());
 			expect(compiled.fragmentSource).toContain('vec4(0.0, 1.0, 0.0, 1.0)');
 		});
-
-		it('refuses to overwrite a built-in without replacement', () => {
-			expect(() => extendTransforms({ name: 'osc', type: 'src', inputs: [], glsl: 'return vec4(1.0);' })).toThrow(
-				/built-in/
-			);
-		});
 	});
 
-	describe('defineSource', () => {
-		it('returns the standalone source function with a registration handle', () => {
-			const stripes = defineSource(STRIPES, { exposeGlobal: false });
-			registrations.push(stripes.registration);
+	describe('setFunction source definitions', () => {
+		it('returns the standalone source function from registration.sources', () => {
+			const registration = setFunction(STRIPES, { exposeGlobal: false });
+			registrations.push(registration);
 
+			const stripes = registration.sources.stripes;
 			expect(typeof stripes).toBe('function');
-			expect(stripes.registration.names).toEqual(['stripes']);
+			expect(registration.names).toEqual(['stripes']);
 
 			const source = stripes(12);
 			expect(source.transforms[0].name).toBe('stripes');
@@ -230,12 +233,12 @@ describe('transform extensibility', () => {
 		});
 
 		it('works through the full fluent pipeline', () => {
-			const stripes = defineSource(STRIPES, { exposeGlobal: false });
-			registrations.push(stripes.registration);
-			const duotone = extendTransforms(DUOTONE, { exposeGlobal: false });
+			const stripes = setFunction(STRIPES, { exposeGlobal: false });
+			registrations.push(stripes);
+			const duotone = setFunction(DUOTONE, { exposeGlobal: false });
 			registrations.push(duotone);
 
-			const source = chainMethods(stripes(4)).duotone();
+			const source = chainMethods(stripes.sources.stripes(4)).duotone();
 			const compiled = compileSynthSource(source);
 			expect(compiled.fragmentSource).toContain('tm_duotone(');
 			expect(compiled.fragmentSource).toContain('tm_stripes(');

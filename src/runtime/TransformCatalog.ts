@@ -10,10 +10,8 @@
  * compiler. It is not part of the package interface.
  */
 
-import type { SynthTransformType } from '../core/types';
 import type { NormalizedTransformDefinition, RegisteredTransform } from '../transforms/TransformDefinition';
 import { buildRegisteredTransform } from '../transforms/TransformDefinition';
-import { TT_SRC } from '../core/constants';
 
 export class TransformCatalog {
 	private readonly _stacks = new Map<string, RegisteredTransform[]>();
@@ -55,40 +53,5 @@ export class TransformCatalog {
 	public current(name: string): RegisteredTransform | undefined {
 		const stack = this._stacks.get(name);
 		return stack?.[stack.length - 1];
-	}
-
-	/** All registrations for a name, oldest first. */
-	public stack(name: string): readonly RegisteredTransform[] {
-		return this._stacks.get(name) ?? [];
-	}
-
-	public has(name: string): boolean {
-		return this._stacks.has(name);
-	}
-
-	public names(): string[] {
-		return Array.from(this._stacks.keys());
-	}
-
-	public all(): RegisteredTransform[] {
-		return Array.from(this._stacks.values())
-			.map((stack) => stack[stack.length - 1])
-			.filter((entry): entry is RegisteredTransform => entry !== undefined);
-	}
-
-	public byType(type: SynthTransformType): RegisteredTransform[] {
-		return this.all().filter((entry) => entry.type === type);
-	}
-
-	public sourceTransforms(): RegisteredTransform[] {
-		return this.byType(TT_SRC);
-	}
-
-	public get size(): number {
-		return this._stacks.size;
-	}
-
-	public clear(): void {
-		this._stacks.clear();
 	}
 }

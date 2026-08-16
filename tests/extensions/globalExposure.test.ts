@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import '../../src/index';
-import { setFunction, extendTransforms } from '../../src/extensions/public';
+import { setFunction } from '../../src/extensions/public';
 import type { TransformDefinition } from '../../src/transforms/TransformDefinition';
 
 const STRIPES: TransformDefinition = {
@@ -44,7 +44,7 @@ describe('global exposure', () => {
 			inputs: [],
 			glsl: 'return _c0;',
 		};
-		const registration = extendTransforms(colorDef);
+		const registration = setFunction(colorDef);
 		disposed.push(() => registration.dispose());
 
 		expect(global()['myTint']).toBeUndefined();

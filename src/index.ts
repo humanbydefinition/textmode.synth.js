@@ -53,7 +53,7 @@
  * The chainable source object that records transforms for shader compilation.
  *
  * @categoryDescription Extensibility
- * Register custom transform and source definitions with setFunction, extendTransforms, and defineSource.
+ * Register custom transform and source definitions with setFunction.
  *
  * @categoryDescription Sources & Sampling
  * Functions that start a chain from procedural patterns, feedback, layers, or media.
@@ -111,18 +111,12 @@ export { setGlobalErrorCallback };
 export type { DynamicErrorCallback } from './utils/SafeEvaluator';
 
 // Transform extensibility
-import { setFunction, extendTransforms, defineSource } from './extensions/public';
-export { setFunction, extendTransforms, defineSource };
+import { setFunction } from './extensions/public';
+export { setFunction };
 
-export type {
-	TransformType,
-	TransformDefinition,
-	TransformInput,
-	ExtensionOptions,
-	ExtensionRegistration,
-	SourceFunction,
-} from './extensions/types';
-export type { SynthTransformType } from './core/types';
+export type { SynthTransformType, TransformInput } from './core/types';
+export type { TransformDefinition } from './transforms/TransformDefinition';
+export type { ExtensionOptions, ExtensionRegistration, SourceFunction } from './runtime/types';
 
 // UMD global exports
 if (typeof window !== 'undefined') {
