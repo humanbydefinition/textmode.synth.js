@@ -138,6 +138,8 @@ declare global {
 		src?: typeof src;
 		voronoi?: typeof voronoi;
 		setGlobalErrorCallback?: typeof setGlobalErrorCallback;
+		setFunction?: typeof setFunction;
+		EASING_FUNCTIONS?: typeof EASING_FUNCTIONS;
 	}
 }
 
@@ -159,4 +161,6 @@ if (typeof window !== 'undefined') {
 	window.src = src;
 	window.voronoi = voronoi;
 	window.setGlobalErrorCallback = setGlobalErrorCallback;
+	window.setFunction = setFunction;
+	window.EASING_FUNCTIONS = EASING_FUNCTIONS;
 }
