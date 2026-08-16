@@ -118,22 +118,49 @@ export type { SynthTransformType, TransformInput } from './core/types';
 export type { TransformDefinition } from './transforms/TransformDefinition';
 export type { ExtensionOptions, ExtensionRegistration, SourceFunction } from './runtime/types';
 
+import type { TextmodePlugin } from 'textmode.js';
+
+declare global {
+	interface Window {
+		SynthPlugin?: TextmodePlugin;
+		SynthSource?: typeof SynthSource;
+		cellColor?: typeof cellColor;
+		char?: typeof char;
+		charColor?: typeof charColor;
+		gradient?: typeof gradient;
+		moire?: typeof moire;
+		noise?: typeof noise;
+		osc?: typeof osc;
+		paint?: typeof paint;
+		plasma?: typeof plasma;
+		shape?: typeof shape;
+		solid?: typeof solid;
+		src?: typeof src;
+		voronoi?: typeof voronoi;
+		setGlobalErrorCallback?: typeof setGlobalErrorCallback;
+		setFunction?: typeof setFunction;
+		EASING_FUNCTIONS?: typeof EASING_FUNCTIONS;
+	}
+}
+
 // UMD global exports
 if (typeof window !== 'undefined') {
-	(window as any).SynthPlugin = SynthPlugin;
-	(window as any).SynthSource = SynthSource;
-	(window as any).cellColor = cellColor;
-	(window as any).char = char;
-	(window as any).charColor = charColor;
-	(window as any).gradient = gradient;
-	(window as any).moire = moire;
-	(window as any).noise = noise;
-	(window as any).osc = osc;
-	(window as any).paint = paint;
-	(window as any).plasma = plasma;
-	(window as any).shape = shape;
-	(window as any).solid = solid;
-	(window as any).src = src;
-	(window as any).voronoi = voronoi;
-	(window as any).setGlobalErrorCallback = setGlobalErrorCallback;
+	window.SynthPlugin = SynthPlugin;
+	window.SynthSource = SynthSource;
+	window.cellColor = cellColor;
+	window.char = char;
+	window.charColor = charColor;
+	window.gradient = gradient;
+	window.moire = moire;
+	window.noise = noise;
+	window.osc = osc;
+	window.paint = paint;
+	window.plasma = plasma;
+	window.shape = shape;
+	window.solid = solid;
+	window.src = src;
+	window.voronoi = voronoi;
+	window.setGlobalErrorCallback = setGlobalErrorCallback;
+	window.setFunction = setFunction;
+	window.EASING_FUNCTIONS = EASING_FUNCTIONS;
 }

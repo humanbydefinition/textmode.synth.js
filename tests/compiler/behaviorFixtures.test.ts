@@ -104,6 +104,8 @@ describe('public behavior fixtures', () => {
 			'SynthPlugin',
 			'SynthSource',
 			'setGlobalErrorCallback',
+			'setFunction',
+			'EASING_FUNCTIONS',
 		]) {
 			expect((window as unknown as Record<string, unknown>)[name]).toBeDefined();
 		}
