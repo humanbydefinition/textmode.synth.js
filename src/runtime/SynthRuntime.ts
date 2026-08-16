@@ -12,12 +12,10 @@
 import type { SynthSource } from '../core/SynthSource';
 import type { TransformDefinition, RegisteredTransform } from '../transforms/TransformDefinition';
 import { TT_SRC } from '../core/constants';
-import { compileSynthSource } from '../compiler/SynthCompiler';
-import type { CompiledSynthShader } from '../compiler/types';
 import { TransformCatalog } from './TransformCatalog';
-import { TransformBindings, type SourceFunction } from './TransformBindings';
+import { TransformBindings } from './TransformBindings';
 import { normalizeDefinition } from './TransformValidator';
-import type { ExtensionOptions, ExtensionRegistration } from './types';
+import type { ExtensionOptions, ExtensionRegistration, SourceFunction } from './types';
 import { setRuntime } from './runtimeAccessor';
 
 export interface SynthRuntimeOptions {
@@ -48,12 +46,10 @@ export class SynthRuntime {
 	public readonly name: string;
 
 	private readonly _bindings: TransformBindings;
-	private readonly _createSource: () => SynthSource;
 
 	public constructor(options: SynthRuntimeOptions) {
 		this.catalog = new TransformCatalog();
 		this.name = options.name ?? 'default';
-		this._createSource = options.createSource;
 		this._bindings = new TransformBindings(options.prototype, options.createSource);
 	}
 
@@ -169,20 +165,6 @@ export class SynthRuntime {
 	 */
 	public lookup(name: string): RegisteredTransform | undefined {
 		return this.catalog.current(name);
-	}
-
-	/**
-	 * Create a new empty SynthSource owned by this runtime.
-	 */
-	public createSource(): SynthSource {
-		return this._createSource();
-	}
-
-	/**
-	 * Compile a SynthSource into a shader.
-	 */
-	public compile(source: SynthSource): CompiledSynthShader {
-		return compileSynthSource(source);
 	}
 }
 

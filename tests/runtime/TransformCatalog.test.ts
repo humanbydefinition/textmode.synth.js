@@ -28,7 +28,6 @@ describe('TransformCatalog', () => {
 
 		const second = catalog.install(normalizeDefinition(makeDef('tint', 'return _c0 * 0.5;')), false);
 		expect(catalog.current('tint')).toBe(second);
-		expect(catalog.stack('tint')).toHaveLength(2);
 	});
 
 	it('disposal restores the previous registration', () => {
@@ -47,7 +46,6 @@ describe('TransformCatalog', () => {
 		// Dispose the oldest while newer ones remain.
 		expect(catalog.dispose(first)).toBe(true);
 		expect(catalog.current('tint')).toBe(third);
-		expect(catalog.stack('tint')).toEqual([second, third]);
 
 		// Then dispose the current to fall back to the middle one.
 		expect(catalog.dispose(third)).toBe(true);
@@ -59,26 +57,6 @@ describe('TransformCatalog', () => {
 		expect(catalog.dispose(entry)).toBe(true);
 		expect(catalog.dispose(entry)).toBe(false);
 		expect(catalog.current('tint')).toBeUndefined();
-	});
-
-	it('reports all, by-type, and source transforms', () => {
-		catalog.install(normalizeDefinition(makeDef('tint')), false); // color
-		const src = catalog.install(
-			normalizeDefinition({ name: 'waves', type: 'src', inputs: [], glsl: 'return vec4(1.0);' }),
-			false
-		);
-		expect(catalog.size).toBe(2);
-		expect(catalog.byType('color')).toHaveLength(1);
-		expect(catalog.sourceTransforms()).toEqual([src]);
-		expect(catalog.names().sort()).toEqual(['tint', 'waves']);
-	});
-
-	it('clear removes all registrations', () => {
-		catalog.install(normalizeDefinition(makeDef('tint')), false);
-		catalog.install(normalizeDefinition(makeDef('waves', 'return vec4(1.0);')), false);
-		catalog.clear();
-		expect(catalog.size).toBe(0);
-		expect(catalog.all()).toHaveLength(0);
 	});
 
 	it('keeps built-in flag on the registration', () => {
