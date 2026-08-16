@@ -51,13 +51,6 @@ declare module 'textmode.js' {
 		 * {@includeCode ../../examples/TextmodeLayer/bpm/sketch.js}
 		 */
 		bpm(value: number): void;
-
-		/**
-		 * Get the unique identifier for this layer.
-		 *
-		 * @returns The layer's unique identifier
-		 */
-		get id(): string;
 	}
 }
 

@@ -5,12 +5,12 @@ import type { LayerSynthState } from '../../src/core/types';
 import { SynthPlugin } from '../../src/plugin/SynthPlugin';
 import { getLayerSynthState, setLayerSynthState } from '../../src/lifecycle/layerState';
 
-function createLayer(id: string): TextmodeLayer {
-	return { id } as TextmodeLayer;
+function createLayer(): TextmodeLayer {
+	return {} as TextmodeLayer;
 }
 
 function createHarness() {
-	const layer = createLayer('base');
+	const layer = createLayer();
 	const layerExtensions = new Map<string, PropertyDescriptor>();
 	const hooks = new Map<string, (...args: any[]) => any>();
 	const unregisterExtensions: Array<() => void> = [];

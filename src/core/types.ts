@@ -268,7 +268,7 @@ export interface CharacterMapping {
  * Used by src(layer) to enable hydra-style output references.
  */
 export interface ExternalLayerReference {
-	/** Unique identifier for the layer (typically layer.id or generated) */
+	/** Unique identifier for the layer reference */
 	layerId: string;
 	/** The layer object or lazy getter */
 	layer: TextmodeLayer | (() => TextmodeLayer | undefined);
