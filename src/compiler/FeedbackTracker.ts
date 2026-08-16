@@ -60,26 +60,4 @@ export class FeedbackTracker {
 			usesCellColorFeedback: this._usage.usesCellColor,
 		};
 	}
-
-	/**
-	 * Check if any feedback is used.
-	 */
-	public get usesAnyFeedback(): boolean {
-		return this._usage.usesCharColor || this._usage.usesChar || this._usage.usesCellColor;
-	}
-
-	/** Whether character color feedback is used */
-	public get usesCharColorFeedback(): boolean {
-		return this._usage.usesCharColor;
-	}
-
-	/** Whether character feedback is used */
-	public get usesCharFeedback(): boolean {
-		return this._usage.usesChar;
-	}
-
-	/** Whether cell color feedback is used */
-	public get usesCellColorFeedback(): boolean {
-		return this._usage.usesCellColor;
-	}
 }

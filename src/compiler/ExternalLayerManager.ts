@@ -61,40 +61,12 @@ export class ExternalLayerManager {
 	}
 
 	/**
-	 * Check if a layer ID has been registered.
-	 */
-	public hasLayer(layerId: string): boolean {
-		return this._externalLayers.has(layerId);
-	}
-
-	/**
-	 * Get info for a specific external layer.
-	 */
-	public getLayerInfo(layerId: string): ExternalLayerInfo | undefined {
-		return this._externalLayers.get(layerId);
-	}
-
-	/**
 	 * Get all external layer references.
 	 *
 	 * @returns A new Map containing all external layer info
 	 */
 	public getExternalLayers(): Map<string, ExternalLayerInfo> {
 		return new Map(this._externalLayers);
-	}
-
-	/**
-	 * Check if any external layers are referenced.
-	 */
-	public get hasExternalLayers(): boolean {
-		return this._externalLayers.size > 0;
-	}
-
-	/**
-	 * Get the count of external layers.
-	 */
-	public get count(): number {
-		return this._externalLayers.size;
 	}
 
 	/**

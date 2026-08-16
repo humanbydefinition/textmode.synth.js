@@ -70,32 +70,4 @@ export class SynthChain {
 	public get length(): number {
 		return this._transforms.length;
 	}
-
-	/**
-	 * Check if the chain is empty.
-	 */
-	public get isEmpty(): boolean {
-		return this._transforms.length === 0;
-	}
-
-	/**
-	 * Append a transform to this chain, returning a new chain.
-	 */
-	public append(record: TransformRecord): SynthChain {
-		return new SynthChain([...this._transforms, record]);
-	}
-
-	/**
-	 * Get a transform at a specific index.
-	 */
-	public get(index: number): TransformRecord | undefined {
-		return this._transforms[index];
-	}
-
-	/**
-	 * Create an iterator over the transforms.
-	 */
-	public [Symbol.iterator](): Iterator<TransformRecord> {
-		return this._transforms[Symbol.iterator]();
-	}
 }
