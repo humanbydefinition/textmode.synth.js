@@ -1,34 +1,34 @@
 /**
  * Public transform extension facade.
  *
- * - {@link setFunction} is the Hydra-compatible single-definition entry point.
- *   Its default conflict policy is `replace`, so it can redefine a built-in.
- * - {@link extendTransforms} is the package-oriented entry point for single or
- *   batch installs. Its default conflict policy is `error`.
- * - {@link defineSource} registers a procedural source and returns the
- *   standalone function with an attached `registration` handle.
- *
- * All three share one underlying runtime operation; they are interface aliases,
- * not separate implementations.
+ * {@link setFunction} is the single entry point for the extensibility API. It
+ * registers transform and source definitions at runtime: pass one definition
+ * or an array for an atomic batch install, and control replacement with the
+ * `conflict` option.
  *
  * @module
  */
 
 import type { TransformDefinition } from './types';
-import type { ExtensionOptions, ExtensionRegistration, SourceFunction } from '../runtime/types';
+import type { ExtensionOptions, ExtensionRegistration } from '../runtime/types';
 import { getRuntime } from '../runtime/runtimeAccessor';
 
 /**
- * Register a transform definition using Hydra's `setFunction()` contract.
+ * Register one or more transform definitions using Hydra's `setFunction()`
+ * contract.
  *
- * Replaces any existing registration with the same name (including built-ins)
- * for future chain calls; previously created chains keep their captured
- * definition. A `src`-type definition becomes a standalone function returned in
- * `sources` and, in browser global mode, on `window`.
+ * Accepts a single definition or an array of definitions installed atomically
+ * (the whole batch validates before any state changes). The default conflict
+ * policy is `replace`, so a definition can redefine a built-in or an earlier
+ * registration; pass `{ conflict: 'error' }` to reject name collisions instead.
+ * Previously created chains keep their captured definition.
  *
- * @param definition - The transform definition
- * @param options - Extension options (`exposeGlobal` only; conflict is always replace)
- * @returns A registration handle whose `dispose()` restores the prior binding
+ * A `src`-type definition becomes a standalone function returned in `sources`
+ * and, in browser global mode, on `window`.
+ *
+ * @param definitions - A single definition or an array of definitions
+ * @param options - Conflict policy and global exposure
+ * @returns A registration handle whose `dispose()` restores the prior bindings
  *
  * @category Extensibility
  *
@@ -38,82 +38,13 @@ import { getRuntime } from '../runtime/runtimeAccessor';
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/setFunction | setFunction API reference}
  */
 export function setFunction(
-	definition: TransformDefinition,
-	options?: Omit<ExtensionOptions, 'conflict'>
-): ExtensionRegistration {
-	return getRuntime().install(definition, {
-		conflict: 'replace',
-		...pickExposeGlobal(options),
-	});
-}
-
-/**
- * Register one or more transform definitions atomically.
- *
- * The whole batch validates and resolves conflicts before any state is mutated.
- * Default conflict policy is `error`; pass `{ conflict: 'replace' }` to allow
- * redefinition.
- *
- * @param definitions - A single definition or an array of definitions
- * @param options - Conflict policy and global exposure
- * @returns A registration handle whose `dispose()` restores the prior bindings
- *
- * @category Extensibility
- *
- * @example
- * {@includeCode ../../examples/CustomTransforms/extendTransforms/sketch.js}
- *
- * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/extendTransforms | extendTransforms API reference}
- */
-export function extendTransforms(
 	definitions: TransformDefinition | readonly TransformDefinition[],
 	options?: ExtensionOptions
 ): ExtensionRegistration {
 	return getRuntime().install(definitions, {
-		conflict: options?.conflict ?? 'error',
+		conflict: options?.conflict ?? 'replace',
 		...pickExposeGlobal(options),
 	});
-}
-
-/**
- * Register a procedural source and return its standalone chain-starter.
- *
- * The returned function is immediately usable as `mySource(...)`, appears as a
- * chain method `.mySource(...)`, and (in browser global mode) on `window`. Its
- * `registration` property exposes the {@link ExtensionRegistration} handle.
- *
- * @param definition - Source definition (the `type` is always `'src'`)
- * @param options - Global exposure options
- * @returns The standalone source function with an attached registration handle
- *
- * @category Extensibility
- *
- * @example
- * {@includeCode ../../examples/CustomTransforms/defineSource/sketch.js}
- *
- * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/defineSource | defineSource API reference}
- */
-export function defineSource(
-	definition: Omit<TransformDefinition, 'type'>,
-	options?: Omit<ExtensionOptions, 'conflict'>
-): SourceFunction & { registration: ExtensionRegistration } {
-	const registration = getRuntime().install(
-		{ ...definition, type: 'src' },
-		{
-			conflict: 'replace',
-			...pickExposeGlobal(options),
-		}
-	);
-
-	const sourceFunction = registration.sources[definition.name];
-	if (!sourceFunction) {
-		registration.dispose();
-		throw new Error(
-			`[textmode.synth.js] defineSource() did not produce a source function for "${definition.name}".`
-		);
-	}
-
-	return Object.assign(sourceFunction, { registration });
 }
 
 function pickExposeGlobal(options?: ExtensionOptions): { exposeGlobal?: boolean | 'auto' } {
