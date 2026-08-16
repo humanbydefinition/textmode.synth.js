@@ -1,5 +1,5 @@
 /**
- * @title extendTransforms
+ * @title setFunction.batch
  */
 
 const t = textmode.create({
@@ -25,7 +25,7 @@ labelLayer.draw(() => {
 	let y = top + 3;
 	const x = left + 3;
 
-	drawText('EXTEND TRANSFORMS', x, y++, 100, 255, 140);
+	drawText('SET FUNCTION: BATCH', x, y++, 100, 255, 140);
 	drawText('------------------------------------', x, y++, 80, 100, 150);
 	drawText('CONCEPT: COHESIVE EXTENSION PACK', x, y++, 100, 220, 255);
 	drawText('src + coord + color install once.', x, y++, 140, 160, 190);
@@ -34,7 +34,7 @@ labelLayer.draw(() => {
 	drawText('surveyGrid().scanJitter()', x, y++, 140, 255, 180);
 });
 
-const pack = extendTransforms([
+const pack = setFunction([
 	{
 		name: 'surveyGrid',
 		type: 'src',
