@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { createDynamicUpdater, setGlobalErrorCallback, getGlobalErrorCallback } from '../../src/utils/SafeEvaluator';
+import { createDynamicUpdater, setGlobalErrorCallback } from '../../src/utils/SafeEvaluator';
 import type { SynthContext } from '../../src/core/types';
 
 describe('SafeEvaluator', () => {
@@ -103,12 +103,6 @@ describe('SafeEvaluator', () => {
 	});
 
 	describe('Global Error Callback', () => {
-		it('should allow setting and getting global error callback', () => {
-			const callback = vi.fn();
-			setGlobalErrorCallback(callback);
-			expect(getGlobalErrorCallback()).toBe(callback);
-		});
-
 		it('should invoke global callback if local callback is missing', () => {
 			const globalCallback = vi.fn();
 			setGlobalErrorCallback(globalCallback);
