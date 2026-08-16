@@ -1,7 +1,6 @@
 import type { TextmodePlugin, TextmodePluginContext, TextmodeLayer, Textmodifier } from 'textmode.js';
 import packageMetadata from '../../package.json';
 
-import { PLUGIN_NAME } from './constants';
 import {
 	extendLayerSynth,
 	extendLayerBpm,
@@ -29,7 +28,7 @@ const shaderManagers = new WeakMap<Textmodifier, ShaderManager>();
  * @see {@link https://code.textmode.art/api/textmode.synth.js/variables/SynthPlugin | SynthPlugin API reference}
  */
 export const SynthPlugin: TextmodePlugin = {
-	name: PLUGIN_NAME,
+	name: packageMetadata.name,
 	version: packageMetadata.version,
 
 	install(textmodifier, api: TextmodePluginContext) {
