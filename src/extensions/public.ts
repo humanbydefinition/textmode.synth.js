@@ -9,7 +9,7 @@
  * @module
  */
 
-import type { TransformDefinition } from './types';
+import type { TransformDefinition } from '../transforms/TransformDefinition';
 import type { ExtensionOptions, ExtensionRegistration } from '../runtime/types';
 import { getRuntime } from '../runtime/runtimeAccessor';
 

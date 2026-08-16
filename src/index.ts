@@ -114,15 +114,9 @@ export type { DynamicErrorCallback } from './utils/SafeEvaluator';
 import { setFunction } from './extensions/public';
 export { setFunction };
 
-export type {
-	TransformType,
-	TransformDefinition,
-	TransformInput,
-	ExtensionOptions,
-	ExtensionRegistration,
-	SourceFunction,
-} from './extensions/types';
-export type { SynthTransformType } from './core/types';
+export type { SynthTransformType, TransformInput } from './core/types';
+export type { TransformDefinition } from './transforms/TransformDefinition';
+export type { ExtensionOptions, ExtensionRegistration, SourceFunction } from './runtime/types';
 
 // UMD global exports
 if (typeof window !== 'undefined') {
