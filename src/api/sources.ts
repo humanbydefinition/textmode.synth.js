@@ -485,7 +485,7 @@ export const src = (
 	if (typeof source === 'function') {
 		const probeResult = source();
 		if (probeResult && isTextmodeLayerObject(probeResult)) {
-			const layerId = probeResult.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+			const layerId = `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 			synthSource.addExternalLayerRef({ layerId, layer: source as () => TextmodeLayer | undefined });
 		} else {
 			const sourceId = `tms_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
@@ -504,7 +504,7 @@ export const src = (
 	} else {
 		// Layer provided - create external layer reference
 		const layer = source as TextmodeLayer;
-		const layerId = layer.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+		const layerId = `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 		synthSource.addExternalLayerRef({ layerId, layer });
 	}
 
