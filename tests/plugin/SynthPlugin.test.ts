@@ -57,7 +57,7 @@ describe('SynthPlugin', () => {
 		expect([...harness.hooks.keys()]).toEqual(['preSetup', 'layerPreRender', 'layerDisposed']);
 	});
 
-	it('consolidates layer cleanup during uninstall', () => {
+	it('consolidates layer cleanup in the returned cleanup', () => {
 		const shader = { dispose: vi.fn() };
 		const pendingShader = { dispose: vi.fn() };
 		const buffer = { dispose: vi.fn() };
@@ -69,8 +69,8 @@ describe('SynthPlugin', () => {
 		} as unknown as LayerSynthState;
 		setLayerSynthState(harness.layer, state);
 
-		SynthPlugin.install(harness.textmodifier as any, harness.api);
-		SynthPlugin.uninstall?.(harness.textmodifier as any, harness.api);
+		const cleanup = SynthPlugin.install(harness.textmodifier as any, harness.api) as unknown as () => void;
+		cleanup();
 
 		expect(state.isDisposed).toBe(true);
 		expect(shader.dispose).toHaveBeenCalledOnce();
@@ -99,21 +99,21 @@ describe('SynthPlugin', () => {
 		first.textmodifier.createMaterialShader.mockResolvedValue(firstShader);
 		second.textmodifier.createMaterialShader.mockResolvedValue(secondShader);
 
-		SynthPlugin.install(first.textmodifier as any, first.api);
-		SynthPlugin.install(second.textmodifier as any, second.api);
+		const cleanupFirst = SynthPlugin.install(first.textmodifier as any, first.api) as unknown as () => void;
+		const cleanupSecond = SynthPlugin.install(second.textmodifier as any, second.api) as unknown as () => void;
 		await first.hooks.get('preSetup')!();
 		await second.hooks.get('preSetup')!();
-		SynthPlugin.uninstall?.(first.textmodifier as any, first.api);
+		cleanupFirst();
 
 		expect(firstShader.dispose).toHaveBeenCalledOnce();
 		expect(secondShader.dispose).not.toHaveBeenCalled();
-		SynthPlugin.uninstall?.(second.textmodifier as any, second.api);
+		cleanupSecond();
 		expect(secondShader.dispose).toHaveBeenCalledOnce();
 	});
 
 	it('leaves extension removal to the host runtime', () => {
-		SynthPlugin.install(harness.textmodifier as any, harness.api);
-		SynthPlugin.uninstall?.(harness.textmodifier as any, harness.api);
+		const cleanup = SynthPlugin.install(harness.textmodifier as any, harness.api) as unknown as () => void;
+		cleanup();
 		expect(typeof (harness.textmodifier as any).synth).toBe('function');
 
 		for (const unregister of harness.unregisterExtensions) unregister();

@@ -12,8 +12,6 @@ import {
 import { ShaderManager, synthDispose, synthRender } from '../lifecycle';
 import { clearSynthState } from '../extensions/textmodifier';
 
-const shaderManagers = new WeakMap<Textmodifier, ShaderManager>();
-
 /**
  * textmode.synth.js plugin for textmode.js.
  *
@@ -21,7 +19,7 @@ const shaderManagers = new WeakMap<Textmodifier, ShaderManager>();
  * native textmode.js plugin system. Layer extensions (`synth`, `clearSynth`,
  * `bpm`) and Textmodifier extensions (`synth`, `bpm`, `seed`) are registered
  * via {@link TextmodePluginContext.defineExtension}, so the host owns their
- * cleanup when the plugin is uninstalled.
+ * cleanup when the plugin is removed.
  *
  * @category Workflow
  *
@@ -29,35 +27,35 @@ const shaderManagers = new WeakMap<Textmodifier, ShaderManager>();
  */
 export const SynthPlugin: TextmodePlugin = {
 	name: packageMetadata.name,
-	version: packageMetadata.version,
 
-	install(textmodifier, api: TextmodePluginContext) {
+	install(textmodifier: Textmodifier, api: TextmodePluginContext): () => void {
 		const shaderManager = new ShaderManager();
-		shaderManagers.set(textmodifier, shaderManager);
 
-		extendTextmodifierBpm(api);
-		extendTextmodifierSeed(api);
-		extendTextmodifierSynth(api);
-		extendLayerSynth(api);
-		extendLayerBpm(api);
-		extendLayerClearSynth(api);
+		try {
+			extendTextmodifierBpm(api);
+			extendTextmodifierSeed(api);
+			extendTextmodifierSynth(api);
+			extendLayerSynth(api);
+			extendLayerBpm(api);
+			extendLayerClearSynth(api);
 
-		api.on('preSetup', async () => {
-			await shaderManager.initialize(textmodifier);
-		});
+			api.on('preSetup', async () => {
+				await shaderManager.initialize(textmodifier);
+			});
 
-		api.on('layerPreRender', (layer: TextmodeLayer) => synthRender(layer, textmodifier, shaderManager.getShader()));
-		api.on('layerDisposed', synthDispose);
-	},
+			api.on('layerPreRender', (layer: TextmodeLayer) =>
+				synthRender(layer, textmodifier, shaderManager.getShader())
+			);
+			api.on('layerDisposed', synthDispose);
+		} catch (error) {
+			shaderManager.dispose();
+			throw error;
+		}
 
-	uninstall(textmodifier, _api: TextmodePluginContext) {
-		for (const layer of [textmodifier.layers.base, ...textmodifier.layers.all]) synthDispose(layer);
-		clearSynthState(textmodifier);
-
-		// Layer and Textmodifier extension properties are removed by the
-		// plugin runtime's extension registry on uninstall.
-
-		shaderManagers.get(textmodifier)?.dispose();
-		shaderManagers.delete(textmodifier);
+		return () => {
+			for (const layer of [textmodifier.layers.base, ...textmodifier.layers.all]) synthDispose(layer);
+			clearSynthState(textmodifier);
+			shaderManager.dispose();
+		};
 	},
 };
