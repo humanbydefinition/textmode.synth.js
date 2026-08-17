@@ -57,7 +57,7 @@ describe('SynthPlugin', () => {
 		expect([...harness.hooks.keys()]).toEqual(['preSetup', 'layerPreRender', 'layerDisposed']);
 	});
 
-	it('consolidates layer cleanup in the returned cleanup', () => {
+	it('delegates layer cleanup to layerDisposed instead of plugin cleanup', () => {
 		const shader = { dispose: vi.fn() };
 		const pendingShader = { dispose: vi.fn() };
 		const buffer = { dispose: vi.fn() };
@@ -71,6 +71,10 @@ describe('SynthPlugin', () => {
 
 		const cleanup = SynthPlugin.install(harness.textmodifier as any, harness.api) as unknown as () => void;
 		cleanup();
+
+		expect(getLayerSynthState(harness.layer)).toBe(state);
+
+		harness.hooks.get('layerDisposed')!(harness.layer);
 
 		expect(state.isDisposed).toBe(true);
 		expect(shader.dispose).toHaveBeenCalledOnce();

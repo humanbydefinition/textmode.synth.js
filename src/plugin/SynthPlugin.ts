@@ -53,7 +53,6 @@ export const SynthPlugin: TextmodePlugin = {
 		}
 
 		return () => {
-			for (const layer of [textmodifier.layers.base, ...textmodifier.layers.all]) synthDispose(layer);
 			clearSynthState(textmodifier);
 			shaderManager.dispose();
 		};
