@@ -23,6 +23,10 @@ import { TT_SRC, TT_COORD, TT_COLOR, TT_COMBINE, TT_COMBINE_COORD } from './cons
  * - `color`: Color transforms that modify existing color values
  * - `combine`: Blending operations that combine two color sources
  * - `combineCoord`: Modulation that uses one source to affect another's coordinates
+ *
+ * @category Extensibility
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/type-aliases/SynthTransformType | SynthTransformType API reference}
  */
 export type SynthTransformType =
 	typeof TT_SRC | typeof TT_COORD | typeof TT_COLOR | typeof TT_COMBINE | typeof TT_COMBINE_COORD;
@@ -34,13 +38,29 @@ export type GLSLType = 'float' | 'vec2' | 'vec3' | 'vec4' | 'int' | 'sampler2D';
 
 /**
  * Input parameter definition for a transform function.
+ *
+ * @category Extensibility
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformInput | TransformInput API reference}
  */
 export interface TransformInput {
-	/** Parameter name used in GLSL and JS API */
+	/**
+	 * Parameter name used in GLSL and JS API
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformInput#name | TransformInput.name API reference}
+	 */
 	name: string;
-	/** GLSL type */
+	/**
+	 * GLSL type
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformInput#type | TransformInput.type API reference}
+	 */
 	type: GLSLType;
-	/** Default value if not provided */
+	/**
+	 * Default value if not provided
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformInput#default | TransformInput.default API reference}
+	 */
 	default: number | number[] | null;
 }
 
@@ -155,6 +175,8 @@ export interface LayerSynthState {
 	compiled?: CompiledSynthShader;
 	/** The compiled GLShader instance */
 	shader?: TextmodeShader;
+	/** Shader compiled asynchronously and promoted at the start of a later frame. */
+	pendingShader?: TextmodeShader;
 	/** Character resolver for this layer's synth */
 	characterResolver: CharacterResolver;
 	/** Whether the shader needs to be recompiled */
@@ -246,7 +268,7 @@ export interface CharacterMapping {
  * Used by src(layer) to enable hydra-style output references.
  */
 export interface ExternalLayerReference {
-	/** Unique identifier for the layer (typically layer.id or generated) */
+	/** Unique identifier for the layer reference */
 	layerId: string;
 	/** The layer object or lazy getter */
 	layer: TextmodeLayer | (() => TextmodeLayer | undefined);

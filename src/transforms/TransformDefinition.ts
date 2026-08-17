@@ -5,11 +5,11 @@
  * synthesis transforms in a declarative way.
  */
 
-import type { SynthTransformType, TransformInput } from '../core/types';
+import type { GLSLType, SynthTransformType, TransformInput } from '../core/types';
 export type { TransformInput };
 import { TRANSFORM_TYPE_INFO } from '../core/types';
 
-const GLSL_RESERVED_IDENTIFIERS = new Set([
+export const GLSL_RESERVED_IDENTIFIERS = new Set([
 	'abs',
 	'acos',
 	'asin',
@@ -56,63 +56,130 @@ const GLSL_RESERVED_IDENTIFIERS = new Set([
 
 /**
  * Definition of a synthesis transform function.
+ *
+ * @category Extensibility
+ *
+ * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformDefinition | TransformDefinition API reference}
  */
 export interface TransformDefinition {
-	/** Function name (used in JS API and GLSL) */
+	/**
+	 * Function name (used in JS API and GLSL)
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformDefinition#name | TransformDefinition.name API reference}
+	 */
 	name: string;
-	/** Transform type determining composition behavior */
+	/**
+	 * Transform type determining composition behavior
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformDefinition#type | TransformDefinition.type API reference}
+	 */
 	type: SynthTransformType;
-	/** Input parameters */
+	/**
+	 * Input parameters
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformDefinition#inputs | TransformDefinition.inputs API reference}
+	 */
 	inputs: TransformInput[];
-	/** GLSL function body (without function signature) */
+	/**
+	 * GLSL function body (without function signature)
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformDefinition#glsl | TransformDefinition.glsl API reference}
+	 */
 	glsl: string;
-	/** Optional description for documentation */
+	/**
+	 * Optional description for documentation
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformDefinition#description | TransformDefinition.description API reference}
+	 */
 	description?: string;
 }
 
 /**
- * A processed transform with complete GLSL function.
+ * A normalized, immutable transform input after validation.
  */
-export interface ProcessedTransform extends TransformDefinition {
-	/** Internal GLSL function name, kept separate from the public JS API name */
-	glslName: string;
-	/** Complete GLSL function code */
-	glslFunction: string;
+export interface NormalizedTransformInput {
+	/** GLSL-safe identifier used inside the generated function */
+	readonly name: string;
+	/** The caller-provided input name */
+	readonly publicName: string;
+	/** GLSL type */
+	readonly type: GLSLType;
+	/** Default value validated against the declared type */
+	readonly default: number | readonly number[] | null;
 }
 
 /**
- * Process a transform definition into a processed transform with complete GLSL function.
+ * A normalized, immutable transform definition after validation.
  */
-export function processTransform(def: TransformDefinition): ProcessedTransform {
-	const typeInfo = TRANSFORM_TYPE_INFO[def.type];
-	const inputArgs = def.inputs.map((i) => ({ type: i.type, name: toSafeGlslIdentifier(i.name) }));
+export interface NormalizedTransformDefinition {
+	readonly name: string;
+	readonly type: SynthTransformType;
+	readonly inputs: readonly NormalizedTransformInput[];
+	readonly glsl: string;
+	readonly description?: string;
+}
+
+/**
+ * Options for building a registered transform.
+ */
+export interface BuildRegisteredTransformOptions {
+	/** Unique identifier for this registration */
+	readonly id: symbol;
+	/** Whether this registration is a built-in definition */
+	readonly builtIn: boolean;
+}
+
+/**
+ * An immutable registration captured by chain nodes.
+ *
+ * Chain nodes capture this record when a chain method is called, so
+ * redefining or disposing a transform affects future chains only.
+ */
+export interface RegisteredTransform {
+	readonly id: symbol;
+	/** Public name used by the JavaScript API */
+	readonly name: string;
+	readonly type: SynthTransformType;
+	readonly inputs: readonly NormalizedTransformInput[];
+	readonly glsl: string;
+	readonly description?: string;
+	/** Internal GLSL function name (prefixed to avoid collisions) */
+	readonly glslName: string;
+	/** Complete GLSL function code */
+	readonly glslFunction: string;
+	readonly builtIn: boolean;
+}
+
+/**
+ * Build a complete, immutable registered transform from a normalized definition.
+ * The GLSL function signature is derived from the transform type and inputs.
+ */
+export function buildRegisteredTransform(
+	normalized: NormalizedTransformDefinition,
+	options: BuildRegisteredTransformOptions
+): RegisteredTransform {
+	const typeInfo = TRANSFORM_TYPE_INFO[normalized.type];
+	const inputArgs = normalized.inputs.map((input) => ({ type: input.type, name: input.name }));
 	const allArgs = [...typeInfo.args, ...inputArgs];
 	const argsStr = allArgs.map((a) => `${a.type} ${a.name}`).join(', ');
-	const glslName = `tm_${def.name}`;
-	const glslBody = def.inputs.reduce((body, input) => {
-		const safeName = toSafeGlslIdentifier(input.name);
-		if (safeName === input.name) return body;
-		return body.replace(new RegExp(`\\b${escapeRegExp(input.name)}\\b`, 'g'), safeName);
-	}, def.glsl);
+	const glslName = `tm_${normalized.name}`;
 
 	const glslFunction = `
 ${typeInfo.returnType} ${glslName}(${argsStr}) {
-${glslBody}
+${normalized.glsl}
 }`;
 
-	return {
-		...def,
+	return Object.freeze({
+		id: options.id,
+		name: normalized.name,
+		type: normalized.type,
+		inputs: normalized.inputs,
+		glsl: normalized.glsl,
+		...(normalized.description !== undefined ? { description: normalized.description } : {}),
 		glslName,
 		glslFunction,
-	};
-}
-
-function toSafeGlslIdentifier(name: string): string {
-	return GLSL_RESERVED_IDENTIFIERS.has(name) ? `tm_${name}` : name;
-}
-
-function escapeRegExp(value: string): string {
-	return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+		builtIn: options.builtIn,
+	});
 }
 
 /**

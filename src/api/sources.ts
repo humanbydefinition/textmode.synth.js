@@ -6,9 +6,22 @@
 
 import type { SynthContext, SynthParameterValue, UpdatableTextmodeSource } from '../core/types';
 import { SynthSource } from '../core/SynthSource';
-import { generatedFunctions } from '../bootstrap';
+import { getRuntime } from '../runtime/runtimeAccessor';
+import type { SourceFunction } from '../runtime/types';
 import type { TextmodeLayer } from 'textmode.js';
 import { TextmodeSource } from 'textmode.js';
+
+/**
+ * Resolve a registered standalone source function by name.
+ * Registered through the default runtime; throws if the name is unknown.
+ */
+function sourceFunction(name: string): SourceFunction {
+	const fn = getRuntime().source(name);
+	if (!fn) {
+		throw new Error(`[textmode.synth.js] Source "${name}" is not registered.`);
+	}
+	return fn;
+}
 
 /**
  * Create a synth source with cell background color defined.
@@ -175,7 +188,7 @@ export function charColor(
  * @see {@link https://code.textmode.art/api/textmode.synth.js/functions/gradient | gradient API reference}
  */
 export function gradient(speed?: number | number[] | ((ctx: SynthContext) => number)): SynthSource {
-	return generatedFunctions['gradient'](speed ?? null);
+	return sourceFunction('gradient')(speed ?? null);
 }
 
 /**
@@ -195,7 +208,7 @@ export function noise(
 	scale?: number | number[] | ((ctx: SynthContext) => number),
 	offset?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-	return generatedFunctions['noise'](scale ?? null, offset ?? null);
+	return sourceFunction('noise')(scale ?? null, offset ?? null);
 }
 
 /**
@@ -219,7 +232,7 @@ export function plasma(
 	phase?: number | number[] | ((ctx: SynthContext) => number),
 	contrast?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-	return generatedFunctions['plasma'](scale ?? null, speed ?? null, phase ?? null, contrast ?? null);
+	return sourceFunction('plasma')(scale ?? null, speed ?? null, phase ?? null, contrast ?? null);
 }
 
 /**
@@ -247,7 +260,7 @@ export function moire(
 	speed?: number | number[] | ((ctx: SynthContext) => number),
 	phase?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-	return generatedFunctions['moire'](
+	return sourceFunction('moire')(
 		freqA ?? null,
 		freqB ?? null,
 		angleA ?? null,
@@ -276,7 +289,7 @@ export function osc(
 	sync?: number | number[] | ((ctx: SynthContext) => number),
 	offset?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-	return generatedFunctions['osc'](frequency ?? null, sync ?? null, offset ?? null);
+	return sourceFunction('osc')(frequency ?? null, sync ?? null, offset ?? null);
 }
 
 /**
@@ -367,7 +380,7 @@ export function shape(
 	radius?: number | number[] | ((ctx: SynthContext) => number),
 	smoothing?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-	return generatedFunctions['shape'](sides ?? null, radius ?? null, smoothing ?? null);
+	return sourceFunction('shape')(sides ?? null, radius ?? null, smoothing ?? null);
 }
 
 /**
@@ -416,9 +429,9 @@ export function solid(
 	// If only first argument is provided and it's a number, pass it as single argument
 	// so the underlying factory can replicate it to RGB.
 	if (r !== undefined && g === undefined && b === undefined && a === undefined && typeof r === 'number') {
-		return generatedFunctions['solid'](r);
+		return sourceFunction('solid')(r);
 	}
-	return generatedFunctions['solid'](r ?? null, g ?? null, b ?? null, a ?? null);
+	return sourceFunction('solid')(r ?? null, g ?? null, b ?? null, a ?? null);
 }
 
 /**
@@ -459,7 +472,7 @@ export const src = (
 	source?: TextmodeLayer | TextmodeSource | (() => TextmodeSource | TextmodeLayer | undefined)
 ): SynthSource => {
 	// Get the base src function for self-feedback
-	const baseSrc = generatedFunctions['src'];
+	const baseSrc = sourceFunction('src');
 
 	if (!source) {
 		// No source provided - use self-feedback (context-aware)
@@ -472,7 +485,7 @@ export const src = (
 	if (typeof source === 'function') {
 		const probeResult = source();
 		if (probeResult && isTextmodeLayerObject(probeResult)) {
-			const layerId = probeResult.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+			const layerId = `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 			synthSource.addExternalLayerRef({ layerId, layer: source as () => TextmodeLayer | undefined });
 		} else {
 			const sourceId = `tms_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
@@ -491,7 +504,7 @@ export const src = (
 	} else {
 		// Layer provided - create external layer reference
 		const layer = source as TextmodeLayer;
-		const layerId = layer.id ?? `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
+		const layerId = `layer_${Date.now()}_${Math.random().toString(36).slice(2, 9)}`;
 		synthSource.addExternalLayerRef({ layerId, layer });
 	}
 
@@ -539,7 +552,7 @@ export function voronoi(
 	speed?: number | number[] | ((ctx: SynthContext) => number),
 	blending?: number | number[] | ((ctx: SynthContext) => number)
 ): SynthSource {
-	return generatedFunctions['voronoi'](scale ?? null, speed ?? null, blending ?? null);
+	return sourceFunction('voronoi')(scale ?? null, speed ?? null, blending ?? null);
 }
 
 /**

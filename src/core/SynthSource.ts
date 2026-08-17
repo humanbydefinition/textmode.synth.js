@@ -1,10 +1,22 @@
-import type { SynthParameterValue, CharacterMapping, ExternalLayerReference, TextmodeSourceReference } from './types';
+import type {
+	SynthParameterValue,
+	CharacterMapping,
+	ExternalLayerReference,
+	TextmodeSourceReference,
+	UpdatableTextmodeSource,
+} from './types';
 import { SynthChain, type TransformRecord } from './SynthChain';
+import { getRuntime } from '../runtime/runtimeAccessor';
+import type { SynthRuntime } from '../runtime/SynthRuntime';
+import type { RegisteredTransform } from '../transforms/TransformDefinition';
+import { generateSourceId, isTextmodeSourceLike } from '../utils/TextmodeSourceGuard';
 
 /**
  * Options for creating a new SynthSource.
  */
 export interface SynthSourceCreateOptions {
+	/** Runtime this source belongs to (defaults to the active runtime). */
+	runtime?: SynthRuntime;
 	chain?: SynthChain;
 	charMapping?: CharacterMapping;
 	charColorSource?: SynthSource;
@@ -99,6 +111,9 @@ export class SynthSource {
 	/** TextmodeSource references for image/video sampling (indexed by transform position) */
 	private readonly _textmodeSourceRefs: Map<number, TextmodeSourceReference>;
 
+	/** Runtime identity for isolated runtimes; undefined means the active runtime. */
+	private readonly _runtime?: SynthRuntime;
+
 	/**
 	 * Create a new SynthSource.
 	 *
@@ -114,16 +129,35 @@ export class SynthSource {
 		this._nestedSources = options?.nestedSources ?? new Map();
 		this._externalLayerRefs = options?.externalLayerRefs ?? new Map();
 		this._textmodeSourceRefs = options?.textmodeSourceRefs ?? new Map();
+		this._runtime = options?.runtime;
+	}
+
+	/**
+	 * The runtime this source resolves transforms through.
+	 * Sources created by an isolated runtime keep that identity; sources from
+	 * the default runtime resolve the module-level active runtime.
+	 *
+	 * @ignore
+	 */
+	public get runtime(): SynthRuntime {
+		return this._runtime ?? getRuntime();
 	}
 
 	/**
 	 * Add a transform to the chain.
 	 * This method is called by dynamically injected transform methods.
 	 *
+	 * The current runtime registration is captured as an immutable snapshot so
+	 * redefinition affects future chains, never this one.
+	 *
 	 * @ignore
 	 */
 	public addTransform(name: string, userArgs: SynthParameterValue[]): this {
-		const record: TransformRecord = { name, userArgs };
+		const transform = this._resolveTransform(name);
+		const index = this._chain.length;
+		this._attachSamplerRefs(index, transform, userArgs);
+		this._attachNestedSources(index, transform, userArgs);
+		const record: TransformRecord = { name, userArgs, transform };
 
 		// Use the chain's internal mutation method for the fluent API
 		this._chain.push(record);
@@ -137,9 +171,14 @@ export class SynthSource {
 	 * @ignore
 	 */
 	public addCombineTransform(name: string, source: SynthSource, userArgs: SynthParameterValue[]): this {
+		this._assertSameRuntime(source);
+		const transform = this._resolveTransform(name);
 		const index = this._chain.length;
+		this._attachSamplerRefs(index, transform, userArgs);
 		this._nestedSources.set(index, source);
-		return this.addTransform(name, userArgs);
+		const record: TransformRecord = { name, userArgs, transform };
+		this._chain.push(record);
+		return this;
 	}
 
 	/**
@@ -149,9 +188,12 @@ export class SynthSource {
 	 * @ignore
 	 */
 	public addExternalLayerRef(ref: ExternalLayerReference): this {
+		const transform = this._resolveTransform('src');
 		const index = this._chain.length;
 		this._externalLayerRefs.set(index, ref);
-		return this.addTransform('src', []);
+		const record: TransformRecord = { name: 'src', userArgs: [], transform };
+		this._chain.push(record);
+		return this;
 	}
 
 	/**
@@ -161,9 +203,113 @@ export class SynthSource {
 	 * @ignore
 	 */
 	public addTextmodeSourceRef(ref: TextmodeSourceReference): this {
+		const transform = this._resolveTransform('srcTexture');
 		const index = this._chain.length;
 		this._textmodeSourceRefs.set(index, ref);
-		return this.addTransform('srcTexture', []);
+		const record: TransformRecord = { name: 'srcTexture', userArgs: [], transform };
+		this._chain.push(record);
+		return this;
+	}
+
+	/**
+	 * Apply a registered transform by name with explicit arguments.
+	 *
+	 * This is the typed escape hatch for dynamic extension code that does not
+	 * want to augment the instance interface. It uses the same runtime lookup
+	 * and chain-recording implementation as injected chain methods.
+	 *
+	 * @param name - Public transform name (must be registered)
+	 * @param args - Arguments resolved against the declared inputs
+	 * @returns The SynthSource for chaining
+	 *
+	 * @category Chain utilities
+	 *
+	 * @example
+	 * ```js
+	 * source.transform('duotone', [0.02, 0.04, 0.12], [1, 0.4, 0.1]);
+	 * ```
+	 *
+	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource#transform | SynthSource.transform API reference}
+	 */
+	public transform(name: string, ...args: SynthParameterValue[]): this {
+		return this.addTransform(name, args);
+	}
+
+	/**
+	 * Resolve the current runtime registration for a public name.
+	 */
+	private _resolveTransform(name: string): RegisteredTransform {
+		const transform = this.runtime.lookup(name);
+		if (!transform) {
+			throw new Error(
+				`[textmode.synth.js] Unknown transform "${name}" in runtime "${this.runtime.name}". ` +
+					'Register it with setFunction() before use.'
+			);
+		}
+		return transform;
+	}
+
+	/**
+	 * Reject chains that combine sources from different runtimes with a
+	 * diagnostic that names both runtimes.
+	 */
+	private _assertSameRuntime(other: SynthSource): void {
+		if (other.runtime !== this.runtime) {
+			throw new Error(
+				`[textmode.synth.js] Cannot combine sources from different synth runtimes. ` +
+					`This chain belongs to runtime "${this.runtime.name}" but the nested source belongs to ` +
+					`runtime "${other.runtime.name}". Recreate the nested source from the same runtime, or register ` +
+					`the transform in the target runtime.`
+			);
+		}
+	}
+
+	/**
+	 * Attach a stable TextmodeSource reference for the first sampler2D input
+	 * whose argument is a media source. The reference is created once at chain
+	 * construction so recompiles reuse the same source id and uniform name.
+	 *
+	 * @ignore
+	 */
+	private _attachSamplerRefs(index: number, transform: RegisteredTransform, userArgs: SynthParameterValue[]): void {
+		for (let j = 0; j < transform.inputs.length; j++) {
+			const input = transform.inputs[j];
+			if (input.type !== 'sampler2D') continue;
+			const value = userArgs[j];
+			if (value === null || value === undefined) continue;
+			if (isTextmodeSourceLike(value) || typeof value === 'function') {
+				this._textmodeSourceRefs.set(index, {
+					sourceId: generateSourceId(),
+					source: (typeof value === 'function' ? value : value) as
+						UpdatableTextmodeSource | (() => UpdatableTextmodeSource | undefined),
+				});
+			} else {
+				throw new Error(
+					`[textmode.synth.js] sampler2D input "${input.publicName}" requires a TextmodeSource (image/video), layer, or a lazy getter returning one.`
+				);
+			}
+			// v1 supports one sampler input per transform; additional sampler
+			// inputs in the same transform are rejected.
+			break;
+		}
+	}
+
+	/**
+	 * Register a nested SynthSource passed to a compatible `vec4` input so it
+	 * compiles recursively at the current coordinate/target. One nested source
+	 * per transform index is supported.
+	 *
+	 * @ignore
+	 */
+	private _attachNestedSources(index: number, transform: RegisteredTransform, userArgs: SynthParameterValue[]): void {
+		for (let j = 0; j < transform.inputs.length; j++) {
+			const input = transform.inputs[j];
+			if (input.type === 'vec4' && userArgs[j] instanceof SynthSource) {
+				this._assertSameRuntime(userArgs[j] as SynthSource);
+				this._nestedSources.set(index, userArgs[j] as SynthSource);
+				break;
+			}
+		}
 	}
 
 	/**
@@ -205,9 +351,12 @@ export class SynthSource {
 		a?: SynthParameterValue
 	): SynthSource {
 		if (rOrSource instanceof SynthSource) {
+			this._assertSameRuntime(rOrSource);
 			return rOrSource;
 		}
-		const source = new SynthSource();
+		const source = new (this.constructor as new (options?: SynthSourceCreateOptions) => SynthSource)({
+			runtime: this._runtime,
+		});
 		// If only a single number is provided, replicate it to RGB for grayscale consistency
 		const args =
 			typeof rOrSource === 'number' && g === undefined && b === undefined && a === undefined
@@ -283,6 +432,7 @@ export class SynthSource {
 	 * @see {@link https://code.textmode.art/api/textmode.synth.js/classes/SynthSource/methods/char | SynthSource.char API reference}
 	 */
 	public char(source: SynthSource): this {
+		this._assertSameRuntime(source);
 		this._charSource = source;
 		return this;
 	}
@@ -427,7 +577,8 @@ export class SynthSource {
 			clonedTextmodeSourceRefs.set(key, { ...value });
 		}
 
-		return new SynthSource({
+		return new (this.constructor as new (options?: SynthSourceCreateOptions) => SynthSource)({
+			runtime: this._runtime,
 			chain: SynthChain.from(this._chain.transforms),
 			charMapping: this._charMapping,
 			charColorSource: this._charColorSource?.clone(),

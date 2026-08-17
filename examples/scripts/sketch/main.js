@@ -62,6 +62,8 @@ if (!examplePath || !isValidPath(examplePath)) {
 	window.char = synthModule.char;
 	window.paint = synthModule.paint;
 
+	window.setFunction = synthModule.setFunction;
+
 	document.title = `textmode.synth.js - ${examplePath}`;
 	const base = document.createElement('base');
 	base.href = `./${examplePath}/`;

@@ -5,6 +5,7 @@ import type { TextmodeLayer } from 'textmode.js';
 import type { Textmodifier, TextmodeFramebuffer } from 'textmode.js';
 import type { LayerSynthState } from '../../src/core/types';
 import { SynthSource } from '../../src/core/SynthSource';
+import { setLayerSynthState } from '../../src/lifecycle/layerState';
 
 const createMockFramebuffer = (): TextmodeFramebuffer =>
 	({
@@ -35,8 +36,6 @@ const createMockLayer = (cols = 10, rows = 10): TextmodeLayer =>
 			end: vi.fn(),
 			textures: [],
 		},
-		getPluginState: vi.fn(),
-		setPluginState: vi.fn(),
 		font: { characters: [] },
 	}) as unknown as TextmodeLayer;
 
@@ -51,13 +50,14 @@ describe('synthRender Lifecycle', () => {
 		state = {
 			source: new SynthSource(),
 			needsCompile: true,
+			shader: { dispose: vi.fn() } as any,
 			dynamicValues: new Map(),
 			characterResolver: {
 				resolve: () => [],
 				invalidate: () => {},
 			} as any,
 		};
-		vi.mocked(layer.getPluginState).mockReturnValue(state);
+		setLayerSynthState(layer, state as LayerSynthState);
 	});
 
 	describe('Buffer Management', () => {
@@ -194,11 +194,11 @@ describe('synthRender Lifecycle', () => {
 			state.shader = initialShader as any;
 
 			// Act 1: Trigger first compile
-			const render1 = synthRender(layer, textmodifier);
+			synthRender(layer, textmodifier);
 
 			// Act 2: Trigger second compile immediately (before first finishes)
 			// In the buggy implementation, needsCompile is still true, so this triggers another compile
-			const render2 = synthRender(layer, textmodifier);
+			synthRender(layer, textmodifier);
 
 			// Resolve promises
 			const shader1 = { dispose: vi.fn(), id: 'shader1' };
@@ -207,7 +207,9 @@ describe('synthRender Lifecycle', () => {
 			resolveShader1!(shader1);
 			resolveShader2!(shader2);
 
-			await Promise.all([render1, render2]);
+			await Promise.resolve();
+			await Promise.resolve();
+			synthRender(layer, textmodifier);
 
 			// Assertions for the BUG state:
 			// 1. initialShader disposed twice (once per call)
@@ -252,7 +254,7 @@ describe('synthRender Lifecycle', () => {
 			vi.mocked(textmodifier.createMaterialShader).mockReturnValue(shaderPromise as any);
 
 			// Act 1: Start rendering (triggers compilation)
-			const renderPromise = synthRender(layer, textmodifier);
+			synthRender(layer, textmodifier);
 
 			// Act 2: Dispose layer immediately while compiling
 			synthDispose(layer);
@@ -264,7 +266,8 @@ describe('synthRender Lifecycle', () => {
 			// Act 3: Finish compilation
 			const newShader = { dispose: vi.fn(), id: 'leaked_shader' };
 			resolveShader!(newShader);
-			await renderPromise;
+			await Promise.resolve();
+			await Promise.resolve();
 
 			// Assert: The new shader should be disposed because the layer is dead
 			expect(newShader.dispose).toHaveBeenCalled();

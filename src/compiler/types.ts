@@ -68,20 +68,6 @@ export interface CompiledSynthShader {
 export type { TextmodeSourceInfo } from './TextmodeSourceManager';
 
 /**
- * Intermediate representation node for a transform.
- */
-export interface IRNode {
-	/** Transform name */
-	name: string;
-	/** Resolved argument strings (GLSL literals or uniform names) */
-	args: string[];
-	/** Transform type */
-	type: string;
-	/** Reference to nested source result (for combine operations) */
-	nestedColorVar?: string;
-}
-
-/**
  * Result from compiling a chain.
  */
 export interface ChainCompilationResult {
@@ -95,20 +81,4 @@ export interface ChainCompilationResult {
 	flagsVar?: string;
 	/** Rotation variable (if any) */
 	rotationVar?: string;
-}
-
-/**
- * Context for code generation.
- */
-export interface GenerationContext {
-	/** Counter for unique variable names */
-	varCounter: number;
-	/** Accumulated GLSL function definitions */
-	glslFunctions: Set<string>;
-	/** Accumulated main code lines */
-	mainCode: string[];
-	/** Collected uniforms */
-	uniforms: Map<string, SynthUniform>;
-	/** Dynamic uniform updaters */
-	dynamicUpdaters: Map<string, (ctx: SynthContext) => number | number[]>;
 }

@@ -1,13 +1,13 @@
 import path from 'path';
 
-import { defineTextmodeProject } from '@textmode/vitest-config';
+import { defineTextmodeProject } from '@textmode/build';
 
 export default defineTextmodeProject({
 	projects: [
 		{
 			test: {
 				name: 'unit',
-				include: ['tests/{api,compiler,core,transforms,utils}/**/*.test.ts'],
+				include: ['tests/{api,compiler,core,extensions,runtime,transforms,utils}/**/*.test.ts'],
 			},
 		},
 		{

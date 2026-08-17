@@ -6,33 +6,41 @@ describe('t.synth comfort method', () => {
 	let api: TextmodePluginContext;
 	let textmodifier: any;
 	let baseLayer: any;
+	let uninstallExtensions: () => void;
 
 	beforeEach(() => {
 		baseLayer = {
 			synth: vi.fn(),
-			getPluginState: vi.fn(),
-			setPluginState: vi.fn(),
 		};
 
-		api = {
-			extendLayer: vi.fn(),
-			removeLayerExtension: vi.fn(),
-			registerLayerPreRenderHook: vi.fn(),
-			registerLayerDisposedHook: vi.fn(),
-			registerPreSetupHook: vi.fn(),
-			layerManager: {
+		const unregisterFns: Array<() => void> = [];
+		uninstallExtensions = () => {
+			for (const unregister of unregisterFns) unregister();
+		};
+
+		textmodifier = {
+			layers: {
 				base: baseLayer,
 				all: [],
 			},
-		} as unknown as TextmodePluginContext;
-
-		textmodifier = {
-			bpm: undefined,
-			layers: {
-				base: baseLayer,
-			},
 			createMaterialShader: vi.fn().mockResolvedValue({ dispose: vi.fn() }),
 		};
+
+		api = {
+			defineExtension: vi.fn((target: string, name: string, descriptor: PropertyDescriptor) => {
+				if (target === 'textmodifier') {
+					Object.defineProperty(textmodifier, name, { ...descriptor, configurable: true });
+				}
+				const unregister = () => {
+					if (target === 'textmodifier') {
+						delete (textmodifier as any)[name];
+					}
+				};
+				unregisterFns.push(unregister);
+				return unregister;
+			}),
+			on: vi.fn(),
+		} as unknown as TextmodePluginContext;
 	});
 
 	it('should add synth method to textmodifier on install', () => {
@@ -55,10 +63,11 @@ describe('t.synth comfort method', () => {
 		expect(baseLayer.synth).toHaveBeenCalledWith(factory);
 	});
 
-	it('should remove synth method on uninstall', () => {
-		SynthPlugin.install(textmodifier, api);
+	it('should remove synth method when the host uninstalls extensions', () => {
+		const cleanup = SynthPlugin.install(textmodifier, api);
 		expect(textmodifier.synth).toBeInstanceOf(Function);
-		SynthPlugin.uninstall?.(textmodifier, api);
+		cleanup?.();
+		uninstallExtensions();
 		expect(textmodifier.synth).toBeUndefined();
 	});
 });

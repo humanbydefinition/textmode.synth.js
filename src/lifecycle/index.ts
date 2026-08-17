@@ -8,4 +8,4 @@
 
 export { synthRender } from './synthRender';
 export { synthDispose } from './synthDispose';
-export { shaderManager } from './ShaderManager';
+export { ShaderManager } from './ShaderManager';

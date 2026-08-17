@@ -6,14 +6,9 @@
  * - `seed()` - Set seed for deterministic randomness (per-instance)
  */
 
-import { Textmodifier } from 'textmode.js';
+import type { TextmodePluginContext } from 'textmode.js';
+import type { Textmodifier } from 'textmode.js';
 import type { SynthSource } from '../core/SynthSource';
-
-/**
- * Symbol key for storing synth plugin state on textmodifier instances.
- * Using a Symbol ensures no collision with other properties.
- */
-export const SYNTH_STATE_KEY = Symbol.for('textmode.synth.state');
 
 /**
  * Per-textmodifier synth plugin state.
@@ -25,15 +20,23 @@ export interface SynthPluginState {
 	seed: number | null;
 }
 
+const states = new WeakMap<Textmodifier, SynthPluginState>();
+
 /**
  * Get the synth plugin state from a textmodifier, creating if needed.
  */
 export function getSynthState(textmodifier: Textmodifier): SynthPluginState {
-	const tm = textmodifier as Textmodifier & { [SYNTH_STATE_KEY]?: SynthPluginState };
-	if (!tm[SYNTH_STATE_KEY]) {
-		tm[SYNTH_STATE_KEY] = { bpm: 60, seed: null };
+	let state = states.get(textmodifier);
+	if (!state) {
+		state = { bpm: 60, seed: null };
+		states.set(textmodifier, state);
 	}
-	return tm[SYNTH_STATE_KEY];
+	return state;
+}
+
+/** Remove the synth state owned by one Textmodifier installation. */
+export function clearSynthState(textmodifier: Textmodifier): void {
+	states.delete(textmodifier);
 }
 
 /**
@@ -53,29 +56,35 @@ export function getInstanceSeed(textmodifier: Textmodifier): number | null {
 /**
  * Extend textmodifier with bpm() method.
  */
-export function extendTextmodifierBpm(textmodifier: Textmodifier): void {
-	textmodifier.bpm = function (value: number): number {
-		getSynthState(textmodifier).bpm = value;
-		return value;
-	};
+export function extendTextmodifierBpm(api: TextmodePluginContext): void {
+	api.defineExtension('textmodifier', 'bpm', {
+		value: function (this: Textmodifier, value: number): number {
+			getSynthState(this).bpm = value;
+			return value;
+		},
+	});
 }
 
 /**
  * Extend textmodifier with seed() method.
  */
-export function extendTextmodifierSeed(textmodifier: Textmodifier): void {
-	textmodifier.seed = function (value: number | null): number | null {
-		getSynthState(textmodifier).seed = value;
-		return value;
-	};
+export function extendTextmodifierSeed(api: TextmodePluginContext): void {
+	api.defineExtension('textmodifier', 'seed', {
+		value: function (this: Textmodifier, value: number | null): number | null {
+			getSynthState(this).seed = value;
+			return value;
+		},
+	});
 }
 
 /**
  * Extend textmodifier with synth() method — convenience shortcut
  * for `t.synth(source)`.
  */
-export function extendTextmodifierSynth(textmodifier: Textmodifier): void {
-	textmodifier.synth = function (source: SynthSource | (() => SynthSource)): void {
-		textmodifier.layers.base.synth(source);
-	};
+export function extendTextmodifierSynth(api: TextmodePluginContext): void {
+	api.defineExtension('textmodifier', 'synth', {
+		value: function (this: Textmodifier, source: SynthSource | (() => SynthSource)): void {
+			this.layers.base.synth(source);
+		},
+	});
 }

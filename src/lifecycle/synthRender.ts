@@ -6,15 +6,14 @@
  */
 
 import type { TextmodeLayer } from 'textmode.js';
-import type { TextmodeFont } from 'textmode.js';
+import type { TextmodeFont, TextmodeShader } from 'textmode.js';
 import type { TextmodeFramebuffer, Textmodifier } from 'textmode.js';
-import { PLUGIN_NAME } from '../plugin/constants';
 import { compileSynthSource } from '../compiler/SynthCompiler';
 import { CHANNEL_SUFFIXES, CHANNEL_SAMPLERS } from '../core/constants';
 import { collectExternalLayerRefs, collectTextmodeSourceRefs } from '../utils';
 import { getInstanceBpm, getInstanceSeed } from '../extensions/textmodifier';
-import { shaderManager } from './ShaderManager';
 import type { SynthContext, LayerSynthState } from '../core/types';
+import { getLayerSynthState } from './layerState';
 
 /**
  * Render synth source to layer framebuffers.
@@ -23,8 +22,12 @@ import type { SynthContext, LayerSynthState } from '../core/types';
  * BEFORE any WebGL operations. If any parameter fails, the entire frame
  * is skipped and the error propagates for the environment to handle.
  */
-export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifier): Promise<void> {
-	const state = layer.getPluginState<LayerSynthState>(PLUGIN_NAME);
+export function synthRender(
+	layer: TextmodeLayer,
+	textmodifier: Textmodifier,
+	copyShader: TextmodeShader | null = null
+): void {
+	const state = getLayerSynthState(layer);
 	if (!state) return;
 
 	const grid = layer.grid;
@@ -84,30 +87,29 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 			state.textmodeSourceMap = collectTextmodeSourceRefs(state.source);
 		}
 
-		try {
-			// Use createMaterialShader - leverages the instanced vertex shader
-			const newShader = await textmodifier.createMaterialShader(compilingTarget.fragmentSource);
-
-			// Check if layer was disposed while compiling
-			if (state.isDisposed) {
-				if (newShader.dispose) newShader.dispose();
-				return;
-			}
-
-			// Dispose old shader now that the new one is ready
-			if (state.shader?.dispose) {
-				state.shader.dispose();
-			}
-
-			state.shader = newShader;
-
-			// Only mark as clean if the source hasn't changed since we started
-			if (state.compiled === compilingTarget) {
+		void textmodifier
+			.createMaterialShader(compilingTarget.fragmentSource)
+			.then((newShader) => {
+				if (state.isDisposed || state.compiled !== compilingTarget) {
+					newShader.dispose();
+					return;
+				}
+				state.pendingShader?.dispose();
+				state.pendingShader = newShader;
 				state.needsCompile = false;
-			}
-		} finally {
-			state.isCompiling = false;
-		}
+			})
+			.catch((error) => {
+				if (!state.isDisposed) console.warn('[textmode.synth.js] Failed to compile synth shader:', error);
+			})
+			.finally(() => {
+				state.isCompiling = false;
+			});
+	}
+
+	if (state.pendingShader) {
+		state.shader?.dispose();
+		state.shader = state.pendingShader;
+		state.pendingShader = undefined;
 	}
 
 	if (!state.shader || !state.compiled || state.isDisposed) return;
@@ -190,7 +192,6 @@ export async function synthRender(layer: TextmodeLayer, textmodifier: Textmodifi
 		drawFramebuffer.begin();
 		textmodifier.clear();
 
-		const copyShader = shaderManager.getShader();
 		if (copyShader) {
 			textmodifier.shader(copyShader);
 			textmodifier.setUniform('u_charTex', writeBuffer.textures[0]);
@@ -300,7 +301,7 @@ function applySynthUniforms(
 				continue;
 			}
 
-			const extState = extLayer.getPluginState<LayerSynthState>(PLUGIN_NAME);
+			const extState = getLayerSynthState(extLayer);
 			let extTextures: WebGLTexture[] | undefined;
 
 			if (extState?.pingPongBuffers) {
