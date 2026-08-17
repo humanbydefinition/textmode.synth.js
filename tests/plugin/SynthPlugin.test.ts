@@ -69,8 +69,8 @@ describe('SynthPlugin', () => {
 		} as unknown as LayerSynthState;
 		setLayerSynthState(harness.layer, state);
 
-		const cleanup = SynthPlugin.install(harness.textmodifier as any, harness.api) as unknown as () => void;
-		cleanup();
+		const cleanup = SynthPlugin.install(harness.textmodifier as any, harness.api);
+		cleanup?.();
 
 		expect(getLayerSynthState(harness.layer)).toBe(state);
 
@@ -103,21 +103,21 @@ describe('SynthPlugin', () => {
 		first.textmodifier.createMaterialShader.mockResolvedValue(firstShader);
 		second.textmodifier.createMaterialShader.mockResolvedValue(secondShader);
 
-		const cleanupFirst = SynthPlugin.install(first.textmodifier as any, first.api) as unknown as () => void;
-		const cleanupSecond = SynthPlugin.install(second.textmodifier as any, second.api) as unknown as () => void;
+		const cleanupFirst = SynthPlugin.install(first.textmodifier as any, first.api);
+		const cleanupSecond = SynthPlugin.install(second.textmodifier as any, second.api);
 		await first.hooks.get('preSetup')!();
 		await second.hooks.get('preSetup')!();
-		cleanupFirst();
+		cleanupFirst?.();
 
 		expect(firstShader.dispose).toHaveBeenCalledOnce();
 		expect(secondShader.dispose).not.toHaveBeenCalled();
-		cleanupSecond();
+		cleanupSecond?.();
 		expect(secondShader.dispose).toHaveBeenCalledOnce();
 	});
 
 	it('leaves extension removal to the host runtime', () => {
-		const cleanup = SynthPlugin.install(harness.textmodifier as any, harness.api) as unknown as () => void;
-		cleanup();
+		const cleanup = SynthPlugin.install(harness.textmodifier as any, harness.api);
+		cleanup?.();
 		expect(typeof (harness.textmodifier as any).synth).toBe('function');
 
 		for (const unregister of harness.unregisterExtensions) unregister();

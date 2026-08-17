@@ -64,9 +64,9 @@ describe('t.synth comfort method', () => {
 	});
 
 	it('should remove synth method when the host uninstalls extensions', () => {
-		const cleanup = SynthPlugin.install(textmodifier, api) as unknown as () => void;
+		const cleanup = SynthPlugin.install(textmodifier, api);
 		expect(textmodifier.synth).toBeInstanceOf(Function);
-		cleanup();
+		cleanup?.();
 		uninstallExtensions();
 		expect(textmodifier.synth).toBeUndefined();
 	});
