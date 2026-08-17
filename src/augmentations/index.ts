@@ -6,3 +6,4 @@
 
 // Import for side effects (module augmentation)
 import './textmode';
+import '../transforms/categories';
