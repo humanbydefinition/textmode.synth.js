@@ -233,6 +233,8 @@ export interface LayerSynthState {
 	 * Used to prevent race conditions during async operations (e.g. compilation).
 	 */
 	isDisposed?: boolean;
+	/** Monotonic generation used to reject late asynchronous shader results. */
+	generation: number;
 
 	/**
 	 * Track which shader instance has received static uniforms.
