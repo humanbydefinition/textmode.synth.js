@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import '../../src/bootstrap';
-import { setFunction, extendTransforms, defineSource, createSynthRuntime } from '../../src/extensions/public';
+import { setFunction } from '../../src/extensions/public';
 import { gradient, moire, noise, osc, shape } from '../../src/api';
 import { compileSynthSource } from '../../src/compiler/SynthCompiler';
 import type { SynthSource } from '../../src/core/SynthSource';
@@ -21,10 +21,11 @@ describe('CustomTransforms example sketches compile', () => {
 		for (const registration of disposed.splice(0)) registration.dispose();
 	});
 
-	it('defineSource (tideChart)', () => {
-		const tideChart = defineSource(
+	it('setFunction.source (tideChart)', () => {
+		const registration = setFunction(
 			{
 				name: 'tideChart',
+				type: 'src',
 				inputs: [
 					{ name: 'frequency', type: 'float', default: 4.5 },
 					{ name: 'drift', type: 'float', default: 0.3 },
@@ -40,7 +41,8 @@ describe('CustomTransforms example sketches compile', () => {
 			},
 			{ exposeGlobal: false }
 		);
-		disposed.push(tideChart.registration);
+		disposed.push(registration);
+		const tideChart = registration.sources.tideChart;
 
 		const glyphs = tideChart(4.5, 0.3).charMap(' .,:;=xX#@');
 		const ink = tideChart(3, -0.12).color(0.22, 0.82, 1.15);
@@ -172,8 +174,8 @@ describe('CustomTransforms example sketches compile', () => {
 		).toContain('tm_fieldBend(');
 	});
 
-	it('extendTransforms extension pack', () => {
-		const pack = extendTransforms(
+	it('setFunction batch extension pack', () => {
+		const pack = setFunction(
 			[
 				{
 					name: 'surveyGrid',
@@ -212,36 +214,6 @@ describe('CustomTransforms example sketches compile', () => {
 		const display = chainMethods(grid).phosphorInk();
 		expect(compileSynthSource(display.charMap('  .:+*%@').cellColor(0.008, 0.025, 0.02)).fragmentSource).toContain(
 			'tm_surveyGrid('
-		);
-	});
-
-	it('createSynthRuntime isolated runtime', () => {
-		const synth = createSynthRuntime({
-			name: 'archive-terminal',
-			transforms: [
-				{
-					name: 'archiveSignal',
-					type: 'src',
-					inputs: [
-						{ name: 'frequency', type: 'float', default: 11 },
-						{ name: 'drift', type: 'float', default: 0.15 },
-					],
-					glsl: 'vec2 p = (_st - 0.5) * vec2(1.35, 1.0); float ring = sin(length(p) * frequency * 6.2831853 - time * drift) * 0.5 + 0.5; float bars = sin((p.x * 3.0 - p.y) * 18.0 + time * drift) * 0.5 + 0.5; float aperture = smoothstep(0.58, 0.18, length(p)); return vec4(vec3((ring * 0.68 + bars * 0.32) * aperture), 1.0);',
-				},
-				{
-					name: 'oxideInk',
-					type: 'color',
-					inputs: [],
-					glsl: 'float v = clamp(_luminance(_c0.rgb), 0.0, 1.0); vec3 rust = mix(vec3(0.03, 0.06, 0.08), vec3(0.95, 0.34, 0.1), v); rust = mix(rust, vec3(0.6, 0.95, 0.82), smoothstep(0.78, 1.0, v)); return vec4(rust, _c0.a);',
-				},
-			],
-			exposeGlobal: false,
-		});
-
-		const { archiveSignal, noise: localNoise } = synth.sources;
-		const signal = chainMethods(archiveSignal(11, 0.15).diff(localNoise(3, 0.025))).oxideInk();
-		expect(synth.compile(signal.charMap('  .,:;=xX#@').cellColor(0.025, 0.03, 0.045)).fragmentSource).toContain(
-			'tm_archiveSignal('
 		);
 	});
 });

@@ -1,5 +1,5 @@
 /**
- * @title defineSource
+ * @title setFunction.source
  */
 
 const t = textmode.create({
@@ -25,17 +25,18 @@ labelLayer.draw(() => {
 	let y = top + 3;
 	const x = left + 3;
 
-	drawText('DEFINE SOURCE', x, y++, 100, 255, 140);
+	drawText('SET FUNCTION: SOURCE', x, y++, 100, 255, 140);
 	drawText('------------------------------------', x, y++, 80, 100, 150);
 	drawText('CONCEPT: PROCEDURAL FIELD', x, y++, 100, 220, 255);
 	drawText('A src creates pixels from _st.', x, y++, 140, 160, 190);
 	drawText('Here: an animated tide chart.', x, y++, 140, 160, 190);
 	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText('tideChart(4.5, 0.3)', x, y++, 140, 255, 180);
+	drawText('setFunction(...).sources.tideChart', x, y++, 140, 255, 180);
 });
 
-const tideChart = defineSource({
+const tideChart = setFunction({
 	name: 'tideChart',
+	type: 'src',
 	inputs: [
 		{ name: 'frequency', type: 'float', default: 4.5 },
 		{ name: 'drift', type: 'float', default: 0.3 },
@@ -48,7 +49,7 @@ const tideChart = defineSource({
 		float level = floor(clamp(swell * 0.28 + echo * 0.22 + 0.5, 0.0, 1.0) * 8.0) / 7.0;
 		return vec4(vec3(level * coast), 1.0);
 	`,
-});
+}).sources.tideChart;
 
 const glyphs = tideChart(4.5, 0.3).charMap(' .,:;=xX#@');
 const ink = tideChart(3.0, -0.12).color(0.22, 0.82, 1.15);

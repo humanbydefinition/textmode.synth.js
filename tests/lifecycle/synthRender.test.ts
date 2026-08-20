@@ -163,6 +163,41 @@ describe('synthRender Lifecycle', () => {
 	});
 
 	describe('Shader Management', () => {
+		const drawFramebuffer = () => layer.drawFramebuffer as TextmodeFramebuffer;
+
+		it('ends the draw framebuffer and restores the host shader when uniforms throw', () => {
+			state.compiled = {
+				fragmentSource: 'void main() {}',
+				uniforms: new Map(),
+				dynamicUpdaters: new Map(),
+			} as any;
+			state.needsCompile = false;
+			vi.mocked(textmodifier.setUniform).mockImplementationOnce(() => {
+				throw new Error('uniform failed');
+			});
+
+			expect(() => synthRender(layer, textmodifier)).toThrow('uniform failed');
+			expect(drawFramebuffer().begin).toHaveBeenCalledOnce();
+			expect(drawFramebuffer().end).toHaveBeenCalledOnce();
+			expect(textmodifier.resetShader).toHaveBeenCalledOnce();
+		});
+
+		it('restores shader state when beginning a framebuffer throws', () => {
+			state.compiled = {
+				fragmentSource: 'void main() {}',
+				uniforms: new Map(),
+				dynamicUpdaters: new Map(),
+			} as any;
+			state.needsCompile = false;
+			vi.mocked(drawFramebuffer().begin).mockImplementationOnce(() => {
+				throw new Error('begin failed');
+			});
+
+			expect(() => synthRender(layer, textmodifier)).toThrow('begin failed');
+			expect(drawFramebuffer().end).not.toHaveBeenCalled();
+			expect(textmodifier.resetShader).toHaveBeenCalledOnce();
+		});
+
 		it('should prevent race conditions and leaks during rapid updates', async () => {
 			// Arrange
 			state.compiled = {

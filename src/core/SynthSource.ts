@@ -222,6 +222,8 @@ export class SynthSource {
 	 * @param args - Arguments resolved against the declared inputs
 	 * @returns The SynthSource for chaining
 	 *
+	 * @category Chain utilities
+	 *
 	 * @example
 	 * ```js
 	 * source.transform('duotone', [0.02, 0.04, 0.12], [1, 0.4, 0.1]);
@@ -241,7 +243,7 @@ export class SynthSource {
 		if (!transform) {
 			throw new Error(
 				`[textmode.synth.js] Unknown transform "${name}" in runtime "${this.runtime.name}". ` +
-					'Register it with setFunction() or extendTransforms() before use.'
+					'Register it with setFunction() before use.'
 			);
 		}
 		return transform;

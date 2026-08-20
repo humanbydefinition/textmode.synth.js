@@ -91,11 +91,4 @@ export class TextmodeSourceManager {
 	public getUniformName(sourceId: string): string {
 		return this._sources.get(sourceId)?.uniformName ?? 'u_tms0';
 	}
-
-	/**
-	 * Check if any TextmodeSource is being used.
-	 */
-	public hasAnySources(): boolean {
-		return this._sources.size > 0;
-	}
 }

@@ -80,6 +80,7 @@ export function synthRender(
 	if (state.needsCompile && state.compiled && !state.isCompiling) {
 		state.isCompiling = true;
 		const compilingTarget = state.compiled;
+		const compilingGeneration = state.generation;
 
 		// Collect external layer references from source
 		if (!justCollected) {
@@ -90,7 +91,11 @@ export function synthRender(
 		void textmodifier
 			.createMaterialShader(compilingTarget.fragmentSource)
 			.then((newShader) => {
-				if (state.isDisposed || state.compiled !== compilingTarget) {
+				if (
+					state.isDisposed ||
+					state.generation !== compilingGeneration ||
+					state.compiled !== compilingTarget
+				) {
 					newShader.dispose();
 					return;
 				}
@@ -113,6 +118,7 @@ export function synthRender(
 	}
 
 	if (!state.shader || !state.compiled || state.isDisposed) return;
+	const activeShader = state.shader;
 
 	// Determine feedback usage
 	const usesFeedback = state.compiled.usesCharColorFeedback;
@@ -175,51 +181,61 @@ export function synthRender(
 		state.dynamicValues.set(name, value);
 	}
 
-	// Execute render
-	if (usesAnyFeedback && state.pingPongBuffers) {
-		const readBuffer = state.pingPongBuffers[state.pingPongIndex];
-		const writeBuffer = state.pingPongBuffers[1 - state.pingPongIndex];
+	try {
+		// Execute render. Each pass owns its framebuffer lifetime so failures in
+		// uniforms, drawing, or shader selection cannot leave a target bound.
+		if (usesAnyFeedback && state.pingPongBuffers) {
+			const readBuffer = state.pingPongBuffers[state.pingPongIndex];
+			const writeBuffer = state.pingPongBuffers[1 - state.pingPongIndex];
 
-		// Render to ping-pong write buffer
-		writeBuffer.begin();
-		textmodifier.clear();
-		textmodifier.shader(state.shader);
-		applySynthUniforms(layer, textmodifier, state, synthContext, readBuffer);
-		textmodifier.rect(grid.cols, grid.rows);
-		writeBuffer.end();
+			renderPass(writeBuffer, () => {
+				textmodifier.clear();
+				textmodifier.shader(activeShader);
+				applySynthUniforms(layer, textmodifier, state, synthContext, readBuffer);
+				textmodifier.rect(grid.cols, grid.rows);
+			});
 
-		// Render to draw framebuffer
-		drawFramebuffer.begin();
-		textmodifier.clear();
+			renderPass(drawFramebuffer, () => {
+				textmodifier.clear();
 
-		if (copyShader) {
-			textmodifier.shader(copyShader);
-			textmodifier.setUniform('u_charTex', writeBuffer.textures[0]);
-			textmodifier.setUniform('u_charColorTex', writeBuffer.textures[1]);
-			textmodifier.setUniform('u_cellColorTex', writeBuffer.textures[2]);
+				if (copyShader) {
+					textmodifier.shader(copyShader);
+					textmodifier.setUniform('u_charTex', writeBuffer.textures[0]);
+					textmodifier.setUniform('u_charColorTex', writeBuffer.textures[1]);
+					textmodifier.setUniform('u_cellColorTex', writeBuffer.textures[2]);
+				} else {
+					// Fallback if copy shader is not ready yet.
+					textmodifier.shader(activeShader);
+					applySynthUniforms(layer, textmodifier, state, synthContext, readBuffer);
+				}
+
+				textmodifier.rect(grid.cols, grid.rows);
+			});
+
+			state.pingPongIndex = 1 - state.pingPongIndex;
 		} else {
-			// Fallback if copy shader not yet ready (shouldn't happen after pre-setup hook)
-			textmodifier.shader(state.shader);
-			applySynthUniforms(layer, textmodifier, state, synthContext, readBuffer);
+			renderPass(drawFramebuffer, () => {
+				textmodifier.clear();
+				textmodifier.shader(activeShader);
+				applySynthUniforms(layer, textmodifier, state, synthContext, null);
+				textmodifier.rect(grid.cols, grid.rows);
+			});
 		}
-
-		textmodifier.rect(grid.cols, grid.rows);
-		drawFramebuffer.end();
-
-		// Swap ping-pong index
-		state.pingPongIndex = 1 - state.pingPongIndex;
-	} else {
-		// No feedback - render directly
-		drawFramebuffer.begin();
-		textmodifier.clear();
-		textmodifier.shader(state.shader);
-		applySynthUniforms(layer, textmodifier, state, synthContext, null);
-		textmodifier.rect(grid.cols, grid.rows);
-		drawFramebuffer.end();
+	} finally {
+		// Always restore the host shader, including when a pass throws.
+		textmodifier.resetShader();
 	}
+}
 
-	// Reset to default shader so other layers aren't affected by synth uniforms
-	textmodifier.resetShader();
+function renderPass(framebuffer: TextmodeFramebuffer, draw: () => void): void {
+	let begun = false;
+	try {
+		framebuffer.begin();
+		begun = true;
+		draw();
+	} finally {
+		if (begun) framebuffer.end();
+	}
 }
 
 /**
@@ -255,7 +271,6 @@ function applySynthUniforms(
 				textmodifier.setUniform(name, uniform.value);
 			}
 		}
-		state.staticUniformsAppliedTo = state.shader;
 	}
 
 	// Character mapping uniforms
@@ -356,4 +371,6 @@ function applySynthUniforms(
 			textmodifier.setUniform(info.uniformName, tms.texture);
 		}
 	}
+
+	if (forceUpdate) state.staticUniformsAppliedTo = state.shader;
 }

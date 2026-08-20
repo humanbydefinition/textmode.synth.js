@@ -8,6 +8,7 @@
  */
 
 import type { SynthSource } from '../core/SynthSource';
+import type {} from 'textmode.js/addon';
 
 declare module 'textmode.js' {
 	interface TextmodeLayer {
@@ -51,18 +52,11 @@ declare module 'textmode.js' {
 		 * {@includeCode ../../examples/TextmodeLayer/bpm/sketch.js}
 		 */
 		bpm(value: number): void;
-
-		/**
-		 * Get the unique identifier for this layer.
-		 *
-		 * @returns The layer's unique identifier
-		 */
-		get id(): string;
 	}
 }
 
-declare module 'textmode.js' {
-	interface Textmodifier {
+declare module 'textmode.js/addon' {
+	interface TextmodifierExtensions {
 		/**
 		 * Convenience shortcut to apply a synth source to the base layer.
 		 *

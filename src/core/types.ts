@@ -24,6 +24,8 @@ import { TT_SRC, TT_COORD, TT_COLOR, TT_COMBINE, TT_COMBINE_COORD } from './cons
  * - `combine`: Blending operations that combine two color sources
  * - `combineCoord`: Modulation that uses one source to affect another's coordinates
  *
+ * @category Extensibility
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/type-aliases/SynthTransformType | SynthTransformType API reference}
  */
 export type SynthTransformType =
@@ -36,6 +38,8 @@ export type GLSLType = 'float' | 'vec2' | 'vec3' | 'vec4' | 'int' | 'sampler2D';
 
 /**
  * Input parameter definition for a transform function.
+ *
+ * @category Extensibility
  *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformInput | TransformInput API reference}
  */
@@ -229,6 +233,8 @@ export interface LayerSynthState {
 	 * Used to prevent race conditions during async operations (e.g. compilation).
 	 */
 	isDisposed?: boolean;
+	/** Monotonic generation used to reject late asynchronous shader results. */
+	generation: number;
 
 	/**
 	 * Track which shader instance has received static uniforms.
@@ -264,7 +270,7 @@ export interface CharacterMapping {
  * Used by src(layer) to enable hydra-style output references.
  */
 export interface ExternalLayerReference {
-	/** Unique identifier for the layer (typically layer.id or generated) */
+	/** Unique identifier for the layer reference */
 	layerId: string;
 	/** The layer object or lazy getter */
 	layer: TextmodeLayer | (() => TextmodeLayer | undefined);

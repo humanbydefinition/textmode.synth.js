@@ -57,6 +57,8 @@ export const GLSL_RESERVED_IDENTIFIERS = new Set([
 /**
  * Definition of a synthesis transform function.
  *
+ * @category Extensibility
+ *
  * @see {@link https://code.textmode.art/api/textmode.synth.js/interfaces/TransformDefinition | TransformDefinition API reference}
  */
 export interface TransformDefinition {
@@ -93,16 +95,6 @@ export interface TransformDefinition {
 }
 
 /**
- * A processed transform with complete GLSL function.
- */
-export interface ProcessedTransform extends TransformDefinition {
-	/** Internal GLSL function name, kept separate from the public JS API name */
-	glslName: string;
-	/** Complete GLSL function code */
-	glslFunction: string;
-}
-
-/**
  * A normalized, immutable transform input after validation.
  */
 export interface NormalizedTransformInput {
@@ -133,21 +125,18 @@ export interface NormalizedTransformDefinition {
 export interface BuildRegisteredTransformOptions {
 	/** Unique identifier for this registration */
 	readonly id: symbol;
-	/** Monotonically increasing revision allocated by the catalog */
-	readonly revision: number;
 	/** Whether this registration is a built-in definition */
 	readonly builtIn: boolean;
 }
 
 /**
- * An immutable, revisioned registration captured by chain nodes.
+ * An immutable registration captured by chain nodes.
  *
  * Chain nodes capture this record when a chain method is called, so
  * redefining or disposing a transform affects future chains only.
  */
 export interface RegisteredTransform {
 	readonly id: symbol;
-	readonly revision: number;
 	/** Public name used by the JavaScript API */
 	readonly name: string;
 	readonly type: SynthTransformType;
@@ -182,7 +171,6 @@ ${normalized.glsl}
 
 	return Object.freeze({
 		id: options.id,
-		revision: options.revision,
 		name: normalized.name,
 		type: normalized.type,
 		inputs: normalized.inputs,
@@ -192,41 +180,6 @@ ${normalized.glsl}
 		glslFunction,
 		builtIn: options.builtIn,
 	});
-}
-
-/**
- * Process a transform definition into a processed transform with complete GLSL function.
- */
-export function processTransform(def: TransformDefinition): ProcessedTransform {
-	const typeInfo = TRANSFORM_TYPE_INFO[def.type];
-	const inputArgs = def.inputs.map((i) => ({ type: i.type, name: toSafeGlslIdentifier(i.name) }));
-	const allArgs = [...typeInfo.args, ...inputArgs];
-	const argsStr = allArgs.map((a) => `${a.type} ${a.name}`).join(', ');
-	const glslName = `tm_${def.name}`;
-	const glslBody = def.inputs.reduce((body, input) => {
-		const safeName = toSafeGlslIdentifier(input.name);
-		if (safeName === input.name) return body;
-		return body.replace(new RegExp(`\\b${escapeRegExp(input.name)}\\b`, 'g'), safeName);
-	}, def.glsl);
-
-	const glslFunction = `
-${typeInfo.returnType} ${glslName}(${argsStr}) {
-${glslBody}
-}`;
-
-	return {
-		...def,
-		glslName,
-		glslFunction,
-	};
-}
-
-function toSafeGlslIdentifier(name: string): string {
-	return GLSL_RESERVED_IDENTIFIERS.has(name) ? `tm_${name}` : name;
-}
-
-function escapeRegExp(value: string): string {
-	return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /**

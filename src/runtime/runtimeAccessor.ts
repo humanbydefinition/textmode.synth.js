@@ -23,7 +23,3 @@ export function getRuntime(): SynthRuntime {
 	}
 	return activeRuntime;
 }
-
-export function hasRuntime(): boolean {
-	return activeRuntime !== null;
-}
