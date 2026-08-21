@@ -126,6 +126,34 @@ describe('synthRender Feedback Optimization', () => {
 		expect((shaderCalls[1][0] as any).id).toBe('main_shader');
 	});
 
+	it('ends both feedback passes and restores shader state when the copy pass throws', () => {
+		const mainShader = { id: 'main_shader', dispose: vi.fn() };
+		const drawFramebuffer = layer.drawFramebuffer as TextmodeFramebuffer;
+		state.compiled = {
+			fragmentSource: 'void main() {}',
+			uniforms: new Map(),
+			dynamicUpdaters: new Map(),
+			usesCharColorFeedback: true,
+		} as any;
+		state.shader = mainShader as any;
+		state.needsCompile = false;
+		state.pingPongBuffers = [createMockFramebuffer(), createMockFramebuffer()];
+		state.pingPongDimensions = { cols: 10, rows: 10 };
+
+		let setUniformCall = 0;
+		vi.mocked(textmodifier.setUniform).mockImplementation(() => {
+			setUniformCall += 1;
+			if (setUniformCall === 5) throw new Error('copy uniform failed');
+		});
+
+		expect(() => synthRender(layer, textmodifier, { id: 'copy_shader', dispose: vi.fn() } as any)).toThrow(
+			'copy uniform failed'
+		);
+		expect(state.pingPongBuffers?.[1].end).toHaveBeenCalledOnce();
+		expect(drawFramebuffer.end).toHaveBeenCalledOnce();
+		expect(textmodifier.resetShader).toHaveBeenCalledOnce();
+	});
+
 	it('should compile copy shader only once via manager', async () => {
 		// Arrange
 		const copyShader = { id: 'copy_shader', dispose: vi.fn() };
