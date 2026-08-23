@@ -1,6 +1,6 @@
 import { describe, it, expect, expectTypeOf } from 'vitest';
-import * as synth from '../src/index';
-import type { SynthTransformType } from '../src/index';
+import * as synth from '../../src/index';
+import type { SynthTransformType } from '../../src/index';
 
 describe('public API surface', () => {
 	it('exports the expected runtime values and no removed extensibility helpers', () => {
