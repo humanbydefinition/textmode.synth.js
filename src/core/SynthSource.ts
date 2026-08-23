@@ -356,10 +356,10 @@ export class SynthSource {
 		const source = new (this.constructor as new (options?: SynthSourceCreateOptions) => SynthSource)({
 			runtime: this._runtime,
 		});
-		// If only a single number is provided, replicate it to RGB for grayscale consistency
+		// If only a single number is provided, replicate it to RGB for grayscale consistency with default alpha 1.0
 		const args =
 			typeof rOrSource === 'number' && g === undefined && b === undefined && a === undefined
-				? [rOrSource, rOrSource, rOrSource, null]
+				? [rOrSource, rOrSource, rOrSource, 1]
 				: [rOrSource, g, b, a].map((v) => (v === undefined ? null : v));
 		source.addTransform('solid', args as SynthParameterValue[]);
 		return source;
