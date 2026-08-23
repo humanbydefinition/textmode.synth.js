@@ -280,8 +280,7 @@ export class SynthSource {
 			if (isTextmodeSourceLike(value) || typeof value === 'function') {
 				this._textmodeSourceRefs.set(index, {
 					sourceId: generateSourceId(),
-					source: (typeof value === 'function' ? value : value) as
-						UpdatableTextmodeSource | (() => UpdatableTextmodeSource | undefined),
+					source: value as UpdatableTextmodeSource | (() => UpdatableTextmodeSource | undefined),
 				});
 			} else {
 				throw new Error(
