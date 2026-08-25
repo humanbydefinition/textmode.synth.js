@@ -93,7 +93,7 @@ Contribution details and profile links are maintained on the [textmode.js contri
 
 ## License
 
-`textmode.synth.js` is licensed under the [AGPL-3.0 License](./LICENSE).
+`textmode.synth.js` is licensed under the [AGPL-3.0-or-later License](./LICENSE).
 
 ## Acknowledgements
 
