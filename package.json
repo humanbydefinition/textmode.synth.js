@@ -91,7 +91,7 @@
 		"synthesis"
 	],
 	"author": "humanbydefinition",
-	"license": "AGPL-3.0",
+	"license": "AGPL-3.0-or-later",
 	"homepage": "https://code.textmode.art",
 	"prettier": "@textmode/lint/prettier",
 	"repository": {
