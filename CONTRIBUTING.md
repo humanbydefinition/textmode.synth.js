@@ -23,4 +23,4 @@ Read the [Code of Conduct](CODE_OF_CONDUCT.md). Report vulnerabilities privately
 
 Need help? [Open an issue](https://github.com/humanbydefinition/textmode.synth.js/issues), read the
 [synth guide](https://code.textmode.art/docs/live-coding-synth-textmode-art) or
-[API reference](https://code.textmode.art/api/textmode.synth.js/), or [join Discord](https://discord.gg/sjrw8QXNks).
+[API reference](https://code.textmode.art/api/textmode.synth.js/).
