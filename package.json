@@ -6,7 +6,7 @@
 	"devEngines": {
 		"runtime": {
 			"name": "node",
-			"version": "^24.0.0",
+			"version": ">=24.0.0",
 			"onFail": "error"
 		},
 		"packageManager": {
@@ -90,7 +90,7 @@
 		"live-coding",
 		"synthesis"
 	],
-	"author": "humanbydefinition",
+	"author": "humanbydefinition <hello@textmode.art> (https://code.textmode.art)",
 	"license": "AGPL-3.0-or-later",
 	"homepage": "https://code.textmode.art",
 	"prettier": "@textmode/lint/prettier",
