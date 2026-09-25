@@ -15,3 +15,6 @@ contact_links:
     - name: textmode.js core repository
       url: https://github.com/humanbydefinition/textmode.js/issues
       about: Report problems reproducible without this add-on in the textmode.js core repository.
+    - name: Discord
+      url: https://discord.gg/sjrw8QXNks
+      about: Ask usage questions or discuss the add-on before filing an issue.
