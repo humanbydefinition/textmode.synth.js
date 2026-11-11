@@ -5,38 +5,44 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
 t.bpm(18);
 
-const labelLayer = t.layers.add();
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 const glyphs = ' .:-=+*#%@';
 const slow = [0.0, 1.0].fast(0.16).ease('easeInOutSine');
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
+function drawLabel(lines) {
+	const { cols, rows } = labelLayer.grid;
+	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
 	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
+	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, lines.length + 2);
 	t.pop();
+	t.printAlign('left', 'top');
+	lines.forEach(([text, color], i) => {
+		t.charColor(color[0], color[1], color[2]);
+		t.print(text, left + 3, top + 3 + i);
+	});
 }
 
 labelLayer.draw(() => {
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('SYNTHSOURCE.HUE', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('HUE ROTATION', x, y++, 120, 220, 255);
-	drawText('Hue drifts, form stays calm.', x, y++, 160, 180, 210);
-	drawText('Palette travels slowly.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	drawLabel([
+		['SYNTHSOURCE.HUE', [120, 240, 180]],
+		['------------------------------------', [70, 100, 140]],
+		['CONCEPT: HUE ROTATION', [140, 210, 255]],
+		['Hue drifts, form stays calm.', [140, 160, 190]],
+		['Palette travels slowly.', [140, 160, 190]],
+		['Separate animated ink and paper.', [140, 160, 190]],
+		['------------------------------------', [70, 100, 140]],
+		['HUE SHIFT: 0.0-1.0 EASED', [140, 255, 200]],
+	]);
 });
 
 const ink = moire(8, 9, 0.15, 1.6, 0.025).color(1.0, 0.62, 0.34).modulate(noise(2.3, 0.018), 0.022);
@@ -56,4 +62,7 @@ t.synth(
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

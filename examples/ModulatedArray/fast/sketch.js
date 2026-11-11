@@ -5,40 +5,45 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
 t.bpm(18);
 
-const labelLayer = t.layers.add();
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 const glyphs = ' .-:=+*#%@';
 const shutter = [4, 14, 28, 9].fast(1.25);
 const slowFrame = [3, 5, 7, 4].fast(0.22);
 const spin = [-0.4, 0.1, 0.65, 1.1].fast(1.25);
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
+function drawLabel(lines) {
+	const { cols, rows } = labelLayer.grid;
+	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
 	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
+	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, lines.length + 2);
 	t.pop();
+	t.printAlign('left', 'top');
+	lines.forEach(([text, color], i) => {
+		t.charColor(color[0], color[1], color[2]);
+		t.print(text, left + 3, top + 3 + i);
+	});
 }
 
 labelLayer.draw(() => {
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('MODULATEDARRAY.FAST', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('RELATIVE RATE SHUTTER', x, y++, 120, 220, 255);
-	drawText('Fast arrays change before frames.', x, y++, 160, 180, 210);
-	drawText('The outer lattice drifts slowly.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('shutter.fast(1.25)', x, y++, 150, 255, 190);
+	drawLabel([
+		['MODULATEDARRAY.FAST', [120, 240, 180]],
+		['------------------------------------', [70, 100, 140]],
+		['CONCEPT: RELATIVE RATE SHUTTER', [140, 210, 255]],
+		['Fast arrays change before frames.', [140, 160, 190]],
+		['The outer lattice drifts slowly.', [140, 160, 190]],
+		['------------------------------------', [70, 100, 140]],
+		['shutter.fast(1.25)', [140, 255, 200]],
+	]);
 });
 
 const glyphField = osc(shutter, 0.02, 1.0).rotate(spin).kaleid(8);
@@ -54,4 +59,7 @@ t.synth(char(glyphField.screen(frame, 0.3)).charMap(glyphs).charColor(inkField).
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

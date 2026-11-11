@@ -5,37 +5,42 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
 t.bpm(18);
 
-const labelLayer = t.layers.add();
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 const glyphs = ' .:-=+*#%@';
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
+function drawLabel(lines) {
+	const { cols, rows } = labelLayer.grid;
+	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
 	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
+	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, lines.length + 2);
 	t.pop();
+	t.printAlign('left', 'top');
+	lines.forEach(([text, color], i) => {
+		t.charColor(color[0], color[1], color[2]);
+		t.print(text, left + 3, top + 3 + i);
+	});
 }
 
 labelLayer.draw(() => {
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('SYNTHSOURCE.PAINT2', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('PAINT SOURCE FIELD', x, y++, 120, 220, 255);
-	drawText('Paint receives a full source.', x, y++, 160, 180, 210);
-	drawText('Base motion supplies glyphs.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('paint(source), no color overrides.', x, y++, 150, 255, 190);
+	drawLabel([
+		['SYNTHSOURCE.PAINT2', [120, 240, 180]],
+		['------------------------------------', [70, 100, 140]],
+		['CONCEPT: PAINT SOURCE FIELD', [140, 210, 255]],
+		['Paint receives a full source.', [140, 160, 190]],
+		['Base motion supplies glyphs.', [140, 160, 190]],
+		['------------------------------------', [70, 100, 140]],
+		['PAINT(FIELD): NO COLOR OVERRIDES', [140, 255, 200]],
+	]);
 });
 
 const paintField = plasma(4.4, 0.022, 0.18, 1.16).colorama(0.16).modulateHue(osc(5, 0.012).kaleid(5), 2.6);
@@ -50,4 +55,7 @@ t.synth(
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });
