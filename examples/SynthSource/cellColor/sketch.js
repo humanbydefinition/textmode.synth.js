@@ -11,36 +11,42 @@ const t = textmode.create({
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const paper = plasma(2.2, 0.45, 0.4, 1.25).colorama(0.42).color(0.42);
+const glyphs = shape(4, 0.58, 0.08)
+	.rotate(() => t.secs * 0.35)
+	.repeat(4, 3);
+
+t.synth(glyphs.clone().char(glyphs).charMap(' .:-=+*#%@').charColor(0.95, 0.98, 1).cellColor(paper));
 
 labelLayer.draw(() => {
 	t.clear();
-	drawLabel([
-		['SYNTHSOURCE.CELLCOLOR', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: CELL COLOR TINT', [140, 210, 255]],
-		['Sets cell background color.', [140, 160, 190]],
-		['Leaves glyph color neutral.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['CELLCOLOR RGB: 0.9, 0.2, 0.5', [140, 255, 200]],
-	]);
-});
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const width = 38;
+	const lines = 7;
 
-t.synth(osc(10, 0.1).cellColor(0.9, 0.2, 0.5));
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (lines + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, lines + 2);
+	t.pop();
+
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.CELLCOLOR', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: SOURCE CELL PAPER', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Drives cell bg with a SynthSource.', left + 3, top + 6);
+	t.print('Bright glyphs stay crisp on top.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('BG: PLASMA(2.2,0.45)->.CELLCOLOR()', left + 3, top + 9);
+});
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

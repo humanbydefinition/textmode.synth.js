@@ -11,57 +11,58 @@ const t = textmode.create({
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
-
-labelLayer.draw(() => {
-	t.clear();
-	drawLabel([
-		['SETFUNCTION.SOURCE', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: PROCEDURAL FIELD', [140, 210, 255]],
-		['A src creates pixels from _st.', [140, 160, 190]],
-		['Here: an animated tide chart.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['setFunction(...).sources.tideChart', [140, 255, 200]],
-	]);
-});
-
-const tideChart = setFunction({
+// A 'src' extension generates RGBA pixels directly from _st and time.
+setFunction({
 	name: 'tideChart',
 	type: 'src',
 	inputs: [
 		{ name: 'frequency', type: 'float', default: 4.5 },
-		{ name: 'drift', type: 'float', default: 0.3 },
+		{ name: 'drift', type: 'float', default: 0.35 },
 	],
 	glsl: `
-		vec2 p = _st - vec2(0.58, 0.46);
-		float swell = sin((p.x * frequency + p.y * 1.7) * 6.2831853 + time * drift);
-		float echo = cos(length(p * vec2(1.0, 1.7)) * frequency * 11.0 - time * drift);
-		float coast = smoothstep(0.68, 0.12, length(p * vec2(0.8, 1.25)));
-		float level = floor(clamp(swell * 0.28 + echo * 0.22 + 0.5, 0.0, 1.0) * 8.0) / 7.0;
-		return vec4(vec3(level * coast), 1.0);
+		vec2 p = _st - 0.5;
+		float wave = sin(p.x * frequency * 6.283 + cos(p.y * 5.0 - time * drift));
+		wave += 0.65 * cos(length(p) * frequency * 8.0 - time * drift * 1.6);
+		float contour = 1.0 - smoothstep(0.08, 0.24, abs(fract(wave * 1.4) - 0.5));
+		float basin = smoothstep(-1.4, 1.4, wave);
+		vec3 col = mix(vec3(0.03, 0.14, 0.28), vec3(0.12, 0.68, 0.85), basin);
+		col = mix(col, vec3(1.0, 0.78, 0.28), contour * 0.88);
+		return vec4(col, 1.0);
 	`,
-}).sources.tideChart;
+});
 
-const glyphs = tideChart(4.5, 0.3).charMap(' .,:;=xX#@');
-const ink = tideChart(3.0, -0.12).color(0.22, 0.82, 1.15);
-const paper = tideChart(1.6, 0.04).color(0.025, 0.055, 0.11);
+const tide = tideChart(4.5, 0.35);
+const glyphs = tide.clone();
 
-t.synth(glyphs.charColor(ink).cellColor(paper));
+t.synth(tide.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.015, 0.04, 0.08));
+
+labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const width = 38;
+	const height = 9;
+	t.clear();
+	t.push();
+	t.translate(left + 2 + width / 2, top + 2 + height / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, height);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SETFUNCTION.SOURCE', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: CUSTOM SOURCE GENERATOR', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('type: "src" takes _st and time,', left + 3, top + 6);
+	t.print('returning RGBA contour colors.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('tideChart(4.5, 0.35)', left + 3, top + 9);
+});
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

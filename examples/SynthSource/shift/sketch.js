@@ -9,57 +9,53 @@ const t = textmode.create({
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
-const glyphs = ' .:-=+*#%@';
-const slow = [0.0, 1.0].fast(0.16).ease('easeInOutSine');
-const breathe = [0.22, 0.78].fast(0.18).ease('easeInOutSine');
-const turn = [-0.42, 0.42].fast(0.14).ease('easeInOutSine');
+const channelShift = (secs, phase) => 0.3 + 0.28 * Math.sin(secs * 0.9 + phase);
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const out = osc(6, 0.2, 0.0)
+	.kaleid(4)
+	.color(0.45)
+	.shift(
+		({ time }) => channelShift(time, 0),
+		({ time }) => channelShift(time, 2.09),
+		({ time }) => channelShift(time, 4.19),
+		0.0
+	);
+const glyphs = out.clone();
+
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.02, 0.05));
 
 labelLayer.draw(() => {
 	t.clear();
-	drawLabel([
-		['SYNTHSOURCE.SHIFT', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: CHANNEL OFFSETS', [140, 210, 255]],
-		['RGB planes drift slowly.', [140, 160, 190]],
-		['Offsets stay below flicker.', [140, 160, 190]],
-		['Separate animated ink and paper.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['SHIFT: 0.22-0.78 EASED', [140, 255, 200]],
-	]);
+	const { cols, rows } = labelLayer.grid;
+	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const rv = channelShift(t.secs, 0).toFixed(2);
+	const gv = channelShift(t.secs, 2.09).toFixed(2);
+	const bv = channelShift(t.secs, 4.19).toFixed(2);
+	const status = `Shift: +${rv}, +${gv}, +${bv} (A +0.0)`;
+	const width = Math.max(36, [...status].length) + 2;
+
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, 7 + 2);
+	t.pop();
+
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.SHIFT', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: CHANNEL OFFSET SHIFT', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Adds fract(offset) per RGBA channel.', left + 3, top + 6);
+	t.print('Phase-shifted RGB lifts monochrome.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(status, left + 3, top + 9);
 });
-
-const ink = osc(6, 0.018, 1.6).rotate(turn, 0.002).color(0.9, 0.58, 1.0).modulateKaleid(noise(2.0, 0.014), 5);
-const paper = plasma(3.2, 0.024, 0.2, 1.08).color(0.08, 0.035, 0.16).hue(slow);
-
-t.synth(
-	plasma(4.8, 0.026, 0.1, 1.12)
-		.modulateRotate(noise(2.0, 0.014), 0.28, 0.04)
-		.shift(breathe, breathe.offset(0.33), breathe.offset(0.66), 0.0)
-		.overlay(osc(6, 0.014).kaleid(5), 0.22)
-		.contrast(1.14)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

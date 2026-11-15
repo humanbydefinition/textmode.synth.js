@@ -11,69 +11,77 @@ const t = textmode.create({
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
-
-labelLayer.draw(() => {
-	t.clear();
-	drawLabel([
-		['SETFUNCTION.BATCH', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: COHESIVE EXTENSION PACK', [140, 210, 255]],
-		['src + coord + color install once.', [140, 160, 190]],
-		['The pack composes like built-ins.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['surveyGrid().scanJitter()', [140, 255, 200]],
-	]);
-});
-
+// Register a cohesive src + coord + color pack atomically in one call.
 const pack = setFunction([
 	{
-		name: 'surveyGrid',
+		name: 'facetWave',
 		type: 'src',
-		inputs: [
-			{ name: 'rings', type: 'float', default: 9 },
-			{ name: 'spokes', type: 'float', default: 7 },
-		],
-		glsl: `vec2 p = (_st - 0.5) * vec2(1.25, 1.0); float radius = length(p); float angle = atan(p.y, p.x); float ring = 1.0 - smoothstep(0.035, 0.1, abs(fract(radius * rings) - 0.5)); float spoke = 1.0 - smoothstep(0.02, 0.1, abs(sin(angle * spokes))); float sweep = pow(max(0.0, cos(angle - time * 0.22)), 18.0); return vec4(vec3(max(ring * 0.8, max(spoke * 0.38, sweep))), 1.0);`,
+		inputs: [{ name: 'scale', type: 'float', default: 6.5 }],
+		glsl: `
+			vec2 p = (_st - 0.5) * scale;
+			float a = sin(p.x + p.y + time * 0.6);
+			float b = cos(p.x - p.y - time * 0.45);
+			float band = smoothstep(-0.35, 0.75, a * b + 0.35 * sin(length(p) * 1.8 - time));
+			float edge = 1.0 - smoothstep(0.04, 0.16, abs(a * b));
+			return vec4(vec3(max(band * 0.85, edge * 0.95)), 1.0);
+		`,
 	},
 	{
-		name: 'scanJitter',
+		name: 'ribbonShear',
 		type: 'coord',
-		inputs: [
-			{ name: 'rows', type: 'float', default: 24 },
-			{ name: 'amount', type: 'float', default: 0.018 },
-		],
-		glsl: 'vec2 st = _st; float row = floor(st.y * rows); st.x += sin(row * 2.17 + time * 0.8) * amount; return st;',
+		inputs: [{ name: 'amount', type: 'float', default: 0.055 }],
+		glsl: `
+			vec2 st = _st;
+			st.x += sin(st.y * 12.0 + time * 0.9) * amount;
+			st.y += cos(st.x * 8.0 - time * 0.6) * (amount * 0.5);
+			return st;
+		`,
 	},
 	{
-		name: 'phosphorInk',
+		name: 'emberGrade',
 		type: 'color',
-		inputs: [
-			{ name: 'dark', type: 'vec3', default: [0.01, 0.05, 0.035] },
-			{ name: 'glow', type: 'vec3', default: [0.2, 1.0, 0.5] },
-			{ name: 'hot', type: 'vec3', default: [1.0, 0.68, 0.2] },
-		],
-		glsl: 'float v = clamp(_luminance(_c0.rgb), 0.0, 1.0); vec3 ink = mix(dark, glow, smoothstep(0.08, 0.72, v)); ink = mix(ink, hot, smoothstep(0.72, 0.98, v)); return vec4(ink, _c0.a);',
+		inputs: [{ name: 'warmth', type: 'float', default: 1.0 }],
+		glsl: `
+			float v = clamp(_luminance(_c0.rgb), 0.0, 1.0);
+			vec3 col = mix(vec3(0.04, 0.02, 0.08), vec3(0.86, 0.18, 0.24), smoothstep(0.05, 0.55, v));
+			col = mix(col, vec3(1.0, 0.84, 0.32) * warmth, smoothstep(0.55, 0.95, v));
+			return vec4(col, _c0.a);
+		`,
 	},
 ]);
 
-const display = pack.sources.surveyGrid(9, 7).scanJitter(24, 0.018).phosphorInk();
+const out = pack.sources.facetWave(6.5).ribbonShear(0.055).emberGrade(1.0);
+const glyphs = out.clone();
 
-t.synth(display.charMap('  .:+*#%@').cellColor(0.008, 0.025, 0.02));
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.015, 0.04));
+
+labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const width = 38;
+	const height = 9;
+	t.clear();
+	t.push();
+	t.translate(left + 2 + width / 2, top + 2 + height / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, height);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SETFUNCTION.BATCH', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: ATOMIC EXTENSION PACK', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('src + coord + color register once', left + 3, top + 6);
+	t.print('and chain via pack.sources.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('facetWave().ribbonShear()', left + 3, top + 9);
+});
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

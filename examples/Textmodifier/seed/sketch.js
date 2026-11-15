@@ -9,52 +9,49 @@ const t = textmode.create({
 	plugins: [SynthPlugin],
 });
 
-t.seed(2026);
+const SEEDS = [101, 204, 309];
+let activeSeed = SEEDS[0];
+t.seed(activeSeed);
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
-const glyphs = ' .,:;=xX#@';
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const terrain = voronoi(5.5, 0.25, 0.5).modulate(noise(3.8, 0.2), 0.14).contrast(1.3);
+const glyphs = terrain.clone();
+const ink = voronoi(4.5, 0.2, 0.4).color(0.28, 0.94, 0.72).hue(0.08).brightness(0.18);
 
-labelLayer.draw(() => {
-	t.clear();
-	drawLabel([
-		['TEXTMODIFIER.SEED', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: REPEATABLE THREE-FIELD TERRAIN', [140, 210, 255]],
-		['Seed locks every random source.', [140, 160, 190]],
-		['Reload keeps the same terrain.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['t.seed(2026)', [140, 255, 200]],
-	]);
+t.synth(terrain.char(glyphs).charMap(' .:-=+*#%@').charColor(ink).cellColor(0.03, 0.08, 0.09));
+
+// Step deterministically across 3 reproducible seeds every 1.2s.
+t.draw(() => {
+	activeSeed = SEEDS[Math.floor(t.secs / 1.2) % SEEDS.length];
+	t.seed(activeSeed);
 });
 
-const glyphField = noise(5.4, 0.025)
-	.modulate(voronoi(5.5, 0.022, 0.58), 0.16)
-	.contrast(1.2);
-const inkField = voronoi(6.2, 0.018, 0.48)
-	.color(0.32, 0.95, 0.7)
-	.screen(noise(4.0, 0.02).color(1.0, 0.46, 0.12), 0.32);
-const paperField = noise(3.2, 0.016)
-	.brightness(0.2)
-	.color(0.05, 0.18, 0.13)
-	.softlight(voronoi(4.0, 0.014, 0.65), 0.28);
-
-t.synth(char(glyphField).charMap(glyphs).charColor(inkField).cellColor(paperField));
+labelLayer.draw(() => {
+	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const top = -Math.floor(labelLayer.grid.rows / 2);
+	t.clear();
+	t.push();
+	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
+	t.char(' ');
+	t.cellColor(6, 10, 22);
+	t.rect(38, 9);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('TEXTMODIFIER.SEED', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: DETERMINISTIC RANDOMNESS', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Seed locks noise() and voronoi().', left + 3, top + 6);
+	t.print('Cycles 3 reproducible terrains.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`SEED: ${activeSeed} (DETERMINISTIC)`, left + 3, top + 9);
+});
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

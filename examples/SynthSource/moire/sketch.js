@@ -10,41 +10,42 @@ const t = textmode.create({
 });
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
-
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const angleAt = (secs) => 0.21 + Math.sin(secs * 0.55) * 0.13;
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const rowCount = 7;
+	const width = 38;
+	const angle = angleAt(t.secs).toFixed(2);
 	t.clear();
-	drawLabel([
-		['SYNTHSOURCE.MOIRE', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: MOIRE INTERFERENCE', [140, 210, 255]],
-		['Creates optical interference grids.', [140, 160, 190]],
-		['Combines rotating high-frequency waves.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['Freq: 15 | Scale: 0.1 | Mod: Mult', [140, 255, 200]],
-	]);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (rowCount + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, rowCount + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.MOIRE', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: OPTICAL BEAT GRATINGS', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Overlaps two angled sine gratings.', left + 3, top + 6);
+	t.print('Small angle tilt forms beat bands.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`FREQ 16/19 | ANGLE B: ${angle} RAD`, left + 3, top + 9);
 });
 
-t.synth(
-	moire(15, 0.1, 0.8)
-		.mult(osc(8, -0.05, 1.2).rotate(1.5))
-		.color(0.2, 0.7, 1.0)
-);
+// Two slightly offset gratings interfere to produce sweeping moire beat bands.
+const bands = moire(16, 19, 0, (ctx) => angleAt(ctx.time), 0.6, 0).contrast(1.3);
+const glyphs = bands.clone();
+
+t.synth(bands.color(1.0, 0.82, 0.32).char(glyphs).cellColor(0.03, 0.02, 0.01).charMap(' .,:;=xX#@'));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

@@ -10,37 +10,43 @@ const t = textmode.create({
 });
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
-
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const frequencies = [8, 16, 24];
+const freqAt = (secs) => frequencies[Math.floor(secs * 0.45) % frequencies.length];
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const rowCount = 7;
+	const width = 38;
+	const freq = freqAt(t.secs);
 	t.clear();
-	drawLabel([
-		['SYNTHSOURCE.OSC', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: SINE WAVE OSCILLATOR', [140, 210, 255]],
-		['Generates periodic band patterns.', [140, 160, 190]],
-		['Params: frequency, sync, offset.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['Freq: 12 | Sync: 0.15', [140, 255, 200]],
-	]);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (rowCount + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, rowCount + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.OSC', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: SINE WAVE OSCILLATOR', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Generates scrolling RGB sine bands.', left + 3, top + 6);
+	t.print('offset shifts R, G, and B phases.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`FREQ ${freq} | SYNC 0.18 | OFFSET 0.6`, left + 3, top + 9);
 });
 
-t.synth(osc(12, 0.15, [0.5, 2.0].ease('easeInOutQuad')).kaleid([3, 7].ease('easeInOutCubic')).color(0.9, 0.25, 1.2));
+// Pure RGB sine bands: frequency steps across [8, 16, 24] while offset=0.6 separates R/G/B fringes.
+const bands = osc((ctx) => freqAt(ctx.time), 0.18, 0.6);
+const glyphs = bands.clone();
+
+t.synth(bands.char(glyphs).cellColor(0.02, 0.03, 0.08).charMap(' .:-=+*#%@'));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

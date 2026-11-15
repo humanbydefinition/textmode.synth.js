@@ -9,53 +9,48 @@ const t = textmode.create({
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
-const glyphs = ' .:-=+*#%@';
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const shearX = [-0.5, 0.5].fast(0.4).ease('sin');
+const shearY = [-0.45, 0.45].fast(0.4).ease('sin').offset(0.5);
+
+// Hollow square frames keep parallel edges straight while leaning into parallelograms.
+const tiles = shape(4, 0.82, 0.04)
+	.diff(shape(4, 0.42, 0.04))
+	.repeat(7, 5)
+	.shear(shearX, shearY, 0.5, 0.5);
+
+const glyphs = tiles.clone();
+
+t.synth(tiles.color(0.38, 0.78, 1.0).char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.04, 0.1));
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const width = 38;
+	const height = 9;
 	t.clear();
-	drawLabel([
-		['SYNTHSOURCE.SHEAR', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: SLANTED COORDINATES', [140, 210, 255]],
-		['Rows and columns lean.', [140, 160, 190]],
-		['The lattice slips gently.', [140, 160, 190]],
-		['Separate animated ink and paper.', [140, 160, 190]],
-	]);
+	t.push();
+	t.translate(left + 2 + width / 2, top + 2 + height / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, height);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.SHEAR', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: AFFINE COORDINATE SLANT', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Shifts axes proportionally to slant.', left + 3, top + 6);
+	t.print('Squares skew into parallelograms.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('Shear X: -0.5..0.5 | Y: -0.45..0.45', left + 3, top + 9);
 });
-
-const ink = osc(5, 0.018, 1.1).kaleid(4).color(0.45, 0.72, 1.0).modulate(noise(2.2, 0.018), 0.025);
-const paper = plasma(3.6, 0.028, 0.1, 1.05).color(0.03, 0.08, 0.18).modulateScale(noise(2.0, 0.015), 0.22, 0.95);
-
-t.synth(
-	osc(9, 0.02, 1.2)
-		.shear([-0.18, 0.18].fast(0.12).ease('easeInOutSine'), [0.14, -0.14].fast(0.12).ease('easeInOutSine'), 0.5, 0.5)
-		.repeat(2, 3, 0.1, 0.06)
-		.color(0.55, 0.95, 1.0)
-		.modulateScale(noise(2.0, 0.014), 0.22, 0.95)
-		.contrast(1.16)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

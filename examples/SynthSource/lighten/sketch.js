@@ -10,43 +10,49 @@ const t = textmode.create({
 });
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const mixAt = (secs) => 0.5 - 0.5 * Math.cos(secs * 1.1);
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const ring = shape(6, 0.44, 0.08)
+	.diff(shape(6, 0.22, 0.08))
+	.rotate(0, 0.4)
+	.color(0.98, 0.28, 0.68);
+
+// Lighten keeps the brighter RGB channel everywhere, merging coral and emerald.
+const out = osc(12, 0.12)
+	.rotate(Math.PI / 2)
+	.color(0.15, 0.95, 0.55)
+	.lighten(ring, ({ time }) => mixAt(time));
+const glyphs = out.clone();
+
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.03, 0.04));
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const width = 38;
+	const height = 9;
 	t.clear();
-	drawLabel([
-		['SYNTHSOURCE.LIGHTEN', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: LIGHTEN BLENDING (MAX)', [140, 210, 255]],
-		['Selects the lighter pixels of sources.', [140, 160, 190]],
-		['Creates bright grid intersections.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['Oscillators merged with max-blend', [140, 255, 200]],
-	]);
+	t.push();
+	t.translate(left + 2 + width / 2, top + 2 + height / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, height);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.LIGHTEN', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: PER-CHANNEL MAXIMUM', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Keeps the brighter RGB channel.', left + 3, top + 6);
+	t.print('Coral hex ring floats over emerald.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`Amount: ${mixAt(t.secs).toFixed(2)} | Max(emerald, coral)`, left + 3, top + 9);
 });
-
-t.synth(
-	osc(15, 0.1)
-		.color(0.1, 0.5, 0.9)
-		.lighten(osc(15, 0.12).rotate(1.57).color(0.9, 0.1, 0.4), 1.0)
-		.charMap(' .:-=+*#%@')
-		.cellColor(0.02, 0.02, 0.05)
-);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

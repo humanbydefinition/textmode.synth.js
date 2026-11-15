@@ -10,37 +10,43 @@ const t = textmode.create({
 });
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const pivotAt = (secs) => 0.46 + 0.24 * Math.sin(secs * 1.15);
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const out = voronoi(4.0, 0.28, 0.8)
+	.levels(0.05, 0.8, 0.0, 1.0)
+	.thresh(({ time }) => pivotAt(time), 0.03);
+const glyphs = out.clone();
+
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.02, 0.03));
 
 labelLayer.draw(() => {
 	t.clear();
-	drawLabel([
-		['SYNTHSOURCE.THRESH', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: THRESHOLD FILTER', [140, 210, 255]],
-		['Binarizes canvas to black/white.', [140, 160, 190]],
-		['Splits values at pivot point.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['PIVOT: 0.3-0.7 EASED', [140, 255, 200]],
-	]);
-});
+	const { cols, rows } = labelLayer.grid;
+	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const status = `Pivot: ${pivotAt(t.secs).toFixed(2)} | Tolerance: 0.03`;
+	const width = Math.max(36, [...status].length) + 2;
 
-t.synth(noise(6).thresh([0.3, 0.7].ease('easeInOutSine')));
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, 7 + 2);
+	t.pop();
+
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.THRESH', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: BINARY THRESHOLD', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Splits luminance to black or white.', left + 3, top + 6);
+	t.print('Sweeping pivot grows bright islands.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(status, left + 3, top + 9);
+});
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

@@ -9,53 +9,45 @@ const t = textmode.create({
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
-const glyphs = ' .:-=+*#%@';
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const rosette = shape(8, 0.5, 0.05)
+	.diff(shape(8, 0.28, 0.05))
+	.add(shape(4, 0.16, 0.04).rotate(0, -0.45))
+	.rotate(0, 0.32);
+const glyphs = rosette.clone();
+const ink = osc(4.2, 0.35, 1.5).rotate(0.4, 0.15).brightness(0.25).saturate(1.35);
+const paper = shape(8, 0.58, 0.12)
+	.color(0.04, 0.08, 0.2)
+	.add(solid(0.01, 0.02, 0.06));
+
+t.synth(rosette.char(glyphs).charMap(' .:-=+*#%@').charColor(ink).cellColor(paper));
 
 labelLayer.draw(() => {
+	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const top = -Math.floor(labelLayer.grid.rows / 2);
 	t.clear();
-	drawLabel([
-		['TEXTMODIFIER.SYNTH', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: BASE-LAYER SYNTH SHORTCUT', [140, 210, 255]],
-		['t.synth routes to the base layer.', [140, 160, 190]],
-		['It receives all three fields.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['t.synth(threeTargetSource)', [140, 255, 200]],
-	]);
+	t.push();
+	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
+	t.char(' ');
+	t.cellColor(6, 10, 22);
+	t.rect(38, 9);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('TEXTMODIFIER.SYNTH', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: ROOT SYNTH SHORTCUT', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('t.synth() binds to the base layer.', left + 3, top + 6);
+	t.print('Char, ink, and paper compose cleanly.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('t.synth(rosetteSource)', left + 3, top + 9);
 });
-
-const glyphField = plasma(5.5, 0.02, 0.3, 1.2)
-	.modulate(moire(7, 10, 0.12, 1.5, 0.014), 0.08)
-	.kaleid(5);
-const inkField = osc(6, 0.018, 1.2)
-	.rotate(0.25, 0.006)
-	.color(0.9, 0.3, 1.0)
-	.screen(moire(10, 14, 0.1, 1.55, 0.016).color(0.18, 0.82, 1.0), 0.34);
-const paperField = plasma(3.2, 0.015, 0.7, 1.04)
-	.brightness(0.2)
-	.color(0.12, 0.04, 0.2)
-	.softlight(noise(2.0, 0.012), 0.24);
-
-t.synth(char(glyphField).charMap(glyphs).charColor(inkField).cellColor(paperField));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

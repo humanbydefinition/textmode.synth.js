@@ -9,50 +9,53 @@ const t = textmode.create({
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
-const glyphs = ' .:-=+*#%@';
-const breathe = [0.22, 0.78].fast(0.18).ease('easeInOutSine');
-const turn = [-0.42, 0.42].fast(0.14).ease('easeInOutSine');
+const ch = (secs, phase) => 0.62 + 0.36 * Math.sin(secs * 1.4 + phase);
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const paper = voronoi(3.5, 0.35, 0.45).color(0.04, 0.07, 0.16);
+const glyphs = osc(12, 0.32, 0.0).rotate(0.55).modulate(noise(2.6, 0.35), 0.14).contrast(1.25);
+
+t.synth(
+	charColor(
+		({ time }) => ch(time, 0),
+		({ time }) => ch(time, 2.1),
+		({ time }) => ch(time, 4.2),
+		1.0
+	)
+		.char(glyphs)
+		.charMap(' .:-=+*#%@')
+		.cellColor(paper)
+);
 
 labelLayer.draw(() => {
 	t.clear();
-	drawLabel([
-		['CHARCOLOR.CHARCOLOR2', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: TOP LEVEL INK RGBA', [140, 210, 255]],
-		['Sets glyph color before cells.', [140, 160, 190]],
-		['Cells remain source driven.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['charColor(r, g, b, a)', [140, 255, 200]],
-	]);
+	const { cols, rows } = labelLayer.grid;
+	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const [r, g, b] = [0, 2.1, 4.2].map((p) => ch(t.secs, p));
+	const status = `RGBA: ${r.toFixed(2)}, ${g.toFixed(2)}, ${b.toFixed(2)}, 1.00`;
+	const width = 38 + 2;
+
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, 7 + 2);
+	t.pop();
+
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('CHARCOLOR.CHARCOLOR2', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: TOP-LEVEL RGBA INK', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('charColor(r,g,b,a) sets uniform ink.', left + 3, top + 6);
+	t.print('Cell color & glyphs animate freely.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(status, left + 3, top + 9);
 });
-
-const paper = noise(3.0, 0.025).color(0.16, 0.055, 0.025).softlight(osc(4, 0.016), 0.22);
-
-t.synth(
-	charColor(breathe, breathe.offset(0.3), 0.18, 1.0)
-		.char(noise(4.2, 0.028).kaleid(5).rotate(turn, 0.002))
-		.charMap(glyphs)
-		.cellColor(paper)
-);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

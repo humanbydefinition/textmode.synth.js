@@ -10,37 +10,50 @@ const t = textmode.create({
 });
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const spinSpeed = 0.7;
+const startAngle = 0.4;
+let angleDeg = 23;
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
+// Track live angle in degrees so the readout matches the spinning beacon.
+function readStartAngle(ctx) {
+	const totalRad = startAngle + spinSpeed * ctx.time;
+	angleDeg = ((Math.round((totalRad * 180) / Math.PI) % 360) + 360) % 360;
+	return startAngle;
 }
 
-labelLayer.draw(() => {
-	t.clear();
-	drawLabel([
-		['SYNTHSOURCE.ROTATE', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: COORDINATE ROTATION', [140, 210, 255]],
-		['Rotates space by angle and speed.', [140, 160, 190]],
-		['Creates spinning visual movement.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['Rotate: continuous speed 1.0', [140, 255, 200]],
-	]);
-});
+// Asymmetric rotor: striped gold triangle plus an orbiting cyan beacon dot.
+const blade = shape(3, 0.28, 0.02).mult(osc(16, 0).thresh(0.45, 0.03)).color(1.0, 0.68, 0.22);
+const beacon = shape(24, 0.09, 0.02).scroll(0, -0.18).color(0.2, 0.95, 0.85);
+const rotor = blade.add(beacon).rotate(readStartAngle, spinSpeed);
+const glyphs = rotor.clone();
 
-t.synth(osc(18, 0.1).color(0.2, 0.6, 1.0).rotate(0.0, 1.0).charMap(' .:-=+*#%@').cellColor(0.05, 0.05, 0.15));
+t.synth(rotor.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.03, 0.05, 0.11));
+
+labelLayer.draw(() => {
+	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const top = -Math.floor(labelLayer.grid.rows / 2);
+	t.clear();
+	t.push();
+	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
+	t.char(' ');
+	t.cellColor(6, 10, 22);
+	t.rect(38, 9);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.ROTATE', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: COORDINATE ROTATION', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Turns UV space around the center.', left + 3, top + 6);
+	t.print('Angle offsets; speed drives spin.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`ANGLE: ${String(angleDeg).padStart(3, ' ')} DEG | SPEED: 0.70/S`, left + 3, top + 9);
+});
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

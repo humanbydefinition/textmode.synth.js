@@ -10,43 +10,43 @@ const t = textmode.create({
 });
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
-
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const satAt = (secs) => 1.2 - 1.2 * Math.cos(secs * 1.0);
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const rowCount = 7;
+	const width = 38;
+	const sat = satAt(t.secs).toFixed(2);
 	t.clear();
-	drawLabel([
-		['SYNTHSOURCE.SATURATE', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: COLOR SATURATION', [140, 210, 255]],
-		['Controls saturation of the output.', [140, 160, 190]],
-		['Cycles from grayscale to neon.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['SATURATE: 0.0-4.0 EASED', [140, 255, 200]],
-	]);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (rowCount + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, rowCount + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.SATURATE', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: CHROMA INTENSITY', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('0.0 drains color to grayscale luma.', left + 3, top + 6);
+	t.print('> 1.0 boosts vivid neon color.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`SATURATE: ${sat}`, left + 3, top + 9);
 });
 
-t.synth(
-	noise(6, 0.1)
-		.color(0.3, 0.7, 0.9)
-		.saturate([0.0, 4.0].ease('easeInOutSine'))
-		.charMap(' .:-=+*#%@')
-		.cellColor(0.05, 0.05, 0.1)
-);
+const field = osc(9, 0.16, 1.5).blend(gradient(0.7).rotate(0, 0.2), 0.45);
+
+// Sweep saturation 0..2.4 so luminance stays steady while color drains to gray and floods back.
+const out = field.saturate((ctx) => satAt(ctx.time));
+const glyphs = out.clone();
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.03, 0.08));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

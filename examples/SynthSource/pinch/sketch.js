@@ -11,36 +11,45 @@ const t = textmode.create({
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const squeeze = [0.0, 4.8].fast(0.45).ease('sin');
+
+// Rotate squares into a diamond lattice so inward pincushion curvature reads clearly.
+const diamonds = shape(4, 0.62, 0.04)
+	.rotate(Math.PI / 4)
+	.repeat(9, 6)
+	.pinch(squeeze, 0.5, 0.5);
+
+const glyphs = diamonds.clone();
+
+t.synth(diamonds.color(0.98, 0.35, 0.88).char(glyphs).charMap(' .:-=+*#%@').cellColor(0.06, 0.02, 0.07));
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const width = 38;
+	const height = 9;
 	t.clear();
-	drawLabel([
-		['SYNTHSOURCE.PINCH', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: PINCH LENS WARP', [140, 210, 255]],
-		['Applies concave pinch squeeze.', [140, 160, 190]],
-		['Draws coordinates inward.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		['Lens: eased -0.5 to 0.8', [140, 255, 200]],
-	]);
+	t.push();
+	t.translate(left + 2 + width / 2, top + 2 + height / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, height);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.PINCH', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: INWARD PINCH SQUEEZE', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Pulls outer grid lines inward.', left + 3, top + 6);
+	t.print('Forms a concave pincushion waist.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('Amount: 0.0..4.8 | Center: 0.5, 0.5', left + 3, top + 9);
 });
-
-t.synth(noise(6).pinch([-0.5, 0.8].ease('easeInOutSine')).color(0.1, 0.7, 0.9));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

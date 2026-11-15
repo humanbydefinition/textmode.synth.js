@@ -10,37 +10,41 @@ const t = textmode.create({
 });
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const ramp = ' .:+oO0#@';
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+// Smooth rotating wave + orb spans 0..1 brightness across the custom ramp.
+const wave = osc(5, 0.35, 1.3).rotate(0.45).color(0.3, 0.92, 1.0);
+const orb = shape(24, 0.38, 0.3).color(1.0, 0.55, 0.25);
+const out = wave.blend(orb, 0.5);
+const glyphs = out.clone();
+
+t.synth(out.char(glyphs).charMap(ramp).cellColor(0.03, 0.05, 0.1));
 
 labelLayer.draw(() => {
+	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const top = -Math.floor(labelLayer.grid.rows / 2);
 	t.clear();
-	drawLabel([
-		['SYNTHSOURCE.CHARMAP', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: CUSTOM GLYPH REMAPPING', [140, 210, 255]],
-		['Luminance picks each glyph.', [140, 160, 190]],
-		['Custom sets restyle the screen.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		["CHARMAP: '01 ' | NOISE 10", [140, 255, 200]],
-	]);
+	t.push();
+	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
+	t.char(' ');
+	t.cellColor(6, 10, 22);
+	t.rect(38, 9);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.CHARMAP', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: CUSTOM GLYPH RAMP', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Maps brightness onto a char string.', left + 3, top + 6);
+	t.print('Dark cells stay blank; peaks get @.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`CHARMAP: '${ramp}'`, left + 3, top + 9);
 });
-
-t.synth(noise(10, 0.15).color(0.2, 0.9, 0.4).cellColor(0.02, 0.05, 0.02).charMap('01 '));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);

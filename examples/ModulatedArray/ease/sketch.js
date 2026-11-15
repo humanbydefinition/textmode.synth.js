@@ -9,53 +9,51 @@ const t = textmode.create({
 	plugins: [SynthPlugin],
 });
 
-t.bpm(17);
+t.bpm(72);
 
 const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
-const glyphs = ' .:-=+*#%@';
-const fold = [-0.85, -0.2, 0.45, 1.05].fast(0.2).ease('easeInOutCubic');
-const span = [0.58, 1.18, 0.74, 1.32].fast(0.2).ease('easeInOutCubic');
+const twist = [-0.8, 0.8, -0.35, 1.2].fast(0.9).ease('easeInOutCubic');
+const zoom = [0.65, 1.35, 0.8, 1.5].fast(0.9).ease('easeInOutCubic');
 
-function drawLabel(lines) {
-	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
-	const width = Math.max(...lines.map(([text]) => [...text].length)) + 2;
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines.length + 5) / 2);
-	t.cellColor(6, 10, 22);
-	t.rect(width, lines.length + 2);
-	t.pop();
-	t.printAlign('left', 'top');
-	lines.forEach(([text, color], i) => {
-		t.charColor(color[0], color[1], color[2]);
-		t.print(text, left + 3, top + 3 + i);
-	});
-}
+const diamonds = shape(4, 0.44, 0.06).scale(zoom).rotate(twist).repeat(3, 3);
+const waves = osc(8, 0.25, 1.2).rotate(twist).kaleid(4);
+const glyphs = diamonds.clone().add(waves, 0.45);
+const ink = diamonds
+	.clone()
+	.color(1.0, 0.72, 0.2)
+	.screen(waves.clone().color(0.45, 0.45, 1.0), 0.5);
+
+t.synth(glyphs.clone().char(glyphs).charMap(' .:-=+*#%@').charColor(ink).cellColor(0.05, 0.04, 0.14));
 
 labelLayer.draw(() => {
 	t.clear();
-	drawLabel([
-		['MODULATEDARRAY.EASE', [120, 240, 180]],
-		['------------------------------------', [70, 100, 140]],
-		['CONCEPT: EASED FOLD TRANSITIONS', [140, 210, 255]],
-		['Easing changes travel, not values.', [140, 160, 190]],
-		['The fold accelerates mid-step.', [140, 160, 190]],
-		['------------------------------------', [70, 100, 140]],
-		["array.ease('easeInOutCubic')", [140, 255, 200]],
-	]);
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const width = 38;
+	const lines = 7;
+
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (lines + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, lines + 2);
+	t.pop();
+
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('MODULATEDARRAY.EASE', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: EASED KEYFRAME MOTION', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Easing curves dwell near stops and', left + 3, top + 6);
+	t.print('accelerate across each step.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print("array.ease('easeInOutCubic')", left + 3, top + 9);
 });
-
-const glyphField = shape(4, 0.38, 0.025).scale(span).rotate(fold).repeat(4, 3);
-const lines = osc(12, 0.018, 1.3).rotate(fold, 0.006).kaleid(4);
-const inkField = shape(4, 0.38, 0.025)
-	.scale(span)
-	.rotate(fold)
-	.repeat(4, 3)
-	.color(1.0, 0.72, 0.2)
-	.screen(osc(12, 0.018, 1.3).rotate(fold, 0.006).kaleid(4).color(0.38, 0.3, 1.0), 0.42);
-const paperField = plasma(span.fit(2.5, 4.2), 0.014, 0.35, 1.0).brightness(0.2).color(0.18, 0.09, 0.3);
-
-t.synth(char(glyphField.add(lines, 0.38)).charMap(glyphs).charColor(inkField).cellColor(paperField));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
