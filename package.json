@@ -1,6 +1,6 @@
 {
 	"name": "textmode.synth.js",
-	"version": "1.8.2",
+	"version": "1.8.3",
 	"description": "Synth engine for textmode.js",
 	"type": "module",
 	"devEngines": {
