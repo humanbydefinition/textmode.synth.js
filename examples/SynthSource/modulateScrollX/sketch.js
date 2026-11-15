@@ -5,54 +5,56 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const scrollAt = (secs) => 0.35 + 0.2 * Math.sin(secs * 1.25);
 
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
-const turn = [-0.42, 0.42].fast(0.14).ease('easeInOutSine');
+const mod = osc(10, 0.3, 0.0)
+	.rotate(Math.PI / 2)
+	.blend(noise(2.4, 0.35), 0.3);
+const out = osc(28, 0.06, 0.35)
+	.contrast(1.3)
+	.color(0.25, 0.88, 1.0)
+	.modulateScrollX(mod, ({ time }) => scrollAt(time), 0.16);
+const glyphs = out.clone();
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.05, 0.1));
 
 labelLayer.draw(() => {
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
+	const { cols, rows } = labelLayer.grid;
+	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const status = `Scroll X: ${scrollAt(t.secs).toFixed(2)} | Speed: 0.16`;
+	const width = 37 + 2;
 
-	drawText('SYNTHSOURCE.MODSCROLLX', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('SOURCE SCROLLED X', x, y++, 120, 220, 255);
-	drawText('Brightness shifts columns.', x, y++, 160, 180, 210);
-	drawText('A current moves sideways.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, 7 + 2);
+	t.pop();
+
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.MODULATESCROLLX', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: HORIZONTAL COORDINATE SCROLL', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Modulator brightness shifts X coords.', left + 3, top + 6);
+	t.print('Vertical bars shear sideways by row.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(status, left + 3, top + 9);
 });
-
-const ink = osc(5, 0.018, 1.1).kaleid(4).color(0.45, 0.72, 1.0).modulate(noise(2.2, 0.018), 0.025);
-const paper = plasma(3.6, 0.028, 0.1, 1.05).color(0.03, 0.08, 0.18).modulateScale(noise(2.0, 0.015), 0.22, 0.95);
-
-t.synth(
-	moire(7, 8, 0.1, 1.57, 0.018)
-		.modulateScrollX(noise(2.8, 0.02), [0.03, 0.16].fast(0.12).ease('easeInOutSine'), 0.006)
-		.color(0.25, 0.7, 1.0)
-		.softlight(osc(5, 0.012).rotate(turn), 0.24)
-		.contrast(1.12)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

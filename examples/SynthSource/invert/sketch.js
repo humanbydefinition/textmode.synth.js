@@ -5,55 +5,53 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
-const slow = [0.0, 1.0].fast(0.16).ease('easeInOutSine');
-const turn = [-0.42, 0.42].fast(0.14).ease('easeInOutSine');
-
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const amountAt = (secs) => 0.5 - 0.5 * Math.cos(secs * 1.45);
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const rowCount = 7;
+	const width = 38;
+	const amt = amountAt(t.secs).toFixed(2);
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('SYNTHSOURCE.INVERT', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('CONTROLLED INVERSION', x, y++, 120, 220, 255);
-	drawText('Inverse blends gradually.', x, y++, 160, 180, 210);
-	drawText('Foreground and cell diverge.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (rowCount + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, rowCount + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.INVERT', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: COLOR COMPLEMENT', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Blends each channel toward 1 - RGB.', left + 3, top + 6);
+	t.print('0.5 flattens; 1.0 flips dark/light.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`INVERT AMOUNT: ${amt}`, left + 3, top + 9);
 });
 
-const ink = osc(6, 0.018, 1.6).rotate(turn, 0.002).color(0.9, 0.58, 1.0).modulateKaleid(noise(2.0, 0.014), 5);
-const paper = plasma(3.2, 0.024, 0.2, 1.08).color(0.08, 0.035, 0.16).hue(slow);
+const backdrop = voronoi(4, 0.25, 0.45).color(0.75, 0.22, 0.18);
+const emblem = shape(6, 0.36, 0.04).rotate(0, 0.35).color(0.25, 0.95, 0.95);
 
-t.synth(
-	voronoi(4.2, 0.05, 0.22)
-		.modulateScale(osc(4, 0.014), 0.28, 0.92)
-		.color(0.22, 0.68, 1.0)
-		.invert([0.12, 0.76].fast(0.12).ease('easeInOutSine'))
-		.screen(osc(7, 0.014).rotate(turn).color(1.0, 0.35, 0.7), 0.22)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
+// Smoothly flip between glowing cyan emblem on dark coral and dark cutout on bright sky.
+const out = backdrop.add(emblem, 0.9).invert((ctx) => amountAt(ctx.time));
+const glyphs = out.clone();
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.03, 0.08));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

@@ -5,59 +5,60 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const repSteps = [
+	[2, 2],
+	[3, 2],
+	[4, 3],
+	[3, 3],
+];
 
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
+const mod = plasma(2.2, 0.45, 0.3, 1.2);
+const out = shape(6, 0.36, 0.06)
+	.color(0.3, 0.82, 1.0)
+	.add(shape(3, 0.18, 0.04).color(0.7, 0.32, 0.52))
+	.modulateRepeat(mod, repSteps.map(([x]) => x).fast(0.7), repSteps.map(([, y]) => y).fast(0.7), 0.28, 0.24);
+const glyphs = out.clone();
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.04, 0.09));
 
 labelLayer.draw(() => {
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
+	const { cols, rows } = labelLayer.grid;
+	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const [rx, ry] = repSteps[Math.floor(t.secs * 0.7) % repSteps.length];
+	const status = `Repeat: ${rx}x${ry} | Offset: 0.28, 0.24`;
+	const width = 36 + 2;
 
-	drawText('SYNTHSOURCE.MODREPEAT', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('WARPED TILING', x, y++, 120, 220, 255);
-	drawText('A source offsets repeats.', x, y++, 160, 180, 210);
-	drawText('Tiles swim in formation.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, 7 + 2);
+	t.pop();
+
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.MODULATEREPEAT', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: 2D MODULATED TILING', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Tiles source on X and Y with warp.', left + 3, top + 6);
+	t.print('R and G channels shift tile offsets.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(status, left + 3, top + 9);
 });
-
-const ink = plasma(4.2, 0.024, 0.0, 1.12).color(0.42, 1.0, 0.58).modulateRotate(noise(2.0, 0.015), 0.28, 0.04);
-const paper = moire(6, 7, 0.0, 1.57, 0.018).color(0.025, 0.13, 0.065).softlight(noise(2.0, 0.014), 0.18);
-
-t.synth(
-	osc(8, 0.018, 1.0)
-		.modulateRepeat(
-			noise(2.5, 0.018),
-			[2, 4].fast(0.1).ease('easeInOutSine'),
-			[3, 5].fast(0.12).ease('easeInOutSine'),
-			0.18,
-			0.12
-		)
-		.color(0.35, 0.85, 1.0)
-		.softlight(plasma(3, 0.018), 0.32)
-		.contrast(1.18)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

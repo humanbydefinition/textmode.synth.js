@@ -5,53 +5,61 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const repSteps = [3, 4, 3, 2];
+const offsetAt = (secs) => 0.26 + 0.14 * Math.sin(secs * 1.35);
 
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
+const mod = osc(6, 0.35, 0.0).blend(noise(2.0, 0.3), 0.35);
+const out = shape(4, 0.34, 0.06)
+	.color(1.0, 0.65, 0.22)
+	.blend(
+		osc(14, 0.15, 0.2)
+			.rotate(Math.PI / 2)
+			.color(1.0, 0.35, 0.45),
+		0.35
+	)
+	.modulateRepeatX(mod, repSteps.fast(0.65), ({ time }) => offsetAt(time));
+const glyphs = out.clone();
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.08, 0.03, 0.01));
 
 labelLayer.draw(() => {
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
+	const { cols, rows } = labelLayer.grid;
+	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const reps = repSteps[Math.floor(t.secs * 0.65) % repSteps.length];
+	const status = `Reps X: ${reps} | Offset: ${offsetAt(t.secs).toFixed(2)}`;
+	const width = 36 + 2;
 
-	drawText('SYNTHSOURCE.MODREPEATX', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('X REPEAT MODULATION', x, y++, 120, 220, 255);
-	drawText('Columns offset by source.', x, y++, 160, 180, 210);
-	drawText('Horizontal echoes ripple.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, 7 + 2);
+	t.pop();
+
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.MODULATEREPEATX', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: X-AXIS REPEAT MODULATION', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Tiles columns horizontally by reps.', left + 3, top + 6);
+	t.print('Modulator shifts columns vertically.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(status, left + 3, top + 9);
 });
-
-const ink = moire(8, 9, 0.15, 1.6, 0.025).color(1.0, 0.62, 0.34).modulate(noise(2.3, 0.018), 0.022);
-const paper = noise(3.0, 0.025).color(0.16, 0.055, 0.025).softlight(osc(4, 0.016), 0.22);
-
-t.synth(
-	moire(8, 9, 0.0, 1.57, 0.018)
-		.modulateRepeatX(noise(2.8, 0.02), [3, 6].fast(0.1).ease('easeInOutSine'), 0.24)
-		.color(0.9, 0.45, 0.25)
-		.modulateScrollY(osc(4, 0.012), 0.06, 0.006)
-		.contrast(1.16)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

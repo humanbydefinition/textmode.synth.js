@@ -5,49 +5,49 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
-
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const rowCount = 7;
+	const width = 38;
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('CHAR.CHAR', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('TOP LEVEL GLYPH SOURCE', x, y++, 120, 220, 255);
-	drawText('Creates characters first.', x, y++, 160, 180, 210);
-	drawText('Ink and paper color them.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (rowCount + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, rowCount + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('CHAR.CHAR', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: TOP-LEVEL GLYPH SOURCE', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Starts chain by choosing glyphs.', left + 3, top + 6);
+	t.print('charColor and cellColor style them.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('CHAR: VORONOI | INK: WARM OSC', left + 3, top + 9);
 });
 
-const ink = moire(8, 9, 0.15, 1.6, 0.025).color(1.0, 0.62, 0.34).modulate(noise(2.3, 0.018), 0.022);
-const paper = noise(3.0, 0.025).color(0.16, 0.055, 0.025).softlight(osc(4, 0.016), 0.22);
+const cells = voronoi(4.5, 0.55, 0.35);
+const ink = osc(8, 0.22, 1.2).rotate(0, 0.3).color(1.0, 0.78, 0.38);
 
-t.synth(
-	char(noise(4.6, 0.03).modulateRotate(osc(3, 0.01), 0.35, 0.04))
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
+// Start the composition from char(source), then color glyphs and cells separately.
+t.synth(char(cells).charMap(' .:-=+*#%@').charColor(ink).cellColor(0.03, 0.04, 0.09));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

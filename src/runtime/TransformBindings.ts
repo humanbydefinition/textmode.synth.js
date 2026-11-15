@@ -152,7 +152,7 @@ export class TransformBindings {
 						}
 					);
 					const val = source as SynthParameterValue;
-					const solidArgs = typeof val === 'number' ? [val, val, val, null] : [val, null, null, null];
+					const solidArgs = typeof val === 'number' ? [val, val, val, 1] : [val, null, null, null];
 					wrapper.addTransform('solid', solidArgs as SynthParameterValue[]);
 					actualSource = wrapper;
 				}

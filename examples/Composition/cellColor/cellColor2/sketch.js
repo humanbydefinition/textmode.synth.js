@@ -5,50 +5,65 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
-const breathe = [0.22, 0.78].fast(0.18).ease('easeInOutSine');
-const turn = [-0.42, 0.42].fast(0.14).ease('easeInOutSine');
-
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const rAt = (secs) => 0.22 + 0.18 * Math.sin(secs * 1.1);
+const gAt = (secs) => 0.14 + 0.12 * Math.sin(secs * 1.1 + 2.1);
+const bAt = (secs) => 0.34 + 0.22 * Math.sin(secs * 1.1 + 4.2);
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const rowCount = 7;
+	const width = 38;
+	const r = rAt(t.secs).toFixed(2);
+	const g = gAt(t.secs).toFixed(2);
+	const b = bAt(t.secs).toFixed(2);
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('CELLCOLOR.CELLCOLOR2', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('TOP LEVEL CELL RGBA', x, y++, 120, 220, 255);
-	drawText('Creates cell color first.', x, y++, 160, 180, 210);
-	drawText('Glyphs are added after.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (rowCount + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, rowCount + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('CELLCOLOR.CELLCOLOR2', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: TOP-LEVEL CELL RGBA', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Sets animated RGBA background paper.', left + 3, top + 6);
+	t.print('Separate char() and charColor() run.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`RGBA(${r}, ${g}, ${b}, 1.0)`, left + 3, top + 9);
 });
 
-const ink = osc(5, 0.018, 1.1).kaleid(4).color(0.45, 0.72, 1.0).modulate(noise(2.2, 0.018), 0.025);
+const tiles = shape(4, 0.4, 0.06).rotate(0, 0.45).repeat(3, 3);
+const ink = osc(6, 0.15, 0.6).color(0.75, 1.0, 0.92).brightness(0.25);
 
+// Top-level cellColor(r, g, b, a) drives pulsing RGBA paper behind bright rotating glyphs.
 t.synth(
-	cellColor(0.02, breathe, breathe.offset(0.5), 1.0)
-		.char(noise(4.5, 0.03).kaleid(5).rotate(turn, 0.002))
-		.charMap(glyphs)
+	cellColor(
+		(ctx) => rAt(ctx.time),
+		(ctx) => gAt(ctx.time),
+		(ctx) => bAt(ctx.time),
+		1.0
+	)
+		.char(tiles)
+		.charMap(' .:-=+*#%@')
 		.charColor(ink)
 );
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

@@ -5,48 +5,50 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
+const glyphs = shape(6, 0.42, 0.12).repeat(3, 2).modulateRotate(osc(4, 0.25), 0.75);
+const paper = plasma(2.8, 0.45, 0.3, 1.2)
+	.color(0.14, 0.24, 0.42)
+	.softlight(osc(8, 0.3, 1.2).color(0.35, 0.14, 0.32), 0.45);
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+t.synth(charColor(0.92).char(glyphs).charMap(' .:-=+*#%@').cellColor(paper));
 
 labelLayer.draw(() => {
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
+	const { cols, rows } = labelLayer.grid;
+	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const width = 39 + 2;
 
-	drawText('CHARCOLOR.CHARCOLOR3', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('TOP LEVEL INK GRAY', x, y++, 120, 220, 255);
-	drawText('One value controls ink.', x, y++, 160, 180, 210);
-	drawText('Cell color still moves.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, 7 + 2);
+	t.pop();
+
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('CHARCOLOR.CHARCOLOR3', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: TOP-LEVEL GRAYSCALE INK', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('charColor(0.92) sets pure silver ink.', left + 3, top + 6);
+	t.print('Vibrant cells & shapes move beneath.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('Ink: charColor(0.92) | Cells animate', left + 3, top + 9);
 });
-
-const paper = plasma(3.6, 0.028, 0.1, 1.05).color(0.03, 0.08, 0.18).modulateScale(noise(2.0, 0.015), 0.22, 0.95);
-
-t.synth(
-	charColor([0.36, 0.92].fast(0.12).ease('easeInOutSine'))
-		.char(moire(7, 8, 0.15, 1.5, 0.018))
-		.charMap(glyphs)
-		.cellColor(paper)
-);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

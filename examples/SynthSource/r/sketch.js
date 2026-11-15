@@ -5,55 +5,60 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+let rScale = 1.0;
 
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
-const turn = [-0.42, 0.42].fast(0.14).ease('easeInOutSine');
+// Combine three distinct RGB motifs; .r() isolates only the red triangle.
+const redTri = shape(3, 0.34, 0.03).rotate(0, 0.55).color(1, 0, 0);
+const greenGrid = shape(4, 0.4, 0.03).rotate(0.7854).repeat(4, 4).scroll(0, 0, 0.14, 0.14).color(0, 1, 0);
+const blueRings = shape(24, 0.42, 0.03)
+	.diff(shape(24, 0.28, 0.03))
+	.color(0, 0, 1);
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const out = redTri
+	.add(greenGrid)
+	.add(blueRings)
+	.r((ctx) => {
+		rScale = 1.05 + 0.35 * Math.sin(ctx.time * 1.5);
+		return rScale;
+	}, 0.0);
+
+const glyphs = out.clone();
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.05, 0.015, 0.02));
 
 labelLayer.draw(() => {
+	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const top = -Math.floor(labelLayer.grid.rows / 2);
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('SYNTHSOURCE.R', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('RED CHANNEL EXTRACTION', x, y++, 120, 220, 255);
-	drawText('Red reveals contour energy.', x, y++, 160, 180, 210);
-	drawText('Warm fields move apart.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
+	t.char(' ');
+	t.cellColor(6, 10, 22);
+	t.rect(38, 9);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.R', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: RED CHANNEL EXTRACTION', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Isolates red from RGB geometry.', left + 3, top + 6);
+	t.print('Outputs grayscale with scale+offset.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`CHANNEL R | SCALE: ${rScale.toFixed(2)} (TRI)`, left + 3, top + 9);
 });
-
-const ink = moire(8, 9, 0.15, 1.6, 0.025).color(1.0, 0.62, 0.34).modulate(noise(2.3, 0.018), 0.022);
-const paper = noise(3.0, 0.025).color(0.16, 0.055, 0.025).softlight(osc(4, 0.016), 0.22);
-
-t.synth(
-	moire(10, 11, 0.18, 1.58, 0.024)
-		.rotate(turn, 0.002)
-		.color(1.0, 0.34, 0.22)
-		.r(1.6, 0.03)
-		.modulateScale(noise(2.2, 0.016), 0.24, 0.95)
-		.contrast(1.26)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

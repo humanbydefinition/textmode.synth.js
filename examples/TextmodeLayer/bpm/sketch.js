@@ -5,54 +5,60 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-t.layers.base.bpm(54);
+t.bpm(60);
 
-const labelLayer = t.layers.add();
-const glyphs = ' .,:;=xX#@';
-const pulse = [5, 9, 15, 7].fast(0.42).ease('easeInOutSine');
-const turn = [-0.5, -0.05, 0.55, 0.95].fast(0.42).ease('easeInOutSine');
+const fastLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+fastLayer.bpm(150);
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+
+// Base layer pulses concentric emerald rings slowly at 60 BPM.
+const baseRing = shape(6, [0.44, 0.72, 0.5, 0.78].ease('sin'), 0.1).mult(osc(10, 0.22));
+const baseGlyphs = baseRing.clone();
+t.layers.base.synth(
+	baseRing.char(baseGlyphs).charMap(' .:-=+*#%@').charColor(0.24, 0.96, 0.62).cellColor(0.02, 0.07, 0.06)
+);
+
+// Fast layer steps an inner coral star rapidly at 150 BPM over transparent cells.
+const fastStar = shape([3, 4, 6, 8].ease('easeInOutQuad'), [0.22, 0.34, 0.18, 0.3].ease('sin'), 0.03)
+	.rotate([0, 0.8, 1.6, 2.4].ease('linear'))
+	.thresh(0.18, 0.05);
+const fastGlyphs = fastStar.clone();
+fastLayer.synth(fastStar.char(fastGlyphs).charMap(' .:-=+*#%@').charColor(1.0, 0.54, 0.22).cellColor(0, 0, 0, 0));
 
 labelLayer.draw(() => {
+	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const top = -Math.floor(labelLayer.grid.rows / 2);
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('TEXTMODELAYER.BPM', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('LOCAL TEMPO, SHARED CANVAS', x, y++, 120, 220, 255);
-	drawText('Base arrays run at 54 BPM.', x, y++, 160, 180, 210);
-	drawText('The HUD keeps the 18 BPM master.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('t.layers.base.bpm(54)', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
+	t.char(' ');
+	t.cellColor(6, 10, 22);
+	t.rect(38, 9);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('TEXTMODELAYER.BPM', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: PER-LAYER TEMPO OVERRIDE', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Outer base rings pulse at 60 BPM.', left + 3, top + 6);
+	t.print('Inner star steps fast at 150 BPM.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('BASE: 60 BPM | FX LAYER: 150 BPM', left + 3, top + 9);
 });
-
-const glyphField = moire(pulse, pulse.fit(8, 18), 0.08, 1.55, 0.018).rotate(turn).kaleid(5);
-const inkField = osc(pulse.fit(4, 10), 0.02, 1.2)
-	.rotate(turn, 0.008)
-	.color(0.24, 1.0, 0.58)
-	.screen(moire(8, 12, turn, 1.55, 0.014).color(1.0, 0.64, 0.16), 0.3);
-const paperField = plasma(pulse.fit(2.5, 4.5), 0.016, 0.3, 1.04)
-	.brightness(0.2)
-	.color(0.04, 0.18, 0.1)
-	.softlight(noise(2.2, 0.014), 0.24);
-
-t.layers.base.synth(char(glyphField).charMap(glyphs).charColor(inkField).cellColor(paperField));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

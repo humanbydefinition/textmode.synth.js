@@ -82,7 +82,7 @@ describe('public behavior fixtures', () => {
 		const chained = osc().add(0.5);
 		const nested = chained.nestedSources.get(1);
 		expect(nested?.transforms[0].name).toBe('solid');
-		expect(nested?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, null]);
+		expect(nested?.transforms[0].userArgs).toEqual([0.5, 0.5, 0.5, 1]);
 	});
 
 	it('keeps the built-in global exposure surface intact', () => {

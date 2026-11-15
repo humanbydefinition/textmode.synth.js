@@ -5,48 +5,49 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
-
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const rowCount = 7;
+	const width = 38;
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('CELLCOLOR.CELLCOLOR3', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('TOP LEVEL CELL GRAY', x, y++, 120, 220, 255);
-	drawText('One value fills cells.', x, y++, 160, 180, 210);
-	drawText('Animated ink adds color.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (rowCount + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, rowCount + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('CELLCOLOR.CELLCOLOR3', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: SCALAR GRAYSCALE PAPER', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('One number sets R=G=B cell gray.', left + 3, top + 6);
+	t.print('Colorful ink glyphs float on slate.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('CELL GRAY: 0.22 | MOIRE GLYPHS', left + 3, top + 9);
 });
 
-const ink = plasma(4.2, 0.024, 0.0, 1.12).color(0.42, 1.0, 0.58).modulateRotate(noise(2.0, 0.015), 0.28, 0.04);
+const glyphs = moire(10, 13, 0.2, 0.55, 0.65, 0);
+const ink = osc(7, 0.2, 1.4).rotate(0, 0.35).brightness(0.15);
 
-t.synth(
-	cellColor([0.04, 0.2].fast(0.12).ease('easeInOutSine'))
-		.char(plasma(4.4, 0.024, 0.1, 1.12).kaleid(5))
-		.charMap(glyphs)
-		.charColor(ink)
-);
+// Pass a literal JS number (0.22) so cellColor() sets neutral R=G=B slate gray paper.
+t.synth(cellColor(0.22).char(glyphs).charMap(' .:-=+*#%@').charColor(ink));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

@@ -5,55 +5,52 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
-const turn = [-0.42, 0.42].fast(0.14).ease('easeInOutSine');
-
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const getSlide = () => Math.sin(t.secs * 0.9) * 0.18;
 
 labelLayer.draw(() => {
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('SYNTHSOURCE.DIFF', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('ABSOLUTE DIFFERENCE', x, y++, 120, 220, 255);
-	drawText('Distance becomes contour.', x, y++, 160, 180, 210);
-	drawText('Interference is slowed down.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const width = 38;
+	const lines = 7;
+	const slide = getSlide().toFixed(2);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (lines + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, lines + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.DIFF', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: ABSOLUTE DIFFERENCE', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Computes abs(A - B) per channel.', left + 3, top + 6);
+	t.print('Matches go dark; overlaps invert.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`SLIDE X: ${slide} | INVERTED ZONE`, left + 3, top + 9);
 });
 
-const ink = osc(5, 0.018, 1.1).kaleid(4).color(0.45, 0.72, 1.0).modulate(noise(2.2, 0.018), 0.025);
-const paper = plasma(3.6, 0.028, 0.1, 1.05).color(0.03, 0.08, 0.18).modulateScale(noise(2.0, 0.015), 0.22, 0.95);
+const stripes = osc(8, 0.08, 0.7).rotate(0.25).color(0.2, 0.9, 1.0);
+const diamond = shape(4, 0.48, 0.08).rotate(0, 0.45).scroll(getSlide, 0).color(1.0, 0.42, 0.25);
+const out = stripes.diff(diamond);
+const glyphs = out.clone();
 
-t.synth(
-	osc(9, 0.02, 0.8)
-		.rotate(turn, 0.002)
-		.diff(osc(8, 0.018, 2.1).rotate(turn.offset(0.5), -0.002))
-		.modulateScale(noise(2.2, 0.014), 0.24, 0.95)
-		.colorama(0.09)
-		.contrast(1.24)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.03, 0.07));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

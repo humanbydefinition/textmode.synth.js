@@ -5,55 +5,54 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
-const slow = [0.0, 1.0].fast(0.16).ease('easeInOutSine');
-
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const hueAt = (secs) => (secs * 0.22) % 1;
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const rowCount = 7;
+	const width = 38;
+	const hueVal = hueAt(t.secs);
+	const deg = Math.round(hueVal * 360);
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('SYNTHSOURCE.HUE', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('HUE ROTATION', x, y++, 120, 220, 255);
-	drawText('Hue drifts, form stays calm.', x, y++, 160, 180, 210);
-	drawText('Palette travels slowly.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (rowCount + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, rowCount + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.HUE', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: HSV HUE WHEEL', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Rotates colors 0.0-1.0 around HSV.', left + 3, top + 6);
+	t.print('Luminance and form stay unchanged.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`HUE: ${hueVal.toFixed(2)} (${deg} DEG)`, left + 3, top + 9);
 });
 
-const ink = moire(8, 9, 0.15, 1.6, 0.025).color(1.0, 0.62, 0.34).modulate(noise(2.3, 0.018), 0.022);
-const paper = noise(3.0, 0.025).color(0.16, 0.055, 0.025).softlight(osc(4, 0.016), 0.22);
+const triangles = shape(3, 0.36, 0.05).rotate(0, 0.4).repeat(3, 3, 0.5).color(1.0, 0.3, 0.2);
+const backdrop = osc(6, 0.1, 0.5).color(0.12, 0.65, 0.85);
 
-t.synth(
-	moire(9, 10, 0.0, 1.57, 0.024)
-		.modulate(noise(2.0, 0.016), 0.025)
-		.color(0.9, 0.38, 0.64)
-		.hue(slow)
-		.saturate(1.28)
-		.contrast(1.14)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
+// Rotate complementary coral triangles and teal waves together around the full HSV wheel.
+const out = backdrop.add(triangles, 0.85).hue((ctx) => hueAt(ctx.time));
+const glyphs = out.clone();
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.03, 0.08));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

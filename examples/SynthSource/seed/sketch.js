@@ -5,37 +5,55 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-const labelLayer = t.layers.add();
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const SEEDS = [1, 7, 23, 42];
+let activeSeed = SEEDS[0];
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+// seed() initializes _seed before voronoi() and noise() run in the shader.
+const out = solid(0, 0, 0)
+	.seed((ctx) => {
+		activeSeed = SEEDS[Math.floor(ctx.time * 0.95) % SEEDS.length];
+		return activeSeed;
+	})
+	.add(voronoi(5.5, 0.25, 0.25).color(0.25, 0.95, 0.72), 1.0)
+	.add(noise(4.0, 0.15).color(0.95, 0.45, 0.2), 0.35);
+
+const glyphs = out.clone();
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.03, 0.04, 0.08));
 
 labelLayer.draw(() => {
+	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const top = -Math.floor(labelLayer.grid.rows / 2);
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText(`SYNTHSOURCE.SEED`, x, y++, 100, 255, 140);
-	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText(`CONCEPT: NOISE STOCHASTIC SEED`, x, y++, 100, 220, 255);
-	drawText(`Seeds the noise generator.`, x, y++, 140, 160, 190);
-	drawText(`Locks the layout structure.`, x, y++, 140, 160, 190);
-	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText(`Seed: Integer 42`, x, y++, 140, 255, 180);
+	t.push();
+	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
+	t.char(' ');
+	t.cellColor(6, 10, 22);
+	t.rect(38, 9);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.SEED', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: DETERMINISTIC SEEDING', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Fixes random layouts for noise and', left + 3, top + 6);
+	t.print('voronoi; each seed gives a new map.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`SEED: ${String(activeSeed).padStart(2, ' ')} (DETERMINISTIC LAYOUT)`, left + 3, top + 9);
 });
-
-t.synth(noise(8, 0.15).seed(42).color(0.2, 0.9, 0.6));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

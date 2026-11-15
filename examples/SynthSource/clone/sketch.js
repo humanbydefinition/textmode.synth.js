@@ -5,58 +5,52 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
-const slow = [0.0, 1.0].fast(0.16).ease('easeInOutSine');
-const turn = [-0.42, 0.42].fast(0.14).ease('easeInOutSine');
+// One core diamond chain branches into three independent clones.
+const core = shape(4, 0.22, 0.04).rotate(0, 0.65);
+const centerBlue = core.clone().scale(1.35).color(0.35, 0.65, 1.0);
+const leftCoral = core.clone().scroll(-0.18, 0.0).color(1.0, 0.38, 0.48);
+const rightMint = core.clone().scroll(0.18, 0.0).rotate(0.7854).color(0.25, 0.95, 0.65);
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const out = centerBlue.screen(leftCoral).screen(rightMint);
+const glyphs = out.clone();
+
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.03, 0.04, 0.09));
 
 labelLayer.draw(() => {
+	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const top = -Math.floor(labelLayer.grid.rows / 2);
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('SYNTHSOURCE.CLONE', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('BRANCH WITHOUT MUTATION', x, y++, 120, 220, 255);
-	drawText('Copies a chain for variants.', x, y++, 160, 180, 210);
-	drawText('Siblings keep separate hues.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
+	t.char(' ');
+	t.cellColor(6, 10, 22);
+	t.rect(38, 9);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.CLONE', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: NON-MUTATING BRANCHES', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Copies a base chain cleanly.', left + 3, top + 6);
+	t.print('Each branch keeps its own transform.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('CLONE: 3 BRANCHED DIAMOND VARIANTS', left + 3, top + 9);
 });
-
-const ink = osc(6, 0.018, 1.6).rotate(turn, 0.002).color(0.9, 0.58, 1.0).modulateKaleid(noise(2.0, 0.014), 5);
-const paper = plasma(3.2, 0.024, 0.2, 1.08).color(0.08, 0.035, 0.16).hue(slow);
-const core = osc(8, 0.018, 1.2).rotate(turn).kaleid(5);
-
-t.synth(
-	core
-		.clone()
-		.color(1.0, 0.32, 0.48)
-		.screen(core.clone().rotate(turn.offset(0.33)).color(0.2, 0.85, 0.68), 0.32)
-		.screen(core.clone().rotate(turn.offset(0.66)).color(0.35, 0.45, 1.0), 0.26)
-		.modulate(noise(2.2, 0.016), 0.03)
-		.contrast(1.18)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

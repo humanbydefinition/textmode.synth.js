@@ -5,43 +5,52 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-const labelLayer = t.layers.add();
-
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const getOrbit = () => Math.sin(t.secs * 0.9) * 0.11;
 
 labelLayer.draw(() => {
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('SYNTHSOURCE.LAYER', x, y++, 100, 255, 140);
-	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText('CONCEPT: ALPHA LAYER OVERLAY', x, y++, 100, 220, 255);
-	drawText('Overlays source using its alpha.', x, y++, 140, 160, 190);
-	drawText('Blends colors by transparency.', x, y++, 140, 160, 190);
-	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText('Overlay: Rotated shape on base osc', x, y++, 140, 255, 180);
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const width = 38;
+	const lines = 7;
+	const x = getOrbit().toFixed(2);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (lines + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, lines + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.LAYER', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: ALPHA COMPOSITING', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Composites B over A by B alpha.', left + 3, top + 6);
+	t.print('luma() keys out dark background.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`STAR OFFSET X: ${x} | LUMA KEY`, left + 3, top + 9);
 });
 
-t.synth(
-	osc(15, 0.1)
-		.color(0.2, 0.4, 0.8)
-		.layer(shape(5, 0.35, 0.1).rotate([0, 6.28].ease('linear')).color(1.0, 0.3, 0.5, 0.75))
-		.charMap(' .:-=+*#%@')
-		.cellColor(0.05, 0.05, 0.1)
-);
+const bg = plasma(5, 0.35, 0, 1.1).color(0.14, 0.76, 0.68);
+const fg = shape(5, 0.38, 0.08).rotate(0, 0.5).scroll(getOrbit, 0).color(1.0, 0.38, 0.55).luma(0.25, 0.1);
+const out = bg.layer(fg);
+const glyphs = out.clone();
+
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.04, 0.07));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

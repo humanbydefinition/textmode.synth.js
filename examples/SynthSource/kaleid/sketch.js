@@ -5,37 +5,55 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-const labelLayer = t.layers.add();
-
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const sides = [3, 5, 6, 8];
+const currentSides = () => sides[Math.floor(t.secs * 0.5) % sides.length];
 
 labelLayer.draw(() => {
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText(`SYNTHSOURCE.KALEID`, x, y++, 100, 255, 140);
-	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText(`CONCEPT: RADIAL KALEIDOSCOPE`, x, y++, 100, 220, 255);
-	drawText(`Mirrors coordinates radially.`, x, y++, 140, 160, 190);
-	drawText(`Creates intricate symmetric shapes.`, x, y++, 140, 160, 190);
-	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText(`Segments: Eased (3 to 8)`, x, y++, 140, 255, 180);
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const width = 38;
+	const lines = 7;
+	const n = currentSides();
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (lines + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, lines + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.KALEID', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: RADIAL WEDGE FOLDING', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Folds angles into N mirror wedges.', left + 3, top + 6);
+	t.print('Higher counts tighten the rosette.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`SIDES: ${n} | WEDGE SYMMETRY`, left + 3, top + 9);
 });
 
-t.synth(osc(10, 0.1, 0.8).kaleid([3, 8].ease('easeInOutQuad')).color(0.9, 0.1, 0.4));
+const wedge = osc(10, 0.12, 0.9)
+	.add(shape(3, 0.36, 0.06).scroll(0.2, 0.1), 0.65)
+	.rotate(0, 0.35)
+	.kaleid(currentSides);
+
+const glyphs = wedge.clone();
+
+t.synth(wedge.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.03, 0.01, 0.06));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

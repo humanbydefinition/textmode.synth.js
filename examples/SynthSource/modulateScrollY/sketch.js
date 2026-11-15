@@ -5,53 +5,55 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const scrollAt = (secs) => 0.35 + 0.2 * Math.sin(secs * 1.25);
 
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
+const mod = osc(10, 0.3, 0.0).blend(voronoi(3.0, 0.35, 0.4), 0.35);
+const out = osc(26, 0.06, 0.4)
+	.rotate(Math.PI / 2)
+	.contrast(1.3)
+	.color(0.35, 1.0, 0.62)
+	.modulateScrollY(mod, ({ time }) => scrollAt(time), -0.16);
+const glyphs = out.clone();
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.07, 0.04));
 
 labelLayer.draw(() => {
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
+	const { cols, rows } = labelLayer.grid;
+	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const status = `Scroll Y: ${scrollAt(t.secs).toFixed(2)} | Speed: -0.16`;
+	const width = 37 + 2;
 
-	drawText('SYNTHSOURCE.MODSCROLLY', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('SOURCE SCROLLED Y', x, y++, 120, 220, 255);
-	drawText('Brightness shifts rows.', x, y++, 160, 180, 210);
-	drawText('A vertical tide folds light.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, 7 + 2);
+	t.pop();
+
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.MODULATESCROLLY', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: VERTICAL COORDINATE SCROLL', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Modulator brightness shifts Y coords.', left + 3, top + 6);
+	t.print('Horizontal bands shear up and down.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(status, left + 3, top + 9);
 });
-
-const ink = plasma(4.2, 0.024, 0.0, 1.12).color(0.42, 1.0, 0.58).modulateRotate(noise(2.0, 0.015), 0.28, 0.04);
-const paper = moire(6, 7, 0.0, 1.57, 0.018).color(0.025, 0.13, 0.065).softlight(noise(2.0, 0.014), 0.18);
-
-t.synth(
-	plasma(4.2, 0.022, 0.1, 1.12)
-		.modulateScrollY(osc(4, 0.012).kaleid(4), [0.03, 0.15].fast(0.12).ease('easeInOutSine'), -0.005)
-		.color(0.5, 0.95, 0.55)
-		.overlay(noise(2.2, 0.016), 0.2)
-		.contrast(1.12)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

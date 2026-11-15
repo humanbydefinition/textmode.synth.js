@@ -5,37 +5,51 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-const labelLayer = t.layers.add();
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+// Horizontal ribbons (4 full sine cycles for seamless wrap) plus wide rungs.
+const ribbons = osc(Math.PI * 8, 0, 0.7)
+	.rotate(1.5708)
+	.thresh(0.45, 0.05)
+	.color(1.0, 0.35, 0.55);
+const rungs = shape(4, 0.36, 0.02).scale(1.0, 2.2, 0.45).repeat(4, 4).color(1.0, 0.8, 0.3);
+const pattern = ribbons.add(rungs).scrollY(0, 0.25);
+
+t.synth(pattern.char(pattern.clone()).charMap(' ._-=+#@').cellColor(0.09, 0.02, 0.05));
 
 labelLayer.draw(() => {
+	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const top = -Math.floor(labelLayer.grid.rows / 2);
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText(`SYNTHSOURCE.SCROLLY`, x, y++, 100, 255, 140);
-	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText(`CONCEPT: VERTICAL SCROLLING`, x, y++, 100, 220, 255);
-	drawText(`Scrolls coordinates vertically.`, x, y++, 140, 160, 190);
-	drawText(`Creates running vertical wave waves.`, x, y++, 140, 160, 190);
-	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText(`Scroll Y: Linear (0 to 4)`, x, y++, 140, 255, 180);
+	t.push();
+	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
+	t.char(' ');
+	t.cellColor(6, 10, 22);
+	t.rect(38, 9);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.SCROLLY', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: VERTICAL SCROLLING', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Shifts only Y coordinates over time.', left + 3, top + 6);
+	t.print('X stays fixed as rungs climb.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('SCROLLY: OFFSET 0.0 | SPEED 0.25/S', left + 3, top + 9);
 });
-
-t.synth(plasma(6, 0.2).scrollY([0, 4].ease('linear')).colorama(0.1));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

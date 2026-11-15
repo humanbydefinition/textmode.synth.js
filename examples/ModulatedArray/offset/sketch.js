@@ -5,57 +5,65 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
+t.bpm(72);
 
-const labelLayer = t.layers.add();
-const glyphs = ' .,:;=xX#@';
-const phaseA = [-0.55, 0.15, 0.72].fast(0.18).ease('easeInOutSine').offset(0.0);
-const phaseB = [-0.55, 0.15, 0.72].fast(0.18).ease('easeInOutSine').offset(0.33);
-const phaseC = [-0.55, 0.15, 0.72].fast(0.18).ease('easeInOutSine').offset(0.66);
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const base = [0.08, 0.19, 0.12];
+const radA = [...base].fast(0.9).ease('sin').offset(0.0);
+const radB = [...base].fast(0.9).ease('sin').offset(0.33);
+const radC = [...base].fast(0.9).ease('sin').offset(0.66);
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const backdrop = osc(10, 0.22).rotate(1.57).color(0.24);
+const hexA = shape(6, radA, 0.025).scrollX(0.27).scrollY(-0.08);
+const hexB = shape(6, radB, 0.025).scrollY(-0.08);
+const hexC = shape(6, radC, 0.025).scrollX(-0.27).scrollY(-0.08);
+
+const glyphs = solid(0, 0, 0).add(backdrop, 1).add(hexA, 1).add(hexB, 1).add(hexC, 1);
+const ink = solid(0, 0, 0)
+	.add(backdrop.clone().color(0.35, 0.5, 0.85), 1)
+	.add(hexA.clone().color(1.0, 0.36, 0.48), 1)
+	.add(hexB.clone().color(0.22, 0.9, 1.0), 1)
+	.add(hexC.clone().color(1.0, 0.8, 0.24), 1);
+
+t.synth(glyphs.clone().char(glyphs).charMap(' .:-=+*#%@').charColor(ink).cellColor(0.04, 0.06, 0.14));
 
 labelLayer.draw(() => {
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const width = 38;
+	const lines = 7;
 
-	drawText('MODULATEDARRAY.OFFSET', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('PHASE-SHIFTED SIGNAL RELAY', x, y++, 120, 220, 255);
-	drawText('Identical arrays start elsewhere.', x, y++, 160, 180, 210);
-	drawText('Three pulses take turns leading.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('phase.offset(0.0, 0.33, 0.66)', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (lines + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, lines + 2);
+	t.pop();
+
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('MODULATEDARRAY.OFFSET', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: PHASE-SHIFTED ARRAYS', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Three cloned arrays pulse in relay.', left + 3, top + 6);
+	t.print('Each offset shifts phase by 1/3.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('offset(0.0) | (0.33) | (0.66)', left + 3, top + 9);
 });
-
-const beaconA = osc(8, 0.02, 1.0).rotate(phaseA).kaleid(5).color(1.0, 0.18, 0.32);
-const beaconB = osc(8, 0.02, 1.0).rotate(phaseB).kaleid(5).color(0.16, 0.86, 1.0);
-const beaconC = osc(8, 0.02, 1.0).rotate(phaseC).kaleid(5).color(1.0, 0.72, 0.18);
-const relay = beaconA.screen(beaconB, 0.36).screen(beaconC, 0.28).contrast(1.15);
-const glyphField = relay;
-const inkField = osc(8, 0.02, 1.0)
-	.rotate(phaseA)
-	.kaleid(5)
-	.color(1.0, 0.18, 0.32)
-	.screen(osc(8, 0.02, 1.0).rotate(phaseB).kaleid(5).color(0.16, 0.86, 1.0), 0.36)
-	.screen(osc(8, 0.02, 1.0).rotate(phaseC).kaleid(5).color(1.0, 0.72, 0.18), 0.28);
-const paperField = plasma(phaseB.fit(2.5, 4.2), 0.014, 0.55, 1.0).brightness(0.2).color(0.08, 0.08, 0.26);
-
-t.synth(char(glyphField).charMap(glyphs).charColor(inkField).cellColor(paperField));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

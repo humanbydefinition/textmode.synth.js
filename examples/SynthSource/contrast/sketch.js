@@ -5,53 +5,52 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
-
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const contrastAt = (secs) => 1.15 + Math.sin(secs * 1.0) * 0.8;
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const rowCount = 7;
+	const width = 38;
+	const contrast = contrastAt(t.secs).toFixed(2);
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('SYNTHSOURCE.CONTRAST', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('DYNAMIC CONTRAST', x, y++, 120, 220, 255);
-	drawText('Midtones open and close.', x, y++, 160, 180, 210);
-	drawText('No hard value snapping.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (rowCount + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, rowCount + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.CONTRAST', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: MIDTONE STRETCH', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Scales RGB distance from 0.5 gray.', left + 3, top + 6);
+	t.print('< 1 flattens; > 1 sharpens edges.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`CONTRAST: ${contrast}`, left + 3, top + 9);
 });
 
-const ink = osc(5, 0.018, 1.1).kaleid(4).color(0.45, 0.72, 1.0).modulate(noise(2.2, 0.018), 0.025);
-const paper = plasma(3.6, 0.028, 0.1, 1.05).color(0.03, 0.08, 0.18).modulateScale(noise(2.0, 0.015), 0.22, 0.95);
+const base = osc(7, 0.14, 0.9).blend(osc(5, -0.1, 1.3).rotate(1.1), 0.5);
 
-t.synth(
-	noise(3.8, 0.025)
-		.modulateRotate(osc(4, 0.014), 0.28, 0.04)
-		.colorama(0.08)
-		.contrast([1.05, 1.65].fast(0.14).ease('easeInOutSine'))
-		.kaleid(5)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
+// Sweep contrast across 0.35..1.95 so intersecting waves flatten to haze then snap sharp.
+const out = base.contrast((ctx) => contrastAt(ctx.time));
+const glyphs = out.clone();
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.03, 0.08));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

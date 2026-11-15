@@ -5,54 +5,55 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
-
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
-
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const multAt = (secs) => 0.65 - 0.5 * Math.cos(secs * 1.2);
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const rowCount = 7;
+	const width = 38;
+	const mult = multAt(t.secs).toFixed(2);
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('SYNTHSOURCE.MODSCALE', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('SOURCE DRIVEN SCALE', x, y++, 120, 220, 255);
-	drawText('Brightness zooms the field.', x, y++, 160, 180, 210);
-	drawText('Nested rings breathe slowly.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Separate animated ink and paper.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (rowCount + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, rowCount + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.MODULATESCALE', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: LOCAL ZOOM FIELD', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Scales UVs around center by source.', left + 3, top + 6);
+	t.print('Bright zones magnify tiled hexes.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`SCALE MULT: ${mult} | OFF 0.85`, left + 3, top + 9);
 });
 
-const ink = osc(5, 0.018, 1.1).kaleid(4).color(0.45, 0.72, 1.0).modulate(noise(2.2, 0.018), 0.025);
-const paper = plasma(3.6, 0.028, 0.1, 1.05).color(0.03, 0.08, 0.18).modulateScale(noise(2.0, 0.015), 0.22, 0.95);
+const tiles = shape(6, 0.44, 0.08)
+	.color(0.25, 0.95, 0.72)
+	.add(shape(6, 0.2, 0.05).color(0.95, 0.85, 0.25), 0.7)
+	.repeat(3, 3);
 
-t.synth(
-	osc(9, 0.02, 1.4)
-		.modulateScale(noise(2.4, 0.018), [0.75, 1.25].fast(0.12).ease('easeInOutSine'), 0.9)
-		.kaleid(6)
-		.color(0.35, 0.8, 1.0)
-		.overlay(plasma(3, 0.018).color(1.0, 0.38, 0.62), 0.22)
-		.contrast(1.16)
-		.charMap(glyphs)
-		.charColor(ink)
-		.cellColor(paper)
-);
+// Breathe local magnification across a 3x3 filled hex grid using a moving plasma modulator.
+const out = tiles.modulateScale(plasma(3.5, 0.65, 0, 1.0), (ctx) => multAt(ctx.time), 0.85);
+const glyphs = out.clone();
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.04, 0.06));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

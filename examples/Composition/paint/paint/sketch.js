@@ -5,37 +5,54 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-const labelLayer = t.layers.add();
-
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 
 labelLayer.draw(() => {
+	const { cols, rows } = labelLayer.grid;
+	const left = -Math.floor(cols / 2);
+	const top = -Math.floor(rows / 2);
+	const rowCount = 7;
+	const width = 38;
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('PAINT.PAINT', x, y++, 100, 255, 140);
-	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText('CONCEPT: COMPOSITE PAINT SOURCE', x, y++, 100, 220, 255);
-	drawText('Paints cells and glyphs from source.', x, y++, 140, 160, 190);
-	drawText('Feeds single pattern to all channels.', x, y++, 140, 160, 190);
-	drawText('------------------------------------', x, y++, 80, 100, 150);
-	drawText('Source: osc color | Char: noise', x, y++, 140, 255, 180);
+	t.push();
+	t.translate(left + (width + 4) / 2, top + (rowCount + 5) / 2);
+	t.cellColor(6, 10, 22);
+	t.rect(width, rowCount + 2);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('PAINT.PAINT', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: TOP-LEVEL PAINT SOURCE', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('paint(src) sets both ink and paper.', left + 3, top + 6);
+	t.print('Dimmed cellColor reveals hex glyphs.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print('PAINT: OSC+PLASMA | BG: 0.22x', left + 3, top + 9);
 });
 
-t.synth(paint(osc(10, 0.1).color(0.2, 0.8, 0.9)).char(noise(8, 0.15)));
+const palette = osc(10, 0.22, 1.5)
+	.rotate(0.5, 0.2)
+	.blend(plasma(4, 0.5, 0, 1.1).color(0.3, 0.9, 1.0), 0.4);
+const glyphPattern = shape(6, 0.42, 0.06)
+	.diff(shape(6, 0.2, 0.05))
+	.rotate(0, -0.4)
+	.repeat(3, 3);
+
+// paint(src) fills both channels identically; a dimmed cellColor override reveals the glyphs.
+t.synth(paint(palette).char(glyphPattern).charMap(' .:-=+*#%@').cellColor(palette.clone().color(0.22)));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

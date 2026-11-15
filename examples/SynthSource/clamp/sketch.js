@@ -5,51 +5,63 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(18);
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
+const WINDOWS = [
+	{ name: 'CEIL', min: 0.0, max: 0.42 },
+	{ name: 'FLOOR', min: 0.35, max: 0.9 },
+	{ name: 'FULL', min: 0.0, max: 1.0 },
+];
+let active = WINDOWS[0];
 
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
+// Overdriven wave lattice crosses 0..1.7 so clamp() plateaus are obvious.
+const lattice = osc(8, 0.2, 1.2)
+	.add(osc(8, 0.2, 1.2).rotate(1.5708), 0.7)
+	.color(1.0, 0.45, 0.85);
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const out = lattice.clamp(
+	(ctx) => {
+		active = WINDOWS[Math.floor(ctx.time * 0.95) % WINDOWS.length];
+		return active.min;
+	},
+	(ctx) => WINDOWS[Math.floor(ctx.time * 0.95) % WINDOWS.length].max
+);
+
+const glyphs = out.clone();
+t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.05, 0.02, 0.06));
 
 labelLayer.draw(() => {
+	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const top = -Math.floor(labelLayer.grid.rows / 2);
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('SYNTHSOURCE.CLAMP', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('VALUE WINDOWING', x, y++, 120, 220, 255);
-	drawText('Clamp caps the color range.', x, y++, 160, 180, 210);
-	drawText('Levels reveal the clipped band.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('Single chain: source -> clamp.', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
+	t.char(' ');
+	t.cellColor(6, 10, 22);
+	t.rect(38, 9);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('SYNTHSOURCE.CLAMP', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: CHANNEL CLAMPING', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('Locks RGB channels inside [min,max].', left + 3, top + 6);
+	t.print('Clips bright peaks or lifts shadows.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`CLAMP ${active.name}: ${active.min.toFixed(2)}..${active.max.toFixed(2)}`, left + 3, top + 9);
 });
-
-t.synth(
-	plasma(6.0, 0.12, 0.2, 1.45)
-		.add(osc(12, 0.06, 1.1).kaleid(5), 0.28)
-		.colorama(0.12)
-		.clamp(0.18, 0.74)
-		.levels(0.18, 0.74, 0.04, 1.0, 0.88)
-		.contrast(1.28)
-		.color(0.3, 0.78, 1.0)
-		.charMap(glyphs)
-		.cellColor(0.015, 0.02, 0.035)
-);
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });

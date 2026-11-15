@@ -5,52 +5,53 @@
 const t = textmode.create({
 	width: window.innerWidth,
 	height: window.innerHeight,
-	fontSize: 8,
+	fontSize: window.innerWidth < 700 ? 8 : 16,
 	plugins: [SynthPlugin],
 });
 
-t.bpm(48);
+t.bpm(120);
 
-const labelLayer = t.layers.add();
-const glyphs = ' .:-=+*#%@';
-const rhythm = [6, 12, 8, 16].fast(0.35).ease('easeInOutCubic');
-const phase = [0.05, 0.48, 0.88, 0.28].fast(0.35).ease('easeInOutCubic');
+const labelLayer = t.layers.add({ fontSize: window.innerWidth < 700 ? 8 : 16 });
 
-function drawText(text, x, y, r = 220, g = 230, b = 255) {
-	t.push();
-	t.printAlign('left', 'top');
-	t.charColor(r, g, b);
-	t.print(text, x, y);
-	t.pop();
-}
+const rhythm = [4, 8, 14, 6].ease('easeInOutCubic');
+const phase = [0.0, 0.78, 1.57, 2.35].ease('easeInOutCubic');
+
+const pattern = osc(rhythm, 0.08, phase).rotate(phase).kaleid(6);
+const glyphs = pattern.clone();
+const ink = osc(rhythm.fit(3, 8), 0.25, 1.5).brightness(0.22).color(1.0, 0.42, 0.68).hue(phase);
+
+t.synth(pattern.char(glyphs).charMap(' .:-=+*#%@').charColor(ink).cellColor(0.04, 0.03, 0.12));
 
 labelLayer.draw(() => {
+	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const top = -Math.floor(labelLayer.grid.rows / 2);
+	const beat = (Math.floor(t.secs * 2) % 4) + 1;
 	t.clear();
-	const left = -Math.floor(t.grid.cols / 2);
-	const top = -Math.floor(t.grid.rows / 2);
-	let y = top + 3;
-	const x = left + 3;
-
-	drawText('TEXTMODIFIER.BPM', x, y++, 110, 255, 170);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('MASTER CLOCK FOR ALL TARGETS', x, y++, 120, 220, 255);
-	drawText('One BPM advances every field.', x, y++, 160, 180, 210);
-	drawText('Glyph, ink, and paper stay synced.', x, y++, 160, 180, 210);
-	drawText('------------------------------------', x, y++, 70, 110, 140);
-	drawText('t.bpm(48)', x, y++, 150, 255, 190);
+	t.push();
+	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
+	t.char(' ');
+	t.cellColor(6, 10, 22);
+	t.rect(38, 9);
+	t.pop();
+	t.printAlign('left', 'top');
+	t.charColor(120, 240, 180);
+	t.print('TEXTMODIFIER.BPM', left + 3, top + 3);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 4);
+	t.charColor(140, 210, 255);
+	t.print('CONCEPT: MASTER ARRAY CLOCK', left + 3, top + 5);
+	t.charColor(140, 160, 190);
+	t.print('t.bpm(120) sets beats per minute.', left + 3, top + 6);
+	t.print('All modulated arrays step in sync.', left + 3, top + 7);
+	t.charColor(70, 100, 140);
+	t.print('------------------------------------', left + 3, top + 8);
+	t.charColor(140, 255, 200);
+	t.print(`BPM: 120 | BEAT: ${beat}/4`, left + 3, top + 9);
 });
-
-const glyphField = osc(rhythm, 0.022, phase).rotate(phase, 0.005).kaleid(6);
-const inkField = moire(rhythm.fit(7, 15), rhythm.fit(9, 18), phase, 1.55, 0.016)
-	.color(1.0, 0.32, 0.5)
-	.screen(osc(rhythm.fit(3, 8), 0.02, 1.5).color(0.3, 0.7, 1.0), 0.34);
-const paperField = plasma(rhythm.fit(2.4, 4.4), 0.016, phase, 1.04)
-	.brightness(0.2)
-	.color(0.08, 0.06, 0.24)
-	.softlight(noise(2.2, 0.014), 0.24);
-
-t.synth(char(glyphField).charMap(glyphs).charColor(inkField).cellColor(paperField));
 
 t.windowResized(() => {
 	t.resizeCanvas(window.innerWidth, window.innerHeight);
+	const size = window.innerWidth < 700 ? 8 : 16;
+	t.fontSize(size);
+	for (const layer of t.layers.all) layer.fontSize(size);
 });
