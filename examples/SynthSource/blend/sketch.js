@@ -15,14 +15,14 @@ const getAmount = () => 0.5 - 0.45 * Math.cos(t.secs * 1.1);
 labelLayer.draw(() => {
 	t.clear();
 	const { cols, rows } = labelLayer.grid;
-	const left = -Math.floor(cols / 2);
+	const left = -Math.floor((cols - 1) / 2);
 	const top = -Math.floor(rows / 2);
 	const width = 38;
 	const lines = 7;
 	const amount = getAmount().toFixed(2);
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines + 5) / 2);
 	t.cellColor(6, 10, 22);
+	t.push();
+	t.translate(left + (width + 3) / 2, top + (lines + 5) / 2);
 	t.rect(width, lines + 2);
 	t.pop();
 	t.printAlign('left', 'top');

@@ -27,12 +27,12 @@ t.synth(charColor(ink).char(glyphs).charMap(' .:-=+*#%@').cellColor(bg));
 labelLayer.draw(() => {
 	t.clear();
 	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const [left, top] = [-Math.floor((cols - 1) / 2), -Math.floor(rows / 2)];
 	const width = 37 + 2;
 
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
 	t.cellColor(6, 10, 22);
+	t.push();
+	t.translate(left + (width + 3) / 2, top + (7 + 5) / 2);
 	t.rect(width, 7 + 2);
 	t.pop();
 

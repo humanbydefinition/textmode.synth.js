@@ -34,16 +34,16 @@ t.synth(swatch.clone().char(swatch).charMap(' .:-=+*#%@').cellColor(0.03, 0.04, 
 labelLayer.draw(() => {
 	t.clear();
 	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const [left, top] = [-Math.floor((cols - 1) / 2), -Math.floor(rows / 2)];
 	const rv = sampleSin(rVals, t.secs).toFixed(2);
 	const gv = sampleSin(gVals, t.secs).toFixed(2);
 	const bv = sampleSin(bVals, t.secs).toFixed(2);
 	const status = `RGB: ${rv}, ${gv}, ${bv} | Alpha: 1.0`;
 	const width = Math.max(36, [...status].length) + 2;
 
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
 	t.cellColor(6, 10, 22);
+	t.push();
+	t.translate(left + (width + 3) / 2, top + (7 + 5) / 2);
 	t.rect(width, 7 + 2);
 	t.pop();
 

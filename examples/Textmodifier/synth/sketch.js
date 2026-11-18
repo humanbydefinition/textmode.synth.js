@@ -24,14 +24,14 @@ const paper = shape(8, 0.58, 0.12)
 t.synth(rosette.char(glyphs).charMap(' .:-=+*#%@').charColor(ink).cellColor(paper));
 
 labelLayer.draw(() => {
-	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const left = -Math.floor((labelLayer.grid.cols - 1) / 2);
 	const top = -Math.floor(labelLayer.grid.rows / 2);
 	t.clear();
-	t.push();
-	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
-	t.char(' ');
 	t.cellColor(6, 10, 22);
-	t.rect(38, 9);
+	t.push();
+	t.translate(left + 2 + 38 / 2, top + 2 + 8 / 2);
+	t.char(' ');
+	t.rect(39, 9);
 	t.pop();
 	t.printAlign('left', 'top');
 	t.charColor(120, 240, 180);

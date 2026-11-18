@@ -28,16 +28,16 @@ t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.02, 0.05));
 labelLayer.draw(() => {
 	t.clear();
 	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const [left, top] = [-Math.floor((cols - 1) / 2), -Math.floor(rows / 2)];
 	const rv = channelShift(t.secs, 0).toFixed(2);
 	const gv = channelShift(t.secs, 2.09).toFixed(2);
 	const bv = channelShift(t.secs, 4.19).toFixed(2);
 	const status = `Shift: +${rv}, +${gv}, +${bv} (A +0.0)`;
 	const width = Math.max(36, [...status].length) + 2;
 
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
 	t.cellColor(6, 10, 22);
+	t.push();
+	t.translate(left + (width + 3) / 2, top + (7 + 5) / 2);
 	t.rect(width, 7 + 2);
 	t.pop();
 

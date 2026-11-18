@@ -38,14 +38,14 @@ t.synth(
 labelLayer.draw(() => {
 	t.clear();
 	const { cols, rows } = labelLayer.grid;
-	const left = -Math.floor(cols / 2);
+	const left = -Math.floor((cols - 1) / 2);
 	const top = -Math.floor(rows / 2);
 	const width = 38;
 	const lines = 7;
 
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (lines + 5) / 2);
 	t.cellColor(6, 10, 22);
+	t.push();
+	t.translate(left + (width + 3) / 2, top + (lines + 5) / 2);
 	t.rect(width, lines + 2);
 	t.pop();
 

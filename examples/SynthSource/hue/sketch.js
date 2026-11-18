@@ -14,16 +14,16 @@ const hueAt = (secs) => (secs * 0.22) % 1;
 
 labelLayer.draw(() => {
 	const { cols, rows } = labelLayer.grid;
-	const left = -Math.floor(cols / 2);
+	const left = -Math.floor((cols - 1) / 2);
 	const top = -Math.floor(rows / 2);
 	const rowCount = 7;
 	const width = 38;
 	const hueVal = hueAt(t.secs);
 	const deg = Math.round(hueVal * 360);
 	t.clear();
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (rowCount + 5) / 2);
 	t.cellColor(6, 10, 22);
+	t.push();
+	t.translate(left + (width + 3) / 2, top + (rowCount + 5) / 2);
 	t.rect(width, rowCount + 2);
 	t.pop();
 	t.printAlign('left', 'top');
