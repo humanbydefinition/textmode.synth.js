@@ -25,13 +25,13 @@ t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.02, 0.07, 0.04));
 labelLayer.draw(() => {
 	t.clear();
 	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const [left, top] = [-Math.floor((cols - 1) / 2), -Math.floor(rows / 2)];
 	const status = `Scroll Y: ${scrollAt(t.secs).toFixed(2)} | Speed: -0.16`;
 	const width = 37 + 2;
 
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
 	t.cellColor(6, 10, 22);
+	t.push();
+	t.translate(left + (width + 3) / 2, top + (7 + 5) / 2);
 	t.rect(width, 7 + 2);
 	t.pop();
 

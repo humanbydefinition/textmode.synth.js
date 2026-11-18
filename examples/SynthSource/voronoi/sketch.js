@@ -20,14 +20,14 @@ t.synth(cells.clone().color(0.55, 0.95, 1.0).char(cells).charMap(' .:-=+*#%@').c
 labelLayer.draw(() => {
 	t.clear();
 	const { cols, rows } = labelLayer.grid;
-	const [left, top] = [-Math.floor(cols / 2), -Math.floor(rows / 2)];
+	const [left, top] = [-Math.floor((cols - 1) / 2), -Math.floor(rows / 2)];
 	const step = Math.floor(t.secs * 0.4) % blends.length;
 	const status = `Blend: ${blends[step].toFixed(2)} (${blendModes[step]}) | Scale: 4.5`;
 	const width = Math.max(36, [...status].length) + 2;
 
-	t.push();
-	t.translate(left + (width + 4) / 2, top + (7 + 5) / 2);
 	t.cellColor(6, 10, 22);
+	t.push();
+	t.translate(left + (width + 3) / 2, top + (7 + 5) / 2);
 	t.rect(width, 7 + 2);
 	t.pop();
 

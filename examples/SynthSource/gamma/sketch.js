@@ -24,14 +24,14 @@ const glyphs = out.clone();
 t.synth(out.char(glyphs).charMap(' .:-=+*#%@').cellColor(0.04, 0.02, 0.06));
 
 labelLayer.draw(() => {
-	const left = -Math.floor(labelLayer.grid.cols / 2);
+	const left = -Math.floor((labelLayer.grid.cols - 1) / 2);
 	const top = -Math.floor(labelLayer.grid.rows / 2);
 	const effect = gammaAmt < 0.85 ? 'CRUSH MIDS' : gammaAmt > 1.25 ? 'LIFT SHADOWS' : 'LINEAR';
 	t.clear();
-	t.push();
-	t.translate(left + 2 + 38 / 2, top + 2 + 9 / 2);
-	t.char(' ');
 	t.cellColor(6, 10, 22);
+	t.push();
+	t.translate(left + 2 + 37 / 2, top + 2 + 8 / 2);
+	t.char(' ');
 	t.rect(38, 9);
 	t.pop();
 	t.printAlign('left', 'top');

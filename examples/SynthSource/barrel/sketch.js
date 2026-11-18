@@ -22,14 +22,14 @@ t.synth(mosaic.color(0.35, 1.0, 0.48).char(glyphs).charMap(' .:-=+*#%@').cellCol
 
 labelLayer.draw(() => {
 	const { cols, rows } = labelLayer.grid;
-	const left = -Math.floor(cols / 2);
+	const left = -Math.floor((cols - 1) / 2);
 	const top = -Math.floor(rows / 2);
 	const width = 38;
 	const height = 9;
 	t.clear();
-	t.push();
-	t.translate(left + 2 + width / 2, top + 2 + height / 2);
 	t.cellColor(6, 10, 22);
+	t.push();
+	t.translate(left + 2 + (width - 1) / 2, top + 2 + (height - 1) / 2);
 	t.rect(width, height);
 	t.pop();
 	t.printAlign('left', 'top');
